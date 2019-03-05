@@ -1,8 +1,8 @@
 package gameengine.physics;
 
 import gameengine.GameEngine;
-import gameobjects.Player;
-import gamescreens.ScreenManager;
+import gameobject.renderable.player.Player;
+import gamescreen.ScreenManager;
 
 public class OverworldEngine {
     ScreenManager screenManager;

@@ -10,10 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 //Project Imports
-import gameengine.GameEngine;
-import gameobjects.renderables.RenderableObject;
-import gamescreens.ScreenManager;
-import main.utilities.AssetLoader;
+import gamescreen.ScreenManager;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -23,7 +20,7 @@ public class RenderEngine extends JPanel {
     //region <Variables>
     private ScreenManager screenManager;
 
-    // off screen rendering
+    // off splashscreen rendering
     private Graphics2D graphics;
     private BufferedImage dbImage = null;
     private GraphicsConfiguration graphicsConfig;
@@ -53,7 +50,7 @@ public class RenderEngine extends JPanel {
         int height = getSize().height;
         if(width > 0 && height > 0) {
             if (dbImage == null) {
-                //Creates an off-screen drawable image to be used for double buffering
+                //Creates an off-splashscreen drawable image to be used for double buffering
                 dbImage = graphicsConfig.createCompatibleImage(width, height, Transparency.OPAQUE);
                 if (dbImage == null) {
                     Debug.error(DebugEnabler.RENDER_ENGINE,"Critical Error: dbImage is null");

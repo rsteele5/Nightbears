@@ -3,12 +3,11 @@ package _test;
 import gameengine.physics.Kinematic;
 import gameengine.physics.PhysicsMeta;
 import gameengine.physics.PhysicsVector;
-import gameobjects.renderables.RenderableObject;
-import gamescreens.DrawLayer;
-import gamescreens.GameScreen;
+import gameobject.renderable.RenderableObject;
+import gameobject.renderable.DrawLayer;
+import gamescreen.GameScreen;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class Square extends RenderableObject implements Kinematic {
     private PhysicsVector accel = new PhysicsVector(0,1);

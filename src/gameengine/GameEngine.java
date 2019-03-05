@@ -3,13 +3,13 @@ package gameengine;
 import static gameengine.GameSettings.*;
 
 import gameengine.physics.OverworldEngine;
-import gameobjects.Player;
-import gameobjects.renderables.Vendor;
-import gamescreens.DrawLayer;
+import gameobject.renderable.player.Player;
+import gameobject.renderable.vendor.Vendor;
+import gameobject.renderable.DrawLayer;
 import input.listeners.MouseController;
 import gameengine.physics.PhysicsEngine;
 import gameengine.rendering.RenderEngine;
-import gamescreens.ScreenManager;
+import gamescreen.ScreenManager;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 import javax.swing.JFrame;
@@ -69,7 +69,7 @@ public class GameEngine implements Runnable {
             long startTime = System.currentTimeMillis();
 
             //TODO: Proposed changes
-            /* Game engine gets the data from the screen manager then sends it to the
+            /* Game engine gets the data from the splashscreen manager then sends it to the
              * physics engine. After its run its course then we send it to the renderEngine
              * So the call would look like:
              * Data data = screenManager.getData();

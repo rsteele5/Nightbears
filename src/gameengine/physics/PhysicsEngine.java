@@ -1,11 +1,10 @@
 package gameengine.physics;
 
 import gameengine.GameEngine;
-import gameobjects.Player;
-import gameobjects.renderables.ImageContainer;
-import gameobjects.renderables.items.Weapon;
-import gamescreens.ScreenManager;
-import gameobjects.GameObject;
+import gameobject.renderable.player.Player;
+import gameobject.renderable.item.weapon.Weapon;
+import gamescreen.ScreenManager;
+import gameobject.GameObject;
 import main.Game;
 import main.utilities.Debug;
 

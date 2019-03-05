@@ -1,9 +1,6 @@
 package main;
 
 import gameengine.GameEngine;
-import gameengine.physics.PhysicsVector;
-import gameobjects.Player;
-import main.utilities.Debug;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;

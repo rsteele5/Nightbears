@@ -1,6 +1,6 @@
 package gameengine.rendering.animation;
 
-import gameobjects.renderables.RenderableObject;
+import gameobject.renderable.RenderableObject;
 import main.utilities.Loadable;
 
 import java.awt.image.BufferedImage;
