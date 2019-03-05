@@ -26,7 +26,7 @@ public class Game {
         gameWindow.setResizable(false);
         gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameWindow.setBackground(Color.BLACK);
-        //Uncomment these to make the game full screen
+        //Uncomment these to make the game full splashscreen
         //gameWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
         gameEngine = new GameEngine();
         //Attach the RenderEngine to the window

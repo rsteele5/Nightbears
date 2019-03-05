@@ -1,8 +1,8 @@
 package gameengine.rendering;
 
-import gameobjects.GameObject;
-import gameobjects.renderables.RenderableObject;
-import gamescreens.GameScreen;
+import gameobject.GameObject;
+import gameobject.renderable.RenderableObject;
+import gamescreen.GameScreen;
 
 import java.awt.*;
 
