@@ -19,8 +19,8 @@ public class Vendor extends RenderableObject {
     private CopyOnWriteArrayList<RenderableObject> rItems = new CopyOnWriteArrayList<>();
     private BufferedImage vendorOverworldImage;
     private BufferedImage vendorLevelImage;
-    private final String vendorOverworldPath = "/assets/overworld/vendor/VendorOverworldForward.png";
-    private final String vendorLevelPath = "/assets/Vendor.png";
+    private final String vendorOverworldPath = "/assets/vendor/vendoridleanimation/VendorOverworldForward.png";
+    private final String vendorLevelPath = "/assets/vendor/Vendor.png";
 
     // Default constructor
     public Vendor(int x, int y){

@@ -6,7 +6,7 @@ import gameengine.rendering.animation.AnimationImage;
 public class PlayerWalkingAnimation extends Animation {
 
     public PlayerWalkingAnimation() {
-        String path = "/assets/player/teddywalkinganimation/";
+        String path = "/assets/player/overworld/teddywalkinganimation/";
         AnimationImage walking1 = new AnimationImage(path + "Overworld-Teddy-Walking1.png", 10);
         AnimationImage walking2 = new AnimationImage(path + "Overworld-Teddy-Walking2.png", 10);
         AnimationImage walking3 = new AnimationImage(path + "Overworld-Teddy-Walking3.png", 10);

@@ -154,7 +154,7 @@ public class PauseMenu extends GameScreen {
         selectedItem.addToScreen(this,true);
 
         //Teddy
-        ImageContainer teddy = new ImageContainer(295,370,"/assets/Teddy.png", DrawLayer.Entity);
+        ImageContainer teddy = new ImageContainer(295,370, "/assets/player/sidescrolling/Teddy.png", DrawLayer.Entity);
         teddy.setWidth(70);
         teddy.setHeight(150);
         teddy.addToScreen(this,true);

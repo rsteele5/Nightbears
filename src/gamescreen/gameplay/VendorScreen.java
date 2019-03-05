@@ -70,14 +70,14 @@ public class VendorScreen extends GameScreen {
 
         ImageContainer imageContainer;
 
-        imageContainer = new ImageContainer(0, 0, "/assets/VendorBackground.png", DrawLayer.Background);
+        imageContainer = new ImageContainer(0, 0, "/assets/vendor/VendorBackground.png", DrawLayer.Background);
         imageContainer.addToScreen(this, true);
 
-        imageContainer = new ImageContainer(x_vendor, y_vendor, "/assets/Vendor.png", vendor.getDrawLayer());
+        imageContainer = new ImageContainer(x_vendor, y_vendor, "/assets/vendor/Vendor.png", vendor.getDrawLayer());
         imageContainer.setSize(150,150);
         imageContainer.addToScreen(this, true);
 
-        imageContainer = new ImageContainer(x_player, y_vendor, "/assets/Teddy.png", player.getDrawLayer());
+        imageContainer = new ImageContainer(x_player, y_vendor, "/assets/player/sidescrolling/Teddy.png", player.getDrawLayer());
         imageContainer.setSize(90, 140);
         imageContainer.addToScreen(this, true);
         //endregion
@@ -311,7 +311,7 @@ public class VendorScreen extends GameScreen {
     @Override
     protected void transitionOff() {
         // Change player's image back to overworld image
-        player.setImage("/assets/overworld/Overworld-Teddy.png");
+        player.setImage("/assets/player/overworld/Overworld-Teddy.png");
         // Update the original inventory arrays with all the changes that have been made here.
         if (vendorInventory != null && playerInventory != null) {
             vendor.replaceList(vendorInventory);
