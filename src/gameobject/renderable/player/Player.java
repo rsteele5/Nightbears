@@ -16,6 +16,9 @@ import gameobject.renderable.player.overworld.PlayerIdleAnimation;
 import gameobject.renderable.player.overworld.PlayerWalkingAnimation;
 import gameobject.renderable.player.sidescrolling.PlayerSSIdleAnimation;
 import gamescreen.GameScreen;
+import main.utilities.AssetLoader;
+import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -26,7 +29,7 @@ public class Player extends RenderableObject implements Kinematic {
     private int speed = 1;
     private CopyOnWriteArrayList<Item> items = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<RenderableObject> rItems = new CopyOnWriteArrayList<>();
-    private PhysicsVector accel = new PhysicsVector(10, 10);
+    private PhysicsVector accel = new PhysicsVector(1, 1);
     private PhysicsVector movement = new PhysicsVector(0, 0);
     private final int[] ssKeys = new int[]{68, 65};
     private final int[] owKeys = new int[]{68, 65, 83, 87};
@@ -223,17 +226,28 @@ public class Player extends RenderableObject implements Kinematic {
         //TODO: Implement error checking
         switch (ps) {
             case overWorld:
+                Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: overWorld");
                 speed = 3;
-                animator.setAnimation("Idle");
+                image = AssetLoader.load("/assets/player/overworld/teddyidleanimation/Overworld-Teddy-Center.png");
+                width = image.getWidth();
+                height = image.getHeight();
+                animator = new Animator(this);
+                animator.addAnimation("Walking", new PlayerWalkingAnimation());
+                animator.addAnimation("Idle", new PlayerIdleAnimation());
+                animator.addAnimation("SS_Idle", new PlayerSSIdleAnimation());
+                animator.setAnimation("SS_Idle");
                 playerState = ps;
                 return true;
             case asleep:
+                Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: asleep");
                 playerState = ps;
                 return true;
             case sideScroll:
+                Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: sideScroll");
                 speed = 1;
-                animator.setAnimation("SS_Idle");
-                image = animator.getDisplayImage("SS_Idle");
+                animator = null;
+                image = AssetLoader.load("/assets/testAssets/square2.png");
+                //imagePath = "/assets/testAssets/square2.png";
                 rotation = 0;
                 playerState = ps;
                 return true;

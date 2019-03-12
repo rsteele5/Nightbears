@@ -62,7 +62,6 @@ public class BedroomLevel implements Level {
         player.reset();
         player.setX(10);
         player.setY(476);
-        player.setState(Player.PlayerState.sideScroll);
         player.addToScreen(gameScreen, true);
 
     }

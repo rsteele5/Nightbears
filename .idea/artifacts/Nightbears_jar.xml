@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Nightbears:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Nightbears_jar</output-path>
+    <root id="archive" name="Nightbears.jar">
+      <element id="module-output" name="Nightbears" />
+    </root>
+  </artifact>
+</component>

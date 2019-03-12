@@ -14,4 +14,5 @@ public class DebugEnabler {
     public static final boolean GARBAGE_COLLECTION =    true;
     public static final boolean FPS_CURRENT =           false;
     public static final boolean LOADING =               false;
+    public static final boolean PLAYER_STATUS =         true;
 }
