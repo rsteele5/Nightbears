@@ -124,6 +124,12 @@ public class Weapon extends RenderableObject implements Item, Kinematic {
     public Rectangle getHitbox() {
         return new Rectangle(x, y, width, height);
     }
+
+    public void increaseMaxAttribute(int num){
+        WeaponBuilder.maxWeapon += num;
+        WeaponBuilder.minWeapon += num;
+    }
+
 }
 
 

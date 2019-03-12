@@ -39,7 +39,76 @@ public class Vendor extends RenderableObject {
     }
 
     private void initializeItems() {
+        items.add(new ArmorBuilder()
+                .buildArmor()
+        );
+        items.add(new ArmorBuilder()
+                .buildArmor()
+        );
+        items.add(new ArmorBuilder()
+                .buildArmor()
+        );
+        items.add(new ArmorBuilder()
+                .buildArmor()
+        );
+        items.add(new ArmorBuilder()
+                .buildArmor()
+        );
+        items.add(new ArmorBuilder()
+                .buildArmor()
+        );
+        items.add(new ArmorBuilder()
+                .buildArmor()
+        );
+
         items.add(new WeaponBuilder()
+                .buildWeapon()
+        );
+        items.add(new WeaponBuilder()
+                .buildWeapon()
+        );
+        items.add(new WeaponBuilder()
+                .buildWeapon()
+        );
+        items.add(new WeaponBuilder()
+                .buildWeapon()
+        );
+        items.add(new WeaponBuilder()
+                .buildWeapon()
+        );
+        items.add(new WeaponBuilder()
+                .buildWeapon()
+        );
+        items.add(new WeaponBuilder()
+                .buildWeapon()
+        );
+        items.add(new WeaponBuilder()
+                .buildWeapon()
+        );
+
+        items.add(new ConsumableBuilder()
+                .buildConsumable()
+        );
+        items.add(new ConsumableBuilder()
+                .buildConsumable()
+        );
+        items.add(new ConsumableBuilder()
+                .buildConsumable()
+        );
+        items.add(new ConsumableBuilder()
+                .buildConsumable()
+        );
+        items.add(new ConsumableBuilder()
+                .buildConsumable()
+        );
+        items.add(new ConsumableBuilder()
+                .buildConsumable()
+        );
+        items.add(new ConsumableBuilder()
+                .buildConsumable()
+        );
+
+        /*items.add(new WeaponBuilder()
                 .imagePath("/assets/Items/club1.png")
                 .name("My Fwirst Club")
                 .type(WeaponType.Club)
@@ -96,7 +165,7 @@ public class Vendor extends RenderableObject {
                 .minAffect(12)
                 .maxAffect(16)
                 .buildConsumable()
-        );
+        );*/
 
         if (items.size() > 0) {
             items.sort(new ItemComparator());
@@ -165,8 +234,87 @@ public class Vendor extends RenderableObject {
         }
     }
 
-    public void restockItems(){
-        System.out.println("Restocking items now");
+    public CopyOnWriteArrayList<Item> restockItems(){
+        CopyOnWriteArrayList<Item> restock = new CopyOnWriteArrayList<>();
+        restock.add(new ArmorBuilder()
+                .buildArmor()
+        );
+        restock.add(new ArmorBuilder()
+                .buildArmor()
+        );
+        restock.add(new ArmorBuilder()
+                .buildArmor()
+        );
+        restock.add(new ArmorBuilder()
+                .buildArmor()
+        );
+        restock.add(new ArmorBuilder()
+                .buildArmor()
+        );
+        restock.add(new ArmorBuilder()
+                .buildArmor()
+        );
+        restock.add(new ArmorBuilder()
+                .buildArmor()
+        );
+
+        restock.add(new WeaponBuilder()
+                .buildWeapon()
+        );
+        restock.add(new WeaponBuilder()
+                .buildWeapon()
+        );
+        restock.add(new WeaponBuilder()
+                .buildWeapon()
+        );
+        restock.add(new WeaponBuilder()
+                .buildWeapon()
+        );
+        restock.add(new WeaponBuilder()
+                .buildWeapon()
+        );
+        restock.add(new WeaponBuilder()
+                .buildWeapon()
+        );
+        restock.add(new WeaponBuilder()
+                .buildWeapon()
+        );
+        restock.add(new WeaponBuilder()
+                .buildWeapon()
+        );
+
+        restock.add(new ConsumableBuilder()
+                .buildConsumable()
+        );
+        restock.add(new ConsumableBuilder()
+                .buildConsumable()
+        );
+        restock.add(new ConsumableBuilder()
+                .buildConsumable()
+        );
+        restock.add(new ConsumableBuilder()
+                .buildConsumable()
+        );
+        restock.add(new ConsumableBuilder()
+                .buildConsumable()
+        );
+        restock.add(new ConsumableBuilder()
+                .buildConsumable()
+        );
+        restock.add(new ConsumableBuilder()
+                .buildConsumable()
+        );
+
+        if (restock.size() > 0) {
+            restock.sort(new ItemComparator());
+        }
+
+        rItems.removeAll(rItems);
+        for (Item item : restock){
+            rItems.add((RenderableObject) item);
+        }
+
+        return restock;
     }
 
     //TODO: Don't think I need this anymore

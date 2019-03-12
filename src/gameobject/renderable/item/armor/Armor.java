@@ -81,6 +81,7 @@ public class Armor extends RenderableObject implements Item {
         description = "\n" + myDescription;
     }
 
+
     @Override
     public void update() {
 
@@ -91,4 +92,9 @@ public class Armor extends RenderableObject implements Item {
         super.load();
         icon = AssetLoader.resizeImage(image, image.getWidth()/2, image.getHeight()/2);
     }
+    public void increaseMaxAttribute(int num){
+        ArmorBuilder.maxArmor += num;
+        ArmorBuilder.minArmor += num;
+    }
+
 }

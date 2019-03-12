@@ -103,4 +103,10 @@ public class Consumable extends RenderableObject implements Item {
         super.load();
         icon = AssetLoader.resizeImage(image, image.getWidth()/2, image.getHeight()/2);
     }
+
+    public void increaseMaxAttribute(int num){
+        ConsumableBuilder.minConsumable += num;
+        ConsumableBuilder.maxConsumable += num;
+    }
+
 }
