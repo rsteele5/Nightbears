@@ -63,23 +63,10 @@ public class GameEngine implements Runnable {
 
     @Override
     public void run() {
-        //TODO: stuff
         while(true){
             frameCounter++;
             long startTime = System.currentTimeMillis();
-
-            //TODO: Proposed changes
-            /* Game engine gets the data from the splashscreen manager then sends it to the
-             * physics engine. After its run its course then we send it to the renderEngine
-             * So the call would look like:
-             * Data data = screenManager.getData();
-             * physicsEngine.update(data);
-             * renderEngine.draw(data);
-             * We just decoupled the screenManager from both the phys engine and the renderer
-             * The game data is the fuel to make the engine run lol
-             */
-
-                //Update
+            //Update
             switch (players.get(0).getState()){
                 case sideScroll:
                     physicsEngine.update();
@@ -88,10 +75,9 @@ public class GameEngine implements Runnable {
                     overworldEngine.update();
                     break;
             }
-            //Render
             screenManager.update();
+            //Render
             renderEngine.draw();
-
 
             long endTime = System.currentTimeMillis();
             int sleepTime = (int) (1.0 / FRAMES_PER_SECOND * 1000)
@@ -103,23 +89,11 @@ public class GameEngine implements Runnable {
                     Debug.success(DebugEnabler.FPS_CURRENT,"Current FPS: " + 1000 / (endTime - startTime) );
                     TimeUnit.MILLISECONDS.sleep(sleepTime);
                 } catch (InterruptedException e) {
-
+                    Debug.error(DebugEnabler.FPS, "Thread Interupted: " + e.toString());
                 }
             } else {
                 Debug.warning(DebugEnabler.FPS,"FPS below 60! - current FPS: " + 1000 / (endTime - startTime) );
             }
         }
-    }
-
-    public void changeInputMethod(InputMethod controller) {
-        //TODO: Implement changing controllers and stuff here
-    }
-
-    public void changeGraphicsOption(GraphicsOption graphicsOption) {
-        //TODO: Implement changing graphics and stuff
-    }
-
-    public void changeSoundOption(SoundOption soundOption) {
-        //TODO: Implement changing sound
     }
 }

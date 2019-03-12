@@ -19,8 +19,7 @@ import static gameengine.GameSettings.GraphicsOption.*;
 public class GraphicsScreen extends GameScreen {
 
     //region <Variables>
-    private static GameSettings.GraphicsOption graphicsSetting;
-    private GameSettings.GraphicsOption exitSetting;
+    private GameSettings.GraphicsOption localGraphicsSetting;
     private TextBox graphicsText;
 
 
@@ -35,8 +34,7 @@ public class GraphicsScreen extends GameScreen {
     //region <Construction and Initialization>
     public GraphicsScreen(ScreenManager screenManager) {
         super(screenManager, "ControlsScreen", true);
-        graphicsSetting = screenManager.getGameSettings().getGraphicsOption();
-        exitSetting = graphicsSetting;
+        localGraphicsSetting = screenManager.getGameSettings().getGraphicsOption();
     }
 
     @Override

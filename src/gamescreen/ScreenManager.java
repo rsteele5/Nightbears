@@ -11,7 +11,6 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class ScreenManager {
-    //private GameScreen screenToAdd;
     //region <Variables>
     private GameScreen rootScreen;
     private LoadingScreen loadingScreen;
@@ -25,20 +24,17 @@ public class ScreenManager {
     public ScreenManager(GameSettings gameSettings) {
         this.gameSettings = gameSettings;
         rootScreen = null;
-        loadingScreen = new LoadingScreen(this); //TODO: Change to LoadingScreen after Test complete.
-        //add Splash splashscreen to the
-        rootScreen = new TeamSplashScreen(this, "TeamSplashScreen");
+        loadingScreen = new LoadingScreen(this);
+        rootScreen = new TeamSplashScreen(this);
     }
 
     public void update() {
-//        if(screenToAdd != null)
-//            addScreen(screenToAdd);
         rootScreen.update();
     }
 
     //region <Support Functions>
     public void addScreen(GameScreen screen) {
-        Debug.log(DebugEnabler.GAME_SCREEN_LOG,  "ScreenManager-add splashscreen " + screen.name);
+        Debug.log(DebugEnabler.GAME_SCREEN_LOG,  "ScreenManager - Add " + screen.name);
         if(screen.isRoot){
             Debug.success(DebugEnabler.GAME_SCREEN_LOG, screen.name + " - is a Root");
             screen.setChildScreen(rootScreen);
@@ -47,16 +43,6 @@ public class ScreenManager {
         } else {
             rootScreen.coverWith(screen);
         }
-    }
-
-    //TODO: Figure it out later for Loading Screen
-    public void initializeLoadingScreen(int amountOfData){
-        //loadingScreen.initializeLoadingScreen(amountOfData);
-    }
-
-    //TODO: Figure it out later for Loading Screen
-    public void updateLoadingScreen(int dataLoaded){
-        //loadingScreen.dataLoaded(dataLoaded);
     }
 
     public void clickEventAtLocation(int x, int y) {
@@ -68,7 +54,7 @@ public class ScreenManager {
         rootScreen.drawScreen(graphics);
     }
 
-    public LoadingScreen getLoadingScreen() {
+    LoadingScreen getLoadingScreen() {
         return loadingScreen;
     }
 

@@ -7,12 +7,11 @@ import static gameengine.GameSettings.PlayerOption.*;
 
 public class GameSettings {
 
-    private static GameEngine gameEngine;
 
-    private static InputMethod inputMethod;
-    private static GraphicsOption graphicsOption;
-    private static PlayerOption playerOptions;
-    private static SoundOption soundOption;
+    private InputMethod inputMethod;
+    private GraphicsOption graphicsOption;
+    private PlayerOption playerOptions;
+    private SoundOption soundOption;
 
     public GameSettings(GameEngine gameEngine) {
         GameSettings.gameEngine = gameEngine;
