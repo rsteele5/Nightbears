@@ -14,7 +14,7 @@ import java.awt.*;
 public class IntroCutScene extends GameScreen {
 
     public IntroCutScene(ScreenManager screenManager) {
-        super(screenManager, "TestScreen");
+        super(screenManager, "IntroCutScene");
     }
 
     private final String text = "Arise!...\n\n" +
@@ -40,9 +40,14 @@ public class IntroCutScene extends GameScreen {
 
     @Override
     public boolean handleClickEvent(int x, int y) {
-        Debug.log(DebugEnabler.GAME_SCREEN_LOG, "Clicked the splash splashscreen");
+        setScreenState(ScreenState.TransitionOff);
+        return true;
+    }
+
+    @Override
+    protected void transitionOff() {
+        Debug.log(DebugEnabler.GAME_SCREEN_LOG, "Clicked the splash intro cut scene");
         exiting = true;
         screenManager.addScreen(new OverworldScreen(screenManager));
-        return true;
     }
 }

@@ -11,6 +11,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class ScreenManager {
+    //private GameScreen screenToAdd;
     //region <Variables>
     private GameScreen rootScreen;
     private LoadingScreen loadingScreen;
@@ -30,6 +31,8 @@ public class ScreenManager {
     }
 
     public void update() {
+//        if(screenToAdd != null)
+//            addScreen(screenToAdd);
         rootScreen.update();
     }
 
