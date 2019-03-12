@@ -17,10 +17,9 @@ public class Armor extends RenderableObject implements Item {
     protected String name;
     protected String description;
     protected int value;
-    protected int armor;
 
     // Armor Variables
-    protected int armorValue;
+    protected int armor;
     //protected FundamentalProperty;
     //TODO check on mass with austion/hunter
     //protected int mass;

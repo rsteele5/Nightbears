@@ -1,5 +1,7 @@
 package gameobject.renderable.vendor;
 
+import gameengine.GameEngine;
+import gameengine.MyTimerTask;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.RenderableObject;
 import gameobject.renderable.item.*;
@@ -12,6 +14,8 @@ import gameobject.renderable.item.weapon.WeaponType;
 import main.utilities.AssetLoader;
 
 import java.awt.image.BufferedImage;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Vendor extends RenderableObject {
@@ -21,6 +25,8 @@ public class Vendor extends RenderableObject {
     private BufferedImage vendorLevelImage;
     private final String vendorOverworldPath = "/assets/vendor/vendoridleanimation/VendorOverworldForward.png";
     private final String vendorLevelPath = "/assets/vendor/Vendor.png";
+    /* Restock timer */
+    public static TimerTask restockTimer;
 
     // Default constructor
     public Vendor(int x, int y){
@@ -28,6 +34,8 @@ public class Vendor extends RenderableObject {
         this.imagePath = vendorLevelPath;
         this.drawLayer = DrawLayer.Entity;
         initializeItems();
+        restockTimer = new MyTimerTask();
+        //startRestockTimer();
     }
 
     private void initializeItems() {
@@ -155,6 +163,29 @@ public class Vendor extends RenderableObject {
                 setSize(image.getWidth(), image.getHeight());
             }
         }
+    }
+
+    public void restockItems(){
+        System.out.println("Restocking items now");
+    }
+
+    //TODO: Don't think I need this anymore
+    public void startRestockTimer(){
+        Timer timer = new Timer(true);
+        timer.scheduleAtFixedRate(restockTimer, 0, 1000*1000);
+        //cancel after sometime to avoid overlap
+        /*try {
+            Thread.sleep(120000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        timer.cancel();
+        System.out.println("TimerTask cancelled");
+        try {
+            Thread.sleep(30000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
     }
 }
 

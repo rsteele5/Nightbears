@@ -16,6 +16,8 @@ import javax.swing.JFrame;
 import java.awt.Graphics;
 import java.awt.Container;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 public class GameEngine implements Runnable {
@@ -35,6 +37,8 @@ public class GameEngine implements Runnable {
     private static Player p1,p2;
     public static Vendor vendor;
 
+
+
     public GameEngine(){
         p1 = new Player(0,0, "/assets/player/overworld/teddyidleanimation/Overworld-Teddy-Center.png", DrawLayer.Entity);
         p2 = new Player(0,0,"/assets/testAssets/square2.png", DrawLayer.Entity);
@@ -49,6 +53,8 @@ public class GameEngine implements Runnable {
             add(p2);
         }};
         overworldEngine = new OverworldEngine(screenManager);
+
+
     }
 
     public Graphics getGraphics(){

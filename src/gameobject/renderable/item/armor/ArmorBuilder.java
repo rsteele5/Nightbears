@@ -17,6 +17,7 @@ public class ArmorBuilder {
     private int _value = -1;
     private int _armor = 0;
 
+
     //TODO check on mass with Austin
     //private int mass;
 
