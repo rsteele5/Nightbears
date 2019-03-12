@@ -21,6 +21,11 @@ public class Square extends RenderableObject implements Kinematic {
     }
 
     @Override
+    public boolean isStatic() {
+        return false;
+    }
+
+    @Override
     public PhysicsVector getVelocity() {
         int gravSign = PhysicsMeta.Gravity != 0 ? 1 : 0;
         PhysicsVector pV = movement.add(new PhysicsVector(0,gravSign)).mult(accel);

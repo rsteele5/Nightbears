@@ -3,9 +3,9 @@ package gamescreen.gameplay.level;
 import _test.Square;
 import gameengine.GameEngine;
 import gameengine.rendering.Camera;
+import gameobject.renderable.house.sidescrolling.Floor;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.ImageContainer;
-import gameobject.renderable.house.sidescrolling.FloorTile;
 import gameobject.renderable.item.weapon.Weapon;
 import gameobject.renderable.item.weapon.WeaponBuilder;
 import gameobject.renderable.item.weapon.WeaponType;
@@ -23,8 +23,8 @@ public class BedroomLevel implements Level {
 
     public void buildTerrain(GameScreen gameScreen) {
         //This is where the instruction for how to procedurally generate a level would go
-        FloorTile floorTile = new FloorTile(10, 576, "/assets/levelObjects/WoodTile1.png");
-        FloorTile floorTile2 = new FloorTile(10, 720, "/assets/levelObjects/WoodTile1.png");
+        Floor floorTile = new Floor(10, 576, "/assets/levelObjects/WoodTile1.png",DrawLayer.Entity);
+        Floor floorTile2 = new Floor(10, 576, "/assets/levelObjects/WoodTile1.png",DrawLayer.Entity);
         floorTile.setWidth(1260);
         floorTile.setHeight(50);
         floorTile2.setWidth(50);
