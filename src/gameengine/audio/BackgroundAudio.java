@@ -10,6 +10,12 @@ public class BackgroundAudio {
 
     public static void play(URL url) {
         try {
+            //Check if background is playing already and close if it is
+            if (backGroundClip != null && backGroundClip.isOpen()) {
+                backGroundClip.close();
+            }
+
+            //Start clip and loop infinitely
             backgroundAudioIn = AudioSystem.getAudioInputStream(url);
             backGroundClip = AudioSystem.getClip();
             if(backGroundClip != null) {
@@ -19,12 +25,6 @@ public class BackgroundAudio {
             }
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    public static void end() {
-        if (backGroundClip != null && backGroundClip.isOpen()) {
-            backGroundClip.close();
         }
     }
 

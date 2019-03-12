@@ -4,6 +4,7 @@ import java.awt.*;
 import static gameengine.GameSettings.InputMethod.*;
 import static gameengine.GameSettings.GraphicsOption.*;
 import static gameengine.GameSettings.PlayerOption.*;
+import static gameengine.GameSettings.SoundOption.*;
 
 public class GameSettings {
 
@@ -12,13 +13,16 @@ public class GameSettings {
     private static InputMethod inputMethod;
     private static GraphicsOption graphicsOption;
     private static PlayerOption playerOptions;
-    private static SoundOption soundOption;
+    private static SoundOption[] soundOption = new SoundOption[3];
 
     public GameSettings(GameEngine gameEngine) {
         GameSettings.gameEngine = gameEngine;
         inputMethod = KeyBoard;
         graphicsOption = High;
         playerOptions = Solo;
+        for (int i =0 ; i < 3; i++) {
+            soundOption[i] = On;
+        }
     }
 
     public enum InputMethod {
@@ -60,13 +64,13 @@ public class GameSettings {
         gameEngine.changeGraphicsOption(graphicsOption);
     }
 
-    public SoundOption getSoundOption() {
-        return soundOption;
+    public SoundOption getSoundOption(int index) {
+        return soundOption[index];
     }
 
-    public void setSoundOption(SoundOption soundOption) {
-        this.soundOption = soundOption;
-        gameEngine.changeSoundOption(soundOption);
+    public void setSoundOption(SoundOption[] soundArray) {
+        soundOption = soundArray.clone();
+        gameEngine.changeSoundOption(soundOption[0]); //TODO: CHANGE THIS
     }
 
     public Graphics getGraphics() {

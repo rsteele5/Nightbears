@@ -46,7 +46,7 @@ public class OptionScreen extends GameScreen {
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Sound");
-                    //TODO: Add Sound Menu
+                    screenManager.addScreen(new SoundScreen(screenManager));
                 });
         button.addToScreen(this,true);
 
