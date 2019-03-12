@@ -1,8 +1,8 @@
 package gamescreen.mainmenu.options;
 
-import static gameengine.GameSettings.*;
-import static gameengine.GameSettings.InputMethod.*;
+import static gameengine.gamedata.InputSetting.InputMethod;
 
+import gameengine.gamedata.InputSetting;
 import gameobject.renderable.text.TextBox;
 import gameobject.renderable.DrawLayer;
 import gamescreen.GameScreen;
@@ -18,8 +18,11 @@ import java.awt.*;
 
 public class ControlsScreen extends GameScreen {
 
-    private static InputMethod inputSetting;
-    private InputMethod exitSetting;
+    InputMethod[] options = InputMethod.values();
+    int optionCount = options.length;
+
+    private InputSetting localSetting;
+
     private TextBox controlsText;
 
     //region <Variables>
@@ -32,12 +35,13 @@ public class ControlsScreen extends GameScreen {
     //region <Construction and Initialization>
     public ControlsScreen(ScreenManager screenManager) {
         super(screenManager, "ControlsScreen", true);
-        inputSetting = screenManager.getGameSettings().getInputMethod();
-        exitSetting = inputSetting;
+
     }
 
     @Override
     protected void initializeScreen() {
+
+        localSetting = new InputSetting(gameData.getInputSetting().getCurrentOption());
 
         //Create Background
         ImageContainer imageContainer;
@@ -49,7 +53,7 @@ public class ControlsScreen extends GameScreen {
         controlsText = new TextBox(X_INIT_BUTTON+X_BUFFER, Y_INIT_BUTTON,
                 300,
                 150,
-                screenManager.getGameSettings().getInputMethod().name(),
+                localSetting.getCurrentOption().name(),
                 new Font("NoScary", Font.PLAIN, 60),
                 Color.WHITE);
 
@@ -61,26 +65,18 @@ public class ControlsScreen extends GameScreen {
         butt = new Button(X_INIT_BUTTON, Y_INIT_BUTTON, "/assets/buttons/Button-LeftArrow.png", DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Left Arrow");
-                    if (exitSetting == KeyBoard) {
-                        exitSetting = GamePad;
-                        controlsText.setText(exitSetting.name());
-                    } else {
-                        exitSetting = KeyBoard;
-                        controlsText.setText(exitSetting.name());
-                    }
+                    int nextOptionOrdinal = (localSetting.getCurrentOption().ordinal() - 1) % optionCount;
+                    localSetting.setCurrentOption(options[nextOptionOrdinal]);
+                    controlsText.setText(localSetting.getCurrentOption().name());
                 });
         butt.addToScreen(this, true);
 
         butt = new Button(X_INIT_BUTTON + X_BUFFER + WIDTH_BUTTON, Y_INIT_BUTTON, "/assets/buttons/Button-RightArrow.png", DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Right Arrow");
-                    if (exitSetting == KeyBoard) {
-                        exitSetting = GamePad;
-                        controlsText.setText(exitSetting.name());
-                    } else {
-                        exitSetting = KeyBoard;
-                        controlsText.setText(exitSetting.name());
-                    }
+                    int nextOptionOrdinal = (localSetting.getCurrentOption().ordinal() + 1) % optionCount;
+                    localSetting.setCurrentOption(options[nextOptionOrdinal]);
+                    controlsText.setText(localSetting.getCurrentOption().name());
                 });
         butt.addToScreen(this, true);
 
@@ -90,8 +86,7 @@ public class ControlsScreen extends GameScreen {
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Confirm");
                     this.setScreenState(ScreenState.TransitionOff);
-                    inputSetting = exitSetting;
-                    screenManager.getGameSettings().setIputMethod(inputSetting);
+                    gameData.setInputSetting(localSetting);
                 });
         butt.addToScreen(this, true);
 
@@ -101,7 +96,7 @@ public class ControlsScreen extends GameScreen {
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Back");
-                    if (!exitSetting.equals(inputSetting)) {
+                    if (!localSetting.getCurrentOption().equals(gameData.getInputSetting().getCurrentOption())) {
                         screenManager.addScreen(new ConfirmationPopup(screenManager,
                                 "Return Without Saving?",
                                 ()-> this.setScreenState(ScreenState.TransitionOff)));

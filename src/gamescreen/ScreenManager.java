@@ -1,6 +1,6 @@
 package gamescreen;
 
-import gameengine.GameSettings;
+import gameengine.gamedata.GameData;
 import gameengine.physics.Kinematic;
 import gamescreen.splashscreen.LoadingScreen;
 import gamescreen.splashscreen.TeamSplashScreen;
@@ -14,16 +14,13 @@ public class ScreenManager {
     //region <Variables>
     private GameScreen rootScreen;
     private LoadingScreen loadingScreen;
-    private GameSettings gameSettings;
+    private GameData gameData;
     //endregion
     //region <Getters and Setters>
-    public GameSettings getGameSettings() {
-        return gameSettings;
-    }
+
     //endregion
-    public ScreenManager(GameSettings gameSettings) {
-        this.gameSettings = gameSettings;
-        rootScreen = null;
+    public ScreenManager(GameData gameData) {
+        this.gameData = gameData;
         loadingScreen = new LoadingScreen(this);
         rootScreen = new TeamSplashScreen(this);
     }
@@ -60,6 +57,10 @@ public class ScreenManager {
 
     public ArrayList<Kinematic> getPhysicsObjects() {
         return rootScreen.getPhysicsObjects();
+    }
+
+    public GameData getGameData() {
+        return gameData;
     }
     //endregion
 }

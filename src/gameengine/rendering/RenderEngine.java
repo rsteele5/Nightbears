@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 //Project Imports
+import gameengine.gamedata.GameData;
 import gamescreen.ScreenManager;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
@@ -26,7 +27,7 @@ public class RenderEngine extends JPanel {
     private GraphicsConfiguration graphicsConfig;
     //endregion
 
-    public RenderEngine(ScreenManager myScreenManager) {
+    public RenderEngine(GameData gameData, ScreenManager myScreenManager) {
         screenManager = myScreenManager;
         setBackground(Color.BLACK);
         graphicsConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();

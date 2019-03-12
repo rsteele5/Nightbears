@@ -73,7 +73,4 @@ public class OptionScreen extends GameScreen {
 
     //endregion
 
-    @Override
-    protected void activeUpdate() {
-    }
 }

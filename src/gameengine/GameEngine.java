@@ -1,7 +1,7 @@
 package gameengine;
 
-import static gameengine.GameSettings.*;
-
+import gameengine.gamedata.GameData;
+import gameengine.gamedata.GameSettings;
 import gameengine.physics.OverworldEngine;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.vendor.Vendor;
@@ -25,7 +25,7 @@ public class GameEngine implements Runnable {
 
 
 
-    private GameSettings gameSettings;
+    private GameData gameData;
 
     private ScreenManager screenManager;
     private PhysicsEngine physicsEngine;
@@ -35,14 +35,14 @@ public class GameEngine implements Runnable {
     private static Player p1,p2;
     public static Vendor vendor;
 
-    public GameEngine(){
+    public GameEngine(GameData gameData){
         p1 = new Player(0,0, "/assets/player/overworld/teddyidleanimation/Overworld-Teddy-Center.png", DrawLayer.Entity);
         p2 = new Player(0,0,"/assets/testAssets/square2.png", DrawLayer.Entity);
         vendor = new Vendor(0,0);
-        gameSettings = new GameSettings(this);
-        screenManager = new ScreenManager(gameSettings);
-        renderEngine = new RenderEngine(screenManager);
-        physicsEngine = new PhysicsEngine(screenManager);
+        this.gameData = gameData;
+        screenManager = new ScreenManager(gameData);
+        renderEngine = new RenderEngine(gameData, screenManager);
+        physicsEngine = new PhysicsEngine(gameData, screenManager);
         renderEngine.addMouseListener(new MouseController());
         players = new ArrayList<>(){{
             add(p1);
@@ -58,7 +58,6 @@ public class GameEngine implements Runnable {
     public void initializeWindow(JFrame gameWindow){
         Container contentPane = gameWindow.getContentPane();
         contentPane.add(renderEngine);
-
     }
 
     @Override
