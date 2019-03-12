@@ -52,6 +52,7 @@ public class SideScroll extends GameScreen {
         background.addToScreen(this,true);
         GameEngine.players.get(0).setState(Player.PlayerState.sideScroll);
         GameEngine.players.get(0).addToScreen(this,true);
+        GameEngine.players.get(0).reset();
         Square square;
         Button b = (new Button(1000,100,
                 "/assets/buttons/Button-Back.png",
@@ -73,7 +74,7 @@ public class SideScroll extends GameScreen {
         floor.setHeight(30);
         floor.addToScreen(this, true);
 
-        setCamera(new Camera(this, GameEngine.players.get(0)));
+        //setCamera(new Camera(this, GameEngine.players.get(0)));
     }
 
 
