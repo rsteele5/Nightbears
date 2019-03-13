@@ -18,18 +18,11 @@ import java.awt.*;
 
 public class ControlsScreen extends GameScreen {
 
-    InputMethod[] options = InputMethod.values();
-    int optionCount = options.length;
-
-    private InputSetting localSetting;
-
-    private TextBox controlsText;
-
     //region <Variables>
-    private final int X_INIT_BUTTON = 64;
-    private final int Y_INIT_BUTTON = 576;
-    private final int WIDTH_BUTTON = 256;
-    private final int X_BUFFER = 48;
+    private InputMethod[] options = InputMethod.values();
+    private int optionCount = options.length;
+    private InputSetting localSetting;
+    private TextBox controlsText;
     //endregion
 
     //region <Construction and Initialization>
@@ -40,47 +33,50 @@ public class ControlsScreen extends GameScreen {
 
     @Override
     protected void initializeScreen() {
-
+        //Grab the graphics settings so we can keep our changes local until we confirm them
         localSetting = new InputSetting(gameData.getInputSetting().getCurrentOption());
 
-        //Create Background
-        ImageContainer imageContainer;
+        //Initial position of the first button
+        int X_INIT_BUTTON = 64;
+        int Y_INIT_BUTTON = 576;
+        int X_BUFFER = 48;
 
-        imageContainer = new ImageContainer(0, 0, "/assets/backgrounds/BG-ControlsMenu.png", DrawLayer.Background);
-        imageContainer.addToScreen(this, true);
+        //Create Background
+        ImageContainer background = new ImageContainer(0, 0, "/assets/backgrounds/BG-ControlsMenu.png", DrawLayer.Background);
+        background.addToScreen(this, true);
 
         //Create Text Box
-        controlsText = new TextBox(X_INIT_BUTTON+X_BUFFER, Y_INIT_BUTTON,
+        controlsText = new TextBox(X_INIT_BUTTON + X_BUFFER, Y_INIT_BUTTON,
                 300,
                 150,
                 localSetting.getCurrentOption().name(),
                 new Font("NoScary", Font.PLAIN, 60),
                 Color.WHITE);
-
         controlsText.addToScreen(this, true);
 
         //Create button
-        Button butt;
-
-        butt = new Button(X_INIT_BUTTON, Y_INIT_BUTTON, "/assets/buttons/Button-LeftArrow.png", DrawLayer.Entity,
+        Button leftArrow = new Button(X_INIT_BUTTON, Y_INIT_BUTTON, "/assets/buttons/Button-LeftArrow.png", DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Left Arrow");
                     int nextOptionOrdinal = (localSetting.getCurrentOption().ordinal() - 1) % optionCount;
+                    if(nextOptionOrdinal < 0) nextOptionOrdinal = 1;
                     localSetting.setCurrentOption(options[nextOptionOrdinal]);
                     controlsText.setText(localSetting.getCurrentOption().name());
                 });
-        butt.addToScreen(this, true);
+        leftArrow.addToScreen(this, true);
 
-        butt = new Button(X_INIT_BUTTON + X_BUFFER + WIDTH_BUTTON, Y_INIT_BUTTON, "/assets/buttons/Button-RightArrow.png", DrawLayer.Entity,
+        int WIDTH_BUTTON = 256;
+        Button rightArrow = new Button(X_INIT_BUTTON + X_BUFFER + WIDTH_BUTTON, Y_INIT_BUTTON, "/assets/buttons/Button-RightArrow.png", DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Right Arrow");
                     int nextOptionOrdinal = (localSetting.getCurrentOption().ordinal() + 1) % optionCount;
+                    if(nextOptionOrdinal > 1) nextOptionOrdinal = 0;
                     localSetting.setCurrentOption(options[nextOptionOrdinal]);
                     controlsText.setText(localSetting.getCurrentOption().name());
                 });
-        butt.addToScreen(this, true);
+        rightArrow.addToScreen(this, true);
 
-        butt = new Button(X_INIT_BUTTON + 2 * (X_BUFFER + WIDTH_BUTTON), Y_INIT_BUTTON,
+        Button confirm = new Button(X_INIT_BUTTON + 2 * (X_BUFFER + WIDTH_BUTTON), Y_INIT_BUTTON,
                 "/assets/buttons/Button-Confirm.png",
                 DrawLayer.Entity,
                 () -> {
@@ -88,9 +84,9 @@ public class ControlsScreen extends GameScreen {
                     this.setScreenState(ScreenState.TransitionOff);
                     gameData.setInputSetting(localSetting);
                 });
-        butt.addToScreen(this, true);
+        confirm.addToScreen(this, true);
 
-        butt = new Button(X_INIT_BUTTON + 3 * (X_BUFFER + WIDTH_BUTTON),
+        Button back = new Button(X_INIT_BUTTON + 3 * (X_BUFFER + WIDTH_BUTTON),
                 Y_INIT_BUTTON,
                 "/assets/buttons/Button-Back.png",
                 DrawLayer.Entity,
@@ -104,7 +100,7 @@ public class ControlsScreen extends GameScreen {
                         setScreenState(ScreenState.TransitionOff);
                     }
                 });
-        butt.addToScreen(this, true);
+        back.addToScreen(this, true);
     }
     //endregion
 }
