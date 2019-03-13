@@ -1,6 +1,7 @@
 package gameobject;
 
 
+import static gameengine.gamedata.GraphicsSetting.GraphicsOption;
 import gamescreen.GameScreen;
 
 public abstract class GameObject {
@@ -71,6 +72,22 @@ public abstract class GameObject {
             screen.activeObjects.add(this);
         } else {
             screen.inactiveObjects.add(this);
+        }
+    }
+
+    public void scale(GraphicsOption graphicsOption) {
+        switch(graphicsOption){
+            case High: {
+                //Do nothing this is our native res
+            }
+            case Medium: {
+                x *= 0.75;
+                y *= 0.75;
+            }
+//            case Low: {
+//                x *= 3.556;
+//                y *= 3.556;
+//            }
         }
     }
 

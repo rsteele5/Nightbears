@@ -1,6 +1,5 @@
 package gamescreen.mainmenu.options;
 
-import gameengine.gamedata.GameData;
 import gameengine.gamedata.GraphicsSetting;
 import gameobject.renderable.text.TextBox;
 import gameobject.renderable.DrawLayer;
@@ -35,7 +34,6 @@ public class GraphicsScreen extends GameScreen {
     //region <Construction and Initialization>
     public GraphicsScreen(ScreenManager screenManager) {
         super(screenManager, "GraphicsScreen", true);
-
     }
 
     @Override

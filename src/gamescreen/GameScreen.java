@@ -219,6 +219,12 @@ public abstract class GameScreen {
      */
     protected void loadContent() {
         Debug.log(DebugEnabler.LOADING, name + " - Load start");
+        for (GameObject gameObject: activeObjects){
+            gameObject.scale(gameData.getGraphicsSettings().getCurrentOption());
+        }
+        for (GameObject gameObject: inactiveObjects){
+            gameObject.scale(gameData.getGraphicsSettings().getCurrentOption());
+        }
         ExecutorService executorService = Executors.newFixedThreadPool(3);
         executorService.execute(() -> {
             if (loadingScreenRequired) {
@@ -242,6 +248,7 @@ public abstract class GameScreen {
             }
             Debug.success(DebugEnabler.LOADING, name + " - Loaded");
         });
+
         executorService.shutdown();
     }
     //endregion

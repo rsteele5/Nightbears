@@ -1,5 +1,6 @@
 package gameobject.renderable;
 
+import gameengine.gamedata.GraphicsSetting;
 import gameengine.rendering.animation.Animator;
 import gameobject.GameObject;
 import gamescreen.GameScreen;
@@ -190,5 +191,21 @@ public abstract class RenderableObject extends GameObject implements Loadable {
 
     public abstract void update();
 
+    public void scale(GraphicsSetting.GraphicsOption graphicsOption) {
+        super.scale(graphicsOption);
+        switch(graphicsOption){
+            case High: {
+                //Do nothing this is our native res
+            }
+            case Medium: {
+                width *= 0.75;
+                height *= 0.75;
+            }
+//            case Low: {
+//                width *= 3.556;
+//                height *= 3.556;
+//            }
+        }
+    }
 }
 
