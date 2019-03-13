@@ -3,7 +3,11 @@ package gamescreen.gameplay.level;
 import _test.Square;
 import gameengine.GameEngine;
 import gameengine.rendering.Camera;
+import gameobject.renderable.enemy.Minion;
+import gameobject.renderable.enemy.WalkLeftMS;
+import gameobject.renderable.enemy.Walker;
 import gameobject.renderable.player.Player;
+import gameobject.renderable.enemy.Enemy;
 import gameobject.renderable.ImageContainer;
 import gameobject.renderable.house.sidescrolling.FloorTile;
 import gameobject.renderable.item.weapon.Weapon;
@@ -69,6 +73,10 @@ public class BedroomLevel implements Level {
 
     @Override
     public void buildEnemies(GameScreen gameScreen) {
+        Minion guy1 = new Walker(200,476, "/assets/enemies/minions/walker/walker.png", DrawLayer.Entity);
+        guy1.setState(new WalkLeftMS());
+        guy1.addToScreen(gameScreen,true);
+
     }
 
 }
