@@ -43,16 +43,12 @@ public class GameEngine implements Runnable {
         screenManager = new ScreenManager(gameData);
         renderEngine = new RenderEngine(gameData, screenManager);
         physicsEngine = new PhysicsEngine(gameData, screenManager);
-        renderEngine.addMouseListener(new MouseController());
+        renderEngine.addMouseListener(new MouseController(screenManager));
         players = new ArrayList<>(){{
             add(p1);
             add(p2);
         }};
         overworldEngine = new OverworldEngine(screenManager);
-    }
-
-    public Graphics getGraphics(){
-        return renderEngine.getGraphics();
     }
 
     public void initializeWindow(JFrame gameWindow){

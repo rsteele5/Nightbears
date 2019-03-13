@@ -11,6 +11,7 @@ import java.io.IOException;
 
 //Project Imports
 import gameengine.gamedata.GameData;
+import gameengine.gamedata.GraphicsSetting;
 import gamescreen.ScreenManager;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
@@ -20,6 +21,7 @@ public class RenderEngine extends JPanel {
 
     //region <Variables>
     private ScreenManager screenManager;
+    private GameData gameData;
 
     // off splashscreen rendering
     private Graphics2D graphics;
@@ -27,8 +29,9 @@ public class RenderEngine extends JPanel {
     private GraphicsConfiguration graphicsConfig;
     //endregion
 
-    public RenderEngine(GameData gameData, ScreenManager myScreenManager) {
-        screenManager = myScreenManager;
+    public RenderEngine(GameData gameData, ScreenManager screenManager) {
+        this.screenManager = screenManager;
+        this.gameData = gameData;
         setBackground(Color.BLACK);
         graphicsConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
         try {
@@ -40,15 +43,10 @@ public class RenderEngine extends JPanel {
         }
     }
 
-    //TODO: Greg FIx  this shit usage in mouse controller
-    public ScreenManager getScreenManager() {
-        return screenManager;
-    }
-
     public void draw() {
         // size of the canvas - determined at runtime once rendered
-        int width = getSize().width;
-        int height = getSize().height;
+        int width = gameData.getGraphicsSettings().getRenderWidth();
+        int height = gameData.getGraphicsSettings().getRenderHeight();
         if(width > 0 && height > 0) {
             if (dbImage == null) {
                 //Creates an off-splashscreen drawable image to be used for double buffering
@@ -83,5 +81,9 @@ public class RenderEngine extends JPanel {
         } catch (Exception e) {
             System.out.println("Graphics error: " + e);
         }
+    }
+
+    private void changeRenderSetting(GraphicsSetting.GraphicsOption option) {
+
     }
 }

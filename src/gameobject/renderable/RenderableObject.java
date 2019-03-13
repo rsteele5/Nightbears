@@ -5,6 +5,7 @@ import gameengine.rendering.animation.Animator;
 import gameobject.GameObject;
 import gamescreen.GameScreen;
 import main.utilities.AssetLoader;
+import main.utilities.Debug;
 import main.utilities.Loadable;
 
 import java.awt.*;
@@ -131,6 +132,7 @@ public abstract class RenderableObject extends GameObject implements Loadable {
         if(animator != null){
             animator.animate();
         }
+        Debug.drawRect(true,graphics, new Rectangle2D.Double(x,y,width, height));
         graphics.drawImage(image, x , y, width, height, null);
     }
 
@@ -194,13 +196,8 @@ public abstract class RenderableObject extends GameObject implements Loadable {
     public void scale(GraphicsSetting.GraphicsOption graphicsOption) {
         super.scale(graphicsOption);
         switch(graphicsOption){
-            case High: {
-                //Do nothing this is our native res
-            }
-            case Medium: {
-                width *= 0.75;
-                height *= 0.75;
-            }
+            case High: { /*Do nothing this is our native res*/ break;}
+            case Medium: { width *= 0.5;  height *= 0.5; break; }
 //            case Low: {
 //                width *= 3.556;
 //                height *= 3.556;

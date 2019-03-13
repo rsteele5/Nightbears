@@ -1,11 +1,13 @@
 package gamescreen.mainmenu;
 
+import gameobject.GameObject;
 import gameobject.renderable.DrawLayer;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gameobject.renderable.ImageContainer;
 import gameobject.renderable.button.Button;
 import gamescreen.mainmenu.options.OptionScreen;
+import main.utilities.Clickable;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -13,7 +15,7 @@ import main.utilities.DebugEnabler;
 public class MainMenuScreen extends GameScreen {
 
     //region <Variables>
-    private final int X_START = 64;
+    private final int X_START = -150;
     private final int Y_START = 400;
     private final int BUTTON_HEIGHT = 96;
     private final int Y_BUFFER = 48;
@@ -72,6 +74,16 @@ public class MainMenuScreen extends GameScreen {
     }
     //endregion
 
+    @Override
+    protected void transitionOn() {
+        int xpos = ((GameObject) clickables.get(0)).getX();
+        if(xpos < 64) {
+            xpos += 20;
+            for(Clickable clickable: clickables){
+                ((GameObject) clickable).setX(xpos);
+            }
+        } else { currentState = ScreenState.Active; }
+    }
 
     @Override
     protected void transitionOff() {

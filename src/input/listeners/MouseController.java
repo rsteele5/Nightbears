@@ -1,6 +1,7 @@
 package input.listeners;
 
 import gameengine.rendering.RenderEngine;
+import gamescreen.ScreenManager;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -8,18 +9,15 @@ import java.awt.event.MouseListener;
 
 public class MouseController implements MouseListener {
 
-    private RenderEngine renderEngine;
+    private ScreenManager screenManager;
 
-    public void addListener(MouseListener button){
-        renderEngine.addMouseListener(button);
+    public MouseController(ScreenManager screenManager) {
+        this.screenManager = screenManager;
     }
-
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        //Find all the objects at the mouse click
-        ((RenderEngine) e.getSource()).getScreenManager()
-                .clickEventAtLocation(e.getX(), e.getY());
+        screenManager.clickEventAtLocation(e.getX(), e.getY());
     }
 
     @Override

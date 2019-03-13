@@ -77,13 +77,8 @@ public abstract class GameObject {
 
     public void scale(GraphicsOption graphicsOption) {
         switch(graphicsOption){
-            case High: {
-                //Do nothing this is our native res
-            }
-            case Medium: {
-                x *= 0.75;
-                y *= 0.75;
-            }
+            case High: { /*Do nothing this is our native res*/ break;}
+            case Medium: { x *= 0.5; y *= 0.5; break; }
 //            case Low: {
 //                x *= 3.556;
 //                y *= 3.556;
