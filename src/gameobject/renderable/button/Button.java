@@ -5,8 +5,12 @@ import gamescreen.GameScreen;
 import gameobject.renderable.RenderableObject;
 import main.utilities.Clickable;
 import main.utilities.Action;
+import main.utilities.Debug;
 
 public class Button extends RenderableObject implements Clickable{
+
+    protected boolean isClicked = false;
+
     //public static ButtonType type
     public Button(int x, int y, String imagePath, DrawLayer drawLayer) {
         super(x, y, imagePath, drawLayer);
@@ -22,14 +26,22 @@ public class Button extends RenderableObject implements Clickable{
     }
 
     @Override
-    public void update() { }
+    public void update() {
+        if(isClicked){
+            Debug.log(true, "doing the action");
+            onClick.doIt();
+            isClicked = false;
+        }
+    }
 
     public Action onClick;
 
     @Override
     public void onClick() {
-        if(onClick != null)
-            onClick.doIt();
+        if(onClick != null){
+            isClicked = true;
+            Debug.log(true, "setting on click to true");
+        }
     }
 
     @Override
