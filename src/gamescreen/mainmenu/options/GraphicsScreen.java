@@ -15,20 +15,13 @@ import static gameengine.gamedata.GraphicsSetting.GraphicsOption;
 import java.awt.*;
 
 
-
 public class GraphicsScreen extends GameScreen {
 
     //region <Variables>
-    GraphicsOption[] options = GraphicsOption.values();
-    int optionCount = options.length;
-
+    private GraphicsOption[] options = GraphicsOption.values();
+    private int optionCount = options.length;
     private GraphicsSetting localSetting;
     private TextBox graphicsText;
-
-    private final int X_INIT_BUTTON = 64;
-    private final int Y_INIT_BUTTON = 576;
-    private final int WIDTH_BUTTON = 256;
-    private final int X_BUFFER = 48;
     //endregion
 
     //region <Construction and Initialization>
@@ -38,8 +31,15 @@ public class GraphicsScreen extends GameScreen {
 
     @Override
     protected void initializeScreen() {
-
+        //Grab the graphics settings so we can keep our changes local until we confirm them
         localSetting = new GraphicsSetting(gameData.getGraphicsSettings().getCurrentOption());
+
+        //Initial position of the first button
+        int X_INIT_BUTTON = 64;
+        int Y_INIT_BUTTON = 576;
+        int WIDTH_BUTTON = 256;
+        int X_BUFFER = 48;
+
         //Create Background
         ImageContainer imageContainer;
 
