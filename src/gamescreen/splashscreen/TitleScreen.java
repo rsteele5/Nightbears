@@ -9,14 +9,14 @@ import gamescreen.mainmenu.MainMenuScreen;
 
 public class TitleScreen extends GameScreen {
     //region <Variables>
-    ImageContainer moonImg;
-    ImageContainer titleImg;
-    ImageContainer skipMsg;
+    private ImageContainer moonImg;
+    private ImageContainer titleImg;
+    private ImageContainer skipMsg;
     //endregion
     private boolean musicStart = false;
     //region <Construction and Initialization>
-    public TitleScreen(ScreenManager screenManager, String name) {
-        super(screenManager,name);
+    public TitleScreen(ScreenManager screenManager) {
+        super(screenManager,"TitleScreen");
     }
 
     /**
@@ -45,7 +45,7 @@ public class TitleScreen extends GameScreen {
             musicStart = true;
             BackgroundAudio.play(this.getClass().getClassLoader().getResource("assets/music/title.wav"));
         }
-        if(moonImg.getY() < -248 * 0.5)
+        if(moonImg.getY() < -248 * gameData.getGraphicsSettings().getScaleFactor())
             moonImg.setY(moonImg.getY() + 2);
         else
             currentState = ScreenState.Active;

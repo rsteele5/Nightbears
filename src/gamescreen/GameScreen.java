@@ -241,10 +241,10 @@ public abstract class GameScreen {
                 isLoading = false;
             }
             for (GameObject gameObject: activeObjects){
-                gameObject.scale(gameData.getGraphicsSettings().getCurrentOption());
+                gameObject.scale(gameData.getGraphicsSettings().getScaleFactor());
             }
             for (GameObject gameObject: inactiveObjects){
-                gameObject.scale(gameData.getGraphicsSettings().getCurrentOption());
+                gameObject.scale(gameData.getGraphicsSettings().getScaleFactor());
             }
             Debug.success(DebugEnabler.LOADING, name + " - Loaded");
         });

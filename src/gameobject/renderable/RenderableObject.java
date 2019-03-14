@@ -132,7 +132,7 @@ public abstract class RenderableObject extends GameObject implements Loadable {
         if(animator != null){
             animator.animate();
         }
-        Debug.drawRect(true,graphics, new Rectangle2D.Double(x,y,width, height));
+        //Debug.drawRect(true,graphics, new Rectangle2D.Double(x,y,width, height));
         graphics.drawImage(image, x , y, width, height, null);
     }
 
@@ -193,16 +193,11 @@ public abstract class RenderableObject extends GameObject implements Loadable {
 
     public abstract void update();
 
-    public void scale(GraphicsSetting.GraphicsOption graphicsOption) {
-        super.scale(graphicsOption);
-        switch(graphicsOption){
-            case High: { /*Do nothing this is our native res*/ break;}
-            case Medium: { width *= 0.5;  height *= 0.5; break; }
-//            case Low: {
-//                width *= 3.556;
-//                height *= 3.556;
-//            }
-        }
+    @Override
+    public void scale(float scaleFactor) {
+        super.scale(scaleFactor);
+        width *= scaleFactor;
+        height *= scaleFactor;
     }
 }
 

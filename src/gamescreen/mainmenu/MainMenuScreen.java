@@ -62,7 +62,7 @@ public class MainMenuScreen extends GameScreen {
         devModeButton.addToScreen(this,true);
 
         Button exitButton = (new Button(X_START, Y_START + 3 * (BUTTON_HEIGHT + Y_BUFFER),
-                "/assets/buttons/Button-Dev.png",
+                "/assets/buttons/Button-Quit.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Exit");

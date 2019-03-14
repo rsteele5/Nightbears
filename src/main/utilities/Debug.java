@@ -7,7 +7,7 @@ import com.sun.management.GcInfo;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 import javax.management.openmbean.CompositeData;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
@@ -57,9 +57,11 @@ public class Debug {
     }
 
     public static void drawRect(boolean status, Graphics2D graphics, Rectangle2D rect) {
+        graphics.setColor(Color.GREEN);
         if(DebugEnabler.DRAWING_ACTIVE && status) {
-            graphics.drawRect((int)rect.getX(), (int)rect.getY(), (int)rect.getWidth(), (int)rect.getHeight());
+            graphics.drawRect((int)rect.getX() - 5, (int)rect.getY() - 5, (int)rect.getWidth() + 5, (int)rect.getHeight() + 5);
         }
+        graphics.setColor(Color.WHITE);
     }
 
     public static void startLog() {

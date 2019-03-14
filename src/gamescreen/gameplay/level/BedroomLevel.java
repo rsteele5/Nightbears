@@ -58,7 +58,6 @@ public class BedroomLevel implements Level {
     public void buildPlayer(GameScreen gameScreen) {
         Player player = GameEngine.players.get(0);
         player.setState(Player.PlayerState.sideScroll);
-        gameScreen.setCamera(new Camera(gameScreen, player));
         player.reset();
         player.setX(10);
         player.setY(476);

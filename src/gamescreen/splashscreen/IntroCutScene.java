@@ -31,7 +31,7 @@ public class IntroCutScene extends GameScreen {
         cover.addToScreen(this, true);
 
         DialogBox diagBox = new DialogBox(320,180, 640, 360, text,
-                new Font("NoScary", Font.PLAIN, 40), Color.WHITE);
+                new Font("NoScary", Font.PLAIN, 40), Color.WHITE, true);
         diagBox.addToScreen(this, true);
 
         ImageContainer skipMsg = new ImageContainer(575,660, "/assets/text/TXT-SkipMsg.png", DrawLayer.Scenery);
@@ -42,6 +42,11 @@ public class IntroCutScene extends GameScreen {
     public boolean handleClickEvent(int x, int y) {
         setScreenState(ScreenState.TransitionOff);
         return true;
+    }
+
+    @Override
+    protected void transitionOn(){
+        this.setScreenState(ScreenState.Active);
     }
 
     @Override

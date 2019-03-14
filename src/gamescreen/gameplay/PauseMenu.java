@@ -115,11 +115,6 @@ public class PauseMenu extends GameScreen {
         }
     }
 
-    @Override
-    protected void activeUpdate() {
-
-    }
-
     private void initLabels() {
 
         //BackGround

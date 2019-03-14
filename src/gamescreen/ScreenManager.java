@@ -63,5 +63,9 @@ public class ScreenManager extends JPanel {
     public GameData getGameData() {
         return gameData;
     }
+
+    public void changeGraphics() {
+        rootScreen = null;
+    }
     //endregion
 }

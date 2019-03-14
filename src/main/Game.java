@@ -19,7 +19,7 @@ public class Game {
         gameWindow.setLocation(0,0);
         gameWindow.setResizable(false);
         gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        gameWindow.setBackground(Color.BLACK);
+        gameWindow.getContentPane().setBackground(Color.DARK_GRAY);
         GameData gameData = new GameData();
         GameEngine gameEngine = new GameEngine(gameData);
         gameEngine.initializeWindow(gameWindow);

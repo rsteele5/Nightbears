@@ -47,20 +47,26 @@ public class RenderEngine extends JPanel {
         // size of the canvas - determined at runtime once rendered
         int width = gameData.getGraphicsSettings().getRenderWidth();
         int height = gameData.getGraphicsSettings().getRenderHeight();
-        if(width > 0 && height > 0) {
-            if (dbImage == null) {
-                //Creates an off-splashscreen drawable image to be used for double buffering
-                dbImage = graphicsConfig.createCompatibleImage(width, height, Transparency.OPAQUE);
-                if (dbImage == null) {
-                    Debug.error(DebugEnabler.RENDER_ENGINE,"Critical Error: dbImage is null");
-                    System.exit(1);
-                } else {
-                    graphics = (Graphics2D) dbImage.getGraphics();
-                }
-                graphics.clearRect(0, 0, width, height);
-                graphics.setBackground(Color.BLACK);
-            }
 
+        switch(gameData.getGraphicsSettings().getCurrentOption()){
+            case High: setBounds(0,0,width, height); break;
+            case Medium: setBounds(320, 180, width, height); break;
+            case Low: setBounds(480, 270, width, height); break;
+        }
+
+        this.setSize(width, height);
+        if (dbImage == null || (dbImage.getWidth() != width)) {
+            //Creates an off-splashscreen drawable image to be used for double buffering
+            dbImage = graphicsConfig.createCompatibleImage(width, height, Transparency.OPAQUE);
+            if (dbImage == null) {
+                Debug.error(DebugEnabler.RENDER_ENGINE,"Critical Error: dbImage is null");
+                System.exit(1);
+            } else {
+                graphics = (Graphics2D) dbImage.getGraphics();
+                graphics.clearRect(0, 0, width, height);
+            }
+            graphics.setBackground(Color.BLACK);
+        } else {
             screenManager.draw(graphics);
             renderBufferToScreen();
             graphics.clearRect(0, 0, width, height);
@@ -81,9 +87,5 @@ public class RenderEngine extends JPanel {
         } catch (Exception e) {
             System.out.println("Graphics error: " + e);
         }
-    }
-
-    private void changeRenderSetting(GraphicsSetting.GraphicsOption option) {
-
     }
 }

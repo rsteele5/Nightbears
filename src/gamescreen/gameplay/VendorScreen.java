@@ -61,12 +61,12 @@ public class VendorScreen extends GameScreen {
         //endregion
 
         //region Create all renderable
-        for (RenderableObject renderable: vendor.getRenderables()){
-            renderable.addToScreen(this, false);
-        }
-        for (RenderableObject renderable: player.getRenderables()){
-            renderable.addToScreen(this, false);
-        }
+//        for (RenderableObject renderable: vendor.getRenderables()){
+//            renderable.addToScreen(this, false);
+//        }
+//        for (RenderableObject renderable: player.getRenderables()){
+//            renderable.addToScreen(this, false);
+//        }
 
         ImageContainer imageContainer;
 
@@ -321,15 +321,4 @@ public class VendorScreen extends GameScreen {
         }
         exiting = true;
     }
-
-    @Override
-    protected void hiddenUpdate() {
-
-    }
-
-    @Override
-    protected void activeUpdate() {
-
-    }
-
 }

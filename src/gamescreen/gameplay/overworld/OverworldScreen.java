@@ -61,7 +61,7 @@ public class OverworldScreen extends GameScreen {
         Debug.log(true, String.valueOf(GameEngine.players.get(0).getState()));
         GameEngine.players.get(0).reset();
         GameEngine.players.get(0).addToScreen(this,true);
-        setCamera(new Camera(this, GameEngine.players.get(0)));
+        setCamera(new Camera(screenManager, this, GameEngine.players.get(0)));
 
         //Vendor
         Vendor vendor = GameEngine.vendor;

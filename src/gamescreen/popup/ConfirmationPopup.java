@@ -50,7 +50,7 @@ public class ConfirmationPopup extends GameScreen {
         confirmationTextBox = new TextBox(X_TEXT, Y_TEXT, W_TEXT, H_TEXT,
                 "",
                 new Font("NoScary", Font.PLAIN, 60),
-                Color.WHITE);
+                Color.WHITE, true);
         confirmationTextBox.addToScreen(this, true);
         //Buttons
         Button button;

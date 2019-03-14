@@ -12,8 +12,8 @@ public class DialogBox extends TextBox {
         stringQueue = new LinkedList<>();
     }
 
-    public DialogBox(int x, int y, int width, int height, String text, Font font, Color color) {
-        super(x, y, width, height, text, font, color);
+    public DialogBox(int x, int y, int width, int height, String text, Font font, Color color, boolean centered) {
+        super(x, y, width, height, text, font, color, centered);
         stringQueue = new LinkedList<>();
     }
 
@@ -65,8 +65,17 @@ public class DialogBox extends TextBox {
         int row = 0;
         for (String line: displayText.split("\n")) {
             if(row < height){
-                graphics.drawString(line, x, y + row + fontAscent);
-                row += fontHeight;
+                if(centered == true){
+                    int stringWidth = graphics.getFontMetrics().stringWidth(line);
+                    //Debug.drawRect(true, graphics, new Rectangle2D.Float(x + ((width-stringWidth)/2),y,stringWidth,height));
+                    int xPos = x + ((width-stringWidth)/2);
+                    //Debug.log(true, "Position - " + xPos);
+                    graphics.drawString(line, xPos, y + row + fontAscent);
+                    row += fontHeight;
+                } else {
+                    graphics.drawString(line, x, y + row + fontAscent);
+                    row += fontHeight;
+                }
             }
         }
     }

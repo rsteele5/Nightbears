@@ -45,7 +45,6 @@ public class TeamSplashScreen extends GameScreen {
         } else {
             currentState = ScreenState.Active;
         }
-        Debug.log(true, "TransistionOn alpha " + logo.getAlpha());
     }
 
     @Override
@@ -55,7 +54,7 @@ public class TeamSplashScreen extends GameScreen {
             logo.setAlpha(alpha - 0.008f);
             if(logo.getAlpha() <= 0.008f) {
                 exiting = true;
-                screenManager.addScreen(new TitleScreen(screenManager, "TitleScreen"));  //TODO: Add title splashscreen
+                screenManager.addScreen(new TitleScreen(screenManager));  //TODO: Add title splashscreen
             }
         }
     }
@@ -75,9 +74,9 @@ public class TeamSplashScreen extends GameScreen {
     //region <Support Functions>
     @Override
     public boolean handleClickEvent(int x, int y) {
-        Debug.log(DebugEnabler.GAME_SCREEN_LOG, "Clicked the splash splashscreen");
+        Debug.log(DebugEnabler.GAME_SCREEN_LOG, "Clicked the splash screen");
         exiting = true;
-        screenManager.addScreen(new TitleScreen(screenManager,"TitleScreen"));
+        screenManager.addScreen(new TitleScreen(screenManager));
         return true;
     }
     //endregion
