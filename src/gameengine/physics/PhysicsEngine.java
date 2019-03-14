@@ -20,7 +20,8 @@ public class PhysicsEngine {
     private final int winHeight = Game.WIN_HEIGHT;
     //Collide with edges of Screen?
 
-    public PhysicsEngine(ScreenManager myScreenManager) {
+    public PhysicsEngine(GameData gameData, ScreenManager myScreenManager) {
+        this.gameData = gameData;
         screenManager = myScreenManager;
     }
 

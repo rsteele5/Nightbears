@@ -16,4 +16,5 @@ public class DebugEnabler {
     public static final boolean LOADING =               false;
     public static final boolean PLAYER_STATUS =         true;
     public static final boolean GAME_DATA =             true;
+    public static final boolean OVERWORLD =             true;
 }

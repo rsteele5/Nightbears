@@ -6,6 +6,7 @@ import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 
 public class GridContainer {
 
@@ -20,7 +21,7 @@ public class GridContainer {
     protected int width;    //(size of item + padding*2) * rows = height
     protected int height;   //(size of item + padding*2) * cols = width
 
-    //protected ArrayList<RenderableObject[]> renderableGrid;
+    protected ArrayList<RenderableObject[]> renderableGrid;
 
 
 
@@ -36,9 +37,9 @@ public class GridContainer {
         width = (itemWidth + padding) * cols + padding;
         height =(itemHeight + padding) * rows + padding;
 
-//        renderableGrid = new ArrayList<>();
-//        for(int row = 0; row < rows; row++)
-//            renderableGrid.add(new RenderableObject[cols]);
+        renderableGrid = new ArrayList<>();
+        for(int row = 0; row < rows; row++)
+            renderableGrid.add(new RenderableObject[cols]);
     }
 
     public GridContainer(GameScreen parentScreen, int rows, int cols, int itemWidth , int itemHeight, int xPos, int yPos) {
@@ -60,6 +61,7 @@ public class GridContainer {
                 renderable.setPosition(x + ((itemWidth + padding) * col)
                         ,y + (itemWidth + padding) * row);
                 renderable.addToScreen(parentScreen,true);
+                renderableGrid.get(row)[col] = renderable;
             }else {
                 Debug.error(DebugEnabler.GAME_SCREEN_LOG, "- addAt() was passed null");
             }
@@ -83,7 +85,19 @@ public class GridContainer {
         return cols;
     }
 
-
+    public void setLocation(int xPos, int yPos){
+        x = xPos;
+        y = yPos;
+        for(int row = 0; row < renderableGrid.size(); row++){
+            for(int col = 0; col < renderableGrid.get(row).length; col++){
+                if(renderableGrid.get(row) != null){
+                    renderableGrid.get(row)[col]
+                            .setPosition(x + ((itemWidth + padding) * col),
+                                         y + (itemWidth + padding) * row);
+                }
+            }
+        }
+    }
 
     //TODO: figure out where this shit goes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
