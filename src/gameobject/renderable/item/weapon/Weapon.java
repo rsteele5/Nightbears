@@ -101,6 +101,11 @@ public class Weapon extends RenderableObject implements Item, Kinematic {
     }
 
     @Override
+    public boolean isStatic() {
+        return false;
+    }
+
+    @Override
     public PhysicsVector getVelocity() {
         return new PhysicsVector(0,0);
     }
