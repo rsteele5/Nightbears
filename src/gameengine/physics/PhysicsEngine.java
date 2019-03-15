@@ -1,6 +1,7 @@
 package gameengine.physics;
 
 import gameengine.GameEngine;
+import gameengine.gamedata.GameData;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.item.weapon.Weapon;
 import gamescreen.ScreenManager;
@@ -12,12 +13,15 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class PhysicsEngine {
-    ScreenManager screenManager;
-    final int winWidth = Game.WIN_WIDTH;
-    final int winHeight = Game.WIN_HEIGHT;
+
+    private GameData gameData;
+    private ScreenManager screenManager;
+    private final int winWidth = Game.WIN_WIDTH;
+    private final int winHeight = Game.WIN_HEIGHT;
     //Collide with edges of Screen?
 
-    public PhysicsEngine(ScreenManager myScreenManager){
+    public PhysicsEngine(GameData gameData, ScreenManager myScreenManager){
+        this.gameData = gameData;
         screenManager = myScreenManager;
     }
 

@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 //Project Imports
+import gameengine.gamedata.GameData;
 import gamescreen.ScreenManager;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
@@ -26,7 +27,7 @@ public class RenderEngine extends JPanel {
     private GraphicsConfiguration graphicsConfig;
     //endregion
 
-    public RenderEngine(ScreenManager myScreenManager) {
+    public RenderEngine(GameData gameData, ScreenManager myScreenManager) {
         screenManager = myScreenManager;
         setBackground(Color.BLACK);
         graphicsConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
@@ -39,12 +40,12 @@ public class RenderEngine extends JPanel {
         }
     }
 
+    //TODO: Greg FIx  this shit usage in mouse controller
     public ScreenManager getScreenManager() {
         return screenManager;
     }
 
     public void draw() {
-
         // size of the canvas - determined at runtime once rendered
         int width = getSize().width;
         int height = getSize().height;
@@ -62,18 +63,10 @@ public class RenderEngine extends JPanel {
                 graphics.setBackground(Color.BLACK);
             }
 
-            createRenderBuffer(graphics);
+            screenManager.draw(graphics);
             renderBufferToScreen();
             graphics.clearRect(0, 0, width, height);
         }
-    }
-
-    //TODO: fix later
-    private void createRenderBuffer(Graphics2D graphics) {
-        //graphics.translate(-640,-360);
-
-        screenManager.draw(graphics);
-
     }
 
     private void renderBufferToScreen() {
@@ -90,6 +83,5 @@ public class RenderEngine extends JPanel {
         } catch (Exception e) {
             System.out.println("Graphics error: " + e);
         }
-
     }
 }

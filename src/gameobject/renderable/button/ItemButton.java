@@ -55,9 +55,10 @@ public class ItemButton extends Button{
     }
 
     @Override
-    public void onClick() {
-        select();
-        if(onClick != null){
+    public void update() {
+        if(isClicked) {
+            select();
+            isClicked = false;
             onClick.doIt();
         }
     }

@@ -1,9 +1,11 @@
 package main.utilities;
 
+import gameengine.gamedata.GameData;
+import gameengine.gamedata.GraphicsSetting.GraphicsOption;
+import gameengine.gamedata.GraphicsSetting.GraphicsOption.*;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -17,7 +19,7 @@ public final class AssetLoader {
         try {
             image = ImageIO.read(AssetLoader.class.getResource(imagePath));
             return image;
-        } catch (Exception e) {
+        } catch (IOException e) {
             try {
                 Debug.error(true, "Failed to load image - " + imagePath);
                 Debug.error(true, "EXCEPTION MESSAGE:" + e.getMessage());
