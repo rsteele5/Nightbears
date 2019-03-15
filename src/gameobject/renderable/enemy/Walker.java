@@ -38,26 +38,26 @@ public class Walker extends Minion {
 
     @Override
     public PhysicsVector getVelocity() {
-        return null;
+        return super.getVelocity();
     }
 
     @Override
     public void setVelocity(PhysicsVector pv) {
-
+        super.setVelocity(pv);
     }
 
     @Override
     public PhysicsVector getAcceleration() {
-        return null;
+        return super.getAcceleration();
     }
 
     @Override
     public void setAcceleration(PhysicsVector pv) {
-
+        super.setAcceleration(pv);
     }
 
     @Override
     public Rectangle getHitbox() {
-        return null;
+        return super.getHitbox();
     }
 }
