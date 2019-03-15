@@ -2,6 +2,7 @@ package gamescreen.gameplay.overworld;
 
 import gameobject.renderable.house.overworld.Map;
 import gameobject.renderable.house.overworld.MapBuilder;
+import gameobject.renderable.house.overworld.room.Bedroom;
 import gamescreen.gameplay.VendorDialogBox;
 import gameengine.GameEngine;
 import gameengine.rendering.Camera;
@@ -32,6 +33,7 @@ public class OverworldScreen extends GameScreen {
         //House generation
         MapBuilder mapBuilder = new MapBuilder();
         mapBuilder.createMap(this);
+        mapBuilder.addRoomAtCell(0,0, new Bedroom());
         overworldMap = mapBuilder.buildMap();
 
         //Player

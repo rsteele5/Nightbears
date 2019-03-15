@@ -5,6 +5,7 @@ import gamescreen.GameScreen;
 import gamescreen.container.GridContainer;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
+import static gameobject.renderable.house.overworld.OverworldMeta.*;
 
 import java.util.ArrayList;
 
@@ -23,22 +24,47 @@ public class MapBuilder {
         rooms = new ArrayList<>();
         chunks = new ArrayList<>();
         chunkBuilder = new ChunkBuilder();
-        //Create initial Border
-        for(int row = 0; row < OverworldMeta.BorderBuffer*2; row++){
-            chunks.add(new ArrayList<>());
-            for(int col = 0; col < OverworldMeta.BorderBuffer*2; col++){
-                chunkBuilder.createNewChunk(parentScreen);
-                chunkBuilder.fillWithGrass();
-                chunks.get(row).add(chunkBuilder.getChunk());
-                chunks.get(row).get(col).setLocation(
-                        (OverworldMeta.TileSize*OverworldMeta.ChunkSize) * col,
-                        (OverworldMeta.TileSize*OverworldMeta.ChunkSize) * row);
-            }
-        }
     }
 
     public Map buildMap(){
         Debug.success(DebugEnabler.OVERWORLD, "MapBuilder - Built Map");
+        // Find the farthest cell from the origin
+        int maxCellX = 0;
+        int maxCellY = 0;
+        for(Room room : rooms){
+            maxCellX = maxCellX < (room.getCellX()+room.getHeight()) ? (room.getCellX()+room.getHeight()) : maxCellX;
+            maxCellY = maxCellY < (room.getCellY()+room.getWidth()) ? (room.getCellY()+room.getWidth()) : maxCellY;
+        }
+        // Calculate the max chunks needed
+        int chunkRows = (maxCellX + (ChunkSize - (maxCellX % ChunkSize))) / ChunkSize;
+        int chunkCols = (maxCellY + (ChunkSize - (maxCellY % ChunkSize))) / ChunkSize;
+
+        // Build Chunks and put them into the chunks array list
+        for(int row = 0; row < chunkRows+BorderBuffer*2; row++) {
+                chunks.add(row,new ArrayList<>());
+            for(int col = 0; col < chunkCols+BorderBuffer*2; col++) {
+                if(row >= BorderBuffer && row < chunkRows+BorderBuffer
+                        && col >= BorderBuffer && col < chunkCols+BorderBuffer){
+                    chunkBuilder.createNewChunk(parentScreen);
+                    chunkBuilder.fillWithCarpet();
+                    chunks.get(row).add(col,chunkBuilder.getChunk());
+                } else {
+                    chunkBuilder.createNewChunk(parentScreen);
+                    chunkBuilder.fillWithGrass();
+                    chunks.get(row).add(col,chunkBuilder.getChunk());
+                }
+            }
+        }
+
+        // Organize Chunks
+        for(int row = 0; row < chunks.size(); row++){
+            for(int col = 0; col < chunks.get(row).size(); col++){
+                chunks.get(row).get(col).setLocation(
+                        (TileSize * ChunkSize) * col,
+                        (TileSize * ChunkSize) * row);
+            }
+        }
+
         return new Map(parentScreen, rooms, chunks);
     }
 
@@ -50,6 +76,7 @@ public class MapBuilder {
                 return;
             }
         }
+        rooms.add(newRoom);
         //TODO: Start Back UP working here~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     }
 }

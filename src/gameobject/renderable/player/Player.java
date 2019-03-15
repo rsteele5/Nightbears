@@ -233,14 +233,9 @@ public class Player extends RenderableObject implements Kinematic {
             case overWorld:
                 Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: overWorld");
                 speed = 3;
-                image = AssetLoader.load("/assets/player/overworld/teddyidleanimation/Overworld-Teddy-Center.png");
-                width = image.getWidth();
-                height = image.getHeight();
-                animator = new Animator(this);
-                animator.addAnimation("Walking", new PlayerWalkingAnimation());
-                animator.addAnimation("Idle", new PlayerIdleAnimation());
-                animator.addAnimation("SS_Idle", new PlayerSSIdleAnimation());
-                animator.setAnimation("SS_Idle");
+                width = 100;
+                height = 100;
+                animator.setAnimation("Idle");
                 playerState = ps;
                 return true;
             case asleep:
@@ -250,10 +245,8 @@ public class Player extends RenderableObject implements Kinematic {
             case sideScroll:
                 Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: sideScroll");
                 speed = 1;
-                animator = null;
-                image = AssetLoader.load("/assets/testAssets/square2.png");
-                //imagePath = "/assets/testAssets/square2.png";
                 rotation = 0;
+                animator.setAnimation("SS_Idle");
                 playerState = ps;
                 return true;
         }

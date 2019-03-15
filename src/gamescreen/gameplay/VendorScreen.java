@@ -326,10 +326,4 @@ public class VendorScreen extends GameScreen {
     protected void hiddenUpdate() {
 
     }
-
-    @Override
-    protected void activeUpdate() {
-
-    }
-
 }

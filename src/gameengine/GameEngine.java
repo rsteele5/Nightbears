@@ -1,7 +1,6 @@
 package gameengine;
 
 import gameengine.gamedata.GameData;
-import gameengine.gamedata.GameSettings;
 import gameengine.physics.OverworldEngine;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.vendor.Vendor;
@@ -85,13 +84,13 @@ public class GameEngine implements Runnable {
             if (sleepTime >= 0) {
                 try {
                     if(endTime-startTime > 0 /*&& frameCounter % 60 == 0*/)
-                    Debug.success(DebugEnabler.FPS_CURRENT,"Current FPS: " + 1000 / (endTime - startTime) );
+                    Debug.success(DebugEnabler.FPS_CURRENT,"Current FPS_WARNING: " + 1000 / (endTime - startTime) );
                     TimeUnit.MILLISECONDS.sleep(sleepTime);
                 } catch (InterruptedException e) {
-                    Debug.error(DebugEnabler.FPS, "Thread Interupted: " + e.toString());
+                    Debug.error(DebugEnabler.FPS_WARNING, "Thread Interupted: " + e.toString());
                 }
             } else {
-                Debug.warning(DebugEnabler.FPS,"FPS below 60! - current FPS: " + 1000 / (endTime - startTime) );
+                Debug.warning(DebugEnabler.FPS_WARNING,"FPS_WARNING below 60! - current FPS_WARNING: " + 1000 / (endTime - startTime) );
             }
         }
     }

@@ -3,6 +3,8 @@ package gameobject.renderable.house.overworld;
 import gameobject.renderable.house.overworld.room.Room;
 import gamescreen.GameScreen;
 import gamescreen.container.GridContainer;
+import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 
 import java.util.ArrayList;
 
@@ -19,6 +21,7 @@ public class Map {
         //Concrete chunks into 2D array
         for(int row = 0; row < chunkMap.length; row++){
             for(int col = 0; col < chunkMap[0].length; col++){
+                Debug.success(DebugEnabler.OVERWORLD, "Map - addAt(" + row + ", " + col + ")");
                 chunkMap[row][col] = chunks.get(row).get(col);
             }
         }

@@ -134,16 +134,16 @@ public abstract class RenderableObject extends GameObject implements Loadable {
     }
 
     public void load() {
-        if(image == null){
+        if(animator != null){
+            animator.load();
+            image = animator.getDisplayImage();
+        } else if(image == null){
             image = AssetLoader.load(imagePath);
             if(width != 0 && height != 0) {
                 setSize(width, height);
             } else {
                 setSize(image.getWidth(), image.getHeight());
             }
-        }
-        if(animator != null){
-            animator.load();
         }
     }
 

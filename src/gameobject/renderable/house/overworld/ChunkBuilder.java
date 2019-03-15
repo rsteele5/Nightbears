@@ -37,6 +37,14 @@ public class ChunkBuilder {
         addTitleAt(roomPath + "RedCarpet.png", row, col );
     }
 
+    public void fillWithCarpet(){
+        for(int row = 0; row < OverworldMeta.ChunkSize; row++){
+            for(int col = 0; col < OverworldMeta.ChunkSize; col++){
+                addHouseTileAt(row, col);
+            }
+        }
+    }
+
     public void addHouseTileAt(int row, int col, Compass wall){
         String path = roomPath + "RedCarpet-" + wall.name() + "-Wall.png";
         addTitleAt(path, row, col);
