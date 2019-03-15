@@ -18,7 +18,6 @@ import gamescreen.GameScreen;
 
 public class BedroomLevel implements Level {
 
-
     @Override
     public void buildBackground(GameScreen gameScreen) {
         ImageContainer background = new ImageContainer(0, 0, "/assets/backgrounds/BG-Level.png", DrawLayer.Background);
@@ -44,6 +43,9 @@ public class BedroomLevel implements Level {
                 square.addToScreen(gameScreen, true);
             }
         }
+
+        square = new Square(800,75,"/assets/testAssets/square.png",DrawLayer.Entity);
+        square.addToScreen(gameScreen, true);
 
         Weapon myWeap = new WeaponBuilder()
                 .position(800, 476)

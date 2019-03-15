@@ -1,9 +1,12 @@
 package gameobject.renderable.enemy;
 
+import _test.Square;
+import gameengine.physics.Kinematic;
 import gameengine.physics.PhysicsMeta;
 import gameengine.physics.PhysicsVector;
 import gameengine.rendering.animation.Animator;
 import gameobject.renderable.DrawLayer;
+import gameobject.renderable.RenderableObject;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.player.overworld.PlayerIdleAnimation;
 import gameobject.renderable.player.overworld.PlayerWalkingAnimation;
@@ -12,16 +15,23 @@ import gamescreen.GameScreen;
 import main.utilities.AssetLoader;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
+import javax.imageio.ImageIO;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public abstract class Minion extends Enemy {
+public abstract class Minion extends Enemy implements Kinematic {
 
     protected MinionState state;
     private int speed = 1;
-    private PhysicsVector accel = new PhysicsVector(1, 1);
-    private PhysicsVector movement = new PhysicsVector(0, 0);
+    protected PhysicsVector accel = new PhysicsVector(0,1);
+    protected PhysicsVector movement = new PhysicsVector(0, 0);
+
 
     public Minion() {
     }
@@ -53,35 +63,12 @@ public abstract class Minion extends Enemy {
 
         this.state = state;
         //TODO: Implement error checking
-        /*switch (ps) {
-            case overWorld:
-                Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: overWorld");
-                //speed = 3;
-                image = AssetLoader.load("/assets/player/overworld/teddyidleanimation/Overworld-Teddy-Center.png");
-                width = image.getWidth();
-                height = image.getHeight();
-                animator = new Animator(this);
-                animator.addAnimation("Walking", new PlayerWalkingAnimation());
-                animator.addAnimation("Idle", new PlayerIdleAnimation());
-                animator.addAnimation("SS_Idle", new PlayerSSIdleAnimation());
-                animator.setAnimation("SS_Idle");
-                //playerState = ps;
-                return true;
-            case asleep:
-                Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: asleep");
-                //playerState = ps;
-                return true;
-            case sideScroll:
-                Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: sideScroll");
-                //speed = 1;
-                animator = null;
-                image = AssetLoader.load("/assets/testAssets/square2.png");
-                //imagePath = "/assets/testAssets/square2.png";
-                //rotation = 0;
-                //playerState = ps;
-                return true;
-        }*/
         return true;
+    }
+
+    @Override
+    public void update() {
+
     }
 
     @Override
@@ -139,5 +126,16 @@ public abstract class Minion extends Enemy {
         if(isActive) {
             screen.kinematics.add(this);
         }
+    }
+
+    @Override
+    public void changeState(){}
+
+    protected BufferedImage flipVertical(BufferedImage src){
+        AffineTransform tx=AffineTransform.getScaleInstance(-1.0,1.0);  //scaling
+        tx.translate(-src.getWidth(),0);  //translating
+        AffineTransformOp tr=new AffineTransformOp(tx,null);  //transforming
+
+        return tr.filter(src, null);  //filtering
     }
 }

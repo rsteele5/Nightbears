@@ -26,6 +26,9 @@ import java.awt.image.BufferedImage;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class Enemy extends RenderableObject implements Kinematic {
+
+    protected int hp;
+
     public Enemy() {
     }
 
@@ -49,5 +52,9 @@ public abstract class Enemy extends RenderableObject implements Kinematic {
         super(x, y, imagePath, layer, alpha);
     }
 
+    public abstract void changeState();
 
+    public int getHp() { return hp; }
+
+    public void setHp(int hp) { this.hp = hp; }
 }

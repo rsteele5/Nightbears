@@ -1,6 +1,9 @@
 package gameengine.physics;
 
+import _test.Square;
 import gameengine.GameEngine;
+import gameobject.renderable.enemy.Enemy;
+import gameobject.renderable.enemy.Walker;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.item.weapon.Weapon;
 import gamescreen.ScreenManager;
@@ -66,6 +69,11 @@ public class PhysicsEngine {
                         if (obj1 instanceof Weapon && obj2 instanceof Player)  {
                             GameEngine.players.get(0).addItem((Weapon) obj1);
                             Debug.log(true, "Weapon Get!");
+                        }
+                        if (obj1 instanceof Enemy && obj2 instanceof Square)  {
+                             Walker e = (Walker) obj1; e.changeState();
+                        }
+                        if (obj1 instanceof Player && obj2 instanceof Enemy)  {
                         }
                         ((Kinematic) obj1).setAcceleration(new PhysicsVector(1,1));
                         ((Kinematic) obj2).setAcceleration(new PhysicsVector(1,1));

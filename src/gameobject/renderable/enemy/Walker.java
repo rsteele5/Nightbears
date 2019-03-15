@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Walker extends Minion {
+
     public Walker() {
     }
 
@@ -24,6 +25,7 @@ public class Walker extends Minion {
 
     public Walker(int x, int y, String imagePath, DrawLayer layer) {
         super(x, y, imagePath, layer);
+        hp = 200;
     }
 
     public Walker(int x, int y, String imagePath, DrawLayer layer, float alpha) {
@@ -33,8 +35,8 @@ public class Walker extends Minion {
     @Override
     public void update() {
         state.doAction(this);
+        if(hp == 0) {}
     }
-
 
     @Override
     public PhysicsVector getVelocity() {
@@ -59,5 +61,20 @@ public class Walker extends Minion {
     @Override
     public Rectangle getHitbox() {
         return super.getHitbox();
+    }
+
+    @Override
+    public void changeState()
+    {
+        switch (state.getState()){
+            case "Walk Left" :
+                image = flipVertical(image);
+                state = new WalkRightMS();
+                break;
+            case "Walk Right" :
+                image = flipVertical(image);
+                state = new WalkLeftMS();
+                break;
+        }
     }
 }
