@@ -1,8 +1,7 @@
 package gamescreen.mainmenu.options;
 
-import static gameengine.GameSettings.*;
-import static gameengine.GameSettings.SoundOption.*;
 
+import gameengine.gamedata.SoundSetting;
 import gameobject.renderable.text.TextBox;
 import gameobject.renderable.DrawLayer;
 import gamescreen.GameScreen;
@@ -18,9 +17,9 @@ import java.awt.*;
 
 public class SoundScreen extends GameScreen {
 
-    private final static int NUMBER_OF_OPTIONS = 3;
-    private static SoundOption[] soundOptions = new SoundOption[NUMBER_OF_OPTIONS];
-    private SoundOption exitSetting;
+    private SoundSetting[] localSettings;
+    private SoundSetting.SoundOption[] options = SoundSetting.SoundOption.values();
+    private boolean didOptionsChange;
 
     //region <Variables>
     private final int X_INIT_BUTTON = 664;
@@ -33,16 +32,19 @@ public class SoundScreen extends GameScreen {
     //region <Construction and Initialization>
     public SoundScreen(ScreenManager screenManager) {
         super(screenManager, "ControlsScreen", true);
-        for (int i = 0; i < soundOptions.length; i++) {
-            soundOptions[i] = screenManager.getGameSettings().getSoundOption(i);
-        }
-        exitSetting = On;
     }
 
     @Override
     protected void initializeScreen() {
 
         //Create Background
+        //localSettings = new SoundSetting(gameData.getSoundSetting().getCurrentOption());
+        didOptionsChange = false;
+
+        localSettings = new SoundSetting[3];
+        for (int i = 0; i < localSettings.length; i++) {
+            localSettings[i] = new SoundSetting(gameData.getSoundSetting(i).getCurrentOption());
+        }
         ImageContainer imageContainer;
 
         imageContainer = new ImageContainer(0, 0, "/assets/backgrounds/BG-SoundMenu.png", DrawLayer.Background);
@@ -53,39 +55,33 @@ public class SoundScreen extends GameScreen {
         Button butt;
 
         for (int i = 0; i < 3; i++) {
-            //controlsText = new TextBox(X_INIT_BUTTON+X_BUFFER, Y_INIT_BUTTON + (i * Y_INIT_BUTTON) / 2,
             TextBox controlsText = new TextBox(X_INIT_BUTTON+X_BUFFER, Y_INIT_BUTTON + (i * Y_INIT_BUTTON) / 2,
                     300,
                     150,
-                    screenManager.getGameSettings().getSoundOption(0).name(),
+                    localSettings[i].getCurrentOption().name(),
                     new Font("NoScary", Font.PLAIN, 60),
                     Color.WHITE);
 
             controlsText.addToScreen(this, true);
+            final int index = i;
 
             butt = new Button(X_INIT_BUTTON, Y_INIT_BUTTON + (i * Y_INIT_BUTTON) / 2, "/assets/buttons/Button-LeftArrow.png", DrawLayer.Entity,
                     () -> {
                         Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Left Arrow");
-                        if (exitSetting == On) {
-                            exitSetting = Off;
-                            controlsText.setText(exitSetting.name());
-                        } else {
-                            exitSetting = On;
-                            controlsText.setText(exitSetting.name());
-                        }
+                        int nextOptionOrdinal = (localSettings[index].getCurrentOption().ordinal() + 1) % options.length;
+                        if(nextOptionOrdinal > 1) nextOptionOrdinal = 0;
+                        localSettings[index].setCurrentOption(options[nextOptionOrdinal]);
+                        controlsText.setText(localSettings[index].getCurrentOption().name());
                     });
             butt.addToScreen(this, true);
 
             butt = new Button(X_INIT_BUTTON + X_BUFFER + WIDTH_BUTTON, Y_INIT_BUTTON + (i * Y_INIT_BUTTON) / 2, "/assets/buttons/Button-RightArrow.png", DrawLayer.Entity,
                     () -> {
                         Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Right Arrow");
-                        if (exitSetting == On) {
-                            exitSetting = Off;
-                            controlsText.setText(exitSetting.name());
-                        } else {
-                            exitSetting = On;
-                            controlsText.setText(exitSetting.name());
-                        }
+                        int nextOptionOrdinal = (localSettings[index].getCurrentOption().ordinal() - 1) % options.length;
+                        if(nextOptionOrdinal < 0) nextOptionOrdinal = 1;
+                        localSettings[index].setCurrentOption(options[nextOptionOrdinal]);
+                        controlsText.setText(localSettings[index].getCurrentOption().name());
                     });
             butt.addToScreen(this, true);
         }
@@ -96,11 +92,9 @@ public class SoundScreen extends GameScreen {
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Confirm");
                     this.setScreenState(ScreenState.TransitionOff);
-                    for(int i = 0; i < soundOptions.length; i++) {
-                        soundOptions[i] = exitSetting; //This line is causing the bug
-                        screenManager.getGameSettings().setSoundOption(soundOptions);
+                    for (int i = 0; i < localSettings.length; i++) {
+                        gameData.setSoundSetting(localSettings[i], i);
                     }
-                    soundOptions[0] = exitSetting;
                 });
         butt.addToScreen(this, true);
 
@@ -110,7 +104,12 @@ public class SoundScreen extends GameScreen {
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Back");
-                    if (!exitSetting.equals(soundOptions[0])) {
+                    for (int i = 0; i < localSettings.length; i++) {
+                        if (!localSettings[i].getCurrentOption().equals(gameData.getSoundSetting(i).getCurrentOption())) {
+                            didOptionsChange = true;
+                        }
+                    }
+                    if (didOptionsChange) {
                         screenManager.addScreen(new ConfirmationPopup(screenManager,
                                 "Return Without Saving?",
                                 ()-> this.setScreenState(ScreenState.TransitionOff)));

@@ -15,7 +15,7 @@ public class GameData implements Serializable {
     private final String FILE_NAME = "GameData.dat";
     private GraphicsSetting currentGraphicsSetting;
     private InputSetting currentInputSetting;
-    private SoundSetting currentSoundSetting;
+    private SoundSetting[] currentSoundSetting = new SoundSetting[3];
 
     public GameData(){
         try {
@@ -25,7 +25,9 @@ public class GameData implements Serializable {
             if(!dataFile.exists()) {
                 currentGraphicsSetting = new GraphicsSetting(High);
                 currentInputSetting = new InputSetting(KeyBoard);
-                currentSoundSetting = new SoundSetting(On);
+                for (int i = 0; i < currentSoundSetting.length; i++) {
+                    currentSoundSetting[i] = new SoundSetting(On);
+                }
                 save();
             } else {
                 FileInputStream file = new FileInputStream(dataFile);
@@ -34,7 +36,9 @@ public class GameData implements Serializable {
                 GameData gameDataInput = (GameData)in.readObject();
                 this.currentGraphicsSetting = gameDataInput.getGraphicsSettings();
                 this.currentInputSetting = gameDataInput.getInputSetting();
-                this.currentSoundSetting = gameDataInput.getSoundSetting();
+                for (int i = 0; i < currentSoundSetting.length; i++) {
+                    currentSoundSetting[i] = gameDataInput.getSoundSetting(i);
+                }
 
                 in.close();
                 file.close();
@@ -43,7 +47,7 @@ public class GameData implements Serializable {
 
             Debug.log(DebugEnabler.GAME_DATA, currentGraphicsSetting.getCurrentOption().name());
             Debug.log(DebugEnabler.GAME_DATA, currentInputSetting.getCurrentOption().name());
-            Debug.log(DebugEnabler.GAME_DATA, currentSoundSetting.getCurrentOption().name());
+            Debug.log(DebugEnabler.GAME_DATA, currentSoundSetting[0].getCurrentOption().name());
 
         } catch (IOException ex) { Debug.error(DebugEnabler.GAME_DATA, "Loading Failed - IOException is caught");
         } catch (ClassNotFoundException ex) { Debug.error(DebugEnabler.GAME_DATA,"Loading Failed - ClassNotFoundException is caught"); }
@@ -67,12 +71,12 @@ public class GameData implements Serializable {
         save();
     }
 
-    public SoundSetting getSoundSetting() {
-        return currentSoundSetting;
+    public SoundSetting getSoundSetting(int index) {
+        return currentSoundSetting[index];
     }
 
-    public void setSoundSetting(SoundSetting setting) {
-        this.currentSoundSetting = setting;
+    public void setSoundSetting(SoundSetting setting, int index) {
+        this.currentSoundSetting[index] = setting;
         save();
     }
 
