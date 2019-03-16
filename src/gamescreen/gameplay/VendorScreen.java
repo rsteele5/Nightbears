@@ -39,7 +39,7 @@ public class VendorScreen extends GameScreen {
     //endregion ****************************************/
 
     public VendorScreen(ScreenManager screenManager) {
-        super(screenManager, "VendorScreen", true, 150, 75);
+        super(screenManager, "VendorScreen", true, 450, 180);
     }
 
     @Override
@@ -61,12 +61,12 @@ public class VendorScreen extends GameScreen {
         //endregion
 
         //region Create all renderable
-//        for (RenderableObject renderable: vendor.getRenderables()){
-//            renderable.addToScreen(this, false);
-//        }
-//        for (RenderableObject renderable: player.getRenderables()){
-//            renderable.addToScreen(this, false);
-//        }
+        for (RenderableObject renderable: vendor.getRenderables()){
+            renderable.addToScreen(this, false);
+        }
+        for (RenderableObject renderable: player.getRenderables()){
+            renderable.addToScreen(this, false);
+        }
 
         ImageContainer imageContainer;
 

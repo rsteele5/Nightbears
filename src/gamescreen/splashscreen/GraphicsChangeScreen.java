@@ -6,6 +6,7 @@ import gameobject.renderable.text.TextBox;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gamescreen.mainmenu.MainMenuScreen;
+import main.utilities.Debug;
 
 import java.awt.*;
 
@@ -13,9 +14,11 @@ public class GraphicsChangeScreen extends GameScreen {
 
     private int framesToDisplay = 120;
     private int frameCounter = 0;
-    private String message = "Working on things... Please wait";
+    private String message = "Please wait";
     private String dots = "";
     private TextBox waitText;
+    private int randomMessage = 0;
+    private String[] waitMessages;
 
     public GraphicsChangeScreen(ScreenManager screenManager) {
         super(screenManager, "GraphicsChangeScreen", 1f);
@@ -24,11 +27,36 @@ public class GraphicsChangeScreen extends GameScreen {
 
     @Override
     protected void initializeScreen() {
+        waitMessages = new String[] {
+                "Working on things",
+                "Trying to back up the AGP bandwidth",
+                "Attaching the visual protocol",
+                "Inputting the back-end transmitter",
+                "Initializing the wireless MAC array",
+                "Synthesizing the solid state alarm",
+                "Disconnecting the haptics",
+                "Transmitting the multi-byte CPU protocol",
+                "Networking the fiber optic mainframe",
+                "Overriding the ethernet HTTP microchip",
+                "Backing up the capacitors",
+                "Inputting the cross-platform internet",
+                "Rebooting the ASCII Bus circuit",
+                "Bypassing the input back-end",
+                "Parsing the USB matrices",
+                "Iterating the bluetooth mainframe",
+                "Quantifying protocols",
+                "Bypassing the BIOS sensor",
+                "Greg is super awesome",
+                "Iterating auxiliary HHD circuits",
+                "Compressing neural networks"
+        };
+
         ImageContainer blackCover = new ImageContainer(0,0, "/assets/backgrounds/BG-BlackCover.png", DrawLayer.Background);
         blackCover.addToScreen(this, true);
-        blackCover.setWidth(3840);
-        blackCover.setHeight(2160);
-        waitText = new TextBox(350,320, 1980, 900, "Working on things... Please wait", new Font("NoScary", Font.PLAIN, 120), Color.WHITE);
+        randomMessage = (int)(Math.random() * (waitMessages.length));
+        waitText = new TextBox(0,480, 1980, 900, "Please wait", new Font("NoScary", Font.PLAIN, 120), Color.WHITE, true);
+        TextBox waitMessage = new TextBox(0, 320, 1980, 900, waitMessages[randomMessage], new Font("NoScary", Font.PLAIN, 120), Color.WHITE, true);
+        waitMessage.addToScreen(this,true);
         waitText.addToScreen(this,true);
     }
 

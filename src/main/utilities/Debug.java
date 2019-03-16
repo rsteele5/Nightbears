@@ -64,6 +64,17 @@ public class Debug {
         graphics.setColor(Color.WHITE);
     }
 
+    public static void drawString(boolean status, Graphics graphics, int x, int y, String string) {
+        graphics.setColor(Color.GREEN);
+        Font font = graphics.getFont();
+        graphics.setFont(new Font( "Arial", Font.PLAIN, 22));
+        if(DebugEnabler.DRAWING_ACTIVE && status) {
+            graphics.drawString(string, x, y);
+        }
+        graphics.setColor(Color.WHITE);
+        graphics.setFont(font);
+    }
+
     public static void startLog() {
         if(DebugEnabler.LOGGING_ACTIVE){
             System.out.println(ANSI_GREEN + "[Success] -> Logging activated successfully" + ANSI_RESET);

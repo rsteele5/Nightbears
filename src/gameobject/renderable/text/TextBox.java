@@ -48,7 +48,7 @@ public class TextBox extends RenderableObject {
 
     @Override
     public void draw(Graphics2D graphics) {
-        //Debug.drawRect(true, graphics, new Rectangle2D.Float(x,y,width,height));
+        Debug.drawRect(true, graphics, new Rectangle2D.Float(x,y,width,height));
         if(displayText.equals("")) parseString(graphics);
         graphics.setFont(font);
         graphics.setColor(color);

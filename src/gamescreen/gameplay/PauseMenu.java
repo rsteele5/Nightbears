@@ -39,7 +39,7 @@ public class PauseMenu extends GameScreen {
     //endregion
 
     public PauseMenu(ScreenManager screenManager) {
-        super(screenManager, "PauseMenu", true, 140, 90);
+        super(screenManager, "PauseMenu", true, 450, 180);
     }
 
     /**

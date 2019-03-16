@@ -22,6 +22,7 @@ public class RenderEngine extends JPanel {
     //region <Variables>
     private ScreenManager screenManager;
     private GameData gameData;
+    private String fps = "";
 
     // off splashscreen rendering
     private Graphics2D graphics;
@@ -41,6 +42,11 @@ public class RenderEngine extends JPanel {
         } catch (IOException |FontFormatException e) {
             Debug.error(DebugEnabler.RENDER_ENGINE,"Font: Cannot be found");
         }
+    }
+
+    public void setFPS(String fps){
+        if(System.currentTimeMillis() % 7 == 0)
+        this.fps = fps;
     }
 
     public void draw() {
@@ -68,6 +74,7 @@ public class RenderEngine extends JPanel {
             graphics.setBackground(Color.BLACK);
         } else {
             screenManager.draw(graphics);
+            Debug.drawString(DebugEnabler.FPS_CURRENT,graphics,20,20,fps);
             renderBufferToScreen();
             graphics.clearRect(0, 0, width, height);
         }

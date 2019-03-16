@@ -1,6 +1,9 @@
 package gameobject.renderable.text;
 
+import main.utilities.Debug;
+
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 
 public class DialogBox extends TextBox {
@@ -51,7 +54,7 @@ public class DialogBox extends TextBox {
 
     @Override
     public void draw(Graphics2D graphics) {
-        //Debug.drawRect(true, graphics, new Rectangle2D.Double(x,y,(double)width, (double) height));
+        Debug.drawRect(true, graphics, new Rectangle2D.Double(x,y,(double)width, (double) height));
         if(displayText.equals("")){
             parseString(graphics);
             setUpStringQueue();

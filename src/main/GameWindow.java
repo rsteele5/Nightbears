@@ -19,6 +19,9 @@ public class GameWindow extends JFrame implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        //TODO make this shutdown gracefully
+        if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+            System.exit(0);
         //TODO: Implement multiple players.
         GameEngine.players.get(0).move(e);
     }
