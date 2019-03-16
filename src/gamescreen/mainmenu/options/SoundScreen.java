@@ -86,12 +86,12 @@ public class SoundScreen extends GameScreen {
                         Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Left Arrow");
                         if (index < 2) {
                             int nextOptionOrdinal = (localSettings[index].getCurrentOption().ordinal() - 1) % options.length;
-                            if(nextOptionOrdinal > 1) nextOptionOrdinal = 0;
+                            if(nextOptionOrdinal < 0) nextOptionOrdinal = 1;
                             localSettings[index].setCurrentOption(options[nextOptionOrdinal]);
                             controlsText.setText(localSettings[index].getCurrentOption().name());
                         } else {
                             int nextVolumeOrdinal = (localSettings[index].getCurrentVolume().ordinal() - 1) % volumes.length;
-                            if(nextVolumeOrdinal > 2) nextVolumeOrdinal = 0;
+                            if(nextVolumeOrdinal < 0) nextVolumeOrdinal = 2;
                             localSettings[index].setCurrentSoundVolume(volumes[nextVolumeOrdinal]);
                             controlsText.setText(localSettings[index].getCurrentVolume().name());
                         }
@@ -103,12 +103,12 @@ public class SoundScreen extends GameScreen {
                         Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Right Arrow");
                         if (index < 2) {
                             int nextOptionOrdinal = (localSettings[index].getCurrentOption().ordinal() + 1) % options.length;
-                            if(nextOptionOrdinal < 0) nextOptionOrdinal = 1;
+                            if(nextOptionOrdinal > 1) nextOptionOrdinal = 0;
                             localSettings[index].setCurrentOption(options[nextOptionOrdinal]);
                             controlsText.setText(localSettings[index].getCurrentOption().name());
                         } else {
                             int nextVolumeOrdinal = (localSettings[index].getCurrentVolume().ordinal() + 1) % volumes.length;
-                            if(nextVolumeOrdinal < 0) nextVolumeOrdinal = 2;
+                            if(nextVolumeOrdinal > 2) nextVolumeOrdinal = 0;
                             localSettings[index].setCurrentSoundVolume(volumes[nextVolumeOrdinal]);
                             controlsText.setText(localSettings[index].getCurrentVolume().name());
                         }
@@ -139,10 +139,11 @@ public class SoundScreen extends GameScreen {
                                 }
                                 break;
                             case 2:
-//                                if (!localSettings[2].getCurrentOption().equals(gameData.getSoundSetting(2).getCurrentOption())) {
-//                                    BackgroundAudio.changeMuteState();
-//                                    SoundEffectAudio.changeMuteState();
-//                                }
+                                switch(localSettings[2].getCurrentVolume()) {
+                                    case Low: BackgroundAudio.changeVolume(-10.0f); break;
+                                    case Medium: BackgroundAudio.changeVolume(-0.0f); break;
+                                    case High: BackgroundAudio.changeVolume(1.0f); break;
+                                }
                                 break;
                             default: Debug.error(DebugEnabler.GAME_DATA, "Unsupported Sound Option Selected");
                         }

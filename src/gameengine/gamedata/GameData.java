@@ -43,7 +43,11 @@ public class GameData implements Serializable {
                 this.currentGraphicsSetting = gameDataInput.getGraphicsSettings();
                 this.currentInputSetting = gameDataInput.getInputSetting();
                 for (int i = 0; i < currentSoundSetting.length; i++) {
-                    currentSoundSetting[i] = gameDataInput.getSoundSetting(i);
+                    if (i < 2) {
+                        currentSoundSetting[i] = gameDataInput.getSoundSetting(i);
+                    } else {
+                        currentSoundSetting[i] = new SoundSetting(SoundSetting.SoundVolume.Medium);
+                    }
                 }
 
                 in.close();
@@ -123,7 +127,11 @@ public class GameData implements Serializable {
                         }
                         break;
                     case 2:
-                        //BackgroundAudio.changeMuteState(false);
+                        switch(currentSoundSetting[i].getCurrentVolume()) {
+                            case Low: BackgroundAudio.changeVolume(-10.0f); break;
+                            case Medium: BackgroundAudio.changeVolume(0.0f); break;
+                            case High: BackgroundAudio.changeVolume(1.0f); break;
+                        }
                         break;
                     default:
                 }

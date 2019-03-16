@@ -9,6 +9,7 @@ public class BackgroundAudio {
     private static Clip backGroundClip;
     private static URL url;
     private static boolean isMute = false;
+    private static FloatControl gainControl;
 
     public static void play(URL myURL) {
         url = myURL;
@@ -52,9 +53,20 @@ public class BackgroundAudio {
                 backGroundClip.close();
             }
         } else {
-            if (url != null) {
+            if (url != null && !backGroundClip.isRunning()) {
                 play(url);
             }
         }
     }
+
+    public static void changeVolume(float gValue) {
+        if (backGroundClip != null) {
+            gainControl = (FloatControl) backGroundClip.getControl(FloatControl.Type.MASTER_GAIN);
+            if (gValue > 0) {
+                gValue = gainControl.getMaximum();
+            }
+            gainControl.setValue(gValue);
+        }
+    }
+
 }
