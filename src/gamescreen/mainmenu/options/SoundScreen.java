@@ -104,9 +104,9 @@ public class SoundScreen extends GameScreen {
                                 break;
                             case 1:
                                 if (localSettings[1].getCurrentOption().equals(SoundSetting.SoundOption.On)) {
-                                    SoundEffectAudio.changeMuteState();
+                                    SoundEffectAudio.changeMuteState(false);
                                 } else {
-                                    SoundEffectAudio.changeMuteState();
+                                    SoundEffectAudio.changeMuteState(true);
                                 }
                                 break;
                             case 2:
