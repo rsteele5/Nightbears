@@ -38,7 +38,8 @@ public class ControlsScreen extends GameScreen {
 
         //Initial position of the first button
         int X_INIT_BUTTON = 64;
-        int Y_INIT_BUTTON = 576;
+        int Y_INIT_BUTTON = 920;
+        int WIDTH_BUTTON = 256;
         int X_BUFFER = 48;
 
         //Create Background
@@ -46,12 +47,22 @@ public class ControlsScreen extends GameScreen {
         background.addToScreen(this, true);
 
         //Create Text Box
+        controlsText = new TextBox(32, 800,
+                450,
+                80,
+                "Controls Settings",
+                new Font("NoScary", Font.PLAIN, 72),
+                Color.WHITE, true);
+
+        controlsText.addToScreen(this, true);
+
+        //Create Text Box
         controlsText = new TextBox(X_INIT_BUTTON + X_BUFFER, Y_INIT_BUTTON,
-                300,
-                150,
+                240,
+                75,
                 localSetting.getCurrentOption().name(),
                 new Font("NoScary", Font.PLAIN, 60),
-                Color.WHITE);
+                Color.WHITE, true);
         controlsText.addToScreen(this, true);
 
         //Create button
@@ -65,7 +76,6 @@ public class ControlsScreen extends GameScreen {
                 });
         leftArrow.addToScreen(this, true);
 
-        int WIDTH_BUTTON = 256;
         Button rightArrow = new Button(X_INIT_BUTTON + X_BUFFER + WIDTH_BUTTON, Y_INIT_BUTTON, "/assets/buttons/Button-RightArrow.png", DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Right Arrow");

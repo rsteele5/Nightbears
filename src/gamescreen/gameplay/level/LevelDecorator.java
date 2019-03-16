@@ -26,6 +26,6 @@ public class LevelDecorator extends GameScreen {
         lBuild.buildBackground(this);
         lBuild.buildTerrain(this);
         lBuild.buildPlayer(this);
-        setCamera(new Camera(this, GameEngine.players.get(0)));
+        setCamera(new Camera(screenManager,this, GameEngine.players.get(0)));
     }
 }

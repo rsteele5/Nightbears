@@ -240,8 +240,15 @@ public abstract class GameScreen {
                 loadables.clear();
                 isLoading = false;
             }
+            for (GameObject gameObject: activeObjects){
+                gameObject.scale(gameData.getGraphicsSettings().getScaleFactor());
+            }
+            for (GameObject gameObject: inactiveObjects){
+                gameObject.scale(gameData.getGraphicsSettings().getScaleFactor());
+            }
             Debug.success(DebugEnabler.LOADING, name + " - Loaded");
         });
+
         executorService.shutdown();
     }
     //endregion

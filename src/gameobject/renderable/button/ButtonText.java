@@ -44,6 +44,12 @@ public class ButtonText extends Button{
         graphics.drawString(text, x+(image.getWidth()/2)-(width/2), y+fontHeight);
     }
 
+    @Override
+    public void scale(float scaleFactor) {
+        super.scale(scaleFactor);
+        this.font = font.deriveFont((font.getSize() * scaleFactor));
+    }
+
     public void setText(String text) {
         this.text = text;
     }

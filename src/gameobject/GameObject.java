@@ -1,6 +1,7 @@
 package gameobject;
 
 
+import static gameengine.gamedata.GraphicsSetting.GraphicsOption;
 import gamescreen.GameScreen;
 
 public abstract class GameObject {
@@ -72,6 +73,11 @@ public abstract class GameObject {
         } else {
             screen.inactiveObjects.add(this);
         }
+    }
+
+    public void scale(float scaleFactor) {
+        x *= scaleFactor;
+        y *= scaleFactor;
     }
 
     public abstract void update();

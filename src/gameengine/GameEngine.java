@@ -43,16 +43,12 @@ public class GameEngine implements Runnable {
         screenManager = new ScreenManager(gameData);
         renderEngine = new RenderEngine(gameData, screenManager);
         physicsEngine = new PhysicsEngine(gameData, screenManager);
-        renderEngine.addMouseListener(new MouseController());
+        renderEngine.addMouseListener(new MouseController(screenManager));
         players = new ArrayList<>(){{
             add(p1);
             add(p2);
         }};
         overworldEngine = new OverworldEngine(screenManager);
-    }
-
-    public Graphics getGraphics(){
-        return renderEngine.getGraphics();
     }
 
     public void initializeWindow(JFrame gameWindow){
@@ -82,10 +78,11 @@ public class GameEngine implements Runnable {
             int sleepTime = (int) (1.0 / FRAMES_PER_SECOND * 1000)
                     - (int) (endTime - startTime);
 
+            Debug.success(DebugEnabler.FPS_CURRENT,"Current FPS: " + 1000 / (endTime - startTime) );
+            renderEngine.setFPS("Current FPS: " + 1000 / (endTime - startTime));
             if (sleepTime >= 0) {
                 try {
                     if(endTime-startTime > 0 /*&& frameCounter % 60 == 0*/)
-                    Debug.success(DebugEnabler.FPS_CURRENT,"Current FPS: " + 1000 / (endTime - startTime) );
                     TimeUnit.MILLISECONDS.sleep(sleepTime);
                 } catch (InterruptedException e) {
                     Debug.error(DebugEnabler.FPS, "Thread Interupted: " + e.toString());

@@ -8,6 +8,7 @@ import gamescreen.ScreenManager;
 import gameobject.renderable.ImageContainer;
 import gameobject.renderable.button.Button;
 import gamescreen.popup.ConfirmationPopup;
+import gamescreen.splashscreen.GraphicsChangeScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 import static gameengine.gamedata.GraphicsSetting.GraphicsOption;
@@ -36,7 +37,7 @@ public class GraphicsScreen extends GameScreen {
 
         //Initial position of the first button
         int X_INIT_BUTTON = 64;
-        int Y_INIT_BUTTON = 576;
+        int Y_INIT_BUTTON = 920;
         int WIDTH_BUTTON = 256;
         int X_BUFFER = 48;
 
@@ -47,12 +48,22 @@ public class GraphicsScreen extends GameScreen {
         imageContainer.addToScreen(this, true);
 
         //Create Text Box
+        graphicsText = new TextBox(X_INIT_BUTTON, 800,
+                340,
+                80,
+                "Graphics Setting",
+                new Font("NoScary", Font.PLAIN, 72),
+                Color.WHITE, true);
+
+        graphicsText.addToScreen(this, true);
+
+        //Create Text Box
         graphicsText = new TextBox(X_INIT_BUTTON+X_BUFFER, Y_INIT_BUTTON,
-                300,
-                150,
+                240,
+                75,
                 localSetting.getCurrentOption().name(),
                 new Font("NoScary", Font.PLAIN, 60),
-                Color.WHITE);
+                Color.WHITE, true);
 
         graphicsText.addToScreen(this, true);
 
@@ -86,8 +97,9 @@ public class GraphicsScreen extends GameScreen {
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Confirm");
-                    this.setScreenState(ScreenState.TransitionOff);
                     gameData.setGraphicsSetting(localSetting);
+                    screenManager.addScreen(new GraphicsChangeScreen(screenManager));
+                    this.setScreenState(ScreenState.TransitionOff);
                 });
         butt.addToScreen(this, true);
 

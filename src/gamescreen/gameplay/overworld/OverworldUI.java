@@ -89,7 +89,7 @@ public class OverworldUI extends Overlay {
                 Color.WHITE, "Camera On!",
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Vendor");
-                    parentScreen.setCamera(new Camera(parentScreen, GameEngine.players.get(0)));
+                    parentScreen.setCamera(new Camera(screenManager, parentScreen, GameEngine.players.get(0)));
                 });
         cameraOffButton.addToScreen(this, true);
     }

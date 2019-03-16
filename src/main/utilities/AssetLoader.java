@@ -19,7 +19,7 @@ public final class AssetLoader {
         try {
             image = ImageIO.read(AssetLoader.class.getResource(imagePath));
             return image;
-        } catch (IOException e) {
+        } catch (Exception e) {
             try {
                 Debug.error(true, "Failed to load image - " + imagePath);
                 Debug.error(true, "EXCEPTION MESSAGE:" + e.getMessage());
@@ -27,7 +27,7 @@ public final class AssetLoader {
                 return image;
             }catch (Exception ex) {
                 Debug.error(true, "Failed to load - MissingImage.png");
-                Debug.error(true, "EXCEPTION MESSAGE:" + ex.getMessage());
+                Debug.error(true, "EXCEPTION MESSAGE: " + ex.getMessage());
                 return null;
             }
         }

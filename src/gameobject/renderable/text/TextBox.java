@@ -1,10 +1,13 @@
 package gameobject.renderable.text;
 
+import gameengine.gamedata.GraphicsSetting;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.RenderableObject;
 import main.utilities.AssetLoader;
+import main.utilities.Debug;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 
 
 public class TextBox extends RenderableObject {
@@ -13,9 +16,11 @@ public class TextBox extends RenderableObject {
     protected String displayText;
     protected Font font;
     protected Color color;
+    protected boolean centered;
 
     public TextBox(int x, int y, int width, int height, String text) {
         super(x,y);
+        this.centered = false;
         this.width = width;
         this.height = height;
         this.text = text;
@@ -31,6 +36,11 @@ public class TextBox extends RenderableObject {
         this.color = color;
     }
 
+    public TextBox(int x, int y, int width, int height, String text, Font font, Color color, boolean centered) {
+        this(x,y,width,height, text, font, color);
+        this.centered = centered;
+    }
+
     @Override
     public void update() {
 
@@ -38,6 +48,7 @@ public class TextBox extends RenderableObject {
 
     @Override
     public void draw(Graphics2D graphics) {
+        Debug.drawRect(true, graphics, new Rectangle2D.Float(x,y,width,height));
         if(displayText.equals("")) parseString(graphics);
         graphics.setFont(font);
         graphics.setColor(color);
@@ -47,8 +58,17 @@ public class TextBox extends RenderableObject {
         String text = displayText;
         for (String line: text.split("\n")) {
             if(row < height){
-                graphics.drawString(line, x, y + row + fontAscent);
-                row += fontHeight;
+                if(centered == true){
+                    int stringWidth = graphics.getFontMetrics().stringWidth(line);
+                    //Debug.drawRect(true, graphics, new Rectangle2D.Float(x + ((width-stringWidth)/2),y,stringWidth,height));
+                    int xPos = x + ((width-stringWidth)/2);
+                    //Debug.log(true, "Position - " + xPos);
+                    graphics.drawString(line, xPos, y + row + fontAscent);
+                    row += fontHeight;
+                } else {
+                    graphics.drawString(line, x, y + row + fontAscent);
+                    row += fontHeight;
+                }
             }
         }
     }
@@ -94,5 +114,11 @@ public class TextBox extends RenderableObject {
                 setSize(image.getWidth(), image.getHeight());
             }
         }
+    }
+
+    @Override
+    public void scale(float scaleFactor) {
+        super.scale(scaleFactor);
+        this.font = font.deriveFont((font.getSize() * scaleFactor));
     }
 }

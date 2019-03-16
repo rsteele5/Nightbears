@@ -9,12 +9,14 @@ import gamescreen.mainmenu.MainMenuScreen;
 
 public class TitleScreen extends GameScreen {
     //region <Variables>
-    ImageContainer cover;
+    private ImageContainer moonImg;
+    private ImageContainer titleImg;
+    private ImageContainer skipMsg;
     //endregion
     private boolean musicStart = false;
     //region <Construction and Initialization>
-    public TitleScreen(ScreenManager screenManager, String name) {
-        super(screenManager,name);
+    public TitleScreen(ScreenManager screenManager) {
+        super(screenManager,"TitleScreen");
     }
 
     /**
@@ -23,17 +25,15 @@ public class TitleScreen extends GameScreen {
     @Override
     protected void initializeScreen() {
         ImageContainer image;
-        image = new ImageContainer(0,0, "/assets/backgrounds/BG-BlackCover.png", DrawLayer.Background);
-        image.addToScreen(this,true);
 
-        cover = new ImageContainer(0,-720, "/assets/backgrounds/BG-TitleScreenCover.png", DrawLayer.Scenery);
-        cover.addToScreen(this,true);
+        moonImg = new ImageContainer(585,-1058, "/assets/backgrounds/BG-Moon.png", DrawLayer.Scenery);
+        moonImg.addToScreen(this,true);
 
-        image = new ImageContainer(350,75, "/assets/backgrounds/BG-Title.png", DrawLayer.Scenery);
-        image.addToScreen(this,true);
+        titleImg = new ImageContainer(625,165, "/assets/backgrounds/BG-Title.png", DrawLayer.Scenery);
+        titleImg.addToScreen(this,true);
 
-        image = new ImageContainer(575,660, "/assets/text/TXT-SkipMsg.png", DrawLayer.Scenery);
-        image.addToScreen(this,true);
+        skipMsg = new ImageContainer(900,980, "/assets/text/TXT-SkipMsg.png", DrawLayer.Scenery);
+        skipMsg.addToScreen(this,true);
     }
 
     //endregion
@@ -45,8 +45,8 @@ public class TitleScreen extends GameScreen {
             musicStart = true;
             BackgroundAudio.play(this.getClass().getClassLoader().getResource("assets/music/title.wav"));
         }
-        if(cover.getY() < -240)
-            cover.setY(cover.getY() + 2);
+        if(moonImg.getY() < -248 * gameData.getGraphicsSettings().getScaleFactor())
+            moonImg.setY(moonImg.getY() + 2);
         else
             currentState = ScreenState.Active;
     }

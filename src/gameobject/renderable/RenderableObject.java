@@ -1,9 +1,11 @@
 package gameobject.renderable;
 
+import gameengine.gamedata.GraphicsSetting;
 import gameengine.rendering.animation.Animator;
 import gameobject.GameObject;
 import gamescreen.GameScreen;
 import main.utilities.AssetLoader;
+import main.utilities.Debug;
 import main.utilities.Loadable;
 
 import java.awt.*;
@@ -130,6 +132,7 @@ public abstract class RenderableObject extends GameObject implements Loadable {
         if(animator != null){
             animator.animate();
         }
+        //Debug.drawRect(true,graphics, new Rectangle2D.Double(x,y,width, height));
         graphics.drawImage(image, x , y, width, height, null);
     }
 
@@ -190,5 +193,11 @@ public abstract class RenderableObject extends GameObject implements Loadable {
 
     public abstract void update();
 
+    @Override
+    public void scale(float scaleFactor) {
+        super.scale(scaleFactor);
+        width *= scaleFactor;
+        height *= scaleFactor;
+    }
 }
 

@@ -39,7 +39,7 @@ public class VendorScreen extends GameScreen {
     //endregion ****************************************/
 
     public VendorScreen(ScreenManager screenManager) {
-        super(screenManager, "VendorScreen", true, 150, 75);
+        super(screenManager, "VendorScreen", true, 450, 180);
     }
 
     @Override
@@ -321,15 +321,4 @@ public class VendorScreen extends GameScreen {
         }
         exiting = true;
     }
-
-    @Override
-    protected void hiddenUpdate() {
-
-    }
-
-    @Override
-    protected void activeUpdate() {
-
-    }
-
 }

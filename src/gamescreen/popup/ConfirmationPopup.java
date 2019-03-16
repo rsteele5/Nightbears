@@ -14,12 +14,12 @@ import java.awt.*;
 
 public class ConfirmationPopup extends GameScreen {
 
-    private final int X_TEXT = 400;
-    private final int Y_TEXT = 200;
+    private final int X_TEXT = 710;
+    private final int Y_TEXT = 380;
     private final int W_TEXT = 500;
     private final int H_TEXT = 150;
-    private final int X_INIT_BUTTON = 427;
-    private final int Y_INIT_BUTTON = 400;
+    private final int X_INIT_BUTTON = 745;
+    private final int Y_INIT_BUTTON = 580;
     private final int X_BUFFER = 142;
     private final int WIDTH_BUTTON = 142;
     private TextBox confirmationTextBox;
@@ -50,7 +50,7 @@ public class ConfirmationPopup extends GameScreen {
         confirmationTextBox = new TextBox(X_TEXT, Y_TEXT, W_TEXT, H_TEXT,
                 "",
                 new Font("NoScary", Font.PLAIN, 60),
-                Color.WHITE);
+                Color.WHITE, true);
         confirmationTextBox.addToScreen(this, true);
         //Buttons
         Button button;

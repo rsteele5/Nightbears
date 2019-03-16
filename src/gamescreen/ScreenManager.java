@@ -7,10 +7,11 @@ import gamescreen.splashscreen.TeamSplashScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ScreenManager {
+public class ScreenManager extends JPanel {
     //region <Variables>
     private GameScreen rootScreen;
     private LoadingScreen loadingScreen;
@@ -61,6 +62,10 @@ public class ScreenManager {
 
     public GameData getGameData() {
         return gameData;
+    }
+
+    public void changeGraphics() {
+        rootScreen = null;
     }
     //endregion
 }
