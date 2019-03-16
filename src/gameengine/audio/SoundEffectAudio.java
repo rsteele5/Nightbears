@@ -20,13 +20,15 @@ public class SoundEffectAudio {
 
     public void play() {
         try {
-            if(soundEffectClip != null && soundEffectAudioIn != null) {
-                soundEffectClip.open(soundEffectAudioIn);
-                soundEffectClip.start();
-                soundEffectClip.addLineListener(listener -> {
-                    if (listener.getType() == LineEvent.Type.STOP)
-                        soundEffectClip.close();
-                });
+            if (!isMuted) {
+                if(soundEffectClip != null && soundEffectAudioIn != null) {
+                    soundEffectClip.open(soundEffectAudioIn);
+                    soundEffectClip.start();
+                    soundEffectClip.addLineListener(listener -> {
+                        if (listener.getType() == LineEvent.Type.STOP)
+                            soundEffectClip.close();
+                    });
+                }
             }
         } catch (LineUnavailableException | IOException e) {
             e.printStackTrace();
@@ -41,5 +43,9 @@ public class SoundEffectAudio {
                 soundEffectClip.start();
             }
         }
+    }
+
+    public static void changeMuteState() {
+        isMuted = !isMuted;
     }
 }

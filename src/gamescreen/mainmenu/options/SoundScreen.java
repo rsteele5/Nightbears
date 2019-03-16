@@ -1,6 +1,8 @@
 package gamescreen.mainmenu.options;
 
 
+import gameengine.audio.BackgroundAudio;
+import gameengine.audio.SoundEffectAudio;
 import gameengine.gamedata.SoundSetting;
 import gameobject.renderable.text.TextBox;
 import gameobject.renderable.DrawLayer;
@@ -38,7 +40,6 @@ public class SoundScreen extends GameScreen {
     protected void initializeScreen() {
 
         //Create Background
-        //localSettings = new SoundSetting(gameData.getSoundSetting().getCurrentOption());
         didOptionsChange = false;
 
         localSettings = new SoundSetting[3];
@@ -94,6 +95,28 @@ public class SoundScreen extends GameScreen {
                     this.setScreenState(ScreenState.TransitionOff);
                     for (int i = 0; i < localSettings.length; i++) {
                         gameData.setSoundSetting(localSettings[i], i);
+                        switch(i) {
+                            case 0:
+                                if (localSettings[0].getCurrentOption().equals(SoundSetting.SoundOption.On)) {
+                                    BackgroundAudio.changeMuteState(false);
+                                } else
+                                    BackgroundAudio.changeMuteState(true);
+                                break;
+                            case 1:
+                                if (localSettings[1].getCurrentOption().equals(SoundSetting.SoundOption.On)) {
+                                    SoundEffectAudio.changeMuteState();
+                                } else {
+                                    SoundEffectAudio.changeMuteState();
+                                }
+                                break;
+                            case 2:
+//                                if (!localSettings[2].getCurrentOption().equals(gameData.getSoundSetting(2).getCurrentOption())) {
+//                                    BackgroundAudio.changeMuteState();
+//                                    SoundEffectAudio.changeMuteState();
+//                                }
+                                break;
+                            default: Debug.error(DebugEnabler.GAME_DATA, "Unsupported Sound Option Selected");
+                        }
                     }
                 });
         butt.addToScreen(this, true);

@@ -1,5 +1,7 @@
 package gameengine.gamedata;
 
+import gameengine.audio.BackgroundAudio;
+import gameengine.audio.SoundEffectAudio;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -43,6 +45,8 @@ public class GameData implements Serializable {
                 in.close();
                 file.close();
             }
+            initializeSound();
+
             Debug.success(DebugEnabler.GAME_DATA,"Loaded GameData successfully");
 
             Debug.log(DebugEnabler.GAME_DATA, currentGraphicsSetting.getCurrentOption().name());
@@ -94,6 +98,38 @@ public class GameData implements Serializable {
             Debug.success(DebugEnabler.GAME_DATA,"Saved GameData to file");
 
         } catch(IOException ex) { System.out.println("IOException is caught"); }
+    }
+
+    private void initializeSound() {
+        for (int i = 0; i < currentSoundSetting.length; i++) {
+            if (currentSoundSetting[i].getCurrentOption().equals(On)) {
+                switch(i) {
+                    case 0:
+                        BackgroundAudio.changeMuteState(false);
+                        break;
+                    case 1:
+                        SoundEffectAudio.changeMuteState();
+                        break;
+                    case 2:
+                        //BackgroundAudio.changeMuteState(false);
+                        break;
+                    default:
+                }
+            } else {
+                    switch(i) {
+                        case 0:
+                            BackgroundAudio.changeMuteState(true);
+                            break;
+                        case 1:
+                            SoundEffectAudio.changeMuteState();
+                            break;
+                        case 2:
+                            //BackgroundAudio.changeMuteState(true);
+                            break;
+                        default:
+                    }
+            }
+        }
     }
 
 
