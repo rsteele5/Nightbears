@@ -81,6 +81,16 @@ public class PhysicsEngine {
                         GameEngine.players.get(0).addItem((Weapon) obj1);
                         Debug.log(true, "Weapon Get!");
                     }
+                    if (obj1 instanceof Enemy && obj2 instanceof Square) {
+                        //Debug.success(true,"ENEMY->SQUARE");
+                        Enemy e = (Enemy) obj1; e.changeState();
+                    }
+                    if (obj1 instanceof Enemy && obj2 instanceof Player) {
+                        Debug.success(true,"ENEMY->Player");
+                        Enemy e = (Enemy) obj1; e.addhp(-1);//todo sword damage
+                        Debug.success(true,Integer.toString(e.getHp()));
+                        if(e.getHp() < 1) obj1.
+                    }
                     ((Kinematic) obj1).setAcceleration(new PhysicsVector(1, 1));
                     if (!((Kinematic) obj2).isStatic()) ((Kinematic) obj2).setAcceleration(new PhysicsVector(1, 1));
                     Rectangle intersect = ((Kinematic) obj1).getHitbox().intersection(((Kinematic) obj2).getHitbox());
