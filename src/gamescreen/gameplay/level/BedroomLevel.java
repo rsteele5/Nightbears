@@ -4,7 +4,11 @@ import _test.Square;
 import gameengine.GameEngine;
 import gameengine.rendering.Camera;
 import gameobject.renderable.house.sidescrolling.Floor;
+import gameobject.renderable.enemy.Minion;
+import gameobject.renderable.enemy.WalkLeftMS;
+import gameobject.renderable.enemy.Walker;
 import gameobject.renderable.player.Player;
+import gameobject.renderable.enemy.Enemy;
 import gameobject.renderable.ImageContainer;
 import gameobject.renderable.item.weapon.Weapon;
 import gameobject.renderable.item.weapon.WeaponBuilder;
@@ -13,7 +17,6 @@ import gameobject.renderable.DrawLayer;
 import gamescreen.GameScreen;
 
 public class BedroomLevel implements Level {
-
 
     @Override
     public void buildBackground(GameScreen gameScreen) {
@@ -42,6 +45,9 @@ public class BedroomLevel implements Level {
             }
         }
 
+        square = new Square(800,75,"/assets/testAssets/square.png",DrawLayer.Entity);
+        square.addToScreen(gameScreen, true);
+
         Weapon myWeap = new WeaponBuilder()
                 .position(800, 476)
                 .imagePath("/assets/Items/sword1.png")
@@ -69,6 +75,10 @@ public class BedroomLevel implements Level {
 
     @Override
     public void buildEnemies(GameScreen gameScreen) {
+        Minion guy1 = new Walker(500,0, "/assets/enemies/minions/walker/walker.png", DrawLayer.Entity);
+        guy1.setState(new WalkLeftMS());
+        guy1.addToScreen(gameScreen,true);
+
     }
 
 }

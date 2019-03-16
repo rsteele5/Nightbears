@@ -1,6 +1,9 @@
 package gameengine.physics;
 
+import _test.Square;
 import gameengine.GameEngine;
+import gameobject.renderable.enemy.Enemy;
+import gameobject.renderable.enemy.Walker;
 import gameengine.gamedata.GameData;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.item.weapon.Weapon;
