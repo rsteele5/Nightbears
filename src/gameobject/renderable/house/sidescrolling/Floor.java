@@ -1,45 +1,30 @@
 package gameobject.renderable.house.sidescrolling;
 
+import _test.Square;
 import gameengine.physics.Kinematic;
 import gameengine.physics.PhysicsVector;
 import gameobject.renderable.RenderableObject;
 import gameobject.renderable.DrawLayer;
+import main.utilities.Debug;
 import main.utilities.Loadable;
 
 import java.awt.*;
 
-public class Floor extends RenderableObject implements Kinematic, Loadable {
-
-    private PhysicsVector accel = new PhysicsVector(0,0);
-
-    public Floor(int x, int y, String imagePath, DrawLayer drawLayer){
-        super(x,y, imagePath ,drawLayer);
+public class Floor extends Square {
+    public Floor(int x, int y, String path, DrawLayer drawLayer){
+        super(x,y,path,drawLayer);
     }
-
     @Override
     public void update() {
-
     }
 
     @Override
-    public PhysicsVector getVelocity() {
-        return new PhysicsVector(0,0);
+    public boolean isStatic() {
+        return true;
     }
-
-    @Override
-    public void setVelocity(PhysicsVector pv) {}
-
-    @Override
-    public PhysicsVector getAcceleration() {
-        return accel;
-    }
-
-    @Override
-    public void setAcceleration(PhysicsVector pv) { }
 
     @Override
     public Rectangle getHitbox() {
-        return new Rectangle(x, y, image.getWidth(), image.getHeight());
+        return new Rectangle(x, y, width, height);
     }
-
 }

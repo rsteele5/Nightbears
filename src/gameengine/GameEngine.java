@@ -1,8 +1,6 @@
 package gameengine;
 
 import gameengine.gamedata.GameData;
-import gameengine.gamedata.GameSettings;
-import gameengine.physics.OverworldEngine;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.vendor.Vendor;
 import gameobject.renderable.DrawLayer;
@@ -32,7 +30,6 @@ public class GameEngine implements Runnable {
     private ScreenManager screenManager;
     private PhysicsEngine physicsEngine;
     private RenderEngine renderEngine;
-    private OverworldEngine overworldEngine;
     public static ArrayList<Player> players;
     private static Player p1,p2;
     public static Vendor vendor;
@@ -50,7 +47,7 @@ public class GameEngine implements Runnable {
             add(p1);
             add(p2);
         }};
-        overworldEngine = new OverworldEngine(screenManager);
+    }
 
 
     }
@@ -65,15 +62,7 @@ public class GameEngine implements Runnable {
         while(true){
             frameCounter++;
             long startTime = System.currentTimeMillis();
-            //Update
-            switch (players.get(0).getState()){
-                case sideScroll:
-                    physicsEngine.update();
-                    break;
-                case overWorld:
-                    overworldEngine.update();
-                    break;
-            }
+            physicsEngine.update();
             screenManager.update();
             //Render
             renderEngine.draw();
@@ -89,10 +78,10 @@ public class GameEngine implements Runnable {
                     if(endTime-startTime > 0 /*&& frameCounter % 60 == 0*/)
                     TimeUnit.MILLISECONDS.sleep(sleepTime);
                 } catch (InterruptedException e) {
-                    Debug.error(DebugEnabler.FPS, "Thread Interupted: " + e.toString());
+                    Debug.error(DebugEnabler.FPS_WARNING, "Thread Interupted: " + e.toString());
                 }
             } else {
-                Debug.warning(DebugEnabler.FPS,"FPS below 60! - current FPS: " + 1000 / (endTime - startTime) );
+                Debug.warning(DebugEnabler.FPS_WARNING,"FPS_WARNING below 60! - current FPS_WARNING: " + 1000 / (endTime - startTime) );
             }
         }
     }

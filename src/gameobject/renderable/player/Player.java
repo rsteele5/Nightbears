@@ -14,6 +14,7 @@ import gameobject.renderable.item.weapon.WeaponBuilder;
 import gameobject.renderable.item.weapon.WeaponType;
 import gameobject.renderable.player.overworld.PlayerIdleAnimation;
 import gameobject.renderable.player.overworld.PlayerWalkingAnimation;
+import gameobject.renderable.player.sidescrolling.PlayerSSCrouchingAnimation;
 import gameobject.renderable.player.sidescrolling.PlayerSSIdleAnimation;
 import gamescreen.GameScreen;
 import main.utilities.AssetLoader;
@@ -29,12 +30,16 @@ public class Player extends RenderableObject implements Kinematic {
     private int speed = 1;
     private CopyOnWriteArrayList<Item> items = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<RenderableObject> rItems = new CopyOnWriteArrayList<>();
-    private PhysicsVector accel = new PhysicsVector(1, 1);
-    private PhysicsVector movement = new PhysicsVector(0, 0);
+    private PhysicsVector moveState = new PhysicsVector(1, 1);
+    private PhysicsVector magnitude = new PhysicsVector(0, 0);
     private final int[] ssKeys = new int[]{68, 65};
     private final int[] owKeys = new int[]{68, 65, 83, 87};
+    private boolean crouch = false;
+    private boolean crouchSet = true;
+    public boolean interaction = false;
     private int movFlag = 0;
     private int gold;
+    private double moveFactor = 1;
     private double rotation = 0;
     /*
     0b1     =   right
@@ -55,6 +60,7 @@ public class Player extends RenderableObject implements Kinematic {
         if(animator != null){
             animator.animate();
         }
+
         Graphics2D g2 = (Graphics2D) graphics2D.create();
         g2.rotate(rotation, x + (width / 2.0), y + (height / 2.0));
         g2.drawImage(image, x, y, null);
@@ -70,6 +76,7 @@ public class Player extends RenderableObject implements Kinematic {
         animator.addAnimation("Walking", new PlayerWalkingAnimation());
         animator.addAnimation("Idle", new PlayerIdleAnimation());
         animator.addAnimation("SS_Idle", new PlayerSSIdleAnimation());
+        animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation());
     }
 
     private void initializeItems() {
@@ -102,8 +109,24 @@ public class Player extends RenderableObject implements Kinematic {
 
     @Override
     public void update() {
+        if(interaction) Debug.log(DebugEnabler.PLAYER_STATUS,"Interaction Avaiable! Act now!");
+        if(playerState == PlayerState.sideScroll && !crouchSet  ){
+            crouchSet = true;
+            if(crouch) {
+                y = y + image.getHeight()/2;
+                animator.setAnimation("SS_Crouch");
+            }
+            else {
+              //  image = AssetLoader.load("/assets/testAssets/square2.png");
+             //   imagePath = "/assets/testAssets/square2.png";
+                animator.setAnimation("SS_Idle");
+                y = y - image.getHeight()/2;
+
+             //   animator.setAnimation("SS_Idle");
+            }
+        }
         if (playerState == PlayerState.overWorld) {
-            if (movement.x != 0.0 || movement.y != 0.0) {
+            if (magnitude.x != 0.0 || magnitude.y != 0.0) {
                 rotation = getVelocity().direction();
                 if(!animator.getCurrentAnimationName().equals("Walking"))
                     animator.setAnimation("Walking");
@@ -136,43 +159,70 @@ public class Player extends RenderableObject implements Kinematic {
 
     public void move(KeyEvent e) {
         switch (getState()) {
+
             case sideScroll:
                 if (e.getKeyCode() == 32 && grounded) {
                     int sign = PhysicsMeta.AntiGravity ? -1 : 1;
                     setAcceleration(getAcceleration().add(new PhysicsVector(0, -7 * sign)));
                     grounded = false;
                 }
+                if(e.getKeyCode() == 83 && !crouch){
+                    Debug.log(DebugEnabler.PLAYER_STATUS,"CROUCHING");
+                    crouch = true;
+                    crouchSet = false;
+                }
+                if(e.getKeyCode() == 16) {
+                    moveFactor = 2.5;
+                }
                 if (PhysicsMeta.Gravity == 0) calculateMove(e, owKeys);
                 else calculateMove(e, ssKeys);
+
                 break;
 
             case overWorld:
                 calculateMove(e, owKeys);
                 break;
         }
+
     }
 
     public void moveRelease(KeyEvent e) {
         switch (getState()) {
             case sideScroll:
+                if(e.getKeyCode() == 83 && crouch){
+                    Debug.log(DebugEnabler.PLAYER_STATUS,"CROUCHING RELEASE");
+                    crouch = false;
+                    crouchSet = false;
+
+                }
+                if(e.getKeyCode() == 16) {
+                    moveFactor = 1;
+                }
                 if (PhysicsMeta.Gravity == 0) calculateRelease(e, owKeys);
                 else calculateRelease(e, ssKeys);
+
                 break;
 
             case overWorld:
                 calculateRelease(e, owKeys);
                 break;
         }
+
+    }
+
+    @Override
+    public boolean isStatic() {
+        return false;
     }
 
     @Override
     public PhysicsVector getVelocity() {
         int gravSign = PhysicsMeta.Gravity != 0 && playerState == PlayerState.sideScroll ? 1 : 0;
-        PhysicsVector pV = movement.add(new PhysicsVector(0, gravSign)).mult(accel);
+        PhysicsVector pV = magnitude.add(new PhysicsVector(0, gravSign)).mult(moveState);
         double y = pV.y;
         y = y < 1 && y > .5 ? 1 : y;
         y = y < -.5 && y > -1 ? -1 : y;
-        return new PhysicsVector(pV.x, y);
+        return new PhysicsVector(pV.x * moveFactor, y);
     }
 
     @Override
@@ -182,17 +232,17 @@ public class Player extends RenderableObject implements Kinematic {
 //            pv.x = (pv.x / Math.sqrt(2));
 //            pv.y = (pv.y / Math.sqrt(2));
         }
-        movement = pv.mult(speed);
+        magnitude = pv.mult(speed);
     }
 
     @Override
     public PhysicsVector getAcceleration() {
-        return accel;
+        return moveState;
     }
 
     @Override
     public void setAcceleration(PhysicsVector pv) {
-        accel = pv;
+        moveState = pv;
     }
 
     @Override
@@ -212,7 +262,7 @@ public class Player extends RenderableObject implements Kinematic {
     public void reset() {
         x = 50;
         y = 50;
-        accel = new PhysicsVector(1, 1);
+        moveState = new PhysicsVector(1, 1);
     }
 
     public PlayerState getState() {
@@ -228,14 +278,9 @@ public class Player extends RenderableObject implements Kinematic {
             case overWorld:
                 Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: overWorld");
                 speed = 3;
-                image = AssetLoader.load("/assets/player/overworld/teddyidleanimation/Overworld-Teddy-Center.png");
-                width = image.getWidth();
-                height = image.getHeight();
-                animator = new Animator(this);
-                animator.addAnimation("Walking", new PlayerWalkingAnimation());
-                animator.addAnimation("Idle", new PlayerIdleAnimation());
-                animator.addAnimation("SS_Idle", new PlayerSSIdleAnimation());
-                animator.setAnimation("SS_Idle");
+                width = 100;
+                height = 100;
+                animator.setAnimation("Idle");
                 playerState = ps;
                 return true;
             case asleep:
@@ -245,10 +290,8 @@ public class Player extends RenderableObject implements Kinematic {
             case sideScroll:
                 Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: sideScroll");
                 speed = 1;
-                animator = null;
-                image = AssetLoader.load("/assets/testAssets/square2.png");
-                //imagePath = "/assets/testAssets/square2.png";
                 rotation = 0;
+                animator.setAnimation("SS_Idle");
                 playerState = ps;
                 return true;
         }

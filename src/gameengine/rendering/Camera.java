@@ -23,7 +23,8 @@ public class Camera {
         graphics.translate(-target.getX( ) + screenManager.getGameData().getGraphicsSettings().getRenderWidth()/2,
                 -target.getY() + screenManager.getGameData().getGraphicsSettings().getRenderHeight()/2);
         for(RenderableObject renderableObject: screen.getRenderables()){
-            renderableObject.draw(graphics);
+            if(Math.hypot(target.getX()-renderableObject.getX(), target.getY()-renderableObject.getY()) < 4000)
+                renderableObject.draw(graphics);
         }
         graphics.translate(target.getX()-screenManager.getGameData().getGraphicsSettings().getRenderWidth()/2,
                 target.getY()-screenManager.getGameData().getGraphicsSettings().getRenderHeight()/2);

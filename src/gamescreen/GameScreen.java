@@ -417,7 +417,6 @@ public abstract class GameScreen {
             // If no overlays handled clicks
             Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "- handle click " + x + " " + y);
             for(Clickable thing: clickables) {
-                Debug.log(DebugEnabler.GAME_SCREEN_LOG, "Button locations - " + ((Button)thing).getX() + ", " + ((Button)thing).getY());
                 if(thing.contains(x,y)) {
                     thing.onClick();
                     return true;

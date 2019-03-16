@@ -13,6 +13,7 @@ import gamescreen.ScreenManager;
 import gameengine.physics.Kinematic;
 import gameobject.GameObject;
 import gameobject.renderable.RenderableObject;
+import gamescreen.gameplay.overworld.OverworldUI;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -21,14 +22,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class SideScroll extends GameScreen {
     private CopyOnWriteArrayList<GameObject> onScreen;
     private CopyOnWriteArrayList<Kinematic> kinematicObjects;
-
-    private final int X_INIT_BUTTON = 64;
-    protected final int Y_INIT_BUTTON = 576;
-    private final int WIDTH_BUTTON = 256;
-    private final int X_BUFFER = 48;
-
+    private OverworldUI UI;
+    final int xOFF = 2500;
+    final int yOFF = 1500;
     public SideScroll(ScreenManager screenManager) {
-        super(screenManager, "level", true);
+        super(screenManager, "level", 1f);
     }
 
     /**
@@ -36,45 +34,62 @@ public class SideScroll extends GameScreen {
      */
     @Override
     protected void initializeScreen() {
-        String bg = "/assets/backgrounds/BG-BlackCover.png";
+        UI = new OverworldUI(screenManager, this);
+        addOverlay(UI);
+        setCamera(new Camera(this, GameEngine.players.get(0)));
+
+        String bg = "/assets/backgrounds/mountains.jpg";
         String path = "/assets/testAssets/square.png";
         RenderableObject player = GameEngine.players.get(0);
-
-//        ((Player)player).reset();
-//        Animator playerAnimator = new Animator(player);
-//        playerAnimator.addAnimation("Idle", new PlayerIdleAnimation());
-//        playerAnimator.setAnimation("Idle");
-//        player.addAnimator(playerAnimator);
-
-
         ImageContainer background;
         background = (new ImageContainer(0,0, bg, DrawLayer.Background));
         background.addToScreen(this,true);
+
         GameEngine.players.get(0).setState(Player.PlayerState.sideScroll);
         GameEngine.players.get(0).addToScreen(this,true);
         GameEngine.players.get(0).reset();
+        GameEngine.players.get(0).setX(xOFF);
+        GameEngine.players.get(0).setY(yOFF);
+
         Square square;
-        Button b = (new Button(1000,100,
-                "/assets/buttons/Button-Back.png",
-                DrawLayer.Entity,
-                () ->{
-                    Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Back");
-                    setScreenState(ScreenState.TransitionOff);
-                }));
-        b.addToScreen(this,true);
+
         for(int x1 = 0; x1 < 5; x1++){
             for(int y1 = 0; y1 < x1; y1++){
-                square = new Square(x1 * 75 + 100,y1*75,path,DrawLayer.Entity);
+                square = new Square(xOFF + x1 * 75 + 100,yOFF + y1*75,path,DrawLayer.Entity);
                 square.addToScreen(this, true);
             }
         }
 
-        Floor floor = new Floor(0,720, "/assets/testAssets/WoodTile2.png", DrawLayer.Entity);
-        floor.setWidth(1280);
-        floor.setHeight(30);
-        floor.addToScreen(this, true);
 
-        //setCamera(new Camera(this, GameEngine.players.get(0)));
+        for(int x1 = 4; x1 > 0; x1--){
+            for(int y1 = 0; y1 < x1; y1++){
+                square = new Square(xOFF - x1 * 75,yOFF + y1*75,path,DrawLayer.Entity);
+                square.addToScreen(this, true);
+            }
+        }
+
+        Floor floor = new Floor(xOFF - 300,yOFF + 300, "/assets/testAssets/obsidian.jpg", DrawLayer.Entity);
+        Floor floor2 = new Floor(xOFF - 300,yOFF - 800, "/assets/testAssets/obsidian.jpg", DrawLayer.Entity);
+        Floor floor1 = new Floor(xOFF +450,yOFF - 300, "/assets/testAssets/obsidian.jpg", DrawLayer.Entity);
+        Floor f;
+        for(int i = 0; i < 19; i++){
+            int offset = (i % 2 == 0) ? 50 : -50;
+            f = new Floor(xOFF - 425 + offset, yOFF + 200 - 50 * i,"/assets/testAssets/obsidian.jpg", DrawLayer.Entity);
+            f.setWidth(40);
+            f.setHeight(20);
+            f.addToScreen(this, true);
+        }
+        floor.setWidth(2000);
+        //floor.setHeight(200);
+        floor.setHeight(500);
+        //floor1.setWidth(50);
+        floor1.setWidth(1000);
+        floor1.setHeight(600);
+        floor2.setWidth(1000);
+        floor2.setHeight(600);
+        floor.addToScreen(this, true);
+        floor1.addToScreen(this, true);
+        floor2.addToScreen(this, true);
     }
 
 
