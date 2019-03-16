@@ -29,13 +29,20 @@ public class PhysicsEngine {
         ArrayList<Kinematic> objects;
         objects = screenManager.getPhysicsObjects();
         if (objects == null) return;
+        Player.PlayerState playerState = null;
+        for (Kinematic k : objects){
+            if(k instanceof Player) playerState = ((Player) k).getState();
+        }
+        if(playerState == null) return;
         int indices = objects.size();
         for (int i1 = 0; i1 < indices; i1++) {
             if(objects.get(i1).isStatic()) continue;;
             GameObject obj1 = (GameObject) objects.get(i1);
 
-            if ((((Kinematic) obj1).getAcceleration().y + PhysicsMeta.Gravity) < PhysicsMeta.terminalVelocity)
-                ((Kinematic) obj1).setAcceleration(((Kinematic) obj1).getAcceleration().add(new PhysicsVector(0, PhysicsMeta.Gravity)));
+            if(playerState == Player.PlayerState.sideScroll) {
+                if ((((Kinematic) obj1).getAcceleration().y + PhysicsMeta.Gravity) < PhysicsMeta.terminalVelocity)
+                    ((Kinematic) obj1).setAcceleration(((Kinematic) obj1).getAcceleration().add(new PhysicsVector(0, PhysicsMeta.Gravity)));
+            }
 
             obj1.setY(obj1.getY() + (int) ((Kinematic) obj1).getVelocity().y);
             obj1.setX(obj1.getX() + (int) ((Kinematic) obj1).getVelocity().x);
@@ -57,9 +64,15 @@ public class PhysicsEngine {
             }
 
             //Collision Detection
+            //TODO: EXTRACT
             for (int i2 = 0; i2 < indices; i2++) {
                 if (i2 == i1) continue;
                 GameObject obj2 = (GameObject) objects.get(i2);
+                if(obj2 instanceof Interactable){
+                    if(((Kinematic) obj1).getHitbox().intersects(((Interactable) obj2).hitbox())){
+                        ((Interactable) obj2).action(obj1);
+                    }
+                }
                 if (((Kinematic) obj1).getHitbox().intersects(((Kinematic) obj2).getHitbox())) {
                     if (obj1 instanceof Weapon && obj2 instanceof Player) {
                         GameEngine.players.get(0).addItem((Weapon) obj1);

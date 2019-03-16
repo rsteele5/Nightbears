@@ -14,6 +14,7 @@ import gameobject.renderable.item.weapon.WeaponBuilder;
 import gameobject.renderable.item.weapon.WeaponType;
 import gameobject.renderable.player.overworld.PlayerIdleAnimation;
 import gameobject.renderable.player.overworld.PlayerWalkingAnimation;
+import gameobject.renderable.player.sidescrolling.PlayerSSCrouchingAnimation;
 import gameobject.renderable.player.sidescrolling.PlayerSSIdleAnimation;
 import gamescreen.GameScreen;
 import main.utilities.AssetLoader;
@@ -33,6 +34,8 @@ public class Player extends RenderableObject implements Kinematic {
     private PhysicsVector magnitude = new PhysicsVector(0, 0);
     private final int[] ssKeys = new int[]{68, 65};
     private final int[] owKeys = new int[]{68, 65, 83, 87};
+    private boolean crouch = false;
+    private boolean crouchSet = true;
     private int movFlag = 0;
     private int gold;
     private double rotation = 0;
@@ -55,6 +58,7 @@ public class Player extends RenderableObject implements Kinematic {
         if(animator != null){
             animator.animate();
         }
+
         Graphics2D g2 = (Graphics2D) graphics2D.create();
         g2.rotate(rotation, x + (width / 2.0), y + (height / 2.0));
         g2.drawImage(image, x, y, null);
@@ -70,6 +74,7 @@ public class Player extends RenderableObject implements Kinematic {
         animator.addAnimation("Walking", new PlayerWalkingAnimation());
         animator.addAnimation("Idle", new PlayerIdleAnimation());
         animator.addAnimation("SS_Idle", new PlayerSSIdleAnimation());
+        animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation());
     }
 
     private void initializeItems() {
@@ -102,6 +107,24 @@ public class Player extends RenderableObject implements Kinematic {
 
     @Override
     public void update() {
+        if(playerState == PlayerState.sideScroll && !crouchSet  ){
+            crouchSet = true;
+            if(crouch) {
+                y = y + image.getHeight()/2;
+                image = AssetLoader.load("/assets/testAssets/square2_crouching.png");
+                imagePath = "/assets/testAssets/square2_crouching.png";
+                animator.setAnimation("SS_Crouch");
+            //animator.setAnimation("SS_Crouch");
+            }
+            else {
+                image = AssetLoader.load("/assets/testAssets/square2.png");
+                imagePath = "/assets/testAssets/square2.png";
+                animator.setAnimation("SS_Idle");
+                y = y - image.getHeight()/2;
+
+             //   animator.setAnimation("SS_Idle");
+            }
+        }
         if (playerState == PlayerState.overWorld) {
             if (magnitude.x != 0.0 || magnitude.y != 0.0) {
                 rotation = getVelocity().direction();
@@ -142,8 +165,14 @@ public class Player extends RenderableObject implements Kinematic {
                     setAcceleration(getAcceleration().add(new PhysicsVector(0, -7 * sign)));
                     grounded = false;
                 }
+                if(e.getKeyCode() == 83 && !crouch){
+                    Debug.log(DebugEnabler.PLAYER_STATUS,"CROUCHING");
+                    crouch = true;
+                    crouchSet = false;
+                }
                 if (PhysicsMeta.Gravity == 0) calculateMove(e, owKeys);
                 else calculateMove(e, ssKeys);
+
                 break;
 
             case overWorld:
@@ -155,8 +184,15 @@ public class Player extends RenderableObject implements Kinematic {
     public void moveRelease(KeyEvent e) {
         switch (getState()) {
             case sideScroll:
+                if(e.getKeyCode() == 83 && crouch){
+                    Debug.log(DebugEnabler.PLAYER_STATUS,"CROUCHING RELEASE");
+                    crouch = false;
+                    crouchSet = false;
+
+                }
                 if (PhysicsMeta.Gravity == 0) calculateRelease(e, owKeys);
                 else calculateRelease(e, ssKeys);
+
                 break;
 
             case overWorld:

@@ -1,8 +1,11 @@
 package gamescreen.gameplay.overworld;
 
+import _test.Square;
+import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.overworld.Map;
 import gameobject.renderable.house.overworld.MapBuilder;
 import gameobject.renderable.house.overworld.room.Bedroom;
+import gameobject.renderable.house.sidescrolling.Floor;
 import gamescreen.gameplay.VendorDialogBox;
 import gameengine.GameEngine;
 import gameengine.rendering.Camera;
@@ -50,6 +53,11 @@ public class OverworldScreen extends GameScreen {
         vendor.setImage("/assets/vendor/vendoridleanimation/VendorOverworldForward.png");
         //TODO: make vendor trigger box
         vendor.addToScreen(this, true);
+        Floor test = new Floor(30,30,"/assets/testAssets/brick.jpg", DrawLayer.Entity);
+        test.setHeight(100);
+        test.setWidth(100);
+        //Square test2 = new Square(100,100,"/assets/testAssets/square.png", DrawLayer.Entity);
+        //test2.addToScreen(this,true);
 
         //Overlay TODO: Fix layering
         UI = new OverworldUI(screenManager, this);

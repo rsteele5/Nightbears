@@ -1,7 +1,6 @@
 package gameengine;
 
 import gameengine.gamedata.GameData;
-import gameengine.physics.OverworldEngine;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.vendor.Vendor;
 import gameobject.renderable.DrawLayer;
@@ -29,7 +28,6 @@ public class GameEngine implements Runnable {
     private ScreenManager screenManager;
     private PhysicsEngine physicsEngine;
     private RenderEngine renderEngine;
-    private OverworldEngine overworldEngine;
     public static ArrayList<Player> players;
     private static Player p1,p2;
     public static Vendor vendor;
@@ -47,7 +45,6 @@ public class GameEngine implements Runnable {
             add(p1);
             add(p2);
         }};
-        overworldEngine = new OverworldEngine(screenManager);
     }
 
     public Graphics getGraphics(){
@@ -64,15 +61,7 @@ public class GameEngine implements Runnable {
         while(true){
             frameCounter++;
             long startTime = System.currentTimeMillis();
-            //Update
-            switch (players.get(0).getState()){
-                case sideScroll:
-                    physicsEngine.update();
-                    break;
-                case overWorld:
-                    overworldEngine.update();
-                    break;
-            }
+            physicsEngine.update();
             screenManager.update();
             //Render
             renderEngine.draw();
