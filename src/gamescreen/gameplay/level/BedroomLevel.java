@@ -21,6 +21,7 @@ public class BedroomLevel implements Level {
         background.addToScreen(gameScreen, true);
     }
 
+    @Override
     public void buildTerrain(GameScreen gameScreen) {
         //This is where the instruction for how to procedurally generate a level would go
         FloorTile floorTile = new FloorTile(10, 576, "/assets/levelObjects/WoodTile1.png");

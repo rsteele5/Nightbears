@@ -1,5 +1,7 @@
 package gameengine.gamedata;
 
+import gameengine.audio.BackgroundAudio;
+import gameengine.audio.SoundEffectAudio;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -15,7 +17,7 @@ public class GameData implements Serializable {
     private final String FILE_NAME = "GameData.dat";
     private GraphicsSetting currentGraphicsSetting;
     private InputSetting currentInputSetting;
-    private SoundSetting currentSoundSetting;
+    private SoundSetting[] currentSoundSetting = new SoundSetting[3];
 
     public GameData(){
         try {
@@ -25,7 +27,13 @@ public class GameData implements Serializable {
             if(!dataFile.exists()) {
                 currentGraphicsSetting = new GraphicsSetting(High);
                 currentInputSetting = new InputSetting(KeyBoard);
-                currentSoundSetting = new SoundSetting(On);
+                for (int i = 0; i < currentSoundSetting.length; i++) {
+                    if (i < 2) {
+                        currentSoundSetting[i] = new SoundSetting(On);
+                    } else {
+                        currentSoundSetting[i] = new SoundSetting(SoundSetting.SoundVolume.Medium);
+                    }
+                }
                 save();
             } else {
                 FileInputStream file = new FileInputStream(dataFile);
@@ -34,16 +42,24 @@ public class GameData implements Serializable {
                 GameData gameDataInput = (GameData)in.readObject();
                 this.currentGraphicsSetting = gameDataInput.getGraphicsSettings();
                 this.currentInputSetting = gameDataInput.getInputSetting();
-                this.currentSoundSetting = gameDataInput.getSoundSetting();
+                for (int i = 0; i < currentSoundSetting.length; i++) {
+                    if (i < 2) {
+                        currentSoundSetting[i] = gameDataInput.getSoundSetting(i);
+                    } else {
+                        currentSoundSetting[i] = new SoundSetting(SoundSetting.SoundVolume.Medium);
+                    }
+                }
 
                 in.close();
                 file.close();
             }
+            initializeSound();
+
             Debug.success(DebugEnabler.GAME_DATA,"Loaded GameData successfully");
 
             Debug.log(DebugEnabler.GAME_DATA, currentGraphicsSetting.getCurrentOption().name());
             Debug.log(DebugEnabler.GAME_DATA, currentInputSetting.getCurrentOption().name());
-            Debug.log(DebugEnabler.GAME_DATA, currentSoundSetting.getCurrentOption().name());
+            Debug.log(DebugEnabler.GAME_DATA, currentSoundSetting[0].getCurrentOption().name());
 
         } catch (IOException ex) { Debug.error(DebugEnabler.GAME_DATA, "Loading Failed - IOException is caught");
         } catch (ClassNotFoundException ex) { Debug.error(DebugEnabler.GAME_DATA,"Loading Failed - ClassNotFoundException is caught"); }
@@ -67,12 +83,12 @@ public class GameData implements Serializable {
         save();
     }
 
-    public SoundSetting getSoundSetting() {
-        return currentSoundSetting;
+    public SoundSetting getSoundSetting(int index) {
+        return currentSoundSetting[index];
     }
 
-    public void setSoundSetting(SoundSetting setting) {
-        this.currentSoundSetting = setting;
+    public void setSoundSetting(SoundSetting setting, int index) {
+        this.currentSoundSetting[index] = setting;
         save();
     }
 
@@ -92,6 +108,36 @@ public class GameData implements Serializable {
         } catch(IOException ex) { System.out.println("IOException is caught"); }
     }
 
+    private void initializeSound() {
+        for (int i = 0; i < currentSoundSetting.length; i++) {
+                switch(i) {
+                    case 0:
+                        if (currentSoundSetting[i].getCurrentOption().equals(On)) {
+                            BackgroundAudio.changeMuteState(false);
+                        } else {
+                            BackgroundAudio.changeMuteState(true);
+                            break;
+                        }
+                    case 1:
+                        if (currentSoundSetting[i].getCurrentOption().equals(On)) {
+                            SoundEffectAudio.changeMuteState(false);
+                        } else {
+                            SoundEffectAudio.changeMuteState(true);
+                            break;
+                        }
+                        break;
+                    case 2:
+                        switch(currentSoundSetting[i].getCurrentVolume()) {
+                            case Low: BackgroundAudio.changeVolume(-10.0f); break;
+                            case Medium: BackgroundAudio.changeVolume(0.0f); break;
+                            case High: BackgroundAudio.changeVolume(1.0f); break;
+                        }
+                        break;
+                    default:
+                }
+            }
+        }
+    }
 
 
 
@@ -104,4 +150,5 @@ public class GameData implements Serializable {
 
 
 
-}
+
+
