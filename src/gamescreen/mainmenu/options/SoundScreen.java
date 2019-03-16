@@ -25,8 +25,8 @@ public class SoundScreen extends GameScreen {
     private boolean didOptionsChange;
 
     //region <Variables>
-    private final int X_INIT_BUTTON = 664;
-    private final int Y_INIT_BUTTON = 226;
+    private final int X_INIT_BUTTON = 996;
+    private final int Y_INIT_BUTTON = 400;
     private final int WIDTH_BUTTON = 256;
     private final int X_BUFFER = 48;
     private final int Y_BUFFER = 110;
@@ -63,16 +63,16 @@ public class SoundScreen extends GameScreen {
         for (int i = 0; i < 3; i++) {
             TextBox controlsText;
             if (i < 2) {
-                controlsText = new TextBox(X_INIT_BUTTON+X_BUFFER, Y_INIT_BUTTON + (i * Y_INIT_BUTTON) / 2,
+                controlsText = new TextBox(X_INIT_BUTTON+X_BUFFER, Y_INIT_BUTTON + (i * 226) / 2,
                         300,
-                        150,
+                        60,
                         localSettings[i].getCurrentOption().name(),
                         new Font("NoScary", Font.PLAIN, 60),
                         Color.WHITE);
             } else {
-                controlsText = new TextBox(X_INIT_BUTTON+X_BUFFER, Y_INIT_BUTTON + (i * Y_INIT_BUTTON) / 2,
+                controlsText = new TextBox(X_INIT_BUTTON+X_BUFFER, Y_INIT_BUTTON + (i * 226) / 2,
                         300,
-                        150,
+                        60,
                         localSettings[i].getCurrentVolume().name(),
                         new Font("NoScary", Font.PLAIN, 60),
                         Color.WHITE);
@@ -81,7 +81,7 @@ public class SoundScreen extends GameScreen {
             controlsText.addToScreen(this, true);
             final int index = i;
 
-            butt = new Button(X_INIT_BUTTON, Y_INIT_BUTTON + (i * Y_INIT_BUTTON) / 2, "/assets/buttons/Button-LeftArrow.png", DrawLayer.Entity,
+            butt = new Button(X_INIT_BUTTON, Y_INIT_BUTTON + (i * 226) / 2, "/assets/buttons/Button-LeftArrow.png", DrawLayer.Entity,
                     () -> {
                         Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Left Arrow");
                         if (index < 2) {
@@ -98,7 +98,7 @@ public class SoundScreen extends GameScreen {
                     });
             butt.addToScreen(this, true);
 
-            butt = new Button(X_INIT_BUTTON + X_BUFFER + WIDTH_BUTTON, Y_INIT_BUTTON + (i * Y_INIT_BUTTON) / 2, "/assets/buttons/Button-RightArrow.png", DrawLayer.Entity,
+            butt = new Button(X_INIT_BUTTON + X_BUFFER + WIDTH_BUTTON, Y_INIT_BUTTON + (i * 226) / 2, "/assets/buttons/Button-RightArrow.png", DrawLayer.Entity,
                     () -> {
                         Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Right Arrow");
                         if (index < 2) {
