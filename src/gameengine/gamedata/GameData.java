@@ -28,7 +28,11 @@ public class GameData implements Serializable {
                 currentGraphicsSetting = new GraphicsSetting(High);
                 currentInputSetting = new InputSetting(KeyBoard);
                 for (int i = 0; i < currentSoundSetting.length; i++) {
-                    currentSoundSetting[i] = new SoundSetting(On);
+                    if (i < 2) {
+                        currentSoundSetting[i] = new SoundSetting(On);
+                    } else {
+                        currentSoundSetting[i] = new SoundSetting(SoundSetting.SoundVolume.Medium);
+                    }
                 }
                 save();
             } else {
@@ -102,32 +106,27 @@ public class GameData implements Serializable {
 
     private void initializeSound() {
         for (int i = 0; i < currentSoundSetting.length; i++) {
-            if (currentSoundSetting[i].getCurrentOption().equals(On)) {
                 switch(i) {
                     case 0:
-                        BackgroundAudio.changeMuteState(false);
-                        break;
+                        if (currentSoundSetting[i].getCurrentOption().equals(On)) {
+                            BackgroundAudio.changeMuteState(false);
+                        } else {
+                            BackgroundAudio.changeMuteState(true);
+                            break;
+                        }
                     case 1:
-                        SoundEffectAudio.changeMuteState();
+                        if (currentSoundSetting[i].getCurrentOption().equals(On)) {
+                            SoundEffectAudio.changeMuteState(false);
+                        } else {
+                            SoundEffectAudio.changeMuteState(true);
+                            break;
+                        }
                         break;
                     case 2:
                         //BackgroundAudio.changeMuteState(false);
                         break;
                     default:
                 }
-            } else {
-                    switch(i) {
-                        case 0:
-                            BackgroundAudio.changeMuteState(true);
-                            break;
-                        case 1:
-                            SoundEffectAudio.changeMuteState();
-                            break;
-                        case 2:
-                            //BackgroundAudio.changeMuteState(true);
-                            break;
-                        default:
-                    }
             }
         }
     }
@@ -144,4 +143,4 @@ public class GameData implements Serializable {
 
 
 
-}
+

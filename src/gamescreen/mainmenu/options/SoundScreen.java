@@ -21,6 +21,7 @@ public class SoundScreen extends GameScreen {
 
     private SoundSetting[] localSettings;
     private SoundSetting.SoundOption[] options = SoundSetting.SoundOption.values();
+    private SoundSetting.SoundVolume[] volumes = SoundSetting.SoundVolume.values();
     private boolean didOptionsChange;
 
     //region <Variables>
@@ -44,7 +45,11 @@ public class SoundScreen extends GameScreen {
 
         localSettings = new SoundSetting[3];
         for (int i = 0; i < localSettings.length; i++) {
-            localSettings[i] = new SoundSetting(gameData.getSoundSetting(i).getCurrentOption());
+            if (i < 2) {
+                localSettings[i] = new SoundSetting(gameData.getSoundSetting(i).getCurrentOption());
+            } else {
+                localSettings[i] = new SoundSetting(gameData.getSoundSetting(i).getCurrentVolume());
+            }
         }
         ImageContainer imageContainer;
 
@@ -56,12 +61,22 @@ public class SoundScreen extends GameScreen {
         Button butt;
 
         for (int i = 0; i < 3; i++) {
-            TextBox controlsText = new TextBox(X_INIT_BUTTON+X_BUFFER, Y_INIT_BUTTON + (i * Y_INIT_BUTTON) / 2,
-                    300,
-                    150,
-                    localSettings[i].getCurrentOption().name(),
-                    new Font("NoScary", Font.PLAIN, 60),
-                    Color.WHITE);
+            TextBox controlsText;
+            if (i < 2) {
+                controlsText = new TextBox(X_INIT_BUTTON+X_BUFFER, Y_INIT_BUTTON + (i * Y_INIT_BUTTON) / 2,
+                        300,
+                        150,
+                        localSettings[i].getCurrentOption().name(),
+                        new Font("NoScary", Font.PLAIN, 60),
+                        Color.WHITE);
+            } else {
+                controlsText = new TextBox(X_INIT_BUTTON+X_BUFFER, Y_INIT_BUTTON + (i * Y_INIT_BUTTON) / 2,
+                        300,
+                        150,
+                        localSettings[i].getCurrentVolume().name(),
+                        new Font("NoScary", Font.PLAIN, 60),
+                        Color.WHITE);
+            }
 
             controlsText.addToScreen(this, true);
             final int index = i;
@@ -69,20 +84,34 @@ public class SoundScreen extends GameScreen {
             butt = new Button(X_INIT_BUTTON, Y_INIT_BUTTON + (i * Y_INIT_BUTTON) / 2, "/assets/buttons/Button-LeftArrow.png", DrawLayer.Entity,
                     () -> {
                         Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Left Arrow");
-                        int nextOptionOrdinal = (localSettings[index].getCurrentOption().ordinal() + 1) % options.length;
-                        if(nextOptionOrdinal > 1) nextOptionOrdinal = 0;
-                        localSettings[index].setCurrentOption(options[nextOptionOrdinal]);
-                        controlsText.setText(localSettings[index].getCurrentOption().name());
+                        if (index < 2) {
+                            int nextOptionOrdinal = (localSettings[index].getCurrentOption().ordinal() - 1) % options.length;
+                            if(nextOptionOrdinal > 1) nextOptionOrdinal = 0;
+                            localSettings[index].setCurrentOption(options[nextOptionOrdinal]);
+                            controlsText.setText(localSettings[index].getCurrentOption().name());
+                        } else {
+                            int nextVolumeOrdinal = (localSettings[index].getCurrentVolume().ordinal() - 1) % volumes.length;
+                            if(nextVolumeOrdinal > 2) nextVolumeOrdinal = 0;
+                            localSettings[index].setCurrentSoundVolume(volumes[nextVolumeOrdinal]);
+                            controlsText.setText(localSettings[index].getCurrentVolume().name());
+                        }
                     });
             butt.addToScreen(this, true);
 
             butt = new Button(X_INIT_BUTTON + X_BUFFER + WIDTH_BUTTON, Y_INIT_BUTTON + (i * Y_INIT_BUTTON) / 2, "/assets/buttons/Button-RightArrow.png", DrawLayer.Entity,
                     () -> {
                         Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Right Arrow");
-                        int nextOptionOrdinal = (localSettings[index].getCurrentOption().ordinal() - 1) % options.length;
-                        if(nextOptionOrdinal < 0) nextOptionOrdinal = 1;
-                        localSettings[index].setCurrentOption(options[nextOptionOrdinal]);
-                        controlsText.setText(localSettings[index].getCurrentOption().name());
+                        if (index < 2) {
+                            int nextOptionOrdinal = (localSettings[index].getCurrentOption().ordinal() + 1) % options.length;
+                            if(nextOptionOrdinal < 0) nextOptionOrdinal = 1;
+                            localSettings[index].setCurrentOption(options[nextOptionOrdinal]);
+                            controlsText.setText(localSettings[index].getCurrentOption().name());
+                        } else {
+                            int nextVolumeOrdinal = (localSettings[index].getCurrentVolume().ordinal() + 1) % volumes.length;
+                            if(nextVolumeOrdinal < 0) nextVolumeOrdinal = 2;
+                            localSettings[index].setCurrentSoundVolume(volumes[nextVolumeOrdinal]);
+                            controlsText.setText(localSettings[index].getCurrentVolume().name());
+                        }
                     });
             butt.addToScreen(this, true);
         }
@@ -128,9 +157,16 @@ public class SoundScreen extends GameScreen {
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Back");
                     for (int i = 0; i < localSettings.length; i++) {
-                        if (!localSettings[i].getCurrentOption().equals(gameData.getSoundSetting(i).getCurrentOption())) {
-                            didOptionsChange = true;
+                        if (i < 2) {
+                            if (!localSettings[i].getCurrentOption().equals(gameData.getSoundSetting(i).getCurrentOption())) {
+                                didOptionsChange = true;
+                            }
+                        } else {
+                            if (!localSettings[i].getCurrentVolume().equals(gameData.getSoundSetting(i).getCurrentVolume())) {
+                                didOptionsChange = true;
+                            }
                         }
+
                     }
                     if (didOptionsChange) {
                         screenManager.addScreen(new ConfirmationPopup(screenManager,
