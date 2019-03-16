@@ -36,6 +36,7 @@ public class Player extends RenderableObject implements Kinematic {
     private final int[] owKeys = new int[]{68, 65, 83, 87};
     private boolean crouch = false;
     private boolean crouchSet = true;
+    public boolean interaction = false;
     private int movFlag = 0;
     private int gold;
     private double moveFactor = 1;
@@ -108,6 +109,7 @@ public class Player extends RenderableObject implements Kinematic {
 
     @Override
     public void update() {
+        if(interaction) Debug.log(DebugEnabler.PLAYER_STATUS,"Interaction Avaiable! Act now!");
         if(playerState == PlayerState.sideScroll && !crouchSet  ){
             crouchSet = true;
             if(crouch) {
