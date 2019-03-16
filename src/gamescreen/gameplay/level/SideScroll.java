@@ -23,8 +23,8 @@ public class SideScroll extends GameScreen {
     private CopyOnWriteArrayList<GameObject> onScreen;
     private CopyOnWriteArrayList<Kinematic> kinematicObjects;
     private OverworldUI UI;
-    final int xOFF = 2000;
-    final int yOFF = 2000;
+    final int xOFF = 2500;
+    final int yOFF = 1500;
     public SideScroll(ScreenManager screenManager) {
         super(screenManager, "level", 1f);
     }
