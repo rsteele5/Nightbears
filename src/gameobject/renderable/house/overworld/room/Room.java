@@ -1,5 +1,6 @@
 package gameobject.renderable.house.overworld.room;
 
+import gameobject.renderable.player.Player;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -15,7 +16,7 @@ public abstract class Room {
     protected int width;
     protected int height;
 
-    //protected ArrayList<AncorPoint> ancorPoints;
+    protected ArrayList<SpawnPoint> spawnPoints;
 
     //private ArrayList<Boundary> boundaries;
     //endregion
@@ -27,10 +28,12 @@ public abstract class Room {
         layout = constructLayout();
         width = layout[0].length;
         height = layout.length;
-        //
+        spawnPoints = new ArrayList<>();
+        initializeSpawnPoints();
     }
 
     protected abstract Integer[][] constructLayout();
+    protected abstract void initializeSpawnPoints();
 
     public String getName() {
         return name;
@@ -42,6 +45,39 @@ public abstract class Room {
 
     public int getCellY() {
         return cellY;
+    }
+
+    public ArrayList<SpawnPoint> getPlayerSpawnOptions(){
+        ArrayList<SpawnPoint> playerSpawnOptions = new ArrayList<>();
+        for(SpawnPoint spawn : spawnPoints){
+            if(spawn.getSpawnType() == SpawnType.Player)
+                playerSpawnOptions.add(spawn);
+        }
+        if(playerSpawnOptions.isEmpty())
+            return null;
+        return playerSpawnOptions;
+    }
+
+    public ArrayList<SpawnPoint> getVendorSpawnOptions(){
+        ArrayList<SpawnPoint> vendorSpawnOptions = new ArrayList<>();
+        for(SpawnPoint spawn : spawnPoints){
+            if(spawn.getSpawnType() == SpawnType.Vendor)
+                vendorSpawnOptions.add(spawn);
+        }
+        if(vendorSpawnOptions.isEmpty())
+            return null;
+        return vendorSpawnOptions;
+    }
+
+    public ArrayList<SpawnPoint> getObjectSpawnOptions(){
+        ArrayList<SpawnPoint> ObjectSpawnOptions = new ArrayList<>();
+        for(SpawnPoint spawn : spawnPoints){
+            if(spawn.getSpawnType() == SpawnType.Objcect)
+                ObjectSpawnOptions.add(spawn);
+        }
+        if(ObjectSpawnOptions.isEmpty())
+            return null;
+        return ObjectSpawnOptions;
     }
 
     public Integer[][] getLayout() {
@@ -77,7 +113,6 @@ public abstract class Room {
             Debug.warning(DebugEnabler.OVERWORLD, name
                     + " - is trying to compare layouts, but does not have a set cell yet. Returning false. ");
         }
-
         return false;
     }
 }

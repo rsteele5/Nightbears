@@ -5,6 +5,7 @@ import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.overworld.Map;
 import gameobject.renderable.house.overworld.MapBuilder;
 import gameobject.renderable.house.overworld.room.Bedroom;
+import gameobject.renderable.house.overworld.room.SpawnPoint;
 import gameobject.renderable.house.sidescrolling.Floor;
 import gamescreen.gameplay.VendorDialogBox;
 import gameengine.GameEngine;
@@ -14,6 +15,8 @@ import gameobject.renderable.vendor.Vendor;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import main.utilities.Debug;
+
+import java.util.ArrayList;
 
 public class OverworldScreen extends GameScreen {
 
@@ -36,7 +39,7 @@ public class OverworldScreen extends GameScreen {
         //House generation
         MapBuilder mapBuilder = new MapBuilder();
         mapBuilder.createMap(this);
-        mapBuilder.addRoomAtCell(1,1, new Bedroom());
+        mapBuilder.addRoomAtCell(0,0, new Bedroom());
         mapBuilder.addRoomAtCell(4,4, new Bedroom());
         overworldMap = mapBuilder.buildMap();
 
@@ -44,20 +47,42 @@ public class OverworldScreen extends GameScreen {
         GameEngine.players.get(0).setState(Player.PlayerState.overWorld);
         Debug.log(true, String.valueOf(GameEngine.players.get(0).getState()));
         GameEngine.players.get(0).reset();
+        SpawnPoint playerSpawn = overworldMap.getPlayerSpawn();
+        GameEngine.players.get(0).setPosition(playerSpawn.getTileX(), playerSpawn.getTileY());
         GameEngine.players.get(0).addToScreen(this,true);
         setCamera(new Camera(this, GameEngine.players.get(0)));
 
         //Vendor
         Vendor vendor = GameEngine.vendor;
-        vendor.setPosition(150,0);
+        SpawnPoint vendorSpawn = overworldMap.getVendorSpawn();
+        vendor.setPosition(vendorSpawn.getTileX(), vendorSpawn.getTileY());
         vendor.setImage("/assets/vendor/vendoridleanimation/VendorOverworldForward.png");
         //TODO: make vendor trigger box
         vendor.addToScreen(this, true);
-        Floor test = new Floor(30,30,"/assets/testAssets/brick.jpg", DrawLayer.Entity);
-        test.setHeight(100);
-        test.setWidth(100);
-        //Square test2 = new Square(100,100,"/assets/testAssets/square.png", DrawLayer.Entity);
-        //test2.addToScreen(this,true);
+
+
+        //Walls
+        ArrayList<SpawnPoint> objectSpawns = overworldMap.getObjectSpawns();
+        SpawnPoint TLC = objectSpawns.get(0);
+        SpawnPoint TRC = objectSpawns.get(1);
+        SpawnPoint BLC = objectSpawns.get(2);
+
+        Floor northWall = new Floor(TLC.getTileX()-50,TLC.getTileY()-50,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
+        northWall.setHeight(25);
+        northWall.setWidth(500);
+        northWall.addToScreen(this,true);
+        Floor westWall = new Floor(TLC.getTileX()-50,TLC.getTileY()-50,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
+        westWall.setHeight(500);
+        westWall.setWidth(25);
+        westWall.addToScreen(this,true);
+        Floor eastWall = new Floor(TRC.getTileX()+25,TRC.getTileY()-50,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
+        eastWall.setHeight(500);
+        eastWall.setWidth(25);
+        eastWall.addToScreen(this,true);
+        Floor southWall = new Floor(BLC.getTileX()-450,BLC.getTileY()+25,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
+        southWall.setHeight(25);
+        southWall.setWidth(500);
+        southWall.addToScreen(this,true);
 
         //Overlay TODO: Fix layering
         UI = new OverworldUI(screenManager, this);
