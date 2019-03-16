@@ -19,7 +19,7 @@ public class Camera {
     public void track(Graphics2D graphics) {
         graphics.translate(-target.getX()+640, -target.getY()+360);
         for(RenderableObject renderableObject: screen.getRenderables()){
-            if(Math.hypot(target.getX()-renderableObject.getX(), target.getY()-renderableObject.getY()) < 1105)
+            if(Math.hypot(target.getX()-renderableObject.getX(), target.getY()-renderableObject.getY()) < 4000)
                 renderableObject.draw(graphics);
         }
         graphics.translate(target.getX()-640, target.getY()-360);

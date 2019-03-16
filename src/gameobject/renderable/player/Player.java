@@ -38,6 +38,7 @@ public class Player extends RenderableObject implements Kinematic {
     private boolean crouchSet = true;
     private int movFlag = 0;
     private int gold;
+    private double moveFactor = 1;
     private double rotation = 0;
     /*
     0b1     =   right
@@ -111,14 +112,11 @@ public class Player extends RenderableObject implements Kinematic {
             crouchSet = true;
             if(crouch) {
                 y = y + image.getHeight()/2;
-                image = AssetLoader.load("/assets/testAssets/square2_crouching.png");
-                imagePath = "/assets/testAssets/square2_crouching.png";
                 animator.setAnimation("SS_Crouch");
-            //animator.setAnimation("SS_Crouch");
             }
             else {
-                image = AssetLoader.load("/assets/testAssets/square2.png");
-                imagePath = "/assets/testAssets/square2.png";
+              //  image = AssetLoader.load("/assets/testAssets/square2.png");
+             //   imagePath = "/assets/testAssets/square2.png";
                 animator.setAnimation("SS_Idle");
                 y = y - image.getHeight()/2;
 
@@ -159,6 +157,7 @@ public class Player extends RenderableObject implements Kinematic {
 
     public void move(KeyEvent e) {
         switch (getState()) {
+
             case sideScroll:
                 if (e.getKeyCode() == 32 && grounded) {
                     int sign = PhysicsMeta.AntiGravity ? -1 : 1;
@@ -170,6 +169,9 @@ public class Player extends RenderableObject implements Kinematic {
                     crouch = true;
                     crouchSet = false;
                 }
+                if(e.getKeyCode() == 16) {
+                    moveFactor = 2.5;
+                }
                 if (PhysicsMeta.Gravity == 0) calculateMove(e, owKeys);
                 else calculateMove(e, ssKeys);
 
@@ -179,6 +181,7 @@ public class Player extends RenderableObject implements Kinematic {
                 calculateMove(e, owKeys);
                 break;
         }
+
     }
 
     public void moveRelease(KeyEvent e) {
@@ -190,6 +193,9 @@ public class Player extends RenderableObject implements Kinematic {
                     crouchSet = false;
 
                 }
+                if(e.getKeyCode() == 16) {
+                    moveFactor = 1;
+                }
                 if (PhysicsMeta.Gravity == 0) calculateRelease(e, owKeys);
                 else calculateRelease(e, ssKeys);
 
@@ -199,6 +205,7 @@ public class Player extends RenderableObject implements Kinematic {
                 calculateRelease(e, owKeys);
                 break;
         }
+
     }
 
     @Override
@@ -213,7 +220,7 @@ public class Player extends RenderableObject implements Kinematic {
         double y = pV.y;
         y = y < 1 && y > .5 ? 1 : y;
         y = y < -.5 && y > -1 ? -1 : y;
-        return new PhysicsVector(pV.x, y);
+        return new PhysicsVector(pV.x * moveFactor, y);
     }
 
     @Override

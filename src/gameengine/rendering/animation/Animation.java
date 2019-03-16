@@ -11,7 +11,10 @@ public abstract class Animation implements Loadable {
     protected ArrayList<AnimationImage> animationImages = new ArrayList<>();
     protected int frameToDisplay = -1;
     protected int totalFrames = 0;
-
+    public AnimationImage start(){
+        frameToDisplay = 0;
+        return animationImages.get(frameToDisplay);
+    }
     public void addAnimationImage(AnimationImage image){
         animationImages.add(image);
         totalFrames++;
