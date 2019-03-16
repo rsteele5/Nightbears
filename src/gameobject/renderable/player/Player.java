@@ -77,9 +77,9 @@ public class Player extends RenderableObject implements Kinematic {
                 .imagePath("/assets/Items/sword1.png")
                 .name("My Fwirst Sword")
                 .type(WeaponType.Sword)
-                .value(11)
-                .minDamage(4)
-                .maxDamage(12)
+                .value(10)
+                .minDamage(5)
+                .maxDamage(7)
                 .critChance(3)
                 .buildWeapon());
 
@@ -87,8 +87,8 @@ public class Player extends RenderableObject implements Kinematic {
                 .imagePath("/assets/Items/helmet1.png")
                 .name("My Fwirst Helmet")
                 .type(ArmorType.Head)
-                .value(11)
-                .armorPoints(12)
+                .value(12)
+                .armorPoints(10)
                 .buildArmor());
 
         if (items.size() > 0) {

@@ -15,19 +15,21 @@ import static java.lang.Math.round;
 
 public class Weapon extends RenderableObject implements Item, Kinematic {
     // Item Variables
-    protected BufferedImage icon;
+    private BufferedImage icon;
     protected String name;
-    protected String description;
+    private String description;
     protected int value;
 
     // Weapon Variables
     protected WeaponType type;
-    protected int maxDamage;
-    protected int minDamage;
-    protected int critChance;
+    private int maxDamage;
+    private int minDamage;
+    private int critChance;
+    private String quality;
 
-    protected Weapon(int x, int y, String imagePath, DrawLayer layer,
-                     String name, int value, WeaponType type, int minDamage, int maxDamage, int critChance){
+    Weapon(int x, int y, String imagePath, DrawLayer layer,
+           String name, int value, WeaponType type, int minDamage, int maxDamage,
+           int critChance, String quality, String description){
         super(x,y,imagePath,layer);
         this.name = name;
         this.value = value;
@@ -35,8 +37,8 @@ public class Weapon extends RenderableObject implements Item, Kinematic {
         this.minDamage = minDamage;
         this.maxDamage = maxDamage;
         this.critChance = critChance;
-
-        setDescription("Testing the weapon description field now. aa aa aa aa aa aa aa aa aa aa aa aa stop");
+        this.quality = quality;
+        this.description = description;
     }
 
     @Override
@@ -78,6 +80,8 @@ public class Weapon extends RenderableObject implements Item, Kinematic {
     public void depreciate() {
         this.value = round((float)(value * (0.9)));
     }
+
+    public String getQuality(){return quality;}
 
     public int getMinDamage() { return minDamage;}
 
@@ -124,6 +128,12 @@ public class Weapon extends RenderableObject implements Item, Kinematic {
     public Rectangle getHitbox() {
         return new Rectangle(x, y, width, height);
     }
+
+    public void increaseMaxAttribute(int num){
+        WeaponBuilder.maxWeapon += num;
+        WeaponBuilder.minWeapon += num;
+    }
+
 }
 
 
