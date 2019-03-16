@@ -33,7 +33,8 @@ public class OverworldScreen extends GameScreen {
         //House generation
         MapBuilder mapBuilder = new MapBuilder();
         mapBuilder.createMap(this);
-        mapBuilder.addRoomAtCell(0,0, new Bedroom());
+        mapBuilder.addRoomAtCell(1,1, new Bedroom());
+        mapBuilder.addRoomAtCell(4,4, new Bedroom());
         overworldMap = mapBuilder.buildMap();
 
         //Player

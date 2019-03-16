@@ -7,21 +7,21 @@ public enum OverworldMeta {;
 
     //region<Tiles>
     public enum Tiles {;
-        public static int EMPTY = 0;
+        public static final int EMPTY = 0;
         //House tiles
         public enum House {;
-            public static int CARPET =  1;
-            public static int WALLN =   2;
-            public static int WALLNE =  3;
-            public static int WALLE =   4;
-            public static int WALLSE =  5;
-            public static int WALLS =   6;
-            public static int WALLSW =  7;
-            public static int WALLW =   8;
-            public static int WALLNW =  9;
+            public static final int CARPET =  1;
+            public static final int WALLN  =  2;
+            public static final int WALLNE =  3;
+            public static final int WALLE  =  4;
+            public static final int WALLSE =  5;
+            public static final int WALLS  =  6;
+            public static final int WALLSW =  7;
+            public static final int WALLW  =  8;
+            public static final int WALLNW =  9;
         }
         public enum Outside{;
-            public static int GRASS =   20;
+            public static final int GRASS  =  20;
         }
     }
     //endregion

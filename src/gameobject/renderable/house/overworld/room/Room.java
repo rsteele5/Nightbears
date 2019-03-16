@@ -3,27 +3,31 @@ package gameobject.renderable.house.overworld.room;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
+import java.util.ArrayList;
+
 public abstract class Room {
 
-    //private ArrayList<Boundary> boundaries;
-    //private ArrayList<interactables> boundaries;
-    //private ArrayList<Boundary> boundaries;
+    //region <Variables>
     protected String name;
     protected int cellX;
     protected int cellY;
     protected Integer[][] layout;
-
     protected int width;
     protected int height;
-    //TODO: Setup Anchor points here
+
+    //protected ArrayList<AncorPoint> ancorPoints;
+
+    //private ArrayList<Boundary> boundaries;
+    //endregion
 
     public Room(String name){
-        layout = constructLayout();
+        this.name = "Room: "+name;
         cellX = -1;
         cellY = -1;
+        layout = constructLayout();
         width = layout[0].length;
         height = layout.length;
-        this.name = "Room: "+name;
+        //
     }
 
     protected abstract Integer[][] constructLayout();

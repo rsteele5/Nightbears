@@ -6,6 +6,8 @@ import gamescreen.container.GridContainer;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 import static gameobject.renderable.house.overworld.OverworldMeta.*;
+import static gameobject.renderable.house.overworld.OverworldMeta.Tiles.Outside.*;
+import static gameobject.renderable.house.overworld.OverworldMeta.Tiles.House.*;
 
 import java.util.ArrayList;
 
@@ -28,42 +30,12 @@ public class MapBuilder {
 
     public Map buildMap(){
         Debug.success(DebugEnabler.OVERWORLD, "MapBuilder - Built Map");
-        // Find the farthest cell from the origin
-        int maxCellX = 0;
-        int maxCellY = 0;
-        for(Room room : rooms){
-            maxCellX = maxCellX < (room.getCellX()+room.getHeight()) ? (room.getCellX()+room.getHeight()) : maxCellX;
-            maxCellY = maxCellY < (room.getCellY()+room.getWidth()) ? (room.getCellY()+room.getWidth()) : maxCellY;
-        }
-        // Calculate the max chunks needed
-        int chunkRows = (maxCellX + (ChunkSize - (maxCellX % ChunkSize))) / ChunkSize;
-        int chunkCols = (maxCellY + (ChunkSize - (maxCellY % ChunkSize))) / ChunkSize;
 
-        // Build Chunks and put them into the chunks array list
-        for(int row = 0; row < chunkRows+BorderBuffer*2; row++) {
-                chunks.add(row,new ArrayList<>());
-            for(int col = 0; col < chunkCols+BorderBuffer*2; col++) {
-                if(row >= BorderBuffer && row < chunkRows+BorderBuffer
-                        && col >= BorderBuffer && col < chunkCols+BorderBuffer){
-                    chunkBuilder.createNewChunk(parentScreen);
-                    chunkBuilder.fillWithCarpet();
-                    chunks.get(row).add(col,chunkBuilder.getChunk());
-                } else {
-                    chunkBuilder.createNewChunk(parentScreen);
-                    chunkBuilder.fillWithGrass();
-                    chunks.get(row).add(col,chunkBuilder.getChunk());
-                }
-            }
-        }
+        // Build the Map Structure and returns a chunk grid that needs room data
+        ArrayList<ArrayList<GridContainer>> noBorderMap = buildMapStructure();
 
-        // Organize Chunks
-        for(int row = 0; row < chunks.size(); row++){
-            for(int col = 0; col < chunks.get(row).size(); col++){
-                chunks.get(row).get(col).setLocation(
-                        (TileSize * ChunkSize) * col,
-                        (TileSize * ChunkSize) * row);
-            }
-        }
+        organizeChunks();
+        roomToChunkConverter(noBorderMap);
 
         return new Map(parentScreen, rooms, chunks);
     }
@@ -77,6 +49,112 @@ public class MapBuilder {
             }
         }
         rooms.add(newRoom);
-        //TODO: Start Back UP working here~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    }
+
+    private ArrayList<ArrayList<GridContainer>> buildMapStructure(){
+        // Find the farthest cell from the origin
+        int maxCellX = ChunkSize;
+        int maxCellY = ChunkSize;
+        for(Room room : rooms){
+            maxCellX = maxCellX < (room.getCellX()+room.getHeight()) ? (room.getCellX()+room.getHeight()) : maxCellX;
+            maxCellY = maxCellY < (room.getCellY()+room.getWidth()) ? (room.getCellY()+room.getWidth()) : maxCellY;
+        }
+        // Calculate the max chunks needed
+        int chunkRows = roundUpToChunk(maxCellX) / ChunkSize;
+        int chunkCols = roundUpToChunk(maxCellY) / ChunkSize;
+
+        // Build Chunks and put them into the chunks array list
+        ArrayList<ArrayList<GridContainer>> noBorderMap = new ArrayList<>();
+        for(int row = 0; row < chunkRows+BorderBuffer*2; row++) {
+            chunks.add(new ArrayList<>());
+            if(row >= BorderBuffer && row < chunkRows+BorderBuffer)
+                noBorderMap.add(new ArrayList<>());
+            for(int col = 0; col < chunkCols+BorderBuffer*2; col++) {
+                if(row >= BorderBuffer && row < chunkRows+BorderBuffer
+                        && col >= BorderBuffer && col < chunkCols+BorderBuffer){
+                    // Create an empty chunk
+                    chunkBuilder.createChunk(parentScreen);
+                    chunks.get(row).add(chunkBuilder.getChunk());
+                    noBorderMap.get(row-BorderBuffer).add(chunks.get(row).get(col));
+                } else {
+                    chunkBuilder.createChunk(parentScreen);
+                    chunkBuilder.fillWithGrass();
+                    chunks.get(row).add(chunkBuilder.getChunk());
+                }
+            }
+        }
+        return noBorderMap;
+    }
+
+    private int roundUpToChunk(int num){
+        if(num % ChunkSize == 0) return num;
+        return num + (ChunkSize - (num % ChunkSize));
+    }
+
+    private void organizeChunks(){
+        for(int row = 0; row < chunks.size(); row++){
+            for(int col = 0; col < chunks.get(row).size(); col++){
+                chunks.get(row).get(col).setLocation(
+                        (TileSize * ChunkSize) * col,
+                        (TileSize * ChunkSize) * row);
+            }
+        }
+    }
+
+    private void roomToChunkConverter(ArrayList<ArrayList<GridContainer>> map) {
+        int cellX, cellY,
+            chunkRow, chunkCol,
+            chunkX, chunkY;
+
+        for(Room room : rooms){
+            // get cell location
+            for(int row = 0; row < room.getHeight(); row++) {
+                cellX = room.getCellX() + row;
+                for(int col = 0; col < room.getWidth(); col++) {
+                    cellY = room.getCellY() + col;
+                    // get chunk location from cell
+                    chunkRow = Math.floorDiv(cellX, ChunkSize);
+                    chunkCol = Math.floorDiv(cellY, ChunkSize);
+                    // get relative cell location in chunk
+                    chunkX = cellX % ChunkSize;
+                    chunkY = cellY % ChunkSize;
+                    // edit chunk
+                    chunkBuilder.editChunk(map.get(chunkRow).get(chunkCol));
+                    Compass wallNS = null;
+                    Compass wallEW = null;
+                    switch(room.getLayout()[row][col]){
+                        case CARPET: break;
+                        case WALLN : wallNS = Compass.North; break;
+                        case WALLE : wallEW = Compass.East; break;
+                        case WALLS : wallNS = Compass.South; break;
+                        case WALLW : wallEW = Compass.West; break;
+                        case WALLNE:
+                            wallNS = Compass.North;
+                            wallEW = Compass.East;
+                            break;
+                        case WALLSE:
+                            wallNS = Compass.South;
+                            wallEW = Compass.East;
+                            break;
+                        case WALLSW:
+                            wallNS = Compass.South;
+                            wallEW = Compass.West;
+                            break;
+                        case WALLNW:
+                            wallNS = Compass.North;
+                            wallEW = Compass.West;
+                            break;
+                        default: break;
+                    }
+                    if(wallNS != null){
+                        if(wallEW != null){
+                            chunkBuilder.addHouseTileAt(chunkX, chunkY, wallNS, wallEW);
+                        } else chunkBuilder.addHouseTileAt(chunkX, chunkY, wallNS);
+                    } else if(wallEW != null){
+                        chunkBuilder.addHouseTileAt(chunkX, chunkY, wallEW);
+                    } else chunkBuilder.addHouseTileAt(chunkX, chunkY);
+                }
+            }
+        }
     }
 }

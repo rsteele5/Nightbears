@@ -90,7 +90,7 @@ public class GridContainer {
         y = yPos;
         for(int row = 0; row < renderableGrid.size(); row++){
             for(int col = 0; col < renderableGrid.get(row).length; col++){
-                if(renderableGrid.get(row) != null){
+                if(renderableGrid.get(row)[col] != null){
                     renderableGrid.get(row)[col]
                             .setPosition(x + ((itemWidth + padding) * col),
                                          y + (itemWidth + padding) * row);
@@ -98,26 +98,4 @@ public class GridContainer {
             }
         }
     }
-
-    //TODO: figure out where this shit goes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    //populates renderableGrid into standard grid
-//    public void organizeStandardGrid(){
-//
-//        if(!renderable.isEmpty()) {
-//            for(int row = 0; row < rows; row++){
-//                for(int col = 0; col < cols; col++){
-//                    if(row*rows + col < renderable.size())
-//                        addAt(renderable.get(row*rows + col), row, col);
-//                    else return;
-//                }
-//            }
-//        } else {
-//            Debug.warning(DebugEnabler.GAME_SCREEN_LOG,
-//                    name + "- trying to organize into standard grid without renderable");
-//        }
-//    }
-
-    //TODO: figure out where this shit goes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 }

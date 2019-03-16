@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public abstract class Animation implements Loadable {
 
-    private String name;
+    protected String name;
 
     protected ArrayList<AnimationImage> animationImages = new ArrayList<>();
     protected int frameToDisplay = -1;
@@ -20,6 +20,11 @@ public abstract class Animation implements Loadable {
     public AnimationImage next(){
         frameToDisplay++;
         if(frameToDisplay >= animationImages.size()){  frameToDisplay = 0; }
+        return animationImages.get(frameToDisplay);
+    }
+
+    public AnimationImage start(){
+        frameToDisplay = 0;
         return animationImages.get(frameToDisplay);
     }
 

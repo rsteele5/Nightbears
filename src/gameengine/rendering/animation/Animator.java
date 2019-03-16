@@ -23,7 +23,8 @@ public class Animator implements Loadable {
 
     public final void setAnimation(String string){
         activeAnimation = animations.get(string);
-        displayImage = activeAnimation.next();
+        displayImage = activeAnimation.start();
+        renderableObject.setCurrentImage(displayImage.getImage());
     }
 
     public final void addAnimation(String name, Animation image){

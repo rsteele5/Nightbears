@@ -21,7 +21,6 @@ public class Map {
         //Concrete chunks into 2D array
         for(int row = 0; row < chunkMap.length; row++){
             for(int col = 0; col < chunkMap[0].length; col++){
-                Debug.success(DebugEnabler.OVERWORLD, "Map - addAt(" + row + ", " + col + ")");
                 chunkMap[row][col] = chunks.get(row).get(col);
             }
         }
