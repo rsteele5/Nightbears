@@ -31,7 +31,8 @@ public class Vendor extends RenderableObject implements Kinematic , Interactable
     private BufferedImage vendorLevelImage;
     private final String vendorOverworldPath = "/assets/vendor/vendoridleanimation/VendorOverworldForward.png";
     private final String vendorLevelPath = "/assets/vendor/Vendor.png";
-
+    int isSet = 0;
+    Player p = null;
     // Default constructor
     public Vendor(int x, int y){
         super(x, y);
@@ -113,7 +114,12 @@ public class Vendor extends RenderableObject implements Kinematic , Interactable
 
     @Override
     public void update() {
-
+        isSet++;
+        isSet %= 5;
+        if(isSet == 4 && p != null){
+            p.interaction = false;
+            p = null;
+        }
     }
 
     public CopyOnWriteArrayList<Item> getItems() {
@@ -239,8 +245,11 @@ public class Vendor extends RenderableObject implements Kinematic , Interactable
 
     @Override
     public boolean action(GameObject g) {
-        g.setX(0);
-        g.setY(0);
+        if(g instanceof Player) {
+            ((Player) g).interaction = true;
+            p = (Player)g;
+        }
+        isSet = 0;
         return true;
     }
 }
