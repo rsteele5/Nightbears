@@ -19,19 +19,21 @@ public class ArmorBuilder {
     private String [] helmetImg = {"/assets/Items/helmet1.png", "/assets/Items/helmet2.png", "/assets/Items/helmet3.png"};
     private String [] chestImg = {"/assets/Items/chest1.png", "/assets/Items/chest2.png"};
     private String [] pantImg = {"/assets/Items/pants1.png", "/assets/Items/pants2.png"};
-    private String [] feetImg = {"/assets/Items/feet1.png"};
+    private String [] feetImg = {"/assets/Items/feet1.png", "/assets/Items/feet1.png"};
     private String [] offhandImg = {"/assets/Items/cape1.png", "/assets/Items/cape2.png", "/assets/Items/cape3.png",
             "/assets/Items/cape4.png"};
 
     //Armor Requirements
     private Random rand = new Random();
-    private ArmorType _type = ArmorType.values()[rand.nextInt(ArmorType.values().length-1)];
-    private int _armor =  getRandomNumber(minArmor, maxArmor);
+    private ArmorType _type;
+    private int _armor = 0;
+    private String _quality = "";
 
     //Item requirements (defaults)
     private DescriptionAssistant assistant = new DescriptionAssistant();
-    private String _name = assistant.getArmorName(_type);
-    private int _value = getRandomNumber(minArmor, _armor) * 2;
+    private String _name = "";
+    private String _description = "";
+    private int _value = 0;
 
 
     //TODO check on mass with Austin
@@ -40,6 +42,9 @@ public class ArmorBuilder {
     public ArmorBuilder(){}
 
     public Armor buildArmor(){
+        if (_type == null){
+            _type = ArmorType.values()[rand.nextInt(ArmorType.values().length)];
+        }
         if (_imagePath.equals("")){
             switch (_type) {
                 case Head:
@@ -48,24 +53,46 @@ public class ArmorBuilder {
                 case Chest:
                     _imagePath = chestImg[rand.nextInt(chestImg.length)];
                     break;
-                case Pants:
+                case Leg:
                     _imagePath = pantImg[rand.nextInt(pantImg.length)];
                     break;
-                case Feet:
+                case Foot:
                     _imagePath = feetImg[rand.nextInt(feetImg.length)];
                     break;
-                case Cape:
+                default:
                     _imagePath = offhandImg[rand.nextInt(offhandImg.length)];
                     break;
             }
         }
-        return new Armor(_x, _y, _imagePath, _layer, _name, _value, _type, _armor);
+        if (_armor == 0){
+            _armor =  getRandomNumber(minArmor, maxArmor);
+        }
+        if (_quality.equals("")){
+            _quality = determineQuality();
+        }
+        if (_name.equals("")){
+            _name = assistant.getArmorName(_type, _quality);
+        }
+        if (_value == 0){
+            _value = getRandomNumber(minArmor, _armor) * 2;
+        }
+        if (_description.equals("")){
+            _description = assistant.getArmorDescription(_type, _quality, _name);
+        }
+        return new Armor(_x, _y, _imagePath, _layer, _name, _value, _type, _armor, _quality, _description);
     }
 
     public ArmorBuilder position(int x, int y){
         _x = x;
         _y = y;
         return this;
+    }
+
+    private String determineQuality(){
+        int partition = (int) (Math.ceil(maxArmor +1 - minArmor) / 3);  //Three possible qualities: good, better, best
+        if (_armor < (minArmor + partition)) return "good";
+        else if (_armor > (maxArmor - partition)) return "best";
+        else return "better";
     }
 
     public ArmorBuilder imagePath(String _imagePath) {

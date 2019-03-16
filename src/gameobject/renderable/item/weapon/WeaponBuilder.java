@@ -2,6 +2,8 @@ package gameobject.renderable.item.weapon;
 
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.item.DescriptionAssistant;
+import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 
 import java.util.Random;
 
@@ -22,16 +24,16 @@ public class WeaponBuilder {
     //Weapon requirements
     private Random rand = new Random();
     private WeaponType _type = WeaponType.values()[rand.nextInt(WeaponType.values().length-1)];
-    private int num1 = getRandomNumber(minWeapon, maxWeapon);
-    private int num2 = getRandomNumber(minWeapon, maxWeapon);
-    private int _maxDamage = (num1 >= num2)? num1 : num2;
-    private int _minDamage = (num1 <= num2)? num1 : num2;
-    private int _critChance = getRandomNumber(minWeapon, maxWeapon);
+    private int _maxDamage = 0;
+    private int _minDamage = 0;
+    private int _critChance = 0;
+    private String quality = "";
 
     //Item requirements
     private DescriptionAssistant assistant = new DescriptionAssistant();
-    private String _name = assistant.getWeaponName(_type);
-    private int _value = getRandomNumber(_minDamage, _maxDamage) * 2 ;
+    private String _name = "";
+    private String _description = "";
+    private int _value = 0;
 
 
     public WeaponBuilder(){ }
@@ -51,7 +53,35 @@ public class WeaponBuilder {
                 _imagePath = "/assets/testAssets/Error-MissingImage.png";
                 break;
         }
-        return new Weapon(_x,_y,_imagePath,_layer,_name,_value,_type, _minDamage, _maxDamage, _critChance);
+        if (_maxDamage == 0) {
+            int num1 = getRandomNumber(minWeapon, maxWeapon);
+            int num2 = getRandomNumber(minWeapon, maxWeapon);
+            _maxDamage = (num1 >= num2)? num1 : num2;
+            _minDamage = (num1 <= num2)? num1 : num2;
+        }
+        if (_critChance == 0){
+            _critChance = getRandomNumber(minWeapon, maxWeapon);
+        }
+        if (quality.equals("")){
+            quality = determineQuality(); //Good, Better, Best
+        }
+        if (_name == ""){
+            _name = assistant.getWeaponName(_type, quality);
+        }
+        if (_value == 0) {
+            _value = getRandomNumber(_minDamage, _maxDamage) * 2;
+        }
+        if (_description == ""){
+            _description = assistant.getWeaponDescription(quality, _type, _name);
+        }
+        return new Weapon(_x,_y,_imagePath,_layer,_name,_value,_type, _minDamage, _maxDamage, _critChance, quality, _description);
+    }
+
+    private String determineQuality(){
+        int partition = (int) (Math.ceil(maxWeapon +1 - minWeapon) / 3);  //Three possible qualities: good, better, best
+        if (_maxDamage < (minWeapon + partition)) return "good";
+        else if (_maxDamage > (maxWeapon - partition)) return "best";
+        else return "better";
     }
 
     public WeaponBuilder position(int x, int y){

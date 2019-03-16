@@ -13,26 +13,28 @@ import java.awt.image.BufferedImage;
 public class Armor extends RenderableObject implements Item {
 
     // Item Variables
-    protected BufferedImage icon;
+    private BufferedImage icon;
     protected String name;
-    protected String description;
+    private String description;
     protected int value;
 
     // Armor Variables
-    protected int armor;
+    private int armor;
     //protected FundamentalProperty;
-    //TODO check on mass with austion/hunter
+    //TODO check on mass with austin/hunter
     //protected int mass;
-    protected ArmorType type;
+    private ArmorType type;
+    private String quality;
 
     protected Armor(int x, int y, String imagePath, DrawLayer layer,
-                     String name, int value, ArmorType type, int armor) {
+                     String name, int value, ArmorType type, int armor, String quality, String description) {
         super(x,y,imagePath,layer);
         this.name = name;
         this.value = value;
         this.type = type;
         this.armor = armor;
-        setDescription("Testing the armor description field now. aaaaaaaaa aaaaaaaaaaa aaaaaaaaa aaaaaaa");
+        this.quality = quality;
+        this.description = description;
     }
 
     @Override
@@ -47,7 +49,6 @@ public class Armor extends RenderableObject implements Item {
 
     @Override
     public String getDescription(boolean desc) {
-        //TODO make this general for all armor
         return name +
                 "\nType: " + type.name() +
                 "\nArmor Points: " + armor +
@@ -75,12 +76,9 @@ public class Armor extends RenderableObject implements Item {
         this.value = round((float)(value * (0.9)));
     }
 
+    public String getQuality(){return quality;}
+
     public int getArmorValue() { return armor; }
-
-    private void setDescription(String myDescription) {
-        description = "\n" + myDescription;
-    }
-
 
     @Override
     public void update() {

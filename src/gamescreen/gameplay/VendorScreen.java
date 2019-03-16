@@ -198,10 +198,10 @@ public class VendorScreen extends GameScreen {
         int x_playerText = 270;
         int y_position = 125;
         int x_vendorText = 550;
-        itemDetailsPlayer = new TextBox(x_playerText, y_position, 210, 200, "",
+        itemDetailsPlayer = new TextBox(x_playerText, y_position, 210, 230, "",
                 new Font("NoScary", Font.PLAIN, 24), Color.BLACK);
         itemDetailsPlayer.addToScreen(this,true);
-        itemDetailsVendor = new TextBox(x_vendorText, y_position, 210, 200, "",
+        itemDetailsVendor = new TextBox(x_vendorText, y_position, 210, 230, "",
                 new Font("NoScary", Font.PLAIN, 24), Color.BLACK);
         itemDetailsVendor.addToScreen(this,true);
         //endregion
