@@ -1,8 +1,10 @@
 package gameobject.renderable.vendor;
 
+import gameengine.physics.Interactable;
 import gameengine.physics.Kinematic;
 import gameengine.physics.PhysicsMeta;
 import gameengine.physics.PhysicsVector;
+import gameobject.GameObject;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.RenderableObject;
 import gameobject.renderable.item.*;
@@ -12,14 +14,17 @@ import gameobject.renderable.item.consumable.ConsumableBuilder;
 import gameobject.renderable.item.consumable.ConsumableType;
 import gameobject.renderable.item.weapon.WeaponBuilder;
 import gameobject.renderable.item.weapon.WeaponType;
+import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
 import main.utilities.AssetLoader;
+import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Vendor extends RenderableObject implements Kinematic {
+public class Vendor extends RenderableObject implements Kinematic , Interactable {
     private CopyOnWriteArrayList<Item> items = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<RenderableObject> rItems = new CopyOnWriteArrayList<>();
     private BufferedImage vendorOverworldImage;
@@ -225,6 +230,18 @@ public class Vendor extends RenderableObject implements Kinematic {
         if(isActive) {
             screen.kinematics.add(this);
         }
+    }
+
+    @Override
+    public Rectangle hitbox() {
+        return new Rectangle(x,y,image.getWidth(),image.getHeight());
+    }
+
+    @Override
+    public boolean action(GameObject g) {
+        g.setX(0);
+        g.setY(0);
+        return true;
     }
 }
 
