@@ -6,6 +6,7 @@ import gameengine.rendering.Camera;
 import gameobject.renderable.enemy.Minion;
 import gameobject.renderable.enemy.WalkLeftMS;
 import gameobject.renderable.enemy.Walker;
+import gameobject.renderable.house.sidescrolling.Floor;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.enemy.Enemy;
 import gameobject.renderable.ImageContainer;

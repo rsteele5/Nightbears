@@ -39,6 +39,11 @@ public class Walker extends Minion {
     }
 
     @Override
+    public boolean isStatic() {
+        return false;
+    }
+
+    @Override
     public PhysicsVector getVelocity() {
         return super.getVelocity();
     }
