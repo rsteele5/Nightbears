@@ -29,8 +29,8 @@ public class Player extends RenderableObject implements Kinematic {
     private int speed = 1;
     private CopyOnWriteArrayList<Item> items = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<RenderableObject> rItems = new CopyOnWriteArrayList<>();
-    private PhysicsVector accel = new PhysicsVector(1, 1);
-    private PhysicsVector movement = new PhysicsVector(0, 0);
+    private PhysicsVector moveState = new PhysicsVector(1, 1);
+    private PhysicsVector magnitude = new PhysicsVector(0, 0);
     private final int[] ssKeys = new int[]{68, 65};
     private final int[] owKeys = new int[]{68, 65, 83, 87};
     private int movFlag = 0;
@@ -103,7 +103,7 @@ public class Player extends RenderableObject implements Kinematic {
     @Override
     public void update() {
         if (playerState == PlayerState.overWorld) {
-            if (movement.x != 0.0 || movement.y != 0.0) {
+            if (magnitude.x != 0.0 || magnitude.y != 0.0) {
                 rotation = getVelocity().direction();
                 if(!animator.getCurrentAnimationName().equals("Walking"))
                     animator.setAnimation("Walking");
@@ -166,9 +166,14 @@ public class Player extends RenderableObject implements Kinematic {
     }
 
     @Override
+    public boolean isStatic() {
+        return false;
+    }
+
+    @Override
     public PhysicsVector getVelocity() {
         int gravSign = PhysicsMeta.Gravity != 0 && playerState == PlayerState.sideScroll ? 1 : 0;
-        PhysicsVector pV = movement.add(new PhysicsVector(0, gravSign)).mult(accel);
+        PhysicsVector pV = magnitude.add(new PhysicsVector(0, gravSign)).mult(moveState);
         double y = pV.y;
         y = y < 1 && y > .5 ? 1 : y;
         y = y < -.5 && y > -1 ? -1 : y;
@@ -182,17 +187,17 @@ public class Player extends RenderableObject implements Kinematic {
 //            pv.x = (pv.x / Math.sqrt(2));
 //            pv.y = (pv.y / Math.sqrt(2));
         }
-        movement = pv.mult(speed);
+        magnitude = pv.mult(speed);
     }
 
     @Override
     public PhysicsVector getAcceleration() {
-        return accel;
+        return moveState;
     }
 
     @Override
     public void setAcceleration(PhysicsVector pv) {
-        accel = pv;
+        moveState = pv;
     }
 
     @Override
@@ -212,7 +217,7 @@ public class Player extends RenderableObject implements Kinematic {
     public void reset() {
         x = 50;
         y = 50;
-        accel = new PhysicsVector(1, 1);
+        moveState = new PhysicsVector(1, 1);
     }
 
     public PlayerState getState() {
@@ -228,14 +233,9 @@ public class Player extends RenderableObject implements Kinematic {
             case overWorld:
                 Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: overWorld");
                 speed = 3;
-                image = AssetLoader.load("/assets/player/overworld/teddyidleanimation/Overworld-Teddy-Center.png");
-                width = image.getWidth();
-                height = image.getHeight();
-                animator = new Animator(this);
-                animator.addAnimation("Walking", new PlayerWalkingAnimation());
-                animator.addAnimation("Idle", new PlayerIdleAnimation());
-                animator.addAnimation("SS_Idle", new PlayerSSIdleAnimation());
-                animator.setAnimation("SS_Idle");
+                width = 100;
+                height = 100;
+                animator.setAnimation("Idle");
                 playerState = ps;
                 return true;
             case asleep:
@@ -245,10 +245,8 @@ public class Player extends RenderableObject implements Kinematic {
             case sideScroll:
                 Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: sideScroll");
                 speed = 1;
-                animator = null;
-                image = AssetLoader.load("/assets/testAssets/square2.png");
-                //imagePath = "/assets/testAssets/square2.png";
                 rotation = 0;
+                animator.setAnimation("SS_Idle");
                 playerState = ps;
                 return true;
         }

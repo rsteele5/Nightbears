@@ -1,14 +1,18 @@
 package gamescreen.gameplay.overworld;
 
+import _test.Square;
+import gameobject.renderable.DrawLayer;
+import gameobject.renderable.house.overworld.Map;
+import gameobject.renderable.house.overworld.MapBuilder;
+import gameobject.renderable.house.overworld.room.Bedroom;
+import gameobject.renderable.house.sidescrolling.Floor;
 import gamescreen.gameplay.VendorDialogBox;
 import gameengine.GameEngine;
 import gameengine.rendering.Camera;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.vendor.Vendor;
-import gameobject.renderable.house.overworld.HouseTile;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
-import gamescreen.container.GridContainer;
 import main.utilities.Debug;
 
 public class OverworldScreen extends GameScreen {
@@ -16,9 +20,7 @@ public class OverworldScreen extends GameScreen {
     //region <Variable Declaration>
     private OverworldUI UI;
     private VendorDialogBox vendorDialogBox;
-    //Maybe make this into room variables
-    private GridContainer grassTileContainer;
-    private GridContainer houseTileContainer;
+    private Map overworldMap;
     //endregion
 
     public OverworldScreen(ScreenManager screenManager) {
@@ -32,29 +34,10 @@ public class OverworldScreen extends GameScreen {
     protected void initializeScreen() {
 
         //House generation
-        grassTileContainer = new GridContainer(this, 4, 4, HouseTile.SIZE, HouseTile.SIZE,
-                -HouseTile.SIZE, -HouseTile.SIZE,0);
-        houseTileContainer = new GridContainer(this, 2, 2, HouseTile.SIZE, HouseTile.SIZE,0, 0,0);
-
-        HouseTile grass;
-        for(int row = 0; row < grassTileContainer.getRows(); row++){
-            for(int col = 0; col < grassTileContainer.getCols(); col++){
-                if (row <= 0 || row >= 3 || col <= 0 || col >= 3) {
-                    grass = new HouseTile(0, 0, "/assets/overworld/grass/Overworld-Grass.png");
-                    grassTileContainer.addAt(grass, row, col);
-                }
-            }
-        }
-
-        HouseTile bedroom;
-        bedroom = new HouseTile(0,0, "/assets/overworld/bedroom/Overworld-Bedroom1.png");
-        houseTileContainer.addAt(bedroom,0,0);
-        bedroom = new HouseTile(0,0, "/assets/overworld/bedroom/Overworld-Bedroom2.png");
-        houseTileContainer.addAt(bedroom,0,1);
-        bedroom = new HouseTile(0,0, "/assets/overworld/bedroom/Overworld-Bedroom3.png");
-        houseTileContainer.addAt(bedroom,1,0);
-        bedroom = new HouseTile(0,0, "/assets/overworld/bedroom/Overworld-Bedroom4.png");
-        houseTileContainer.addAt(bedroom,1,1);
+        MapBuilder mapBuilder = new MapBuilder();
+        mapBuilder.createMap(this);
+        mapBuilder.addRoomAtCell(0,0, new Bedroom());
+        overworldMap = mapBuilder.buildMap();
 
         //Player
         GameEngine.players.get(0).setState(Player.PlayerState.overWorld);
@@ -69,6 +52,11 @@ public class OverworldScreen extends GameScreen {
         vendor.setImage("/assets/vendor/vendoridleanimation/VendorOverworldForward.png");
         //TODO: make vendor trigger box
         vendor.addToScreen(this, true);
+        Floor test = new Floor(30,30,"/assets/testAssets/brick.jpg", DrawLayer.Entity);
+        test.setHeight(100);
+        test.setWidth(100);
+        //Square test2 = new Square(100,100,"/assets/testAssets/square.png", DrawLayer.Entity);
+        //test2.addToScreen(this,true);
 
         //Overlay TODO: Fix layering
         UI = new OverworldUI(screenManager, this);
@@ -77,12 +65,4 @@ public class OverworldScreen extends GameScreen {
         addOverlay(vendorDialogBox);
 
     }
-
-//    @Override
-//    protected void transitionOn() {
-//        if(overlayScreens.isEmpty()){
-//            Debug.warning(DebugEnabler.GAME_SCREEN_LOG, name + " - Trying to add overlay");
-//            addOverlay(UI);
-//        }
-//    }
 }

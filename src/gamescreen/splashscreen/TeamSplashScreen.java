@@ -17,8 +17,8 @@ public class TeamSplashScreen extends GameScreen {
     //endregion
 
     //region <Construction and Initialization>
-    public TeamSplashScreen(ScreenManager screenManager, String name) {
-        super(screenManager, name);
+    public TeamSplashScreen(ScreenManager screenManager) {
+        super(screenManager, "TeamSplashScreen");
     }
 
     /**

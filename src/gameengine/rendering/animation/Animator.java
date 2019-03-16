@@ -17,7 +17,7 @@ public class Animator implements Loadable {
         this.renderableObject = renderableObject;
     }
 
-    public final BufferedImage getDisplayImage(String string){
+    public final BufferedImage getDisplayImage(){
         return displayImage.getImage();
     }
 

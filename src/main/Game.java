@@ -1,14 +1,13 @@
 package main;
 
 import gameengine.GameEngine;
+import gameengine.gamedata.GameData;
 import main.utilities.Debug;
 
 import javax.swing.JFrame;
 import java.awt.*;
 
 public class Game {
-
-    private static GameEngine gameEngine;
 
     //TODO: Make Adjustable
     public static int WIN_WIDTH = 1280;
@@ -22,14 +21,12 @@ public class Game {
         JFrame gameWindow = new GameWindow();
         gameWindow.setTitle("Nightbears");
         gameWindow.setSize(WIN_WIDTH, WIN_HEIGHT);
-        gameWindow.setLocation(20,20);
+        gameWindow.setLocation(0,0);
         gameWindow.setResizable(false);
         gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameWindow.setBackground(Color.BLACK);
-        //Uncomment these to make the game full splashscreen
-        //gameWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        gameEngine = new GameEngine();
-        //Attach the RenderEngine to the window
+        GameData gameData = new GameData();
+        GameEngine gameEngine = new GameEngine(gameData);
         gameEngine.initializeWindow(gameWindow);
         gameWindow.setUndecorated(true);
         gameWindow.setVisible(true);
