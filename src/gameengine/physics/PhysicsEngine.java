@@ -71,9 +71,10 @@ public class PhysicsEngine {
                             Debug.log(true, "Weapon Get!");
                         }
                         if (obj1 instanceof Enemy && obj2 instanceof Square)  {
-                             Walker e = (Walker) obj1; e.changeState();
+                             Enemy e = (Enemy) obj1; e.changeState();
                         }
-                        if (obj1 instanceof Player && obj2 instanceof Enemy)  {
+                        if (obj1 instanceof Enemy && obj2 instanceof Player)  {
+                            Enemy e = (Enemy) obj1; e.addhp(-1);
                         }
                         ((Kinematic) obj1).setAcceleration(new PhysicsVector(1,1));
                         ((Kinematic) obj2).setAcceleration(new PhysicsVector(1,1));

@@ -57,4 +57,6 @@ public abstract class Enemy extends RenderableObject implements Kinematic {
     public int getHp() { return hp; }
 
     public void setHp(int hp) { this.hp = hp; }
+
+    public void addhp(int hp) { this.hp += hp; }
 }
