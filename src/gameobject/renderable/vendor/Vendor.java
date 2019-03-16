@@ -1,5 +1,8 @@
 package gameobject.renderable.vendor;
 
+import gameengine.physics.Kinematic;
+import gameengine.physics.PhysicsMeta;
+import gameengine.physics.PhysicsVector;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.RenderableObject;
 import gameobject.renderable.item.*;
@@ -9,12 +12,14 @@ import gameobject.renderable.item.consumable.ConsumableBuilder;
 import gameobject.renderable.item.consumable.ConsumableType;
 import gameobject.renderable.item.weapon.WeaponBuilder;
 import gameobject.renderable.item.weapon.WeaponType;
+import gamescreen.GameScreen;
 import main.utilities.AssetLoader;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Vendor extends RenderableObject {
+public class Vendor extends RenderableObject implements Kinematic {
     private CopyOnWriteArrayList<Item> items = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<RenderableObject> rItems = new CopyOnWriteArrayList<>();
     private BufferedImage vendorOverworldImage;
@@ -154,6 +159,71 @@ public class Vendor extends RenderableObject {
             } else {
                 setSize(image.getWidth(), image.getHeight());
             }
+        }
+    }
+
+    private PhysicsVector accel = new PhysicsVector(0,1);
+    PhysicsVector movement = new PhysicsVector(0,0);
+
+    @Override
+    public PhysicsVector getVelocity() {
+        int gravSign = PhysicsMeta.Gravity != 0 ? 1 : 0;
+        PhysicsVector pV = movement.add(new PhysicsVector(0,gravSign)).mult(accel);
+        double y = pV.y;
+        y = y < 1 && y > .5 ? 1 : y;
+        y = y < -.5 && y > -1 ? -1 : y;
+        return new PhysicsVector(pV.x,y);
+    }
+
+    @Override
+    public void setVelocity(PhysicsVector pv) {
+        movement = pv;
+    }
+
+    @Override
+    public PhysicsVector getAcceleration() {
+        return accel;
+    }
+
+    @Override
+    public void setAcceleration(PhysicsVector pv) {
+        accel = pv;
+    }
+
+    @Override
+    public Rectangle getHitbox() {
+        return new Rectangle(x + (int)(image.getWidth()*.25), y + (int)(image.getHeight()*.25), (int) (image.getWidth()*.5), (int)(image.getHeight()*.5));
+    }
+
+    @Override
+    public boolean isStatic(){
+        return  true;
+    }
+
+    @Override
+    public boolean setActive(GameScreen screen){
+        if(super.setActive(screen)){
+            screen.kinematics.add(this);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean setInactive(GameScreen screen){
+        if(super.setInactive(screen)){
+            screen.kinematics.remove(this);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void addToScreen(GameScreen screen, boolean isActive){
+        super.addToScreen(screen, isActive);
+
+        if(isActive) {
+            screen.kinematics.add(this);
         }
     }
 }
