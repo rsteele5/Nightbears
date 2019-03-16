@@ -6,6 +6,7 @@ import gameobject.GameObject;
 import gamescreen.GameScreen;
 import main.utilities.AssetLoader;
 import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 import main.utilities.Loadable;
 
 import java.awt.*;
@@ -132,7 +133,7 @@ public abstract class RenderableObject extends GameObject implements Loadable {
         if(animator != null){
             animator.animate();
         }
-        //Debug.drawRect(true,graphics, new Rectangle2D.Double(x,y,width, height));
+        Debug.drawRect(DebugEnabler.RENDERABLE_LOG,graphics, new Rectangle2D.Double(x,y,width, height));
         graphics.drawImage(image, x , y, width, height, null);
     }
 

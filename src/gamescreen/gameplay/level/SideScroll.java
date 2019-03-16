@@ -36,7 +36,7 @@ public class SideScroll extends GameScreen {
     protected void initializeScreen() {
         UI = new OverworldUI(screenManager, this);
         addOverlay(UI);
-        setCamera(new Camera(this, GameEngine.players.get(0)));
+        setCamera(new Camera(screenManager,this, GameEngine.players.get(0)));
 
         String bg = "/assets/backgrounds/mountains.jpg";
         String path = "/assets/testAssets/square.png";

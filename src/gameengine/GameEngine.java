@@ -50,8 +50,6 @@ public class GameEngine implements Runnable {
     }
 
 
-    }
-
     public void initializeWindow(JFrame gameWindow){
         Container contentPane = gameWindow.getContentPane();
         contentPane.add(renderEngine);

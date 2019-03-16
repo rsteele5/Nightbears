@@ -70,8 +70,6 @@ public class RandomPlayerScreen extends GameScreen {
             silhouette.setAlpha(0f);
             clicked = true;
         } else {
-            renderables.remove(silhouette);
-            screenManager.addScreen(new IntroCutScene(screenManager));
             setScreenState(ScreenState.TransitionOff);
         }
 
@@ -81,5 +79,6 @@ public class RandomPlayerScreen extends GameScreen {
     @Override
     protected void transitionOff() {
         exiting = true;
+        screenManager.addScreen(new IntroCutScene(screenManager));
     }
 }
