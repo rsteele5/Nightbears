@@ -131,74 +131,17 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable 
 
     public CopyOnWriteArrayList<Item> restockItems(){
         CopyOnWriteArrayList<Item> restock = new CopyOnWriteArrayList<>();
-        restock.add(new ArmorBuilder()
-                .buildArmor()
-        );
-        restock.add(new ArmorBuilder()
-                .buildArmor()
-        );
-        restock.add(new ArmorBuilder()
-                .buildArmor()
-        );
-        restock.add(new ArmorBuilder()
-                .buildArmor()
-        );
-        restock.add(new ArmorBuilder()
-                .buildArmor()
-        );
-        restock.add(new ArmorBuilder()
-                .buildArmor()
-        );
-        restock.add(new ArmorBuilder()
-                .buildArmor()
-        );
-
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-
-        restock.add(new ConsumableBuilder()
-                .buildConsumable()
-        );
-        restock.add(new ConsumableBuilder()
-                .buildConsumable()
-        );
-        restock.add(new ConsumableBuilder()
-                .buildConsumable()
-        );
-        restock.add(new ConsumableBuilder()
-                .buildConsumable()
-        );
-        restock.add(new ConsumableBuilder()
-                .buildConsumable()
-        );
-        restock.add(new ConsumableBuilder()
-                .buildConsumable()
-        );
-        restock.add(new ConsumableBuilder()
-                .buildConsumable()
-        );
+        for (int i = 0; i < 8; i++){
+            restock.add(new ArmorBuilder()
+                    .buildArmor()
+            );
+            restock.add(new WeaponBuilder()
+                    .buildWeapon()
+            );
+            restock.add(new ConsumableBuilder()
+                    .buildConsumable()
+            );
+        }
 
         if (restock.size() > 0) {
             restock.sort(new ItemComparator());
