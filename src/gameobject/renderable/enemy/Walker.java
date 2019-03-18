@@ -25,7 +25,7 @@ public class Walker extends Minion {
 
     public Walker(int x, int y, String imagePath, DrawLayer layer) {
         super(x, y, imagePath, layer);
-        hp = 200;
+        hp = 10;
     }
 
     public Walker(int x, int y, String imagePath, DrawLayer layer, float alpha) {
@@ -35,7 +35,6 @@ public class Walker extends Minion {
     @Override
     public void update() {
         state.doAction(this);
-        if(hp == 0) {}
     }
 
     @Override

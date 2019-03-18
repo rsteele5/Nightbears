@@ -75,7 +75,7 @@ public class BedroomLevel implements Level {
 
     @Override
     public void buildEnemies(GameScreen gameScreen) {
-        Minion guy1 = new Walker(500,0, "/assets/enemies/minions/walker/walker.png", DrawLayer.Entity);
+        Minion guy1 = new Walker(600,0, "/assets/enemies/minions/walker/walker.png", DrawLayer.Entity);
         guy1.setState(new WalkLeftMS());
         guy1.addToScreen(gameScreen,true);
 

@@ -31,6 +31,7 @@ public abstract class Minion extends Enemy implements Kinematic {
     private int speed = 1;
     protected PhysicsVector accel = new PhysicsVector(0,1);
     protected PhysicsVector movement = new PhysicsVector(0, 0);
+    private GameScreen screen;
 
 
     public Minion() {
@@ -55,6 +56,7 @@ public abstract class Minion extends Enemy implements Kinematic {
     public Minion(int x, int y, String imagePath, DrawLayer layer, float alpha) {
         super(x, y, imagePath, layer, alpha);
     }
+
 
     /**
      * Returns true or false depending on the acceptance of the state transition.
@@ -125,6 +127,8 @@ public abstract class Minion extends Enemy implements Kinematic {
 
         if(isActive) {
             screen.kinematics.add(this);
+            this.screen = screen;
+
         }
     }
 
@@ -137,5 +141,13 @@ public abstract class Minion extends Enemy implements Kinematic {
         AffineTransformOp tr=new AffineTransformOp(tx,null);  //transforming
 
         return tr.filter(src, null);  //filtering
+    }
+
+    public GameScreen getScreen() {
+        return screen;
+    }
+
+    public void setScreen(GameScreen screen) {
+        this.screen = screen;
     }
 }
