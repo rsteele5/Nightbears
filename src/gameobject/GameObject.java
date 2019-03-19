@@ -1,7 +1,5 @@
 package gameobject;
 
-
-import static gameengine.gamedata.GraphicsSetting.GraphicsOption;
 import gamescreen.GameScreen;
 
 public abstract class GameObject {

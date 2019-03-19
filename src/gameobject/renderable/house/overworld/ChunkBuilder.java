@@ -51,7 +51,7 @@ public class ChunkBuilder {
     }
 
     private void addTitleAt(String imagePath, int row, int col){
-        chunk.addAt(new Tile(imagePath), row, col);
+        chunk.dynamicAddAt(new Tile(imagePath), row, col);
     }
 
     public void setDrawLayer(DrawLayer drawLayer){

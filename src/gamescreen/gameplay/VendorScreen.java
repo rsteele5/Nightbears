@@ -218,8 +218,8 @@ public class VendorScreen extends GameScreen {
         // Create GridContainers for player and vendor item button
         int rows = 7;
         int columns = 4;
-        GridContainer playerGrid = new GridContainer(this, rows, columns, 50, 125, 50, 150);
-        GridContainer vendorGrid = new GridContainer(this, rows, columns, 50, 125, 760, 150);
+        GridContainer playerGrid = new GridContainer(this, rows, columns, 50, 50, 50, 150);
+        GridContainer vendorGrid = new GridContainer(this, rows, columns, 50, 50, 760, 150);
 
         //region Add item buttons to the Grid Containers
         int count = playerInventory.size();
@@ -227,7 +227,7 @@ public class VendorScreen extends GameScreen {
         for (int i = 0; i < rows; i++){
             for (int j = 0; j < columns; j++){
                 ItemButton itemContainerButton = new ItemButton();
-                playerGrid.addAt(itemContainerButton, i, j);
+                playerGrid.dynamicAddAt(itemContainerButton, i, j);
                 if (k < count) {
                     itemContainerButton.setItem(playerInventory.get(k));
                     //setClickEvent(itemContainerButton, itemDetailsPlayer, itemDetailsVendor, "player" );
@@ -244,7 +244,7 @@ public class VendorScreen extends GameScreen {
         for (int i = 0; i < rows; i++){
             for (int j = 0; j < columns; j++){
                 ItemButton itemContainerButton = new ItemButton();
-                vendorGrid.addAt(itemContainerButton, i, j);
+                vendorGrid.dynamicAddAt(itemContainerButton, i, j);
                 if (k < count) {
                     itemContainerButton.setItem(vendorInventory.get(k));
                     k++;

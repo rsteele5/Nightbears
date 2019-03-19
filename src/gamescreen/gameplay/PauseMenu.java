@@ -210,7 +210,7 @@ public class PauseMenu extends GameScreen {
         //Set up the grid for the player inventory
         int rows = 7;
         int columns = 4;
-        GridContainer playerGrid = new GridContainer(this, rows, columns, 50, 125, 15, 140);
+        GridContainer playerGrid = new GridContainer(this, rows, columns, 50, 50, 15, 140);
 
         //region Add button to the Grid Containers
         int count = playerInventory.size();
@@ -218,7 +218,7 @@ public class PauseMenu extends GameScreen {
         for (int i = 0; i < rows; i++){
             for (int j = 0; j < columns; j++){
                 ItemButton itemContainerButton = new ItemButton();
-                playerGrid.addAt(itemContainerButton, i, j);
+                playerGrid.dynamicAddAt(itemContainerButton, i, j);
                 if (k < count) {
                     itemContainerButton.setItem(playerInventory.get(k));
                     k++;
@@ -232,35 +232,35 @@ public class PauseMenu extends GameScreen {
 
     private void initEquipButtons(){
         //Create grid for the cross pattern equipment stuff
-        GridContainer equipGrid = new GridContainer(this, 4, 3, 50, 125, 250, 140);
+        GridContainer equipGrid = new GridContainer(this, 4, 3, 50, 50, 250, 140);
         //Equipment Buttons
         ItemButton equipHead =  new ItemButton();
-        equipGrid.addAt(equipHead, 0, 1);
+        equipGrid.dynamicAddAt(equipHead, 0, 1);
         equipButtons.add(equipHead);
         setClickEvent(equipHead, itemDetails);
 
         ItemButton equipOffHand =  new ItemButton();
-        equipGrid.addAt(equipOffHand, 1, 0);
+        equipGrid.dynamicAddAt(equipOffHand, 1, 0);
         equipButtons.add(equipOffHand);
         setClickEvent(equipOffHand, itemDetails);
 
         ItemButton equipChest =  new ItemButton();
-        equipGrid.addAt(equipChest, 1, 1);
+        equipGrid.dynamicAddAt(equipChest, 1, 1);
         equipButtons.add(equipChest);
         setClickEvent(equipChest, itemDetails);
 
         ItemButton equipWeapon =  new ItemButton();
-        equipGrid.addAt(equipWeapon, 1, 2);
+        equipGrid.dynamicAddAt(equipWeapon, 1, 2);
         equipButtons.add(equipWeapon);
         setClickEvent(equipWeapon, itemDetails);
 
         ItemButton equipLegs =  new ItemButton();
-        equipGrid.addAt(equipLegs, 2, 1);
+        equipGrid.dynamicAddAt(equipLegs, 2, 1);
         equipButtons.add(equipLegs);
         setClickEvent(equipLegs, itemDetails);
 
         ItemButton equipFeet =  new ItemButton();
-        equipGrid.addAt(equipFeet, 3, 1);
+        equipGrid.dynamicAddAt(equipFeet, 3, 1);
         equipButtons.add(equipFeet);
         setClickEvent(equipFeet, itemDetails);
     }

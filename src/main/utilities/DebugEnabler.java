@@ -18,4 +18,5 @@ public class DebugEnabler {
     public static boolean GAME_DATA =             true;
     public static boolean OVERWORLD =             true;
     public static boolean COLLISION =             true;
+    public static boolean GRID_CONTAINER =        true;
 }

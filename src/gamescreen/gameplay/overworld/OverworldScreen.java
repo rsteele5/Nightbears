@@ -1,6 +1,5 @@
 package gamescreen.gameplay.overworld;
 
-import _test.Square;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.overworld.Map;
 import gameobject.renderable.house.overworld.MapBuilder;
@@ -15,9 +14,6 @@ import gameobject.renderable.vendor.Vendor;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import main.utilities.Debug;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 import java.util.ArrayList;
 
@@ -42,8 +38,11 @@ public class OverworldScreen extends GameScreen {
         //House generation
         MapBuilder mapBuilder = new MapBuilder();
         mapBuilder.createMap(this);
-        mapBuilder.addRoomAtCell(0,0, new Bedroom());
-        mapBuilder.addRoomAtCell(4,4, new Bedroom());
+        //mapBuilder.addRoomAtCell(5, 5, new Bedroom());
+        mapBuilder.addRoomAtCell(0, 0, new Bedroom());
+        //mapBuilder.addRoomAtCell(0,5, new Bedroom());
+        //mapBuilder.addRoomAtCell(5, 0, new Bedroom());
+
         overworldMap = mapBuilder.buildMap();
 
         //Player
@@ -78,7 +77,7 @@ public class OverworldScreen extends GameScreen {
         westWall.setHeight(500);
         westWall.setWidth(25);
         westWall.addToScreen(this,true);
-        Floor eastWall = new Floor(TRC.getTileX()+25,TRC.getTileY()-50,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
+        Floor eastWall = new Floor(BLC.getTileX()+25,BLC.getTileY()-450,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
         eastWall.setHeight(500);
         eastWall.setWidth(25);
         eastWall.addToScreen(this,true);

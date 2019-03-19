@@ -6,7 +6,6 @@ import gamescreen.container.GridContainer;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 import static gameobject.renderable.house.overworld.OverworldMeta.*;
-import static gameobject.renderable.house.overworld.OverworldMeta.Tiles.Outside.*;
 import static gameobject.renderable.house.overworld.OverworldMeta.Tiles.House.*;
 
 import java.util.ArrayList;
@@ -94,7 +93,7 @@ public class MapBuilder {
     private void organizeChunks(){
         for(int row = 0; row < chunks.size(); row++){
             for(int col = 0; col < chunks.get(row).size(); col++){
-                chunks.get(row).get(col).setLocation(
+                chunks.get(row).get(col).setPosition(
                         (TileSize * ChunkSize) * col,
                         (TileSize * ChunkSize) * row);
             }
