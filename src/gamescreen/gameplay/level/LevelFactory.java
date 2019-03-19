@@ -6,17 +6,17 @@ import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.overworld.OverworldUI;
 
-public class LevelDecorator extends GameScreen {
+public class LevelFactory extends GameScreen {
     private static Level lBuild;
     private OverworldUI UI;
 
-    private LevelDecorator(ScreenManager screenManager) {
-        super(screenManager, "LevelDecorator", 1f);
+    private LevelFactory(ScreenManager screenManager) {
+        super(screenManager, "LevelFactory", 1f);
     }
 
-    public static LevelDecorator create(ScreenManager screenManager, Level levelBuild) {
+    public static LevelFactory create(ScreenManager screenManager, Level levelBuild) {
         lBuild = levelBuild;
-        return new LevelDecorator(screenManager);
+        return new LevelFactory(screenManager);
     }
 
     @Override

@@ -6,7 +6,7 @@ import gameobject.renderable.ImageContainer;
 import gameobject.renderable.button.Button;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.level.BedroomLevel;
-import gamescreen.gameplay.level.LevelDecorator;
+import gamescreen.gameplay.level.LevelFactory;
 import gamescreen.gameplay.PauseMenu;
 import gamescreen.gameplay.VendorScreen;
 import gamescreen.gameplay.level.SideScroll;
@@ -44,7 +44,7 @@ public class DevScreen extends GameScreen {
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - level");
-                    screenManager.addScreen(LevelDecorator.create(screenManager, new BedroomLevel()));
+                    screenManager.addScreen(LevelFactory.create(screenManager, new BedroomLevel()));
                 });
         button.addToScreen(this, true);
 

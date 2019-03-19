@@ -11,7 +11,7 @@ import gamescreen.Overlay;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.PauseMenu;
 import gamescreen.gameplay.level.BedroomLevel;
-import gamescreen.gameplay.level.LevelDecorator;
+import gamescreen.gameplay.level.LevelFactory;
 import gamescreen.mainmenu.MainMenuScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
@@ -52,7 +52,7 @@ public class OverworldUI extends Overlay {
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - level");
                     //TODO save players location
                     parentScreen.setCamera(null);
-                    screenManager.addScreen(LevelDecorator.create(screenManager, new BedroomLevel()));
+                    screenManager.addScreen(LevelFactory.create(screenManager, new BedroomLevel()));
 
         });
         actionButton.addToScreen(this, true);
