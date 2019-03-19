@@ -9,7 +9,13 @@ import static gameengine.gamedata.GraphicsSetting.GraphicsOption.*;
 import static gameengine.gamedata.InputSetting.InputMethod.*;
 import static gameengine.gamedata.SoundSetting.SoundOption.*;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.io.IOException;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 
 
 public class GameData implements Serializable {
