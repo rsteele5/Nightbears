@@ -313,11 +313,7 @@ public class VendorScreen extends GameScreen {
     private String getGoldText(){
         return "Gold: " + player.getGold();
     }
-
-    @Override
-    protected void transitionOn() {
-        currentState = ScreenState.Active;
-    }
+    
 
     @Override
     protected void transitionOff() {

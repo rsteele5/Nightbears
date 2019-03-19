@@ -3,6 +3,7 @@ package gamescreen.splashscreen;
 import gameengine.GameEngine;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.ImageContainer;
+import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.overworld.OverworldScreen;

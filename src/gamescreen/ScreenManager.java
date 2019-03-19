@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class ScreenManager extends JPanel {
     //region <Variables>
     private GameScreen rootScreen;
-    private LoadingScreen loadingScreen;
+    private GameScreen loadingScreen;
     private GameData gameData;
     //endregion
     //region <Getters and Setters>
@@ -23,7 +23,9 @@ public class ScreenManager extends JPanel {
     public ScreenManager(GameData gameData) {
         this.gameData = gameData;
         loadingScreen = new LoadingScreen(this);
-        rootScreen = new TeamSplashScreen(this);
+        loadingScreen.initializeScreen();
+        loadingScreen.loadContent();
+        addScreen(new TeamSplashScreen(this));
     }
 
     public void update() {
@@ -33,6 +35,10 @@ public class ScreenManager extends JPanel {
     //region <Support Functions>
     public void addScreen(GameScreen screen) {
         Debug.log(DebugEnabler.GAME_SCREEN_LOG,  "ScreenManager - Add " + screen.name);
+        Debug.log(DebugEnabler.GAME_SCREEN_LOG, screen.name + " - is initializing");
+        screen.initializeScreen();
+        Debug.success(DebugEnabler.GAME_SCREEN_LOG, screen.name + " - initialized");
+        screen.loadContent();
         if(screen.isRoot){
             Debug.success(DebugEnabler.GAME_SCREEN_LOG, screen.name + " - is a Root");
             screen.setChildScreen(rootScreen);
@@ -53,7 +59,7 @@ public class ScreenManager extends JPanel {
     }
 
     LoadingScreen getLoadingScreen() {
-        return loadingScreen;
+        return (LoadingScreen)loadingScreen;
     }
 
     public ArrayList<Kinematic> getPhysicsObjects() {

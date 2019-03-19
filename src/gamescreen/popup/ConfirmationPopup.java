@@ -22,6 +22,7 @@ public class ConfirmationPopup extends GameScreen {
     private final int Y_INIT_BUTTON = 580;
     private final int X_BUFFER = 142;
     private final int WIDTH_BUTTON = 142;
+    private String confirmationText;
     private TextBox confirmationTextBox;
 
     private Action onYesBtn;
@@ -29,13 +30,15 @@ public class ConfirmationPopup extends GameScreen {
 
     public ConfirmationPopup(ScreenManager screenManager, String confirmationMessage, Action onYes) {
         super(screenManager, "ConfirmationPopup", true);
-        confirmationTextBox.setText(confirmationMessage);
+        this.confirmationText = confirmationMessage;
         onYesBtn = onYes;
+        this.screenAlpha = 0;
     }
 
     public ConfirmationPopup(ScreenManager screenManager, String confirmationMessage, Action onYes, Action onNo) {
         this(screenManager, confirmationMessage, onYes);
         onNoBtn = onNo;
+        this.screenAlpha = 0;
     }
 
     @Override
@@ -52,6 +55,9 @@ public class ConfirmationPopup extends GameScreen {
                 new Font("NoScary", Font.PLAIN, 60),
                 Color.WHITE, true);
         confirmationTextBox.addToScreen(this, true);
+
+        confirmationTextBox.setText(confirmationText);
+
         //Buttons
         Button button;
 

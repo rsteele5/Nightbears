@@ -11,12 +11,11 @@ public class TitleScreen extends GameScreen {
     //region <Variables>
     private ImageContainer moonImg;
     private ImageContainer titleImg;
-    private ImageContainer skipMsg;
     //endregion
     private boolean musicStart = false;
     //region <Construction and Initialization>
     public TitleScreen(ScreenManager screenManager) {
-        super(screenManager,"TitleScreen");
+        super(screenManager,"TitleScreen", 1f);
     }
 
     /**
@@ -31,9 +30,6 @@ public class TitleScreen extends GameScreen {
 
         titleImg = new ImageContainer(625,165, "/assets/backgrounds/BG-Title.png", DrawLayer.Scenery);
         titleImg.addToScreen(this,true);
-
-        skipMsg = new ImageContainer(900,980, "/assets/text/TXT-SkipMsg.png", DrawLayer.Scenery);
-        skipMsg.addToScreen(this,true);
     }
 
     //endregion

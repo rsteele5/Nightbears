@@ -12,7 +12,6 @@ public class TeamSplashScreen extends GameScreen {
 
     //region <Variables>
     private ImageContainer logo;
-    private ImageContainer skipMsg;
     //endregion
 
     //region <Construction and Initialization>
@@ -28,11 +27,7 @@ public class TeamSplashScreen extends GameScreen {
         logo = new ImageContainer(670,420, "/assets/backgrounds/BG-TeamLogo.png", DrawLayer.Background);
         logo.addToScreen(this,true);
         logo.setAlpha(0);
-
-        skipMsg = new ImageContainer(900,980, "/assets/text/TXT-SkipMsg.png", DrawLayer.Scenery);
-        skipMsg.addToScreen(this, true);
     }
-
 
     //endregion
 

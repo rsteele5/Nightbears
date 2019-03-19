@@ -14,7 +14,7 @@ import java.awt.*;
 public class IntroCutScene extends GameScreen {
 
     public IntroCutScene(ScreenManager screenManager) {
-        super(screenManager, "IntroCutScene");
+        super(screenManager, "IntroCutScene",1f);
     }
 
     private final String text = "Arise!...\n\n" +

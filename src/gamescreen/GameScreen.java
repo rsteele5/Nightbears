@@ -157,12 +157,8 @@ public abstract class GameScreen {
         kinematics = new ArrayList<>();
         loadables = new ArrayList<>();
         renderables = new ArrayList<>();
-        Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + " - is initializing");
-        initializeScreen();
-        Debug.success(DebugEnabler.GAME_SCREEN_LOG, name + " - initialized");
-        currentState = ScreenState.TransitionOn;
         isLoading = true;
-        loadContent();
+        currentState = ScreenState.TransitionOn;
     }
 
     public GameScreen(ScreenManager screenManager, String name) {
@@ -200,12 +196,8 @@ public abstract class GameScreen {
         kinematics = new ArrayList<>();
         loadables = new ArrayList<>();
         renderables = new ArrayList<>();
-        Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + " - is initializing");
-        initializeScreen();
-        Debug.success(DebugEnabler.GAME_SCREEN_LOG, name + " - initialized");
         currentState = ScreenState.TransitionOn;
         isLoading = true;
-        loadContent();
     }
 
 
@@ -218,7 +210,7 @@ public abstract class GameScreen {
      * Loads the contents of this main.Game Screen.
      */
     protected void loadContent() {
-        Debug.log(DebugEnabler.LOADING, name + " - Load start");
+        Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + " - Load start");
         ExecutorService executorService = Executors.newFixedThreadPool(3);
         executorService.execute(() -> {
             if (loadingScreenRequired) {
@@ -232,6 +224,7 @@ public abstract class GameScreen {
                 isLoading = false;
                 childScreen = null;
                 loadingScreen.reset();
+
             } else {
                 for (Loadable loadable : loadables) {
                     Debug.log(DebugEnabler.LOADING, name + " - Loading: " + loadable.getClass().getName());
@@ -240,13 +233,9 @@ public abstract class GameScreen {
                 loadables.clear();
                 isLoading = false;
             }
-            for (GameObject gameObject: activeObjects){
-                gameObject.scale(gameData.getGraphicsSettings().getScaleFactor());
-            }
-            for (GameObject gameObject: inactiveObjects){
-                gameObject.scale(gameData.getGraphicsSettings().getScaleFactor());
-            }
-            Debug.success(DebugEnabler.LOADING, name + " - Loaded");
+            scaleScreen();
+            Debug.success(DebugEnabler.GAME_SCREEN_LOG, name + " - Loaded");
+            setScreenAlpha(screenAlpha);
         });
 
         executorService.shutdown();
@@ -348,14 +337,15 @@ public abstract class GameScreen {
                 childScreen.update();
             }
         } else {
-            switch(currentState) {
-                case TransitionOn: transitionOn(); break;
-                case TransitionOff: transitionOff(); break;
-                case Active: activeUpdate(); break;
-                case Hidden: hiddenUpdate(); break;
-                default: Debug.error(DebugEnabler.GAME_SCREEN_LOG, "Unknown splashscreen state");
+            if(!isLoading){
+                switch(currentState) {
+                    case TransitionOn: transitionOn(); break;
+                    case TransitionOff: transitionOff(); break;
+                    case Active: activeUpdate(); break;
+                    case Hidden: hiddenUpdate(); break;
+                    default: Debug.error(DebugEnabler.GAME_SCREEN_LOG, "Unknown screen state");
+                }
             }
-
             if(!overlayScreens.isEmpty()) {
                 for (GameScreen overlay : overlayScreens) {
                     if(overlay.isExiting()){
@@ -436,6 +426,8 @@ public abstract class GameScreen {
             Debug.error(DebugEnabler.GAME_SCREEN_LOG,
                     overlay.name +"- is not an overlay. Will not add to overlays.");
         } else {
+            overlay.initializeScreen();
+            overlay.loadContent();
             overlayScreens.add(overlay);
         }
     }
@@ -448,6 +440,15 @@ public abstract class GameScreen {
 
     public void setCamera(Camera camera){
         this.camera = camera;
+    }
+
+    public void scaleScreen(){
+        for (GameObject gameObject: activeObjects){
+            gameObject.scale(gameData.getGraphicsSettings().getScaleFactor());
+        }
+        for (GameObject gameObject: inactiveObjects){
+            gameObject.scale(gameData.getGraphicsSettings().getScaleFactor());
+        }
     }
     //endregion
 }
