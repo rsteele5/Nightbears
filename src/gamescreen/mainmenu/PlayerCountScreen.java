@@ -7,6 +7,7 @@ import gamescreen.ScreenManager;
 import gameobject.renderable.ImageContainer;
 import gameobject.renderable.button.Button;
 import gamescreen.popup.ConfirmationPopup;
+import gamescreen.splashscreen.RandomPlayerScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -14,7 +15,7 @@ import main.utilities.DebugEnabler;
 public class PlayerCountScreen extends GameScreen {
     //region <Variables>
     private final int X_INIT_BUTTON = 64;
-    private final int Y_INIT_BUTTON = 576;
+    private final int Y_INIT_BUTTON = 920;
     private final int X_BUFFER = 48;
     private final int WIDTH_BUTTON = 256;
     private final int TEDDY_HEIGHT = 200;
@@ -52,7 +53,7 @@ public class PlayerCountScreen extends GameScreen {
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Solo");
                     screenManager.addScreen(new ConfirmationPopup(screenManager,
                             "You selected... \nSOLO\nIs this correct?",
-                            ()-> screenManager.addScreen(new IntroCutScene(screenManager))));
+                            ()-> screenManager.addScreen(new RandomPlayerScreen(screenManager))));
                 });
         button.addToScreen(this, true);
 

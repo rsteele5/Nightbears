@@ -7,7 +7,7 @@ import java.net.URL;
 public class SoundEffectAudio {
     private AudioInputStream soundEffectAudioIn;
     private Clip soundEffectClip;
-    private static boolean isMuted;
+    private static boolean isMute;
 
     public SoundEffectAudio(URL url) {
         try{
@@ -20,26 +20,22 @@ public class SoundEffectAudio {
 
     public void play() {
         try {
-            if(soundEffectClip != null && soundEffectAudioIn != null) {
-                soundEffectClip.open(soundEffectAudioIn);
-                soundEffectClip.start();
-                soundEffectClip.addLineListener(listener -> {
-                    if (listener.getType() == LineEvent.Type.STOP)
-                        soundEffectClip.close();
-                });
+            if (!isMute) {
+                if(soundEffectClip != null && soundEffectAudioIn != null) {
+                    soundEffectClip.open(soundEffectAudioIn);
+                    soundEffectClip.start();
+                    soundEffectClip.addLineListener(listener -> {
+                        if (listener.getType() == LineEvent.Type.STOP)
+                            soundEffectClip.close();
+                    });
+                }
             }
         } catch (LineUnavailableException | IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void changeSoundState() {
-        if (soundEffectClip != null) {
-            if (soundEffectClip.isRunning())
-                soundEffectClip.stop();
-            else {
-                soundEffectClip.start();
-            }
-        }
+    public static void changeMuteState(boolean isMuted) {
+        isMute = isMuted;
     }
 }

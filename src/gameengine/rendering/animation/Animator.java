@@ -17,13 +17,14 @@ public class Animator implements Loadable {
         this.renderableObject = renderableObject;
     }
 
-    public final BufferedImage getDisplayImage(String string){
+    public final BufferedImage getDisplayImage(){
         return displayImage.getImage();
     }
 
     public final void setAnimation(String string){
         activeAnimation = animations.get(string);
-        displayImage = activeAnimation.next();
+        displayImage = activeAnimation.start();
+        renderableObject.setCurrentImage(displayImage.getImage());
     }
 
     public final void addAnimation(String name, Animation image){

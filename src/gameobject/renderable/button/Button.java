@@ -5,6 +5,7 @@ import gamescreen.GameScreen;
 import gameobject.renderable.RenderableObject;
 import main.utilities.Clickable;
 import main.utilities.Action;
+import main.utilities.Debug;
 
 public class Button extends RenderableObject implements Clickable{
 
@@ -27,6 +28,7 @@ public class Button extends RenderableObject implements Clickable{
     @Override
     public void update() {
         if(isClicked){
+            Debug.log(true, "doing the action");
             onClick.doIt();
             isClicked = false;
         }
@@ -38,8 +40,8 @@ public class Button extends RenderableObject implements Clickable{
     public void onClick() {
         if(onClick != null){
             isClicked = true;
+            Debug.log(true, "setting on click to true");
         }
-
     }
 
     @Override

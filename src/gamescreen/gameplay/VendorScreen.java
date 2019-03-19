@@ -28,7 +28,6 @@ public class VendorScreen extends GameScreen {
     private TextBox itemDetailsVendor;
     private TextBox itemDetailsPlayer;
     private TextBox goldTextBox;
-    private String goldText;
     private CopyOnWriteArrayList<Item> playerInventory;
     private CopyOnWriteArrayList<Item> vendorInventory;
     private CopyOnWriteArrayList<ItemButton> playerButtons;
@@ -39,7 +38,7 @@ public class VendorScreen extends GameScreen {
     //endregion ****************************************/
 
     public VendorScreen(ScreenManager screenManager) {
-        super(screenManager, "VendorScreen", true, 150, 75);
+        super(screenManager, "VendorScreen", true, 450, 180);
     }
 
     @Override
@@ -169,16 +168,29 @@ public class VendorScreen extends GameScreen {
                 });
         button.addToScreen(this, true);
 
-        // Test button
-        /*button = new Button(460, 480,
-                "/assets/button/Button-Test.png",
+        // TODO: Remove after Sprint 3 testing and adjust restockItems() in Vendor
+        button = new Button(460, 485,
+                "/assets/testAssets/TestButton.png",
                 DrawLayer.Entity,
                 () -> {
-                    Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Test Vendor");
-                    screenManager.addScreen(new VendorDialogBoxScreen(screenManager));
+                    Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Restock Items");
+                    vendorInventory = vendor.restockItems();
+                    vendor.replaceList(vendorInventory);
+
+                    // Access the new images
+                    for (RenderableObject renderable: vendor.getRenderables()){
+                        renderable.load();
+                    }
+                    resetButtonItems();
+                    if (currentItemButton != null){
+                        currentItemButton.deSelect();
+                        currentItem = null;
+                        itemDetailsPlayer.setText("");
+                    }
                 });
         button.setSize(100, 50);
-        button.addToScreen(this, true);*/
+        button.addToScreen(this, true);
+
         //endregion
 
         //region Create text boxes to hold item description
@@ -186,10 +198,10 @@ public class VendorScreen extends GameScreen {
         int x_playerText = 270;
         int y_position = 125;
         int x_vendorText = 550;
-        itemDetailsPlayer = new TextBox(x_playerText, y_position, 210, 200, "",
+        itemDetailsPlayer = new TextBox(x_playerText, y_position, 210, 230, "",
                 new Font("NoScary", Font.PLAIN, 24), Color.BLACK);
         itemDetailsPlayer.addToScreen(this,true);
-        itemDetailsVendor = new TextBox(x_vendorText, y_position, 210, 200, "",
+        itemDetailsVendor = new TextBox(x_vendorText, y_position, 210, 230, "",
                 new Font("NoScary", Font.PLAIN, 24), Color.BLACK);
         itemDetailsVendor.addToScreen(this,true);
         //endregion
@@ -197,7 +209,7 @@ public class VendorScreen extends GameScreen {
         //region TextBox to hold player's available gold
         int x_goldText = 850;
         int y_goldText = 20;
-        goldText = getGoldText();
+        String goldText = getGoldText();
         goldTextBox = new TextBox(x_goldText, y_goldText, 150, 50, goldText,
                 new Font("NoScary", Font.PLAIN, 48), Color.BLACK);
         goldTextBox.addToScreen(this, true);
@@ -209,7 +221,7 @@ public class VendorScreen extends GameScreen {
         GridContainer playerGrid = new GridContainer(this, rows, columns, 50, 125, 50, 150);
         GridContainer vendorGrid = new GridContainer(this, rows, columns, 50, 125, 760, 150);
 
-        //region Add button to the Grid Containers
+        //region Add item buttons to the Grid Containers
         int count = playerInventory.size();
         int k = 0;
         for (int i = 0; i < rows; i++){
@@ -235,7 +247,6 @@ public class VendorScreen extends GameScreen {
                 vendorGrid.addAt(itemContainerButton, i, j);
                 if (k < count) {
                     itemContainerButton.setItem(vendorInventory.get(k));
-                    //setClickEvent(itemContainerButton, itemDetailsPlayer, itemDetailsVendor, "vendor");
                     k++;
                 }
                 setClickEvent(itemContainerButton, itemDetailsPlayer, itemDetailsVendor, "vendor");
@@ -274,7 +285,7 @@ public class VendorScreen extends GameScreen {
     }
 
     private void resetButtonItems(){
-        // Reset all vendor item button to null, set item button again, and establish click events
+        // Reset all vendor item buttons to null, set item button again, and establish click events
         int count = vendorInventory.size();
         int k = 0;
         for (ItemButton vbutton : vendorButtons) {
@@ -286,7 +297,7 @@ public class VendorScreen extends GameScreen {
             }
         }
 
-        // Reset all player item button to null, set item button again, and establish click events
+        // Reset all player item buttons to null, set item button again, and establish click events
         count = playerInventory.size();
         k = 0;
         for (ItemButton pbutton : playerButtons) {
@@ -299,7 +310,7 @@ public class VendorScreen extends GameScreen {
         }
     }
 
-    public String getGoldText(){
+    private String getGoldText(){
         return "Gold: " + player.getGold();
     }
 
@@ -321,15 +332,4 @@ public class VendorScreen extends GameScreen {
         }
         exiting = true;
     }
-
-    @Override
-    protected void hiddenUpdate() {
-
-    }
-
-    @Override
-    protected void activeUpdate() {
-
-    }
-
 }

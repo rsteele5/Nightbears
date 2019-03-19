@@ -13,4 +13,5 @@ public interface Item {
     int getType();  //TODO: find best way of sending subtype
     int getValue();
     void depreciate();
+    void increaseMaxAttribute(int num);
 }

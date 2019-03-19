@@ -17,7 +17,7 @@ import main.utilities.DebugEnabler;
 public class DevScreen extends GameScreen {
     //region <Variables>
     private final int X_INIT_BUTTON = 64;
-    private final int Y_INIT_BUTTON = 576;
+    private final int Y_INIT_BUTTON = 920;
     private final int WIDTH_BUTTON = 256;
     private final int X_BUFFER = 48;
 
@@ -45,6 +45,16 @@ public class DevScreen extends GameScreen {
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - level");
                     screenManager.addScreen(LevelDecorator.create(screenManager, new BedroomLevel()));
+                });
+        button.addToScreen(this, true);
+
+        //Dev screen debug button
+        button = new Button(X_INIT_BUTTON,Y_INIT_BUTTON - 128,
+                "/assets/buttons/Button-Debug.png",
+                DrawLayer.Entity,
+                () ->{
+                    Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Debug");
+                    screenManager.addScreen(new DebugOptionsScreen(screenManager));
                 });
         button.addToScreen(this, true);
 

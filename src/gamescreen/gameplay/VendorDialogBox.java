@@ -33,7 +33,7 @@ public class VendorDialogBox extends Overlay {
         cover.addToScreen(this, true);
 
         DialogBox diagBox = new DialogBox(10, 10, 355, 160, welcome,
-                new Font("NoScary", Font.PLAIN, 40), Color.WHITE);
+                new Font("NoScary", Font.PLAIN, 40), Color.WHITE, false);
         diagBox.addToScreen(this, true);
 
         gameobject.renderable.button.Button button = new gameobject.renderable.button.Button(100,140,

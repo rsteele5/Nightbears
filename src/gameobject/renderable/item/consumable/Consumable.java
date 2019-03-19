@@ -24,11 +24,12 @@ public class Consumable extends RenderableObject implements Item {
     protected ConsumableType type;
     protected int minAffect;
     protected int maxAffect;
+    private String quality;
 
 
     protected Consumable(int x, int y, String imagePath, DrawLayer layer,
                          String name, int value, ConsumableType type,
-                         AffectType affect, int maxAffect, int minAffect){
+                         AffectType affect, int maxAffect, int minAffect, String quality, String description){
         super(x, y, imagePath, layer);
         this.name = name;
         this.value = value;
@@ -36,9 +37,8 @@ public class Consumable extends RenderableObject implements Item {
         this.affect = affect;
         this.maxAffect = maxAffect;
         this.minAffect = minAffect;
-
-        setDescription("Testing the consumable description field now. aaaaaaaaa aaaaaaaaaaa aaaaaaaaa aaaaaaa");
-
+        this.quality = quality;
+        this.description = description;
     }
 
     @Override
@@ -54,7 +54,6 @@ public class Consumable extends RenderableObject implements Item {
     @Override
     public String getDescription(boolean desc) {
         return name +
-                "\nType: " + type.name() +
                 "\nAffect: " + affect.name() +
                 "\nEffectiveness: " + minAffect + "-" + maxAffect +
                 "\nValue: " + value + " gold" +
@@ -103,4 +102,10 @@ public class Consumable extends RenderableObject implements Item {
         super.load();
         icon = AssetLoader.resizeImage(image, image.getWidth()/2, image.getHeight()/2);
     }
+
+    public void increaseMaxAttribute(int num){
+        ConsumableBuilder.minConsumable += num;
+        ConsumableBuilder.maxConsumable += num;
+    }
+
 }

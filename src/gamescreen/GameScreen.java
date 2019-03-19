@@ -1,14 +1,14 @@
 package gamescreen;
 
+import gameengine.gamedata.GameData;
 import gameengine.physics.Kinematic;
 import gameengine.rendering.Camera;
-import main.utilities.Clickable;
+import gameobject.renderable.button.Button;
+import main.utilities.*;
 import gameobject.GameObject;
 import gameobject.renderable.RenderableObject;
 import gamescreen.splashscreen.LoadingScreen;
-import main.utilities.Debug;
-import main.utilities.DebugEnabler;
-import main.utilities.Loadable;
+
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -19,6 +19,7 @@ import java.util.concurrent.Executors;
 public abstract class GameScreen {
 
     //region <Variables>
+    protected GameData gameData;
     public String name;
     protected float screenAlpha;
 
@@ -140,6 +141,7 @@ public abstract class GameScreen {
 
     //region<Construction and Initialization>
     public GameScreen(ScreenManager screenManager, String name, float screenAlpha) {
+        this.gameData = screenManager.getGameData();
         this.screenManager = screenManager;
         this.name = name;
         this.isRoot = true;
@@ -181,6 +183,7 @@ public abstract class GameScreen {
 
     public GameScreen(ScreenManager screenManager, String name, boolean isExclusive, int xPos, int yPos, float screenAlpha) {
         this.screenManager = screenManager;
+        this.gameData = screenManager.getGameData();
         this.name = name;
         this.isRoot = false;
         this.isExclusive = isExclusive;
@@ -216,7 +219,7 @@ public abstract class GameScreen {
      */
     protected void loadContent() {
         Debug.log(DebugEnabler.LOADING, name + " - Load start");
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
         executorService.execute(() -> {
             if (loadingScreenRequired) {
                 loadingScreen = screenManager.getLoadingScreen();
@@ -229,15 +232,23 @@ public abstract class GameScreen {
                 isLoading = false;
                 childScreen = null;
                 loadingScreen.reset();
+            } else {
+                for (Loadable loadable : loadables) {
+                    Debug.log(DebugEnabler.LOADING, name + " - Loading: " + loadable.getClass().getName());
+                    loadable.load();
+                }
+                loadables.clear();
+                isLoading = false;
             }
-            for (Loadable loadable : loadables) {
-                Debug.log(DebugEnabler.LOADING, name + " - Loading: " + loadable.getClass().getName());
-                loadable.load();
+            for (GameObject gameObject: activeObjects){
+                gameObject.scale(gameData.getGraphicsSettings().getScaleFactor());
             }
-            loadables.clear();
-            isLoading = false;
+            for (GameObject gameObject: inactiveObjects){
+                gameObject.scale(gameData.getGraphicsSettings().getScaleFactor());
+            }
             Debug.success(DebugEnabler.LOADING, name + " - Loaded");
         });
+
         executorService.shutdown();
     }
     //endregion
@@ -404,7 +415,7 @@ public abstract class GameScreen {
                     return true;
             }
             // If no overlays handled clicks
-            Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "-splashscreen handle click ");
+            Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "- handle click " + x + " " + y);
             for(Clickable thing: clickables) {
                 if(thing.contains(x,y)) {
                     thing.onClick();
