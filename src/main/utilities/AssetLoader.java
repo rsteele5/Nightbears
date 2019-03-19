@@ -1,9 +1,11 @@
 package main.utilities;
 
+import gameengine.gamedata.GameData;
+import gameengine.gamedata.GraphicsSetting.GraphicsOption;
+import gameengine.gamedata.GraphicsSetting.GraphicsOption.*;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -25,7 +27,7 @@ public final class AssetLoader {
                 return image;
             }catch (Exception ex) {
                 Debug.error(true, "Failed to load - MissingImage.png");
-                Debug.error(true, "EXCEPTION MESSAGE:" + ex.getMessage());
+                Debug.error(true, "EXCEPTION MESSAGE: " + ex.getMessage());
                 return null;
             }
         }

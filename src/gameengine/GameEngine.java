@@ -1,8 +1,6 @@
 package gameengine;
 
-import static gameengine.GameSettings.*;
-
-import gameengine.physics.OverworldEngine;
+import gameengine.gamedata.GameData;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.vendor.Vendor;
 import gameobject.renderable.DrawLayer;
@@ -16,6 +14,8 @@ import javax.swing.JFrame;
 import java.awt.Graphics;
 import java.awt.Container;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 public class GameEngine implements Runnable {
@@ -25,101 +25,64 @@ public class GameEngine implements Runnable {
 
 
 
-    private GameSettings gameSettings;
+    private GameData gameData;
 
     private ScreenManager screenManager;
     private PhysicsEngine physicsEngine;
     private RenderEngine renderEngine;
-    private OverworldEngine overworldEngine;
     public static ArrayList<Player> players;
     private static Player p1,p2;
     public static Vendor vendor;
 
-    public GameEngine(){
+    public GameEngine(GameData gameData){
         p1 = new Player(0,0, "/assets/player/overworld/teddyidleanimation/Overworld-Teddy-Center.png", DrawLayer.Entity);
         p2 = new Player(0,0,"/assets/testAssets/square2.png", DrawLayer.Entity);
         vendor = new Vendor(0,0);
-        gameSettings = new GameSettings(this);
-        screenManager = new ScreenManager(gameSettings);
-        renderEngine = new RenderEngine(screenManager);
-        physicsEngine = new PhysicsEngine(screenManager);
-        renderEngine.addMouseListener(new MouseController());
+        this.gameData = gameData;
+        screenManager = new ScreenManager(gameData);
+        renderEngine = new RenderEngine(gameData, screenManager);
+        physicsEngine = new PhysicsEngine(gameData, screenManager);
+        renderEngine.addMouseListener(new MouseController(screenManager));
         players = new ArrayList<>(){{
             add(p1);
             add(p2);
         }};
-        overworldEngine = new OverworldEngine(screenManager);
     }
 
-    public Graphics getGraphics(){
-        return renderEngine.getGraphics();
-    }
 
     public void initializeWindow(JFrame gameWindow){
         Container contentPane = gameWindow.getContentPane();
         contentPane.add(renderEngine);
-
     }
 
     @Override
     public void run() {
-        //TODO: stuff
         while(true){
             frameCounter++;
             long startTime = System.currentTimeMillis();
-
-            //TODO: Proposed changes
-            /* Game engine gets the data from the splashscreen manager then sends it to the
-             * physics engine. After its run its course then we send it to the renderEngine
-             * So the call would look like:
-             * Data data = screenManager.getData();
-             * physicsEngine.update(data);
-             * renderEngine.draw(data);
-             * We just decoupled the screenManager from both the phys engine and the renderer
-             * The game data is the fuel to make the engine run lol
-             */
-
-                //Update
-            switch (players.get(0).getState()){
-                case sideScroll:
-                    physicsEngine.update();
-                    break;
-                case overWorld:
-                    overworldEngine.update();
-                    break;
-            }
-            //Render
+            physicsEngine.update();
             screenManager.update();
+            //Render
             renderEngine.draw();
-
 
             long endTime = System.currentTimeMillis();
             int sleepTime = (int) (1.0 / FRAMES_PER_SECOND * 1000)
                     - (int) (endTime - startTime);
 
+
             if (sleepTime >= 0) {
                 try {
-                    if(endTime-startTime > 0 /*&& frameCounter % 60 == 0*/)
-                    Debug.success(DebugEnabler.FPS_CURRENT,"Current FPS: " + 1000 / (endTime - startTime) );
-                    TimeUnit.MILLISECONDS.sleep(sleepTime);
+                    if(endTime-startTime > 0 /*&& frameCounter % 60 == 0*/) {
+                        Debug.success(DebugEnabler.FPS_CURRENT,"Current FPS: " + 1000 / (endTime - startTime) );
+                        renderEngine.setFPS("Current FPS: " + 1000 / (endTime - startTime));
+                        TimeUnit.MILLISECONDS.sleep(sleepTime);
+                    }
                 } catch (InterruptedException e) {
-
+                    Debug.error(DebugEnabler.FPS_WARNING, "Thread Interupted: " + e.toString());
                 }
             } else {
-                Debug.warning(DebugEnabler.FPS,"FPS below 60! - current FPS: " + 1000 / (endTime - startTime) );
+                Debug.warning(DebugEnabler.FPS_WARNING,"FPS_WARNING below 60! - current FPS_WARNING: " + 1000 / (endTime - startTime) );
             }
         }
-    }
-
-    public void changeInputMethod(InputMethod controller) {
-        //TODO: Implement changing controllers and stuff here
-    }
-
-    public void changeGraphicsOption(GraphicsOption graphicsOption) {
-        //TODO: Implement changing graphics and stuff
-    }
-
-    public void changeSoundOption(SoundOption soundOption) {
-        //TODO: Implement changing sound
     }
 }

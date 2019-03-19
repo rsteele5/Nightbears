@@ -12,13 +12,12 @@ public class TeamSplashScreen extends GameScreen {
 
     //region <Variables>
     private ImageContainer logo;
-    private ImageContainer cover;
     private ImageContainer skipMsg;
     //endregion
 
     //region <Construction and Initialization>
-    public TeamSplashScreen(ScreenManager screenManager, String name) {
-        super(screenManager, name);
+    public TeamSplashScreen(ScreenManager screenManager) {
+        super(screenManager, "TeamSplashScreen");
     }
 
     /**
@@ -26,16 +25,12 @@ public class TeamSplashScreen extends GameScreen {
      */
     @Override
     protected void initializeScreen() {
-        logo = new ImageContainer(0,0, "/assets/backgrounds/BG-TeamLogo.png", DrawLayer.Background);
+        logo = new ImageContainer(670,420, "/assets/backgrounds/BG-TeamLogo.png", DrawLayer.Background);
         logo.addToScreen(this,true);
+        logo.setAlpha(0);
 
-        cover = new ImageContainer(0,0, "/assets/backgrounds/BG-BlackCover.png", DrawLayer.Background);
-        cover.setAlpha(1f);
-        cover.addToScreen(this, true);
-
-        skipMsg = new ImageContainer(575,660, "/assets/text/TXT-SkipMsg.png", DrawLayer.Scenery);
+        skipMsg = new ImageContainer(900,980, "/assets/text/TXT-SkipMsg.png", DrawLayer.Scenery);
         skipMsg.addToScreen(this, true);
-
     }
 
 
@@ -44,24 +39,23 @@ public class TeamSplashScreen extends GameScreen {
     //region <Update>
     @Override
     public void transitionOn() {
-
-        float alpha = cover.getAlpha();
-        if(alpha > 0.008f) {
-            cover.setAlpha(alpha - 0.008f);
-            if(cover.getAlpha() <= 0.008f) {
-                currentState = ScreenState.Active;
-            }
+        float alpha = logo.getAlpha();
+        if(alpha < 0.991f){
+            logo.setAlpha(alpha + 0.008f);
+        } else {
+            currentState = ScreenState.Active;
         }
     }
 
     @Override
     public void transitionOff() {
-        float alpha = cover.getAlpha();
-        if(alpha < 1f){
-            cover.setAlpha(alpha + 0.008f);
-        } else {
-            exiting = true;
-            screenManager.addScreen(new TitleScreen(screenManager, "TitleScreen"));  //TODO: Add title splashscreen
+        float alpha = logo.getAlpha();
+        if(alpha > 0.008f) {
+            logo.setAlpha(alpha - 0.008f);
+            if(logo.getAlpha() <= 0.008f) {
+                exiting = true;
+                screenManager.addScreen(new TitleScreen(screenManager));  //TODO: Add title splashscreen
+            }
         }
     }
 
@@ -80,9 +74,9 @@ public class TeamSplashScreen extends GameScreen {
     //region <Support Functions>
     @Override
     public boolean handleClickEvent(int x, int y) {
-        Debug.log(DebugEnabler.GAME_SCREEN_LOG, "Clicked the splash splashscreen");
+        Debug.log(DebugEnabler.GAME_SCREEN_LOG, "Clicked the splash screen");
         exiting = true;
-        screenManager.addScreen(new TitleScreen(screenManager,"TitleScreen"));
+        screenManager.addScreen(new TitleScreen(screenManager));
         return true;
     }
     //endregion

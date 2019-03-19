@@ -1,32 +1,29 @@
 package gamescreen;
 
-import gameengine.GameSettings;
+import gameengine.gamedata.GameData;
 import gameengine.physics.Kinematic;
 import gamescreen.splashscreen.LoadingScreen;
 import gamescreen.splashscreen.TeamSplashScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ScreenManager {
+public class ScreenManager extends JPanel {
     //region <Variables>
     private GameScreen rootScreen;
     private LoadingScreen loadingScreen;
-    private GameSettings gameSettings;
+    private GameData gameData;
     //endregion
     //region <Getters and Setters>
-    public GameSettings getGameSettings() {
-        return gameSettings;
-    }
+
     //endregion
-    public ScreenManager(GameSettings gameSettings) {
-        this.gameSettings = gameSettings;
-        rootScreen = null;
-        loadingScreen = new LoadingScreen(this); //TODO: Change to LoadingScreen after Test complete.
-        //add Splash splashscreen to the
-        rootScreen = new TeamSplashScreen(this, "TeamSplashScreen");
+    public ScreenManager(GameData gameData) {
+        this.gameData = gameData;
+        loadingScreen = new LoadingScreen(this);
+        rootScreen = new TeamSplashScreen(this);
     }
 
     public void update() {
@@ -35,7 +32,7 @@ public class ScreenManager {
 
     //region <Support Functions>
     public void addScreen(GameScreen screen) {
-        Debug.log(DebugEnabler.GAME_SCREEN_LOG,  "ScreenManager-add splashscreen " + screen.name);
+        Debug.log(DebugEnabler.GAME_SCREEN_LOG,  "ScreenManager - Add " + screen.name);
         if(screen.isRoot){
             Debug.success(DebugEnabler.GAME_SCREEN_LOG, screen.name + " - is a Root");
             screen.setChildScreen(rootScreen);
@@ -44,16 +41,6 @@ public class ScreenManager {
         } else {
             rootScreen.coverWith(screen);
         }
-    }
-
-    //TODO: Figure it out later for Loading Screen
-    public void initializeLoadingScreen(int amountOfData){
-        //loadingScreen.initializeLoadingScreen(amountOfData);
-    }
-
-    //TODO: Figure it out later for Loading Screen
-    public void updateLoadingScreen(int dataLoaded){
-        //loadingScreen.dataLoaded(dataLoaded);
     }
 
     public void clickEventAtLocation(int x, int y) {
@@ -65,12 +52,20 @@ public class ScreenManager {
         rootScreen.drawScreen(graphics);
     }
 
-    public LoadingScreen getLoadingScreen() {
+    LoadingScreen getLoadingScreen() {
         return loadingScreen;
     }
 
     public ArrayList<Kinematic> getPhysicsObjects() {
         return rootScreen.getPhysicsObjects();
+    }
+
+    public GameData getGameData() {
+        return gameData;
+    }
+
+    public void changeGraphics() {
+        rootScreen = null;
     }
     //endregion
 }

@@ -1,6 +1,6 @@
 package gamescreen.mainmenu.options;
 
-import gameengine.GameSettings;
+import gameengine.gamedata.GraphicsSetting;
 import gameobject.renderable.text.TextBox;
 import gameobject.renderable.DrawLayer;
 import gamescreen.GameScreen;
@@ -8,39 +8,38 @@ import gamescreen.ScreenManager;
 import gameobject.renderable.ImageContainer;
 import gameobject.renderable.button.Button;
 import gamescreen.popup.ConfirmationPopup;
+import gamescreen.splashscreen.GraphicsChangeScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
+import static gameengine.gamedata.GraphicsSetting.GraphicsOption;
 
 import java.awt.*;
-
-import static gameengine.GameSettings.GraphicsOption.*;
 
 
 public class GraphicsScreen extends GameScreen {
 
     //region <Variables>
-    private static GameSettings.GraphicsOption graphicsSetting;
-    private GameSettings.GraphicsOption exitSetting;
+    private GraphicsOption[] options = GraphicsOption.values();
+    private int optionCount = options.length;
+    private GraphicsSetting localSetting;
     private TextBox graphicsText;
-
-
-
-
-    private final int X_INIT_BUTTON = 64;
-    private final int Y_INIT_BUTTON = 576;
-    private final int WIDTH_BUTTON = 256;
-    private final int X_BUFFER = 48;
     //endregion
 
     //region <Construction and Initialization>
     public GraphicsScreen(ScreenManager screenManager) {
-        super(screenManager, "ControlsScreen", true);
-        graphicsSetting = screenManager.getGameSettings().getGraphicsOption();
-        exitSetting = graphicsSetting;
+        super(screenManager, "GraphicsScreen", true);
     }
 
     @Override
     protected void initializeScreen() {
+        //Grab the graphics settings so we can keep our changes local until we confirm them
+        localSetting = new GraphicsSetting(gameData.getGraphicsSettings().getCurrentOption());
+
+        //Initial position of the first button
+        int X_INIT_BUTTON = 64;
+        int Y_INIT_BUTTON = 920;
+        int WIDTH_BUTTON = 256;
+        int X_BUFFER = 48;
 
         //Create Background
         ImageContainer imageContainer;
@@ -49,12 +48,22 @@ public class GraphicsScreen extends GameScreen {
         imageContainer.addToScreen(this, true);
 
         //Create Text Box
+        graphicsText = new TextBox(X_INIT_BUTTON, 800,
+                340,
+                80,
+                "Graphics Setting",
+                new Font("NoScary", Font.PLAIN, 72),
+                Color.WHITE, true);
+
+        graphicsText.addToScreen(this, true);
+
+        //Create Text Box
         graphicsText = new TextBox(X_INIT_BUTTON+X_BUFFER, Y_INIT_BUTTON,
-                300,
-                150,
-                screenManager.getGameSettings().getGraphicsOption().name(),
+                240,
+                75,
+                localSetting.getCurrentOption().name(),
                 new Font("NoScary", Font.PLAIN, 60),
-                Color.WHITE);
+                Color.WHITE, true);
 
         graphicsText.addToScreen(this, true);
 
@@ -64,12 +73,10 @@ public class GraphicsScreen extends GameScreen {
         butt = new Button(X_INIT_BUTTON, Y_INIT_BUTTON, "/assets/buttons/Button-LeftArrow.png", DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Left Arrow");
-                    switch (exitSetting){
-                        case High: exitSetting = Medium; break;
-                        case Medium: exitSetting = Low; break;
-                        case Low: exitSetting = High; break;
-                    }
-                    graphicsText.setText(exitSetting.name());
+                    int nextOptionOrdinal = (localSetting.getCurrentOption().ordinal() + 1) % optionCount ;
+                    if(nextOptionOrdinal > 2) nextOptionOrdinal = 0;
+                    localSetting.setCurrentOption(options[nextOptionOrdinal]);
+                    graphicsText.setText(localSetting.getCurrentOption().name());
                 });
         butt.addToScreen(this, true);
 
@@ -77,12 +84,10 @@ public class GraphicsScreen extends GameScreen {
         butt = new Button(X_INIT_BUTTON + X_BUFFER + WIDTH_BUTTON, Y_INIT_BUTTON, "/assets/buttons/Button-RightArrow.png", DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Right Arrow");
-                    switch (exitSetting){
-                        case High: exitSetting = Low; break;
-                        case Medium: exitSetting = High; break;
-                        case Low: exitSetting = Medium; break;
-                    }
-                    graphicsText.setText(exitSetting.name());
+                    int nextOptionOrdinal = (localSetting.getCurrentOption().ordinal() - 1) % optionCount;
+                    if(nextOptionOrdinal < 0) nextOptionOrdinal = 2;
+                    localSetting.setCurrentOption(options[nextOptionOrdinal]);
+                    graphicsText.setText(localSetting.getCurrentOption().name());
                 });
         butt.addToScreen(this, true);
 
@@ -92,9 +97,9 @@ public class GraphicsScreen extends GameScreen {
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Confirm");
+                    gameData.setGraphicsSetting(localSetting);
+                    screenManager.addScreen(new GraphicsChangeScreen(screenManager));
                     this.setScreenState(ScreenState.TransitionOff);
-                    graphicsSetting = exitSetting;
-                    screenManager.getGameSettings().setGraphicsOption(graphicsSetting);
                 });
         butt.addToScreen(this, true);
 
@@ -105,7 +110,7 @@ public class GraphicsScreen extends GameScreen {
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Back");
-                    if (!exitSetting.equals(graphicsSetting)) {
+                    if (!localSetting.getCurrentOption().equals(gameData.getGraphicsSettings().getCurrentOption())) {
                         screenManager.addScreen(new ConfirmationPopup(screenManager,
                                 "Return Without Saving?",
                                 ()-> this.setScreenState(ScreenState.TransitionOff)));

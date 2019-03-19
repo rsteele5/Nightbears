@@ -14,7 +14,7 @@ import java.awt.*;
 public class IntroCutScene extends GameScreen {
 
     public IntroCutScene(ScreenManager screenManager) {
-        super(screenManager, "TestScreen");
+        super(screenManager, "IntroCutScene");
     }
 
     private final String text = "Arise!...\n\n" +
@@ -30,19 +30,27 @@ public class IntroCutScene extends GameScreen {
         cover.setAlpha(1f);
         cover.addToScreen(this, true);
 
-        DialogBox diagBox = new DialogBox(320,180, 640, 360, text,
-                new Font("NoScary", Font.PLAIN, 40), Color.WHITE);
+        DialogBox diagBox = new DialogBox(480,90, 960, 540, text,
+                new Font("NoScary", Font.PLAIN, 56), Color.WHITE, true);
         diagBox.addToScreen(this, true);
 
-        ImageContainer skipMsg = new ImageContainer(575,660, "/assets/text/TXT-SkipMsg.png", DrawLayer.Scenery);
+        ImageContainer skipMsg = new ImageContainer(900,980, "/assets/text/TXT-SkipMsg.png", DrawLayer.Scenery);
         skipMsg.addToScreen(this, true);
     }
 
     @Override
     public boolean handleClickEvent(int x, int y) {
-        Debug.log(DebugEnabler.GAME_SCREEN_LOG, "Clicked the splash splashscreen");
+        Debug.log(DebugEnabler.GAME_SCREEN_LOG, "Clicked the splash intro cut scene");
+        setScreenState(ScreenState.TransitionOff);
+        return true;
+    }
+
+    @Override
+    protected void transitionOn() { this.setScreenState(ScreenState.Active); }
+
+    @Override
+    protected void transitionOff() {
         exiting = true;
         screenManager.addScreen(new OverworldScreen(screenManager));
-        return true;
     }
 }

@@ -12,7 +12,7 @@ import main.utilities.DebugEnabler;
 public class OptionScreen extends GameScreen {
     //region <Variables>
     private final int X_INIT_BUTTON = 64;
-    private final int Y_INIT_BUTTON = 576;
+    private final int Y_INIT_BUTTON = 920;
     private final int WIDTH_BUTTON = 256;
     private float alphaTransition = 0.0f;
     private final int X_BUFFER = 48;
@@ -46,7 +46,7 @@ public class OptionScreen extends GameScreen {
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Sound");
-                    //TODO: Add Sound Menu
+                    screenManager.addScreen(new SoundScreen(screenManager));
                 });
         button.addToScreen(this,true);
 
@@ -73,7 +73,4 @@ public class OptionScreen extends GameScreen {
 
     //endregion
 
-    @Override
-    protected void activeUpdate() {
-    }
 }
