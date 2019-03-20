@@ -3,7 +3,9 @@ package gameengine.physics;
 import _test.Square;
 import gameengine.GameEngine;
 import gameobject.renderable.enemy.Enemy;
+import gameobject.renderable.enemy.Minion;
 import gameobject.renderable.enemy.Walker;
+import gameobject.renderable.house.sidescrolling.Floor;
 import gameengine.gamedata.GameData;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.item.weapon.Weapon;
@@ -83,13 +85,17 @@ public class PhysicsEngine {
                     }
                     if (obj1 instanceof Enemy && obj2 instanceof Square) {
                         //Debug.success(true,"ENEMY->SQUARE");
-                        Enemy e = (Enemy) obj1; e.changeState();
+                        if(!(obj2 instanceof Floor)) {
+                            Minion e = (Minion) obj1;
+                            e.changeState();
+                        }
+
                     }
-                    if (obj1 instanceof Enemy && obj2 instanceof Player) {
+                    if (obj1 instanceof Minion && obj2 instanceof Player) {
                         Debug.success(true,"ENEMY->Player");
-                        Enemy e = (Enemy) obj1; e.addhp(-1);//todo sword damage
+                        Minion e = (Minion) obj1; e.addhp(-1);//todo sword damage
                         Debug.success(true,Integer.toString(e.getHp()));
-                        //(e.getHp() < 1) obj1.
+                        if(e.getHp() < 1) e.setInactive(e.getScreen());
                     }
                     ((Kinematic) obj1).setAcceleration(new PhysicsVector(1, 1));
                     if (!((Kinematic) obj2).isStatic()) ((Kinematic) obj2).setAcceleration(new PhysicsVector(1, 1));
