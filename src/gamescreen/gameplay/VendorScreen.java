@@ -233,7 +233,6 @@ public class VendorScreen extends GameScreen {
                 playerGrid.dynamicAddAt(itemContainerButton, i, j);
                 if (k < count) {
                     itemContainerButton.setItem(playerInventory.get(k));
-                    //setClickEvent(itemContainerButton, itemDetailsPlayer, itemDetailsVendor, "player" );
                     k++;
                 }
                 setClickEvent(itemContainerButton, itemDetailsPlayer, itemDetailsVendor, "player" );
@@ -263,7 +262,7 @@ public class VendorScreen extends GameScreen {
 
     private void setClickEvent(ItemButton itemContainerButton, TextBox itemDetailsPlayer, TextBox itemDetailsVendor, String sender){
         itemContainerButton.setOnClick(() -> {
-            if (currentItemButton != null) {
+            if (currentItemButton != null && currentItemButton != itemContainerButton) {
                 currentItemButton.deSelect();
                 // Reset previous item's text to ""
                 if (itemDetailsPlayer.getText().length() > 0) {
