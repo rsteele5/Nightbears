@@ -46,7 +46,7 @@ public class MainMenuScreen extends GameScreen {
 
         Button optionsButton = (new Button(X_START, Y_START + BUTTON_HEIGHT + Y_BUFFER,
                 "/assets/buttons/Button-Options.png",
-                "src/assets/buttons/Button-OptionsPressed.png",
+                "/assets/buttons/Button-OptionsPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Options");

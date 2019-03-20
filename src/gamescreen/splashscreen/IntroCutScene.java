@@ -6,6 +6,7 @@ import gameobject.renderable.DrawLayer;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.overworld.OverworldScreen;
+import input.listeners.MouseController;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -43,11 +44,18 @@ public class IntroCutScene extends GameScreen {
     }
 
     @Override
-    public boolean handleClickEvent(int x, int y) {
+    public boolean handleMousePress(MouseController mouseController, int x, int y){
         Debug.log(DebugEnabler.GAME_SCREEN_LOG, "Clicked the splash intro cut scene");
         setScreenState(ScreenState.TransitionOff);
         return true;
     }
+
+//    @Override
+//    public boolean handleClickEvent(int x, int y) {
+//        Debug.log(DebugEnabler.GAME_SCREEN_LOG, "Clicked the splash intro cut scene");
+//        setScreenState(ScreenState.TransitionOff);
+//        return true;
+//    }
 
     @Override
     protected void transitionOn() { this.setScreenState(ScreenState.Active); }

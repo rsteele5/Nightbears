@@ -4,6 +4,7 @@ import gameobject.renderable.DrawLayer;
 import gameobject.renderable.ImageContainer;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
+import input.listeners.MouseController;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -61,7 +62,7 @@ public class RandomPlayerScreen extends GameScreen {
     }
 
     @Override
-    public boolean handleClickEvent(int x, int y) {
+    public boolean handleMousePress(MouseController mouseController, int x, int y){
         if(!clicked) {
             Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "- handle click " + x + " " + y);
             silhouette.setAlpha(0f);
@@ -72,6 +73,19 @@ public class RandomPlayerScreen extends GameScreen {
 
         return true;
     }
+
+//    @Override
+//    public boolean handleClickEvent(int x, int y) {
+//        if(!clicked) {
+//            Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "- handle click " + x + " " + y);
+//            silhouette.setAlpha(0f);
+//            clicked = true;
+//        } else {
+//            setScreenState(ScreenState.TransitionOff);
+//        }
+//
+//        return true;
+//    }
 
     @Override
     protected void transitionOff() {
