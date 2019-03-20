@@ -86,6 +86,7 @@ public class VendorScreen extends GameScreen {
 
         button = new Button(25, 25,
                 "/assets/buttons/Button-Vendor-Exit.png",
+                "/assets/buttons/Button-Vendor-ExitPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Exit Vendor");
@@ -96,6 +97,7 @@ public class VendorScreen extends GameScreen {
 
         button = new Button(585, 485,
                 "/assets/buttons/Button-Vendor-Buy.png",
+                "/assets/buttons/Button-Vendor-BuyPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Buy from Vendor");
@@ -138,6 +140,7 @@ public class VendorScreen extends GameScreen {
 
         button = new Button(310, 485,
                 "/assets/buttons/Button-Vendor-Sell.png",
+                "/assets/buttons/Button-Vendor-SellPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Sell to Vendor");

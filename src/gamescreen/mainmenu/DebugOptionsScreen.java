@@ -90,6 +90,7 @@ public class DebugOptionsScreen extends GameScreen {
 
         rightArrow = new Button(X_INIT_BUTTON + X_BUFFER + WIDTH_BUTTON, Y_INIT_BUTTON,
                 "/assets/buttons/Button-RightArrow.png",
+                "/assets/buttons/Button-RightArrowPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Right Arrow");
@@ -136,6 +137,7 @@ public class DebugOptionsScreen extends GameScreen {
 
         rightArrow = new Button(X_INIT_BUTTON + X_BUFFER + WIDTH_BUTTON, Y_INIT_BUTTON + Y_BUFFER,
                 "/assets/buttons/Button-RightArrow.png",
+                "/assets/buttons/Button-RightArrowPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Right Arrow");
@@ -184,6 +186,7 @@ public class DebugOptionsScreen extends GameScreen {
 
         rightArrow = new Button(X_INIT_BUTTON + X_BUFFER + WIDTH_BUTTON, Y_INIT_BUTTON + Y_BUFFER,
                 "/assets/buttons/Button-RightArrow.png",
+                "/assets/buttons/Button-RightArrowPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Right Arrow");

@@ -172,6 +172,7 @@ public class PauseMenu extends GameScreen {
         //Save Button
         Button saveButton = new gameobject.renderable.button.Button(765,132,
                 "/assets/buttons/Button-Save.png",
+                "/assets/buttons/Button-SavePressed.png",
                 DrawLayer.Entity,
                 () ->{
                     //TODO Save stuff
@@ -184,6 +185,7 @@ public class PauseMenu extends GameScreen {
         //Options Button
         Button optionsButton = new gameobject.renderable.button.Button(765,234,
                 "/assets/buttons/Button-Options.png",
+                "src/assets/buttons/Button-OptionsPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Options");
