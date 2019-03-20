@@ -60,6 +60,7 @@ public class DevScreen extends GameScreen {
 
         button = new Button(X_INIT_BUTTON,Y_INIT_BUTTON,
                 "/assets/buttons/Button-Vendor.png",
+                "/assets/buttons/Button-VendorPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Vendor");
@@ -69,6 +70,7 @@ public class DevScreen extends GameScreen {
 
         button = new Button(X_INIT_BUTTON+X_BUFFER+WIDTH_BUTTON,Y_INIT_BUTTON,
                 "/assets/buttons/Button-Physics.png",
+                "/assets/buttons/Button-PhysicsPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Physics");

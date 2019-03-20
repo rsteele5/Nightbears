@@ -75,6 +75,7 @@ public class ConfirmationPopup extends GameScreen {
 
         button = new Button(X_INIT_BUTTON + WIDTH_BUTTON + X_BUFFER,Y_INIT_BUTTON,
                 "/assets/buttons/Button-No.png",
+                "/assets/buttons/Button-NoPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - No");

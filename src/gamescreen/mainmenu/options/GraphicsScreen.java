@@ -81,7 +81,10 @@ public class GraphicsScreen extends GameScreen {
         butt.addToScreen(this, true);
 
         //Right Arrow
-        butt = new Button(X_INIT_BUTTON + X_BUFFER + WIDTH_BUTTON, Y_INIT_BUTTON, "/assets/buttons/Button-RightArrow.png", DrawLayer.Entity,
+        butt = new Button(X_INIT_BUTTON + X_BUFFER + WIDTH_BUTTON, Y_INIT_BUTTON,
+                "/assets/buttons/Button-RightArrow.png",
+                "/assets/buttons/Button-RightArrowPressed.png",
+                DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Right Arrow");
                     int nextOptionOrdinal = (localSetting.getCurrentOption().ordinal() - 1) % optionCount;

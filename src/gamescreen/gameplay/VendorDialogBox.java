@@ -36,8 +36,9 @@ public class VendorDialogBox extends Overlay {
                 new Font("NoScary", Font.PLAIN, 40), Color.WHITE, false);
         diagBox.addToScreen(this, true);
 
-        gameobject.renderable.button.Button button = new gameobject.renderable.button.Button(100,140,
+        Button button = new gameobject.renderable.button.Button(100,140,
                 "/assets/buttons/Button-Yes.png",
+                "/assets/buttons/Button-YesPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - VendorDialog Yes");
@@ -49,6 +50,7 @@ public class VendorDialogBox extends Overlay {
 
         button = new Button(225,140,
                 "/assets/buttons/Button-No.png",
+                "src/assets/buttons/Button-NoPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - VendorDialog No");
