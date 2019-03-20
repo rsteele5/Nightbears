@@ -17,7 +17,6 @@ import gameobject.renderable.player.overworld.PlayerWalkingAnimation;
 import gameobject.renderable.player.sidescrolling.PlayerSSCrouchingAnimation;
 import gameobject.renderable.player.sidescrolling.PlayerSSIdleAnimation;
 import gamescreen.GameScreen;
-import main.utilities.AssetLoader;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -37,16 +36,16 @@ public class Player extends RenderableObject implements Kinematic {
     private boolean crouch = false;
     private boolean crouchSet = true;
     public boolean interaction = false;
-    private int movFlag = 0;
-    private int gold;
-    private double moveFactor = 1;
-    private double rotation = 0;
     /*
     0b1     =   right
     0b10    =   left
     0b100   =   down
     0b1000  =   up
      */
+    private int movFlag = 0;
+    private int gold;
+    private double moveFactor = 1;
+    private double rotation = 0;
     public boolean grounded;
     private PlayerState playerState;
 
@@ -57,10 +56,7 @@ public class Player extends RenderableObject implements Kinematic {
     }
 
     public void draw(Graphics2D graphics2D) {
-        if(animator != null){
-            animator.animate();
-        }
-
+        if(animator != null) animator.animate();
         Graphics2D g2 = (Graphics2D) graphics2D.create();
         g2.rotate(rotation, x + (width / 2.0), y + (height / 2.0));
         g2.drawImage(image, x, y, null);
@@ -117,12 +113,8 @@ public class Player extends RenderableObject implements Kinematic {
                 animator.setAnimation("SS_Crouch");
             }
             else {
-              //  image = AssetLoader.load("/assets/testAssets/square2.png");
-             //   imagePath = "/assets/testAssets/square2.png";
                 animator.setAnimation("SS_Idle");
                 y = y - image.getHeight()/2;
-
-             //   animator.setAnimation("SS_Idle");
             }
         }
         if (playerState == PlayerState.overWorld) {
@@ -137,7 +129,7 @@ public class Player extends RenderableObject implements Kinematic {
         }
     }
 
-    private void setVelocity(int flags) {
+    private void setMovementState(int flags) {
         int x1 = 0b1 & flags;
         x1 += (((0b10 & flags) / 0b10) * -1);
         int y1 = ((0b100 & flags) / 0b100);
@@ -148,18 +140,17 @@ public class Player extends RenderableObject implements Kinematic {
     private void calculateMove(KeyEvent e, int[] keys) {
         for (int i = 0; i < keys.length; i++)
             movFlag += e.getKeyCode() == keys[i] && ((movFlag & (int) Math.pow(2, i)) == 0) ? (int) Math.pow(2, i) : 0;
-        setVelocity(movFlag);
+        setMovementState(movFlag);
     }
 
     private void calculateRelease(KeyEvent e, int[] keys) {
         for (int i = 0; i < keys.length; i++)
             movFlag -= e.getKeyCode() == keys[i] && ((movFlag & (int) Math.pow(2, i)) == Math.pow(2, i)) ? (int) Math.pow(2, i) : 0;
-        setVelocity(movFlag);
+        setMovementState(movFlag);
     }
 
     public void move(KeyEvent e) {
         switch (getState()) {
-
             case sideScroll:
                 if (e.getKeyCode() == 32 && grounded) {
                     int sign = PhysicsMeta.AntiGravity ? -1 : 1;
@@ -167,7 +158,6 @@ public class Player extends RenderableObject implements Kinematic {
                     grounded = false;
                 }
                 if(e.getKeyCode() == 83 && !crouch){
-                    Debug.log(DebugEnabler.PLAYER_STATUS,"CROUCHING");
                     crouch = true;
                     crouchSet = false;
                 }
@@ -176,9 +166,7 @@ public class Player extends RenderableObject implements Kinematic {
                 }
                 if (PhysicsMeta.Gravity == 0) calculateMove(e, owKeys);
                 else calculateMove(e, ssKeys);
-
                 break;
-
             case overWorld:
                 calculateMove(e, owKeys);
                 break;
@@ -227,11 +215,6 @@ public class Player extends RenderableObject implements Kinematic {
 
     @Override
     public void setVelocity(PhysicsVector pv) {
-        if(pv.x != 0 && pv.y != 0){
-            //TODO: this is broken. Needs to make speed constant in all directions
-//            pv.x = (pv.x / Math.sqrt(2));
-//            pv.y = (pv.y / Math.sqrt(2));
-        }
         magnitude = pv.mult(speed);
     }
 
