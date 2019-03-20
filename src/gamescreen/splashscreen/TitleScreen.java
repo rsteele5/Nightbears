@@ -6,14 +6,16 @@ import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gameobject.renderable.ImageContainer;
 import gamescreen.mainmenu.MainMenuScreen;
+import input.listeners.MouseController;
+import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 
 public class TitleScreen extends GameScreen {
-    //region <Variables>
+
     private ImageContainer moonImg;
     private ImageContainer titleImg;
-    //endregion
     private boolean musicStart = false;
-    //region <Construction and Initialization>
+
     public TitleScreen(ScreenManager screenManager) {
         super(screenManager,"TitleScreen", 1f);
     }
@@ -61,6 +63,12 @@ public class TitleScreen extends GameScreen {
     //endregion
 
     //region <Support Functions>
+    @Override
+    public boolean handleMousePress(MouseController mouseController, int x, int y){
+        currentState = ScreenState.TransitionOff;
+        return true;
+    }
+
     @Override
     public boolean handleClickEvent(int x, int y) {
         currentState = ScreenState.TransitionOff;

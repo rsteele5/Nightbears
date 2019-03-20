@@ -54,6 +54,7 @@ public class MainMenuScreen extends GameScreen {
 
         Button devModeButton = (new Button(X_START, Y_START + 2 * (BUTTON_HEIGHT + Y_BUFFER),
                 "/assets/buttons/Button-Dev.png",
+                "/assets/buttons/Button-DevPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - DevMode");

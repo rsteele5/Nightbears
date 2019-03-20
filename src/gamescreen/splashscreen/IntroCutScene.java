@@ -9,8 +9,15 @@ import gamescreen.gameplay.overworld.OverworldScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
-import java.awt.*;
+import java.awt.Font;
+import java.awt.Color;
 
+
+/**
+ * The intro IntroCutScene adds a bit of narration before our game
+ * starts. The screen is skippable if the gamer so wishes. After the
+ * IntroCutScene is done the overworld is displayed.
+ */
 public class IntroCutScene extends GameScreen {
 
     public IntroCutScene(ScreenManager screenManager) {
@@ -33,9 +40,6 @@ public class IntroCutScene extends GameScreen {
         DialogBox diagBox = new DialogBox(480,90, 960, 540, text,
                 new Font("NoScary", Font.PLAIN, 56), Color.WHITE, true);
         diagBox.addToScreen(this, true);
-
-        ImageContainer skipMsg = new ImageContainer(900,980, "/assets/text/TXT-SkipMsg.png", DrawLayer.Scenery);
-        skipMsg.addToScreen(this, true);
     }
 
     @Override

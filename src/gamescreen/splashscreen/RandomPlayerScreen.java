@@ -1,19 +1,15 @@
 package gamescreen.splashscreen;
 
-import gameengine.GameEngine;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.ImageContainer;
-import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
-import gamescreen.gameplay.overworld.OverworldScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
-import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 
 public class RandomPlayerScreen extends GameScreen {
 
@@ -67,7 +63,7 @@ public class RandomPlayerScreen extends GameScreen {
     @Override
     public boolean handleClickEvent(int x, int y) {
         if(!clicked) {
-            Debug.log(DebugEnabler.GAME_SCREEN_LOG, "Revealing Character");
+            Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "- handle click " + x + " " + y);
             silhouette.setAlpha(0f);
             clicked = true;
         } else {

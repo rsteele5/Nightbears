@@ -4,6 +4,7 @@ import gameengine.gamedata.GameData;
 import gameengine.physics.Kinematic;
 import gameengine.rendering.Camera;
 import gameobject.renderable.button.Button;
+import input.listeners.MouseController;
 import main.utilities.*;
 import gameobject.GameObject;
 import gameobject.renderable.RenderableObject;
@@ -343,7 +344,7 @@ public abstract class GameScreen {
                     case TransitionOff: transitionOff(); break;
                     case Active: activeUpdate(); break;
                     case Hidden: hiddenUpdate(); break;
-                    default: Debug.error(DebugEnabler.GAME_SCREEN_LOG, "Unknown screen state");
+                    default: Debug.error(DebugEnabler.GAME_SCREEN_LOG, "Unknown splashscreen state");
                 }
             }
             if(!overlayScreens.isEmpty()) {
@@ -392,6 +393,63 @@ public abstract class GameScreen {
     //endregion
 
     //region <Support Functions>
+    public boolean handleMousePress(MouseController mouseController, int x, int y){
+        //Handle press on the Exlusive splashscreen covering me
+        if(childScreen != null) {
+            Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "-handle press on child");
+            childScreen.handleMousePress(mouseController, x,y);
+        } else {
+            //Handle press on all overlays
+            for (GameScreen overlay : overlayScreens) {
+                Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "-handle press on overlay");
+                if (overlay.handleMousePress(mouseController, x, y))
+                    return true;
+            }
+            // If no overlays handled press
+            Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "- handle press " + x + " " + y);
+            for(Clickable thing: clickables) {
+                if(thing.contains(x,y)) {
+                    mouseController.setPressTarget(thing);
+                    thing.setPressed(true);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean handleMouseRelease(MouseController mouseController, int x, int y){
+        //Handle release on the Exlusive splashscreen covering me
+        if(childScreen != null) {
+            Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "-handle release on child");
+            childScreen.handleMouseRelease(mouseController, x,y);
+        } else {
+            //Handle release on all overlays
+            for (GameScreen overlay : overlayScreens) {
+                Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "-handle release on overlay");
+                if (overlay.handleMouseRelease(mouseController, x, y))
+                    return true;
+            }
+            // If no overlays handled press
+            Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "- handle release " + x + " " + y);
+            for(Clickable thing: clickables) {
+                if(thing.equals(mouseController.getPressTarget())) {
+                    if(thing.contains(x,y)){
+                        thing.onClick();
+                        mouseController.clearPressTarget();
+                        thing.setPressed(false);
+                        return true;
+                    } else {
+                        mouseController.clearPressTarget();
+                        thing.setPressed(false);
+                        return false;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean handleClickEvent(int x, int y) {
         //Handle click on the Exlusive splashscreen covering me
         if(childScreen != null) {

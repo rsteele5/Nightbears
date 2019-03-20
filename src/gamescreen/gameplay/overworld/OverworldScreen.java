@@ -26,7 +26,7 @@ public class OverworldScreen extends GameScreen {
     //endregion
 
     public OverworldScreen(ScreenManager screenManager) {
-        super(screenManager, "Overworld", 1f);
+        super(screenManager, "Overworld", 0f);
     }
 
     /**

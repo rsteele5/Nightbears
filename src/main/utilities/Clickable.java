@@ -4,4 +4,5 @@ public interface Clickable {
     void onClick();
     void setOnClick(Action onClick);
     boolean contains(int x, int y);
+    void setPressed(boolean isPressed);
 }
