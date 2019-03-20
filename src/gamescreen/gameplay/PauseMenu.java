@@ -184,7 +184,7 @@ public class PauseMenu extends GameScreen {
         //Options Button
         Button optionsButton = new gameobject.renderable.button.Button(765,234,
                 "/assets/buttons/Button-Options.png",
-                "src/assets/buttons/Button-OptionsPressed.png",
+                "/assets/buttons/Button-OptionsPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Options");
