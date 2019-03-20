@@ -7,8 +7,7 @@ import gamescreen.ScreenManager;
 import gameobject.renderable.ImageContainer;
 import gamescreen.mainmenu.MainMenuScreen;
 import input.listeners.MouseController;
-import main.utilities.Debug;
-import main.utilities.DebugEnabler;
+
 
 public class TitleScreen extends GameScreen {
 

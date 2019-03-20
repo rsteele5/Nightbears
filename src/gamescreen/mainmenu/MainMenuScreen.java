@@ -36,6 +36,7 @@ public class MainMenuScreen extends GameScreen {
         //Create buttons
         Button newGameButton = (new Button(X_START, Y_START,
                 "/assets/buttons/Button-NewGame.png",
+                "/assets/buttons/Button-NewGamePressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - New Game");

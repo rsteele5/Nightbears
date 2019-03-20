@@ -70,7 +70,10 @@ public class GraphicsScreen extends GameScreen {
         //Create button
         Button butt;
         //Left Arrow
-        butt = new Button(X_INIT_BUTTON, Y_INIT_BUTTON, "/assets/buttons/Button-LeftArrow.png", DrawLayer.Entity,
+        butt = new Button(X_INIT_BUTTON, Y_INIT_BUTTON,
+                "/assets/buttons/Button-LeftArrow.png",
+                "/assets/buttons/Button-LeftArrowPressed.png",
+                DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Left Arrow");
                     int nextOptionOrdinal = (localSetting.getCurrentOption().ordinal() + 1) % optionCount ;
@@ -94,6 +97,7 @@ public class GraphicsScreen extends GameScreen {
         //Confirm
         butt = new Button(X_INIT_BUTTON + 2 * (X_BUFFER + WIDTH_BUTTON), Y_INIT_BUTTON,
                 "/assets/buttons/Button-Confirm.png",
+                "/assets/buttons/Button-ConfrimPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Confirm");
@@ -107,6 +111,7 @@ public class GraphicsScreen extends GameScreen {
         butt = new Button(X_INIT_BUTTON + 3 * (X_BUFFER + WIDTH_BUTTON),
                 Y_INIT_BUTTON,
                 "/assets/buttons/Button-Back.png",
+                "/assets/buttons/Button-BackPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Back");

@@ -159,6 +159,7 @@ public class PauseMenu extends GameScreen {
         //Main Menu Button
         Button mainMenuButton = new gameobject.renderable.button.Button(765,30,
                 "/assets/buttons/Button-MainMenu.png",
+                "/assets/buttons/Button-MainMenuPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Main Menu");
@@ -195,6 +196,7 @@ public class PauseMenu extends GameScreen {
         //Back Button
         Button backButton = new gameobject.renderable.button.Button(765,336,
                 "/assets/buttons/Button-Back.png",
+                "/assets/buttons/Button-BackPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Back");
