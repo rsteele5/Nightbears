@@ -69,6 +69,7 @@ public class DebugOptionsScreen extends GameScreen {
         //Create button
         leftArrow = new Button(X_INIT_BUTTON, Y_INIT_BUTTON,
                 "/assets/buttons/Button-LeftArrow.png",
+                "/assets/buttons/Button-LeftArrowPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Left Arrow");
@@ -115,6 +116,7 @@ public class DebugOptionsScreen extends GameScreen {
         //Create button
         leftArrow = new Button(X_INIT_BUTTON, Y_INIT_BUTTON + Y_BUFFER,
                 "/assets/buttons/Button-LeftArrow.png",
+                "/assets/buttons/Button-LeftArrowPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Left Arrow");
@@ -163,6 +165,7 @@ public class DebugOptionsScreen extends GameScreen {
         //Create button
         leftArrow = new Button(X_INIT_BUTTON, Y_INIT_BUTTON + Y_BUFFER,
                 "/assets/buttons/Button-LeftArrow.png",
+                "/assets/buttons/Button-LeftArrowPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Left Arrow");
@@ -253,6 +256,7 @@ public class DebugOptionsScreen extends GameScreen {
 
         Button confirm = new gameobject.renderable.button.Button(1296, 920,
                 "/assets/buttons/Button-Confirm.png",
+                "/assets/buttons/Button-ConfrimPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Confirm");
@@ -263,6 +267,7 @@ public class DebugOptionsScreen extends GameScreen {
 
         Button back = new Button(1600,920,
                 "/assets/buttons/Button-Back.png",
+                "/assets/buttons/Button-BackPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Back");

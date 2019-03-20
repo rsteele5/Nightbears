@@ -41,6 +41,7 @@ public class DevScreen extends GameScreen {
 
         button = new Button(X_INIT_BUTTON+(X_BUFFER+WIDTH_BUTTON),Y_INIT_BUTTON - 128,
                 "/assets/buttons/Button-NewGame.png",
+                "/assets/buttons/Button-NewGamePressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - level");
@@ -51,6 +52,7 @@ public class DevScreen extends GameScreen {
         //Dev screen debug button
         button = new Button(X_INIT_BUTTON,Y_INIT_BUTTON - 128,
                 "/assets/buttons/Button-Debug.png",
+                "/assets/buttons/Button-DebugPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Debug");
@@ -80,6 +82,7 @@ public class DevScreen extends GameScreen {
 
         button = new Button(X_INIT_BUTTON+2*(X_BUFFER+WIDTH_BUTTON), Y_INIT_BUTTON,
                 "/assets/buttons/Button-Inventory.png",
+                "/assets/buttons/Button-InventoryPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Inventory");
@@ -90,6 +93,7 @@ public class DevScreen extends GameScreen {
 
         button = new Button(X_INIT_BUTTON+3*(X_BUFFER+WIDTH_BUTTON),Y_INIT_BUTTON,
                 "/assets/buttons/Button-MainMenu.png",
+                "/assets/buttons/Button-MainMenuPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Main Menu");
