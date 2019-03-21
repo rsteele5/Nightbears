@@ -2,6 +2,11 @@ package main.utilities;
 
 /**
  * Contains the necessary functions needed to be a clickable object in the game.
+ *
+ * @see #onClick()
+ * @see #setOnClick(Action)
+ * @see #contains(int, int)
+ * @see #setPressed(boolean)
  */
 public interface Clickable {
     /**
@@ -10,11 +15,10 @@ public interface Clickable {
     void onClick();
 
     /**
-     * Sets the desired functionality of the clickable when it is clicked. The method Accepts and Action, but a
+     * Sets the desired functionality of the clickable when it is clicked. The method Accepts and {@link Action}, but a
      * parameterless lamba expression can be passed instead.
      *
      * @param   onClick A function dictating how the clickable will behave on click.
-     * @see     Action
      */
     void setOnClick(Action onClick);
 

@@ -50,7 +50,7 @@ public class VendorDialogBox extends Overlay {
 
         button = new Button(225,140,
                 "/assets/buttons/Button-No.png",
-                "src/assets/buttons/Button-NoPressed.png",
+                "/assets/buttons/Button-NoPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - VendorDialog No");

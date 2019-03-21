@@ -3,13 +3,10 @@ package gamescreen;
 import gameengine.gamedata.GameData;
 import gameengine.physics.Kinematic;
 import gameengine.rendering.Camera;
-import gameobject.renderable.button.Button;
 import input.listeners.MouseController;
 import main.utilities.*;
 import gameobject.GameObject;
 import gameobject.renderable.RenderableObject;
-import gamescreen.splashscreen.LoadingScreen;
-
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -17,115 +14,60 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Contains
+ */
 public abstract class GameScreen {
 
     //region <Variables>
-    protected GameData gameData;
     public String name;
-    protected float screenAlpha;
-
     protected int x, y;
-
-    private GameScreen childScreen;
-    protected CopyOnWriteArrayList<GameScreen> overlayScreens;
-    public LoadingScreen loadingScreen;
-    private Camera camera;
-
-    //TODO: Used for testing, remove after splashscreen management is working. If it so tickles your pickles
-    protected ScreenState previousState;
-
+    protected float screenAlpha;
+    private ScreenState previousState;
+    protected ScreenState currentState;
     protected ScreenManager screenManager;
-
-    protected boolean loadingScreenRequired = false;
-
-    /**
-     * The variable exclusivePopup describes if a splashscreen is covering a portion of another splashscreen.
-     * An exclusive popup splashscreen prevents updates on splashscreen below it in the list.
-     */
-    protected boolean isExclusive = false;
-    protected boolean isOverlay = false;
-
-    /**
-     * The variable exclusivePopup describes if a splashscreen is covering a portion of another splashscreen.
-     * An exclusive popup splashscreen prevents updates on splashscreen below it in the list.
-     */
+    private GameScreen childScreen;
+    private CopyOnWriteArrayList<GameScreen> overlayScreens;
+    private Camera camera;
+    private boolean loadingScreenRequired = false;
+    private boolean isExclusive;
+    private boolean isOverlay;
     private boolean isLoading;
-
-    /**
-     * The variable overlay describes if a splashscreen is covering another splashscreen in it's entirety, but
-     * does not prevent updates or rendering on splashscreen below it in the list.
-     */
-    protected boolean isRoot;
-
     protected boolean exiting = false;
-
+    boolean isRoot;
+    /**
+     * Contains all of the {@link GameObject}s that are not updated and/or drawn on the GameScreen
+     */
     public ArrayList<GameObject> inactiveObjects;
+    /**
+     * Contains all of the {@link GameObject}s that are updated and/or drawn on the GameScreen
+     */
     public ArrayList<GameObject> activeObjects;
+    /**
+     * Contains all of the active {@link RenderableObject}s on the GameScreen
+     */
+    public ArrayList<RenderableObject> renderables;
+    /**
+     * Contains all of the active {@link Clickable}s on the GameScreen
+     */
     public ArrayList<Clickable> clickables;
+    /**
+     * Contains all of the active {@link Kinematic} objects on the GameScreen
+     */
     public ArrayList<Kinematic> kinematics;
+    /**
+     * Contains all objects that need to be loaded. The objects are removed from this list once they are loaded.
+     */
     public ArrayList<Loadable> loadables;
 
-    public ArrayList<RenderableObject> getRenderables() {
-        return renderables;
-    }
-
-    public ArrayList<RenderableObject> renderables;
-
-    public void coverWith(GameScreen gameScreen) {
-        if (gameScreen.isExclusive) {
-            if (childScreen == null) {
-                childScreen = gameScreen;
-            } else {
-                childScreen.coverWith(gameScreen);
-            }
-        } else {
-            addOverlay(gameScreen);
-        }
-    }
-
-    //Recursively removes all child splashscreen and overlays
-    public void removeMe(GameScreen gameScreen){
-        if(gameScreen != null) {
-            if (gameScreen.childScreen != null)
-                removeMe(gameScreen.childScreen);
-
-            if (!gameScreen.overlayScreens.isEmpty()) {
-                for (GameScreen overlay : gameScreen.overlayScreens)
-                    removeMe(overlay);
-            }
-            Debug.log(DebugEnabler.GAME_SCREEN_LOG, gameScreen.name + " - Remove Scheduled");
-            gameScreen.currentState = ScreenState.TransitionOff;
-        }
-        else Debug.warning(DebugEnabler.GAME_SCREEN_LOG,  "Screen is already removed");
-    }
-
-
-    public ArrayList<Kinematic> getPhysicsObjects() {
-        if (!isLoading) {
-            if (childScreen != null) {
-                return childScreen.getPhysicsObjects();
-            } else {
-                return kinematics;
-            }
-        } else {
-            return null;
-        }
-    }
-
-    public void setChildScreen(GameScreen screen) {
-        childScreen = screen;
-    }
-    public GameScreen getChildScreen() {
-        return childScreen;
-    }
-
+    protected GameData gameData;
 
     /**
-     * <p>Screen state describes all possible states that a splashscreen can be in:</p>
-     * <p><b>TransitionOn</b> - The splashscreen is currently undergoing transition on effects. ie fade in etc</p>
-     * <p><b>Active</b> - The splashscreen is currently active and can accept input and update its objects</p>
-     * <p><b>TransitionOff</b> - The splashscreen is currently undergoing transition off effects. ie fade in etc</p>
-     * <p><b>Hidden</b> - The splashscreen is currently covered by another splashscreen</p>
+     * <p>Screen state describes all possible states that a GameScreen can be in:</p>
+     * <p><b>TransitionOn</b> - The GameScreen is currently undergoing transition on effects. ie fade in etc</p>
+     * <p><b>Active</b> - The GameScreen is currently active and can accept input and update its objects</p>
+     * <p><b>TransitionOff</b> - The GameScreen is currently undergoing transition off effects. ie fade in etc</p>
+     * <p><b>Hidden</b> - The GameScreen is currently covered by another GameScreen</p>
      */
     public enum ScreenState {
         TransitionOn,
@@ -133,24 +75,23 @@ public abstract class GameScreen {
         TransitionOff,
         Hidden
     }
-
-    /**
-     * Current state describes what state the splashscreen is currently in.
-     */
-    protected ScreenState currentState;
     //endregion
 
     //region<Construction and Initialization>
-    public GameScreen(ScreenManager screenManager, String name, float screenAlpha) {
-        this.gameData = screenManager.getGameData();
-        this.screenManager = screenManager;
+    private GameScreen(boolean isRoot, ScreenManager screenManager, String name, boolean isExclusive, int xPos, int yPos, float screenAlpha) {
         this.name = name;
-        this.isRoot = true;
-        previousState = null;
+        x = xPos;
+        y = yPos;
         this.screenAlpha = screenAlpha;
-        x = 0;
-        y = 0;
+        previousState = null;
+        currentState = ScreenState.TransitionOn;
+        this.screenManager = screenManager;
+        childScreen = null;
         overlayScreens = new CopyOnWriteArrayList<>();
+        this.isExclusive = isExclusive;
+        this.isOverlay = !isExclusive;
+        isLoading = true;
+        this.isRoot = isRoot;
         //GameObjects
         activeObjects = new ArrayList<>();
         inactiveObjects = new ArrayList<>();
@@ -158,82 +99,121 @@ public abstract class GameScreen {
         kinematics = new ArrayList<>();
         loadables = new ArrayList<>();
         renderables = new ArrayList<>();
-        isLoading = true;
-        currentState = ScreenState.TransitionOn;
+        this.gameData = screenManager.getGameData();
     }
+    /* Only for root GameScreens */
 
+    /**
+     * Used to construct a root screen with a particular alpha value. To easily override the default
+     * {@link #transitionOn()} function, set the alpha value to 1f. Root screens will always be anchored at (0,0).
+     * @param screenManager The Manager for this GameScreen.
+     * @param name          Name of the GameScreen (Used for {@link Debug}ing).
+     * @param screenAlpha   Starting alpha value of all of the GameScreen's renderables.
+     */
+    public GameScreen(ScreenManager screenManager, String name, float screenAlpha) {
+        this(true, screenManager, name, false, 0, 0, screenAlpha);
+    }
+    /**
+     * Used to construct a default root screen. The alpha value is set to 0 to utilize the default
+     * {@link #transitionOn()} function. Root screens will always be anchored at (0,0).
+     * @param screenManager The Manager for this GameScreen.
+     * @param name          Name of the GameScreen (Used for {@link Debug}ing).
+     */
     public GameScreen(ScreenManager screenManager, String name) {
         this(screenManager, name, 0f);
     }
 
+    /* Only for non-root GameScreens */
 
-    /* Only for non root splashscreen */
-    public GameScreen(ScreenManager screenManager, String name, boolean isExclusive) {
-        this(screenManager, name, isExclusive, 0, 0, 0f);
+    /**
+     * Used to construct exclusive and non exclusive popups that render on top of the Root screen and potentially
+     * other GameScreens. The GameScreen will be anchored at a specified xPos and yPos with a particular alpha value.
+     * To easily override the default {@link #transitionOn()} function, set the alpha value to 1f.
+     *
+     * @param screenManager The Manager for this GameScreen.
+     * @param name          Name of the GameScreen (Used for {@link Debug}ing).
+     * @param isExclusive   <b>True:</b>  the Screen will stop {@link #update()} and {@link #drawScreen(Graphics2D)}
+     *                      on all GameScreens covered by this GameScreen.
+     *                      <br><b>False:</b> The screen will behave like an Overlay. I would recommend using the
+     *                      {@link Overlay} class instead of setting this to false.
+     * @param xPos          x position relative to the top left corner of the {@link main.GameWindow}.
+     * @param yPos          y position relative to the top left corner of the {@link main.GameWindow}.
+     * @param screenAlpha   Starting alpha value of all of the GameScreen's renderables.
+     */
+    public GameScreen(ScreenManager screenManager, String name, boolean isExclusive, int xPos, int yPos, float screenAlpha) {
+        this(false, screenManager, name, isExclusive, xPos, yPos, screenAlpha);
     }
-    public GameScreen(ScreenManager screenManager, String name, boolean isExclusive, float screenAlpha) {
-        this(screenManager, name, isExclusive, 0, 0, screenAlpha);
-    }
+
+    /**
+     * Used to construct exclusive and non exclusive popups that render on top of the Root screen and potentially
+     * other GameScreens. The GameScreen will be anchored at a specified xPos and yPos. The alpha value is set to 0 to
+     * utilize the default {@link #transitionOn()} function.
+     *
+     * @param screenManager The Manager for this GameScreen.
+     * @param name          Name of the GameScreen (Used for {@link Debug}ing).
+     * @param isExclusive   <b>True:</b>  the Screen will stop {@link #update()} and {@link #drawScreen(Graphics2D)}
+     *                      on all GameScreens covered by this GameScreen.
+     *                      <br><b>False:</b> The screen will behave like an Overlay. I would recommend using the
+     *                      {@link Overlay} class instead of setting this to false.
+     * @param xPos          x position relative to the top left corner of the {@link main.GameWindow}.
+     * @param yPos          y position relative to the top left corner of the {@link main.GameWindow}.
+     */
     public GameScreen(ScreenManager screenManager, String name, boolean isExclusive, int xPos, int yPos) {
         this(screenManager, name, isExclusive, xPos, yPos, 0f);
     }
 
-    public GameScreen(ScreenManager screenManager, String name, boolean isExclusive, int xPos, int yPos, float screenAlpha) {
-        this.screenManager = screenManager;
-        this.gameData = screenManager.getGameData();
-        this.name = name;
-        this.isRoot = false;
-        this.isExclusive = isExclusive;
-        this.isOverlay = !isExclusive;
-        previousState = null;
-        this.screenAlpha = screenAlpha;
-        x = xPos;
-        y = yPos;
-        overlayScreens = new CopyOnWriteArrayList<>();
-        //Game Objects
-        activeObjects = new ArrayList<>();
-        inactiveObjects = new ArrayList<>();
-        clickables = new ArrayList<>();
-        kinematics = new ArrayList<>();
-        loadables = new ArrayList<>();
-        renderables = new ArrayList<>();
-        currentState = ScreenState.TransitionOn;
-        isLoading = true;
+    /**
+     * Used to construct exclusive and non exclusive popups that render on top of the Root screen and potentially
+     * other GameScreens. The GameScreen will be anchored at (0,0) with a particular alpha value. To easily override
+     * the default {@link #transitionOn()} function, set the alpha value to 1f.
+     *
+     * @param screenManager The Manager for this GameScreen.
+     * @param name          Name of the GameScreen (Used for {@link Debug}ing).
+     * @param isExclusive   <b>True:</b>  the Screen will stop {@link #update()} and {@link #drawScreen(Graphics2D)}
+     *                      on all GameScreens covered by this GameScreen.
+     *                      <br><b>False:</b> The screen will behave like an Overlay. I would recommend using the
+     *                      {@link Overlay} class instead of setting this to false.
+     * @param screenAlpha   Starting alpha value of all of the GameScreen's renderables.
+     */
+    public GameScreen(ScreenManager screenManager, String name, boolean isExclusive, float screenAlpha) {
+        this(screenManager, name, isExclusive, 0, 0, screenAlpha);
+    }
+    /**
+     * Used to construct exclusive and non exclusive popups that render on top of the Root screen and potentially
+     * other GameScreens. The GameScreen will be anchored at (0,0). The alpha value is set to 0 to
+     * utilize the default {@link #transitionOn()} function.
+     *
+     * @param screenManager The Manager for this GameScreen.
+     * @param name          Name of the GameScreen (Used for {@link Debug}ing).
+     * @param isExclusive   <b>True:</b>  the Screen will stop {@link #update()} and {@link #drawScreen(Graphics2D)}
+     *                      on all GameScreens covered by this GameScreen.
+     *                      <br><b>False:</b> The screen will behave like an Overlay. I would recommend using the
+     *                      {@link Overlay} class instead of setting this to false.
+     */
+    public GameScreen(ScreenManager screenManager, String name, boolean isExclusive) {
+        this(screenManager, name, isExclusive, 0f);
     }
 
 
+
     /**
-     * Initializes all of the stuff you want on your splashscreen
+     * Initializes all of the contents and functionality of the GameScreen
      */
     protected abstract void initializeScreen();
 
     /**
-     * Loads the contents of this main.Game Screen.
+     * Loads the contents of the GameScreen.
      */
     protected void loadContent() {
         Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + " - Load start");
         ExecutorService executorService = Executors.newFixedThreadPool(3);
         executorService.execute(() -> {
-            if (loadingScreenRequired) {
-                loadingScreen = screenManager.getLoadingScreen();
-                loadingScreen.initializeLoadingScreen(loadables.size());
-                coverWith(loadingScreen);
-                for (int i = 0; i < loadables.size(); i++) {
-                    loadables.get(i).load();
-                    loadingScreen.dataLoaded(i);
-                }
-                isLoading = false;
-                childScreen = null;
-                loadingScreen.reset();
-
-            } else {
-                for (Loadable loadable : loadables) {
-                    Debug.log(DebugEnabler.LOADING, name + " - Loading: " + loadable.getClass().getName());
-                    loadable.load();
-                }
-                loadables.clear();
-                isLoading = false;
+            for (Loadable loadable : loadables) {
+                Debug.log(DebugEnabler.LOADING, name + " - Loading: " + loadable.getClass().getName());
+                loadable.load();
             }
+            loadables.clear();
+            isLoading = false;
             scaleScreen();
             Debug.success(DebugEnabler.GAME_SCREEN_LOG, name + " - Loaded");
             setScreenAlpha(screenAlpha);
@@ -255,6 +235,47 @@ public abstract class GameScreen {
     public void setPosition(int xPos, int yPos) {
         x = xPos;
         y = yPos;
+    }
+
+    public ScreenState getScreenState() {
+        return currentState;
+    }
+
+    public void setScreenState(ScreenState state) {
+        currentState = state;
+    }
+
+    public void setChildScreen(GameScreen screen) {
+        childScreen = screen;
+    }
+    public GameScreen getChildScreen() {
+        return childScreen;
+    }
+
+    protected void setScreenAlpha(float alpha){
+        screenAlpha = alpha;
+        for(RenderableObject renderable : renderables)
+            renderable.setAlpha(screenAlpha);
+    }
+
+    public void setCamera(Camera camera){
+        this.camera = camera;
+    }
+
+    public ArrayList<RenderableObject> getRenderables() {
+        return renderables;
+    }
+
+    ArrayList<Kinematic> getPhysicsObjects() {
+        if (!isLoading) {
+            if (childScreen != null) {
+                return childScreen.getPhysicsObjects();
+            } else {
+                return kinematics;
+            }
+        } else {
+            return null;
+        }
     }
 
     public boolean isLoadingScreenRequired() {
@@ -283,16 +304,6 @@ public abstract class GameScreen {
     public boolean isExiting() {
         return exiting;
     }
-
-    public ScreenState getScreenState() {
-        return currentState;
-    }
-
-    public void setScreenState(ScreenState state) {
-        currentState = state;
-    }
-
-
     //endregion
 
     //region <Update>
@@ -300,8 +311,14 @@ public abstract class GameScreen {
         if(screenAlpha < 0.9f){
             screenAlpha += 0.05f;
             setScreenAlpha(screenAlpha);
+            for(GameScreen ov : overlayScreens){
+                ov.setScreenAlpha(screenAlpha);
+            }
         } else {
             setScreenAlpha(1.0f);
+            for(GameScreen ov : overlayScreens){
+                ov.setScreenAlpha(1.0f);
+            }
             currentState = ScreenState.Active;
         }
     }
@@ -310,6 +327,9 @@ public abstract class GameScreen {
         if(screenAlpha > 0.075f){
             screenAlpha -= 0.07f;
             setScreenAlpha(screenAlpha);
+            for(GameScreen ov : overlayScreens){
+                ov.setScreenAlpha(screenAlpha);
+            }
         } else {
             exiting = true;
         }
@@ -325,10 +345,10 @@ public abstract class GameScreen {
     }
 
     /**
-     *  Updates the state of the splashscreen
+     *  Updates the state of the screen
      */
     public void update(){
-        // If I have an Exclusive child splashscreen on top on me
+        // If I have an Exclusive child screen on top on me
         if(childScreen != null) {
             if(childScreen.isExiting()){
                 if(!isLoading){
@@ -363,7 +383,7 @@ public abstract class GameScreen {
         }
     }
 
-    public final void drawScreen(Graphics2D graphics) {
+    final void drawScreen(Graphics2D graphics) {
         if(!isLoading) {
             if(camera != null){
                 camera.track(graphics);
@@ -386,7 +406,7 @@ public abstract class GameScreen {
         }
     }
 
-    protected void drawLayers(Graphics2D graphics) {
+    private void drawLayers(Graphics2D graphics) {
         for(RenderableObject renderable : renderables)
             renderable.draw(graphics);
     }
@@ -490,17 +510,35 @@ public abstract class GameScreen {
         }
     }
 
-    protected void setScreenAlpha(float alpha){
-        screenAlpha = alpha;
-        for(RenderableObject renderable : renderables)
-            renderable.setAlpha(screenAlpha);
+    protected void coverWith(GameScreen gameScreen) {
+        if (gameScreen.isExclusive) {
+            if (childScreen == null) {
+                childScreen = gameScreen;
+            } else {
+                childScreen.coverWith(gameScreen);
+            }
+        } else {
+            addOverlay(gameScreen);
+        }
     }
 
-    public void setCamera(Camera camera){
-        this.camera = camera;
+    //Recursively removes all child screens and overlays
+    void removeMe(GameScreen gameScreen){
+        if(gameScreen != null) {
+            if (gameScreen.childScreen != null)
+                removeMe(gameScreen.childScreen);
+
+            if (!gameScreen.overlayScreens.isEmpty()) {
+                for (GameScreen overlay : gameScreen.overlayScreens)
+                    removeMe(overlay);
+            }
+            Debug.log(DebugEnabler.GAME_SCREEN_LOG, gameScreen.name + " - Remove Scheduled");
+            gameScreen.currentState = ScreenState.TransitionOff;
+        }
+        else Debug.warning(DebugEnabler.GAME_SCREEN_LOG,  "Screen is already removed");
     }
 
-    public void scaleScreen(){
+    void scaleScreen(){
         for (GameObject gameObject: activeObjects){
             gameObject.scale(gameData.getGraphicsSettings().getScaleFactor());
         }
