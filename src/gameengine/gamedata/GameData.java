@@ -31,6 +31,7 @@ public class GameData implements Serializable {
             Debug.success(DebugEnabler.GAME_DATA,"Loading GameData from file");
 
             File dataFile = new File(FILE_NAME);
+
             if(!dataFile.exists()) {
                 currentGraphicsSetting = new GraphicsSetting(High);
                 currentInputSetting = new InputSetting(KeyBoard);

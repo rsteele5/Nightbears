@@ -47,7 +47,6 @@ public class GameEngine implements Runnable {
             add(p1);
             add(p2);
         }};
-        gameData.setPlayerData(gameData.getPlayerData());
     }
 
 

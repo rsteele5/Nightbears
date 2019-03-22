@@ -8,9 +8,10 @@ import gameobject.renderable.item.armor.ArmorType;
 import gameobject.renderable.item.weapon.WeaponBuilder;
 import gameobject.renderable.item.weapon.WeaponType;
 
+import java.io.Serializable;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class PlayerData {
+public class PlayerData implements Serializable {
 
     private CopyOnWriteArrayList<RenderableObject> playerInventory = new CopyOnWriteArrayList<>();
 

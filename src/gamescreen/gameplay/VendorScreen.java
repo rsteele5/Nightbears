@@ -54,6 +54,16 @@ public class VendorScreen extends GameScreen {
         Point exitButtonLocation = (new Point(25, 25));
         Point buyButtonLocation = new Point(850, 780);
         Point sellButtonLocation = new Point(550, 780);
+        Point playerTextLocation = new Point(270, 125);
+        Point vendorTextLocation = new Point(550, 125);
+        Point textBoxSize = new Point(210, 230);
+        Point itemButtonSize = new Point(50, 50);
+        Point goldTextboxLocation = new Point(850, 20);
+        Point goldTextboxSize = new Point(150, 50);
+        Point playerGridLocation = new Point(50, 150);
+        Point vendorGridLocation = new Point(760, 150);
+        int textBoxFont = 24;
+        int goldTextFont = 48;
 
         //region Initialize variables
         vendor = GameEngine.vendor;
@@ -211,31 +221,27 @@ public class VendorScreen extends GameScreen {
 
         //region Create text boxes to hold item description
         /* x and y positions for text */
-        int x_playerText = 270;
-        int y_position = 125;
-        int x_vendorText = 550;
-        itemDetailsPlayer = new TextBox(x_playerText, y_position, 210, 230, "",
-                new Font("NoScary", Font.PLAIN, 24), Color.BLACK);
+
+        itemDetailsPlayer = new TextBox(playerTextLocation.x, playerTextLocation.y, textBoxSize.x, textBoxSize.y, "",
+                new Font("NoScary", Font.PLAIN, textBoxFont), Color.BLACK);
         itemDetailsPlayer.addToScreen(this,true);
-        itemDetailsVendor = new TextBox(x_vendorText, y_position, 210, 230, "",
-                new Font("NoScary", Font.PLAIN, 24), Color.BLACK);
+        itemDetailsVendor = new TextBox(vendorTextLocation.x, vendorTextLocation.y, textBoxSize.x, textBoxSize.y, "",
+                new Font("NoScary", Font.PLAIN, textBoxFont), Color.BLACK);
         itemDetailsVendor.addToScreen(this,true);
         //endregion
 
         //region TextBox to hold player's available gold
-        int x_goldText = 850;
-        int y_goldText = 20;
         String goldText = getGoldText();
-        goldTextBox = new TextBox(x_goldText, y_goldText, 150, 50, goldText,
-                new Font("NoScary", Font.PLAIN, 48), Color.BLACK);
+        goldTextBox = new TextBox(goldTextboxLocation.x, goldTextboxLocation.y, goldTextboxSize.x, goldTextboxSize.y, goldText,
+                new Font("NoScary", Font.PLAIN, goldTextFont), Color.BLACK);
         goldTextBox.addToScreen(this, true);
         //endregion
 
         // Create GridContainers for player and vendor item button
         int rows = 7;
         int columns = 4;
-        GridContainer playerGrid = new GridContainer(this, rows, columns, 50, 50, 50, 150);
-        GridContainer vendorGrid = new GridContainer(this, rows, columns, 50, 50, 760, 150);
+        GridContainer playerGrid = new GridContainer(this, rows, columns, itemButtonSize.x, itemButtonSize.y, playerGridLocation.x, playerGridLocation.y);
+        GridContainer vendorGrid = new GridContainer(this, rows, columns, itemButtonSize.x, itemButtonSize.y, vendorGridLocation.x, vendorGridLocation.y);
 
         //region Add item buttons to the Grid Containers
         int count = playerInventory.size();
@@ -334,7 +340,7 @@ public class VendorScreen extends GameScreen {
     protected void transitionOff() {
         // Change player's image back to overworld image
         player.setImage("/assets/player/overworld/Overworld-Teddy.png");
-        gameData.setPlayerData(playerData);
+        gameData.save();
         // Update the original inventory arrays with all the changes that have been made here.
         if (vendorInventory != null && playerInventory != null) {
             vendor.replaceList(vendorInventory);
