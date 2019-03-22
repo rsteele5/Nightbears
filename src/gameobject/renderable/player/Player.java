@@ -1,5 +1,8 @@
 package gameobject.renderable.player;
 
+import gameengine.GameEngine;
+import gameengine.gamedata.GameData;
+import gameengine.gamedata.PlayerData;
 import gameengine.physics.Kinematic;
 import gameengine.physics.PhysicsMeta;
 import gameengine.physics.PhysicsVector;
@@ -17,6 +20,7 @@ import gameobject.renderable.player.overworld.PlayerWalkingAnimation;
 import gameobject.renderable.player.sidescrolling.PlayerSSCrouchingAnimation;
 import gameobject.renderable.player.sidescrolling.PlayerSSIdleAnimation;
 import gamescreen.GameScreen;
+import main.Game;
 import main.utilities.AssetLoader;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
@@ -28,8 +32,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Player extends RenderableObject implements Kinematic {
 
     private int speed = 1;
-    private CopyOnWriteArrayList<Item> items = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<RenderableObject> rItems = new CopyOnWriteArrayList<>();
+/*    private PlayerData playerData;
+    private CopyOnWriteArrayList<Item> items;
+    private CopyOnWriteArrayList<RenderableObject> rItems;*/
     private PhysicsVector moveState = new PhysicsVector(1, 1);
     private PhysicsVector magnitude = new PhysicsVector(0, 0);
     private final int[] ssKeys = new int[]{68, 65};
@@ -67,10 +72,14 @@ public class Player extends RenderableObject implements Kinematic {
         g2.dispose();
     }
 
-    public Player(int x, int y, String path, DrawLayer drawLayer) {
+    public Player(int x, int y, String path, DrawLayer drawLayer, GameData gameData) {
         super(x, y, path, drawLayer);
         playerState = PlayerState.asleep;
-        initializeItems();
+/*        //private CopyOnWriteArrayList<Item> items = new CopyOnWriteArrayList<>();
+        this.playerData = gameData.getPlayerData();
+        this.items = playerData.getInventory();
+        //this.rItems = playerData.
+        //initializeItems();*/
         this.gold = 10;
         animator = new Animator(this);
         animator.addAnimation("Walking", new PlayerWalkingAnimation());
@@ -79,18 +88,19 @@ public class Player extends RenderableObject implements Kinematic {
         animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation());
     }
 
-    private void initializeItems() {
-        items.add(new WeaponBuilder()
+    //Moving to PlayerData
+/*    private void initializeItems() {
+
+        addItem(new WeaponBuilder()
                 .imagePath("/assets/Items/sword1.png")
                 .name("My Fwirst Sword")
                 .type(WeaponType.Sword)
                 .value(10)
-                .minDamage(5)
-                .maxDamage(7)
+                .minmaxDamage(5, 7)
                 .critChance(3)
                 .buildWeapon());
 
-        items.add(new ArmorBuilder()
+        addItem(new ArmorBuilder()
                 .imagePath("/assets/Items/helmet1.png")
                 .name("My Fwirst Helmet")
                 .type(ArmorType.Head)
@@ -102,14 +112,11 @@ public class Player extends RenderableObject implements Kinematic {
             items.sort(new ItemComparator());
         }
 
-        for (Item item : items) {
-            rItems.add((RenderableObject) item);
-        }
-    }
+    }*/
 
     @Override
     public void update() {
-        if(interaction) Debug.log(DebugEnabler.PLAYER_STATUS,"Interaction Avaiable! Act now!");
+        if(interaction) Debug.log(DebugEnabler.PLAYER_STATUS,"Interaction Available! Act now!");
         if(playerState == PlayerState.sideScroll && !crouchSet  ){
             crouchSet = true;
             if(crouch) {
@@ -137,6 +144,7 @@ public class Player extends RenderableObject implements Kinematic {
         }
     }
 
+    //region <Physics functions>
     private void setVelocity(int flags) {
         int x1 = 0b1 & flags;
         x1 += (((0b10 & flags) / 0b10) * -1);
@@ -297,14 +305,14 @@ public class Player extends RenderableObject implements Kinematic {
         }
         return false;
     }
+    //endregion
 
-    public CopyOnWriteArrayList<Item> getItems() {
+    //region <Inventory functions>
+/*    public CopyOnWriteArrayList<Item> getItems() {
         return items;
     }
 
-    public CopyOnWriteArrayList<RenderableObject> getRenderables() {
-        return rItems;
-    }
+
 
     public void addItem(Item item) {
         items.add(item);
@@ -323,7 +331,8 @@ public class Player extends RenderableObject implements Kinematic {
         for (Item item : items) {
             rItems.add((RenderableObject) item);
         }
-    }
+    }*/
+    //endregion
 
     public int getGold() {
         return gold;

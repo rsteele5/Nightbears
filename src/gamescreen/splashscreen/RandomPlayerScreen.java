@@ -48,7 +48,7 @@ public class RandomPlayerScreen extends GameScreen {
         for(String filePath: directories) {
             Debug.error(true, "Directory: " + filePath);
             ImageContainer image = new ImageContainer(912,723,
-                    "/src/assets/player/images/" + filePath,
+                    "/assets/player/images/" + filePath,
                     DrawLayer.Entity);
             images.add(image);
 

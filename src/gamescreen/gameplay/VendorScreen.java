@@ -1,6 +1,7 @@
 package gamescreen.gameplay;
 
 import gameengine.GameEngine;
+import gameengine.gamedata.PlayerData;
 import gameobject.renderable.item.ItemComparator;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.*;
@@ -28,11 +29,12 @@ public class VendorScreen extends GameScreen {
     private TextBox itemDetailsVendor;
     private TextBox itemDetailsPlayer;
     private TextBox goldTextBox;
-    private CopyOnWriteArrayList<Item> playerInventory;
+    private CopyOnWriteArrayList<RenderableObject> playerInventory;
     private CopyOnWriteArrayList<Item> vendorInventory;
     private CopyOnWriteArrayList<ItemButton> playerButtons;
     private CopyOnWriteArrayList<ItemButton> vendorButtons;
     private Player player;
+    private PlayerData playerData;
     private Player.PlayerState previousPlayerState;
     private Vendor vendor;
     //endregion ****************************************/
@@ -51,10 +53,11 @@ public class VendorScreen extends GameScreen {
         //region Initialize variables
         vendor = GameEngine.vendor;
         player = GameEngine.players.get(0);
+        playerData = gameData.getPlayerData();
         previousPlayerState = player.getState();
         player.setState(Player.PlayerState.asleep);
         vendorInventory = vendor.getItems();
-        playerInventory = player.getItems();
+        playerInventory = playerData.getInventory();
         playerButtons = new CopyOnWriteArrayList<>();
         vendorButtons = new CopyOnWriteArrayList<>();
         //endregion
@@ -63,7 +66,7 @@ public class VendorScreen extends GameScreen {
         for (RenderableObject renderable: vendor.getRenderables()){
             renderable.addToScreen(this, false);
         }
-        for (RenderableObject renderable: player.getRenderables()){
+        for (RenderableObject renderable: playerData.getInventory()){
             renderable.addToScreen(this, false);
         }
 
@@ -119,7 +122,7 @@ public class VendorScreen extends GameScreen {
                                             player.changeGold(-currentItem.getValue());
                                             goldTextBox.setText("");
                                             goldTextBox.setText(getGoldText());
-                                            currentItem.depreciate();
+                                            currentItem.setValue(currentItem.depreciate(currentItem.getValue()));
                                             // Reset button item to the updated inventory arrays
                                             resetButtonItems();
                                             currentItemButton.deSelect();
@@ -232,7 +235,7 @@ public class VendorScreen extends GameScreen {
                 ItemButton itemContainerButton = new ItemButton();
                 playerGrid.dynamicAddAt(itemContainerButton, i, j);
                 if (k < count) {
-                    itemContainerButton.setItem(playerInventory.get(k));
+                    itemContainerButton.setItem((Item)(playerInventory.get(k)));
                     k++;
                 }
                 setClickEvent(itemContainerButton, itemDetailsPlayer, itemDetailsVendor, "player" );
@@ -305,7 +308,7 @@ public class VendorScreen extends GameScreen {
         for (ItemButton pbutton : playerButtons) {
             pbutton.resetItem();
             if (k < count){
-                pbutton.setItem(playerInventory.get(k));
+                pbutton.setItem((Item)(playerInventory.get(k)));
                 setClickEvent(pbutton, itemDetailsPlayer, itemDetailsVendor, "player" );
                 k++;
             }
@@ -321,10 +324,11 @@ public class VendorScreen extends GameScreen {
     protected void transitionOff() {
         // Change player's image back to overworld image
         player.setImage("/assets/player/overworld/Overworld-Teddy.png");
+        gameData.setPlayerData(playerData);
         // Update the original inventory arrays with all the changes that have been made here.
         if (vendorInventory != null && playerInventory != null) {
             vendor.replaceList(vendorInventory);
-            player.replaceList(playerInventory);
+            playerData.replaceList(playerInventory);
         } else {
             Debug.error(DebugEnabler.GAME_SCREEN_LOG, "VendorScreen: Unable to overwrite inventory list");
         }

@@ -24,6 +24,7 @@ public class GameData implements Serializable {
     private GraphicsSetting currentGraphicsSetting;
     private InputSetting currentInputSetting;
     private SoundSetting[] currentSoundSetting = new SoundSetting[3];
+    private PlayerData currentPlayerData;
 
     public GameData(){
         try {
@@ -40,6 +41,7 @@ public class GameData implements Serializable {
                         currentSoundSetting[i] = new SoundSetting(SoundSetting.SoundVolume.Medium);
                     }
                 }
+                currentPlayerData = new PlayerData();
                 save();
             } else {
                 FileInputStream file = new FileInputStream(dataFile);
@@ -55,7 +57,7 @@ public class GameData implements Serializable {
                         currentSoundSetting[i] = new SoundSetting(SoundSetting.SoundVolume.Medium);
                     }
                 }
-
+                this.currentPlayerData = gameDataInput.getPlayerData();
                 in.close();
                 file.close();
             }
@@ -69,6 +71,13 @@ public class GameData implements Serializable {
 
         } catch (IOException ex) { Debug.error(DebugEnabler.GAME_DATA, "Loading Failed - IOException is caught");
         } catch (ClassNotFoundException ex) { Debug.error(DebugEnabler.GAME_DATA,"Loading Failed - ClassNotFoundException is caught"); }
+    }
+
+    public PlayerData getPlayerData() { return currentPlayerData; }
+
+    public void setPlayerData(PlayerData playerData){
+        this.currentPlayerData = playerData;
+        save();
     }
 
     public GraphicsSetting getGraphicsSettings() {
