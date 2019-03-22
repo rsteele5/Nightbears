@@ -33,7 +33,7 @@ public class GraphicsScreen extends GameScreen {
     @Override
     protected void initializeScreen() {
         //Grab the graphics settings so we can keep our changes local until we confirm them
-        localSetting = new GraphicsSetting(gameData.getGraphicsSettings().getCurrentOption());
+        localSetting = gameData.getGraphicsSettings();
 
         //Initial position of the first button
         int X_INIT_BUTTON = 64;
@@ -104,7 +104,7 @@ public class GraphicsScreen extends GameScreen {
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Confirm");
-                    gameData.setGraphicsSetting(localSetting);
+                    gameData.save();
                     screenManager.addScreen(new GraphicsChangeScreen(screenManager));
                     this.setScreenState(ScreenState.TransitionOff);
                 });

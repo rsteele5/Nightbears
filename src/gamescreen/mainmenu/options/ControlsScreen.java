@@ -34,7 +34,7 @@ public class ControlsScreen extends GameScreen {
     @Override
     protected void initializeScreen() {
         //Grab the graphics settings so we can keep our changes local until we confirm them
-        localSetting = new InputSetting(gameData.getInputSetting().getCurrentOption());
+        localSetting = gameData.getInputSetting();
 
         //Initial position of the first button
         int X_INIT_BUTTON = 64;
@@ -97,7 +97,7 @@ public class ControlsScreen extends GameScreen {
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Confirm");
                     this.setScreenState(ScreenState.TransitionOff);
-                    gameData.setInputSetting(localSetting);
+                    gameData.save();
                 });
         confirm.addToScreen(this, true);
 

@@ -45,15 +45,11 @@ public class RandomPlayerScreen extends GameScreen {
 
         File file = new File("src/assets/player/images");
         String[] directories = file.list();
-        int xPos = 20;
         for(String filePath: directories) {
-            Debug.error(true, "Directory: " + filePath);
             ImageContainer image = new ImageContainer(912,723,
-                    "/src/assets/player/images/" + filePath,
+                    "/assets/player/images/" + filePath,
                     DrawLayer.Entity);
             images.add(image);
-
-            xPos += 220;
         }
 
         int totalImages = images.size() - 1;
@@ -73,19 +69,6 @@ public class RandomPlayerScreen extends GameScreen {
 
         return true;
     }
-
-//    @Override
-//    public boolean handleClickEvent(int x, int y) {
-//        if(!clicked) {
-//            Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "- handle click " + x + " " + y);
-//            silhouette.setAlpha(0f);
-//            clicked = true;
-//        } else {
-//            setScreenState(ScreenState.TransitionOff);
-//        }
-//
-//        return true;
-//    }
 
     @Override
     protected void transitionOff() {

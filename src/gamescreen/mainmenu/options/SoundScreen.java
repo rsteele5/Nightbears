@@ -46,9 +46,9 @@ public class SoundScreen extends GameScreen {
         localSettings = new SoundSetting[3];
         for (int i = 0; i < localSettings.length; i++) {
             if (i < 2) {
-                localSettings[i] = new SoundSetting(gameData.getSoundSetting(i).getCurrentOption());
+                localSettings[i] = gameData.getSoundSetting(i);
             } else {
-                localSettings[i] = new SoundSetting(gameData.getSoundSetting(i).getCurrentVolume());
+                localSettings[i] = gameData.getSoundSetting(i);
             }
         }
         ImageContainer imageContainer;
@@ -130,7 +130,7 @@ public class SoundScreen extends GameScreen {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Confirm");
                     this.setScreenState(ScreenState.TransitionOff);
                     for (int i = 0; i < localSettings.length; i++) {
-                        gameData.setSoundSetting(localSettings[i], i);
+                        gameData.save();
                         switch(i) {
                             case 0:
                                 if (localSettings[0].getCurrentOption().equals(SoundSetting.SoundOption.On)) {

@@ -67,35 +67,20 @@ public class GameData implements Serializable {
             Debug.log(DebugEnabler.GAME_DATA, currentInputSetting.getCurrentOption().name());
             Debug.log(DebugEnabler.GAME_DATA, currentSoundSetting[0].getCurrentOption().name());
 
-        } catch (IOException ex) { Debug.error(DebugEnabler.GAME_DATA, "Loading Failed - IOException is caught");
-        } catch (ClassNotFoundException ex) { Debug.error(DebugEnabler.GAME_DATA,"Loading Failed - ClassNotFoundException is caught"); }
+        } catch (IOException ex) { Debug.criticalError("Loading Failed - IOException is caught");
+        } catch (ClassNotFoundException ex) { Debug.criticalError("Loading Failed - ClassNotFoundException is caught"); }
     }
 
     public GraphicsSetting getGraphicsSettings() {
         return currentGraphicsSetting;
     }
 
-    public void setGraphicsSetting(GraphicsSetting setting) {
-        this.currentGraphicsSetting = setting;
-        save();
-    }
-
     public InputSetting getInputSetting() {
         return currentInputSetting;
     }
 
-    public void setInputSetting(InputSetting setting) {
-        this.currentInputSetting = setting;
-        save();
-    }
-
     public SoundSetting getSoundSetting(int index) {
         return currentSoundSetting[index];
-    }
-
-    public void setSoundSetting(SoundSetting setting, int index) {
-        this.currentSoundSetting[index] = setting;
-        save();
     }
 
     public void save() {
