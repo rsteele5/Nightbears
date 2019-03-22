@@ -11,10 +11,11 @@ import main.utilities.AssetLoader;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
 import static java.lang.Math.round;
 
-public class Weapon extends Item implements Kinematic {
+public class Weapon extends Item implements Kinematic, Serializable {
     //region <Variables>
 
     /** General item variables **/

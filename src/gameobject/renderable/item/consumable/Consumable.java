@@ -9,10 +9,11 @@ import gameobject.renderable.item.ItemMeta;
 import main.utilities.AssetLoader;
 
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
 import static java.lang.Math.round;
 
-public class Consumable extends Item {
+public class Consumable extends Item implements Serializable {
 
     //region <Variables>
     /** General item variables **/

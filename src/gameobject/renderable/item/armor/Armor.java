@@ -10,8 +10,9 @@ import main.utilities.AssetLoader;
 import static java.lang.Math.round;
 
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
-public class Armor extends Item {
+public class Armor extends Item implements Serializable {
 
     //region <Variables>
     /** General item variables **/
