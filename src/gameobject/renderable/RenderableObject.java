@@ -12,8 +12,9 @@ import main.utilities.Loadable;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
-public abstract class RenderableObject extends GameObject implements Loadable {
+public abstract class RenderableObject extends GameObject implements Loadable, Serializable {
 
     //region <Variables>
     protected DrawLayer drawLayer;
@@ -21,7 +22,7 @@ public abstract class RenderableObject extends GameObject implements Loadable {
     protected int width;
     protected int height;
     protected String imagePath;
-    protected BufferedImage image;
+    protected transient BufferedImage image;
     protected Animator animator;
     //endregion
 

@@ -2,6 +2,7 @@ package gameengine.gamedata;
 
 import gameengine.audio.BackgroundAudio;
 import gameengine.audio.SoundEffectAudio;
+import gameobject.renderable.RenderableObject;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -24,12 +25,15 @@ public class GameData implements Serializable {
     private GraphicsSetting currentGraphicsSetting;
     private InputSetting currentInputSetting;
     private SoundSetting[] currentSoundSetting = new SoundSetting[3];
+    private PlayerData currentPlayerData;
+    private VendorData currentVendorData;
 
     public GameData(){
         try {
             Debug.success(DebugEnabler.GAME_DATA,"Loading GameData from file");
 
             File dataFile = new File(FILE_NAME);
+
             if(!dataFile.exists()) {
                 currentGraphicsSetting = new GraphicsSetting(High);
                 currentInputSetting = new InputSetting(KeyBoard);
@@ -40,6 +44,8 @@ public class GameData implements Serializable {
                         currentSoundSetting[i] = new SoundSetting(SoundSetting.SoundVolume.Medium);
                     }
                 }
+                currentPlayerData = new PlayerData();
+                currentVendorData = new VendorData();
                 save();
             } else {
                 FileInputStream file = new FileInputStream(dataFile);
@@ -55,6 +61,9 @@ public class GameData implements Serializable {
                         currentSoundSetting[i] = new SoundSetting(SoundSetting.SoundVolume.Medium);
                     }
                 }
+                this.currentPlayerData = gameDataInput.getPlayerData();
+                this.currentVendorData = gameDataInput.getVendorData();
+                Debug.log(true, "Do I have shit?: " + currentPlayerData.getInventory().get(0).getImagePath());
 
                 in.close();
                 file.close();
@@ -67,9 +76,15 @@ public class GameData implements Serializable {
             Debug.log(DebugEnabler.GAME_DATA, currentInputSetting.getCurrentOption().name());
             Debug.log(DebugEnabler.GAME_DATA, currentSoundSetting[0].getCurrentOption().name());
 
-        } catch (IOException ex) { Debug.criticalError("Loading Failed - IOException is caught");
-        } catch (ClassNotFoundException ex) { Debug.criticalError("Loading Failed - ClassNotFoundException is caught"); }
+        } catch (IOException ex) { Debug.error(DebugEnabler.GAME_DATA, "Loading Failed - IOException is caught " + ex.getMessage());
+        } catch (ClassNotFoundException ex) { Debug.error(DebugEnabler.GAME_DATA,"Loading Failed - ClassNotFoundException is caught" + ex.getMessage()); }
     }
+
+    public VendorData getVendorData() {
+        return currentVendorData;
+    }
+
+    public PlayerData getPlayerData() { return currentPlayerData; }
 
     public GraphicsSetting getGraphicsSettings() {
         return currentGraphicsSetting;

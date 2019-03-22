@@ -1,6 +1,7 @@
 package gameobject.renderable.vendor;
 
 import gameengine.MyTimerTask;
+import gameengine.gamedata.VendorData;
 import gameengine.physics.Interactable;
 import gameengine.physics.Kinematic;
 import gameengine.physics.PhysicsMeta;
@@ -18,11 +19,12 @@ import main.utilities.AssetLoader;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Vendor extends RenderableObject implements Kinematic, Interactable {
+public class Vendor extends RenderableObject implements Kinematic, Interactable, Serializable {
 
     private CopyOnWriteArrayList<Item> items = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<RenderableObject> rItems = new CopyOnWriteArrayList<>();
@@ -32,40 +34,18 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable 
     private final String vendorLevelPath = "/assets/vendor/Vendor.png";
     /* Restock timer */
     public static TimerTask restockTimer;
+    private VendorData vendorData;
 
     int isSet = 0;
     Player p = null;
     // Default constructor
-    public Vendor(int x, int y){
+    public Vendor(int x, int y, VendorData vendorData){
         super(x, y);
         this.imagePath = vendorLevelPath;
         this.drawLayer = DrawLayer.Entity;
-        initializeItems();
-        restockTimer = new MyTimerTask();
+        this.vendorData = vendorData;
+        restockTimer = new MyTimerTask(vendorData);
         //startRestockTimer();
-    }
-
-    private void initializeItems() {
-
-        for (int i = 0; i < 8; i++){
-            items.add(new ArmorBuilder()
-                    .buildArmor()
-            );
-            items.add(new WeaponBuilder()
-                    .buildWeapon()
-            );
-            items.add(new ConsumableBuilder()
-                    .buildConsumable()
-            );
-        }
-
-        if (items.size() > 0) {
-            items.sort(new ItemComparator());
-        }
-
-        for (Item item : items){
-            rItems.add((RenderableObject) item);
-        }
     }
 
     @Override
@@ -78,15 +58,19 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable 
         }
     }
 
-    public CopyOnWriteArrayList<Item> getItems() {
+    public void setImage(String imagePath){ this.imagePath = imagePath; }
+
+    public VendorData getVendorData(){
+        return vendorData;
+    }
+
+/*    public CopyOnWriteArrayList<Item> getItems() {
         return items;
     }
 
     public CopyOnWriteArrayList<RenderableObject> getRenderables() {
         return rItems;
     }
-
-    public void setImage(String imagePath){ this.imagePath = imagePath; }
 
     public void addItem(Item item){
         items.add(item);
@@ -105,7 +89,7 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable 
         for (Item item : items){
             rItems.add((RenderableObject) item);
         }
-    }
+    }*/
 
     public BufferedImage getOverworldImage(){
         return vendorOverworldImage;
@@ -127,32 +111,6 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable 
                 setSize(image.getWidth(), image.getHeight());
             }
         }
-    }
-
-    public CopyOnWriteArrayList<Item> restockItems(){
-        CopyOnWriteArrayList<Item> restock = new CopyOnWriteArrayList<>();
-        for (int i = 0; i < 8; i++){
-            restock.add(new ArmorBuilder()
-                    .buildArmor()
-            );
-            restock.add(new WeaponBuilder()
-                    .buildWeapon()
-            );
-            restock.add(new ConsumableBuilder()
-                    .buildConsumable()
-            );
-        }
-
-        if (restock.size() > 0) {
-            restock.sort(new ItemComparator());
-        }
-
-        rItems.removeAll(rItems);
-        for (Item item : restock){
-            rItems.add((RenderableObject) item);
-        }
-
-        return restock;
     }
 
     //TODO: Don't think I need this anymore

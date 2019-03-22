@@ -1,6 +1,7 @@
 package gamescreen.gameplay;
 
 import gameengine.GameEngine;
+import gameengine.gamedata.PlayerData;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.*;
 import gameobject.renderable.ImageContainer;
@@ -35,6 +36,7 @@ public class PauseMenu extends GameScreen {
     private Item currentItem = null;
     private ButtonText useButton;
     Player player;
+    private PlayerData playerData = gameData.getPlayerData();
 
     //endregion
 
@@ -50,12 +52,12 @@ public class PauseMenu extends GameScreen {
         player = GameEngine.players.get(0);
         previousPlayerState = player.getState();
         player.setState(Player.PlayerState.asleep);
-        playerInventory = player.getItems();
+        playerInventory = playerData.getInventory();
         playerButtons = new CopyOnWriteArrayList<>();
         equipButtons = new CopyOnWriteArrayList<>();
 
         //Add all the item in the dev splashscreen player to the splashscreen
-        for (RenderableObject renderable: player.getRenderables()){
+        for (RenderableObject renderable: playerInventory){
             renderable.addToScreen(this, false);
         }
         //Create Labels
@@ -108,7 +110,7 @@ public class PauseMenu extends GameScreen {
         for (ItemButton pbutton : playerButtons) {
             pbutton.resetItem();
             if (k < count){
-                pbutton.setItem(playerInventory.get(k));
+                pbutton.setItem((Item)(playerInventory.get(k)));
                 setClickEvent(pbutton, itemDetails);
                 k++;
             }
@@ -224,7 +226,7 @@ public class PauseMenu extends GameScreen {
                 ItemButton itemContainerButton = new ItemButton();
                 playerGrid.dynamicAddAt(itemContainerButton, i, j);
                 if (k < count) {
-                    itemContainerButton.setItem(playerInventory.get(k));
+                    itemContainerButton.setItem((Item)(playerInventory.get(k)));
                     k++;
                 }
                 setClickEvent(itemContainerButton, itemDetails);
