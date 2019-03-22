@@ -13,7 +13,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class PlayerData implements Serializable {
 
-    private CopyOnWriteArrayList<RenderableObject> playerInventory = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<Item> playerInventory = new CopyOnWriteArrayList<>();
 
     public PlayerData(){
         initializeInventory();
@@ -22,7 +22,7 @@ public class PlayerData implements Serializable {
     public PlayerData getPlayerData() { return this; }
 
 
-    public CopyOnWriteArrayList<RenderableObject> getInventory(){
+    public CopyOnWriteArrayList<Item> getInventory(){
         return playerInventory;
     }
 
@@ -32,7 +32,7 @@ public class PlayerData implements Serializable {
 
 
 
-    public void addItem(RenderableObject item){
+    public void addItem(Item item){
         playerInventory.add(item);
     }
 
@@ -40,7 +40,7 @@ public class PlayerData implements Serializable {
         playerInventory.remove(item);
     }
 
-    public void replaceList(CopyOnWriteArrayList<RenderableObject> updatedItems) {
+    public void replaceList(CopyOnWriteArrayList<Item> updatedItems) {
         this.playerInventory = updatedItems;
     }
 

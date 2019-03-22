@@ -27,7 +27,7 @@ public class PauseMenu extends GameScreen {
     /* Initialize variables *****************/
     //region<Variable Declarations>
     private Player.PlayerState previousPlayerState;
-    private CopyOnWriteArrayList<RenderableObject> playerInventory;
+    private CopyOnWriteArrayList<Item> playerInventory;
     private CopyOnWriteArrayList<ItemButton> playerButtons;
     private CopyOnWriteArrayList<ItemButton> equipButtons;
     private ItemButton bigEquipment;

@@ -29,7 +29,7 @@ public class VendorScreen extends GameScreen {
     private TextBox itemDetailsVendor;
     private TextBox itemDetailsPlayer;
     private TextBox goldTextBox;
-    private CopyOnWriteArrayList<RenderableObject> playerInventory;
+    private CopyOnWriteArrayList<Item> playerInventory;
     private CopyOnWriteArrayList<Item> vendorInventory;
     private CopyOnWriteArrayList<ItemButton> playerButtons;
     private CopyOnWriteArrayList<ItemButton> vendorButtons;
@@ -46,24 +46,24 @@ public class VendorScreen extends GameScreen {
     @Override
     protected void initializeScreen() {
         Point vendorLocation = new Point(850, 575);
-        Point playerLocation = new Point(600, 575);
+        Point playerLocation = new Point(500, 575);
         Point screenSize = (new Point(1600,900));
         Point vendorSize = (new Point(200,200));
         Point playerSize = (new Point(125,200));
         Point buttonSize = (new Point(200, 75));
         Point exitButtonLocation = (new Point(25, 25));
         Point buyButtonLocation = new Point(850, 780);
-        Point sellButtonLocation = new Point(550, 780);
-        Point playerTextLocation = new Point(270, 125);
-        Point vendorTextLocation = new Point(550, 125);
+        Point sellButtonLocation = new Point(425, 780);
+        Point playerTextLocation = new Point(410, 215);
+        Point vendorTextLocation = new Point(890, 215);
         Point textBoxSize = new Point(210, 230);
-        Point itemButtonSize = new Point(50, 50);
-        Point goldTextboxLocation = new Point(850, 20);
-        Point goldTextboxSize = new Point(150, 50);
-        Point playerGridLocation = new Point(50, 150);
-        Point vendorGridLocation = new Point(760, 150);
-        int textBoxFont = 24;
-        int goldTextFont = 48;
+        Point itemButtonSize = new Point(85, 85);
+        Point goldTextboxLocation = new Point(1300, 20);
+        Point goldTextboxSize = new Point(300, 100);
+        Point playerGridLocation = new Point(75, 215);
+        Point vendorGridLocation = new Point(1100, 215);
+        int textBoxFont = 48;
+        int goldTextFont = 96;
 
         //region Initialize variables
         vendor = GameEngine.vendor;
@@ -249,6 +249,7 @@ public class VendorScreen extends GameScreen {
         for (int i = 0; i < rows; i++){
             for (int j = 0; j < columns; j++){
                 ItemButton itemContainerButton = new ItemButton();
+                itemContainerButton.setSize(itemButtonSize.x, itemButtonSize.y);
                 playerGrid.dynamicAddAt(itemContainerButton, i, j);
                 if (k < count) {
                     itemContainerButton.setItem((Item)(playerInventory.get(k)));
@@ -265,6 +266,7 @@ public class VendorScreen extends GameScreen {
         for (int i = 0; i < rows; i++){
             for (int j = 0; j < columns; j++){
                 ItemButton itemContainerButton = new ItemButton();
+                itemContainerButton.setSize(itemButtonSize.x, itemButtonSize.y);
                 vendorGrid.dynamicAddAt(itemContainerButton, i, j);
                 if (k < count) {
                     itemContainerButton.setItem(vendorInventory.get(k));
