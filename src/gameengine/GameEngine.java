@@ -4,6 +4,7 @@ import gameengine.gamedata.GameData;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.vendor.Vendor;
 import gameobject.renderable.DrawLayer;
+import input.listeners.KeyController;
 import input.listeners.MouseController;
 import gameengine.physics.PhysicsEngine;
 import gameengine.rendering.RenderEngine;
@@ -43,6 +44,7 @@ public class GameEngine implements Runnable {
         renderEngine = new RenderEngine(gameData, screenManager);
         physicsEngine = new PhysicsEngine(gameData, screenManager);
         renderEngine.addMouseListener(new MouseController(screenManager));
+        renderEngine.addKeyListener(new KeyController(screenManager));
         players = new ArrayList<>(){{
             add(p1);
             add(p2);

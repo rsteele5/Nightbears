@@ -1,6 +1,5 @@
 package input.listeners;
 
-import gameengine.GameEngine;
 import gamescreen.ScreenManager;
 
 import java.awt.event.KeyEvent;
@@ -12,7 +11,6 @@ public class KeyController implements KeyListener {
 
     public KeyController(ScreenManager screenManager) {
         this.screenManager = screenManager;
-
     }
 
     @Override
@@ -22,16 +20,20 @@ public class KeyController implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        //TODO make this shutdown gracefully
-        if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
-            System.exit(0);
-        //TODO: Implement multiple players.
-        GameEngine.players.get(0).move(e);
+        screenManager.handleKeyPressed(e);
+
+//        //TODO make this shutdown gracefully
+//        if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+//            System.exit(0);
+//        //TODO: Implement multiple players.
+//        GameEngine.players.get(0).move(e);
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        //TODO: Implement multiple players.
-        GameEngine.players.get(0).moveRelease(e);
+        screenManager.handleKeyReleased(e);
+
+//        //TODO: Implement multiple players.
+//        GameEngine.players.get(0).moveRelease(e);
     }
 }

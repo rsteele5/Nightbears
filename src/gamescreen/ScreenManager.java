@@ -4,12 +4,14 @@ import gameengine.gamedata.GameData;
 import gameengine.physics.Kinematic;
 import gamescreen.splashscreen.LoadingScreen;
 import gamescreen.splashscreen.TeamSplashScreen;
+import input.listeners.KeyHandler;
 import input.listeners.MouseController;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
 import javax.swing.JPanel;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 /**
@@ -125,5 +127,13 @@ public class ScreenManager extends JPanel {
     //TODO change how screens handle graphics changes
     public void changeGraphics() {
         rootScreen = null;
+    }
+
+    public void handleKeyPressed(KeyEvent e) {
+        rootScreen.handleKeyPressed(e);
+    }
+
+    public void handleKeyReleased(KeyEvent e) {
+        rootScreen.handleKeyPressed(e);
     }
 }

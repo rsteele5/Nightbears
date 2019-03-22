@@ -3,12 +3,14 @@ package gamescreen;
 import gameengine.gamedata.GameData;
 import gameengine.physics.Kinematic;
 import gameengine.rendering.Camera;
+import input.listeners.KeyHandler;
 import input.listeners.MouseController;
 import main.utilities.*;
 import gameobject.GameObject;
 import gameobject.renderable.RenderableObject;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
@@ -35,6 +37,7 @@ public abstract class GameScreen {
     private boolean isLoading;
     protected boolean exiting = false;
     boolean isRoot;
+    private KeyHandler keyHandler;
     /**
      * Contains all of the {@link GameObject}s that are not updated and/or drawn on the GameScreen
      */
@@ -262,6 +265,10 @@ public abstract class GameScreen {
         this.camera = camera;
     }
 
+    public void setKeyHandler(KeyHandler keyHandler){
+        this.keyHandler = keyHandler;
+    }
+
     public ArrayList<RenderableObject> getRenderables() {
         return renderables;
     }
@@ -437,6 +444,25 @@ public abstract class GameScreen {
         }
         return false;
     }
+
+    public void handleKeyPressed(KeyEvent e){
+        if(keyHandler != null){
+            this.keyHandler.keyPressed(e);
+        } else {
+            Debug.criticalError("No key handler attached to screen!");
+        }
+
+    }
+
+    public void handleKeyReleased(KeyEvent e){
+        if(keyHandler != null){
+            this.keyHandler.keyReleased(e);
+        } else {
+            Debug.criticalError("No key handler attached to screen!");
+        }
+
+    }
+
 
     public boolean handleMouseRelease(MouseController mouseController, int x, int y){
         //Handle release on the Exlusive splashscreen covering me
