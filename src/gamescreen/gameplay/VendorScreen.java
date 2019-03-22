@@ -40,15 +40,20 @@ public class VendorScreen extends GameScreen {
     //endregion ****************************************/
 
     public VendorScreen(ScreenManager screenManager) {
-        super(screenManager, "VendorScreen", true, 450, 180);
+        super(screenManager, "VendorScreen", true, 150, 80);
     }
 
     @Override
     protected void initializeScreen() {
-        int x_vendor = 570;
-        int y_vendor = 335;
-        int x_player = 330;
-
+        Point vendorLocation = new Point(850, 575);
+        Point playerLocation = new Point(600, 575);
+        Point screenSize = (new Point(1600,900));
+        Point vendorSize = (new Point(200,200));
+        Point playerSize = (new Point(125,200));
+        Point buttonSize = (new Point(200, 75));
+        Point exitButtonLocation = (new Point(25, 25));
+        Point buyButtonLocation = new Point(850, 780);
+        Point sellButtonLocation = new Point(550, 780);
 
         //region Initialize variables
         vendor = GameEngine.vendor;
@@ -73,21 +78,23 @@ public class VendorScreen extends GameScreen {
         ImageContainer imageContainer;
 
         imageContainer = new ImageContainer(0, 0, "/assets/vendor/VendorBackground.png", DrawLayer.Background);
+        imageContainer.setSize(screenSize.x, screenSize.y);
         imageContainer.addToScreen(this, true);
 
-        imageContainer = new ImageContainer(x_vendor, y_vendor, "/assets/vendor/Vendor.png", vendor.getDrawLayer());
-        imageContainer.setSize(150,150);
+
+        imageContainer = new ImageContainer(vendorLocation.x, vendorLocation.y, "/assets/vendor/Vendor.png", vendor.getDrawLayer());
+        imageContainer.setSize(vendorSize.x, vendorSize.y);
         imageContainer.addToScreen(this, true);
 
-        imageContainer = new ImageContainer(x_player, y_vendor, "/assets/player/sidescrolling/Teddy.png", player.getDrawLayer());
-        imageContainer.setSize(90, 140);
+        imageContainer = new ImageContainer(playerLocation.x, playerLocation.y, "/assets/player/sidescrolling/Teddy.png", player.getDrawLayer());
+        imageContainer.setSize(playerSize.x, playerSize.y);
         imageContainer.addToScreen(this, true);
         //endregion
 
         //region Create splashscreen button **/
         Button button;
 
-        button = new Button(25, 25,
+        button = new Button(exitButtonLocation.x, exitButtonLocation.y,
                 "/assets/buttons/Button-Vendor-Exit.png",
                 "/assets/buttons/Button-Vendor-ExitPressed.png",
                 DrawLayer.Entity,
@@ -96,9 +103,10 @@ public class VendorScreen extends GameScreen {
                     player.setState(previousPlayerState);
                     this.setScreenState(ScreenState.TransitionOff);
                 });
+        button.setSize(buttonSize.x, buttonSize.y);
         button.addToScreen(this, true);
 
-        button = new Button(585, 485,
+        button = new Button(buyButtonLocation.x, buyButtonLocation.y,
                 "/assets/buttons/Button-Vendor-Buy.png",
                 "/assets/buttons/Button-Vendor-BuyPressed.png",
                 DrawLayer.Entity,
@@ -139,9 +147,10 @@ public class VendorScreen extends GameScreen {
                         }
                     }
                 });
+        button.setSize(buttonSize.x, buttonSize.y);
         button.addToScreen(this, true);
 
-        button = new Button(310, 485,
+        button = new Button(sellButtonLocation.x, sellButtonLocation.y,
                 "/assets/buttons/Button-Vendor-Sell.png",
                 "/assets/buttons/Button-Vendor-SellPressed.png",
                 DrawLayer.Entity,
@@ -172,10 +181,11 @@ public class VendorScreen extends GameScreen {
                         }
                     }
                 });
+        button.setSize(buttonSize.x, buttonSize.y);
         button.addToScreen(this, true);
 
         // TODO: Remove after Sprint 3 testing and adjust restockItems() in Vendor
-        button = new Button(460, 485,
+        /*button = new Button(460, 485,
                 "/assets/testAssets/TestButton.png",
                 DrawLayer.Entity,
                 () -> {
@@ -195,7 +205,7 @@ public class VendorScreen extends GameScreen {
                     }
                 });
         button.setSize(100, 50);
-        button.addToScreen(this, true);
+        button.addToScreen(this, true);*/
 
         //endregion
 

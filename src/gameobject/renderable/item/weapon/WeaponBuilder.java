@@ -142,6 +142,8 @@ public class WeaponBuilder {
         if (_maxDamage == 0) {
             int num1 = getRandomNumber(minWeapon, maxWeapon);
             int num2 = getRandomNumber(minWeapon, maxWeapon);
+            if(num1 == num2 && num1 > minWeapon) num1--;
+            else if(num1 == num2 && num1 < maxWeapon) num2++;
             this._maxDamage = (num1 >= num2)? num1 : num2;
             this._minDamage = (num1 <= num2)? num1 : num2;
         } else {

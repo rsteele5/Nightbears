@@ -148,13 +148,14 @@ public class ConsumableBuilder {
         if (_maxAffect == 0){
             int num1 = getRandomNumber(minConsumable, maxConsumable);
             int num2 = getRandomNumber(minConsumable, maxConsumable);
+            if(num1 == num2 && num1 > minConsumable) num1--;
+            else if(num1 == num2 && num1 < maxConsumable) num2++;
             this._maxAffect = (num1 >= num2)? num1 : num2;
             this._minAffect = (num1 <= num2)? num1 : num2;
         } else {
             this._maxAffect = _maxAffect;
-            this._minAffect = _maxAffect;
+            this._minAffect = _minAffect;
         }
-        this._maxAffect = _maxAffect;
     }
 
     /**
