@@ -1,6 +1,8 @@
 package gamescreen.mainmenu;
 
 import gameobject.renderable.DrawLayer;
+import gameobject.renderable.player.Player;
+import gameobject.renderable.vendor.Vendor;
 import gamescreen.GameScreen;
 import gameobject.renderable.ImageContainer;
 import gameobject.renderable.button.Button;
@@ -21,6 +23,8 @@ public class DevScreen extends GameScreen {
     private final int WIDTH_BUTTON = 256;
     private final int X_BUFFER = 48;
 
+    private Player player;
+
     //endregion
 
     //region <Construction and Initialization>
@@ -32,9 +36,11 @@ public class DevScreen extends GameScreen {
     protected void initializeScreen() {
         //Background image
         ImageContainer imageContainer;
-
         imageContainer = new ImageContainer(0,0, "/assets/backgrounds/BG-DevMenu.png", DrawLayer.Background);
         imageContainer.addToScreen(this, true);
+
+        //Create game entities
+        player = new Player(0, 0, DrawLayer.Entity, gameData.getPlayerData());
 
         //Create button
         Button button;
@@ -66,7 +72,7 @@ public class DevScreen extends GameScreen {
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Vendor");
-                    screenManager.addScreen(new VendorScreen(screenManager));
+                    screenManager.addScreen(new VendorScreen(screenManager, player));
                 });
         button.addToScreen(this, true);
 
@@ -87,7 +93,7 @@ public class DevScreen extends GameScreen {
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Inventory");
                     //TODO: Add Inventory Screen
-                    screenManager.addScreen(new PauseMenu(screenManager));
+                    screenManager.addScreen(new PauseMenu(screenManager, player));
                 });
         button.addToScreen(this, true);
 

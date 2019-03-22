@@ -1,5 +1,6 @@
 package gameobject.renderable.house.overworld.room;
 
+import gameobject.renderable.house.overworld.Tile;
 import gameobject.renderable.player.Player;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
@@ -15,6 +16,7 @@ public abstract class Room {
     protected Integer[][] layout;
     protected int width;
     protected int height;
+    protected Tile[][] roomTiles;
 
     protected ArrayList<SpawnPoint> spawnPoints;
 
@@ -26,6 +28,7 @@ public abstract class Room {
         cellX = -1;
         cellY = -1;
         layout = constructLayout();
+        roomTiles = new Tile[layout.length][layout[0].length];
         width = layout[0].length;
         height = layout.length;
         spawnPoints = new ArrayList<>();
@@ -114,5 +117,9 @@ public abstract class Room {
                     + " - is trying to compare layouts, but does not have a set cell yet. Returning false. ");
         }
         return false;
+    }
+
+    public void setTile(int row, int col, Tile content) {
+        roomTiles[row][col] = content;
     }
 }

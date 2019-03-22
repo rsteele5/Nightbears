@@ -16,10 +16,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class PlayerData implements Serializable {
 
     private CopyOnWriteArrayList<Item> playerInventory = new CopyOnWriteArrayList<>();
+    private int gold;
 
     public PlayerData(){
         initializeInventory();
-
+        gold = 10;
     }
 
     public PlayerData getPlayerData() { return this; }
@@ -28,12 +29,6 @@ public class PlayerData implements Serializable {
     public CopyOnWriteArrayList<Item> getInventory(){
         return playerInventory;
     }
-
-    /*public void setPlayerData(PlayerData playerData){
-        this.playerInventory = playerData.playerInventory;
-    }*/
-
-
 
     public void addItem(Item item){
         playerInventory.add(item);
@@ -70,4 +65,11 @@ public class PlayerData implements Serializable {
         }
     }
 
+    public int getGold() {
+        return gold;
+    }
+
+    public void changeGold(int amt) {
+        gold += amt;
+    }
 }

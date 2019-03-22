@@ -1,5 +1,6 @@
 package gamescreen.gameplay;
 
+import gameobject.renderable.player.Player;
 import gameobject.renderable.text.DialogBox;
 import gameobject.renderable.ImageContainer;
 import gameobject.renderable.button.Button;
@@ -15,10 +16,11 @@ import java.awt.*;
 public class VendorDialogBox extends Overlay {
 
     private final String welcome = "Hey Teddy! Would you like to come in and check out my new wares?";
+    private Player player;
 
-
-    public VendorDialogBox(ScreenManager screenManager, GameScreen parentScreen, int xPos, int yPos) {
+    public VendorDialogBox(ScreenManager screenManager, GameScreen parentScreen, int xPos, int yPos, Player p1) {
         super(screenManager, parentScreen, "VendorDialogBox", xPos, yPos, 1f);
+        player = p1;
     }
 
     /**
@@ -43,7 +45,7 @@ public class VendorDialogBox extends Overlay {
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - VendorDialog Yes");
                     this.exiting = true;
-                    screenManager.addScreen(new VendorScreen(screenManager));
+                    screenManager.addScreen(new VendorScreen(screenManager, player));
                 });
         button.setSize(75,30);
         button.addToScreen(this,true);

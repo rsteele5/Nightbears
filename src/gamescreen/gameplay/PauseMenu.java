@@ -1,6 +1,5 @@
 package gamescreen.gameplay;
 
-import gameengine.GameEngine;
 import gameengine.gamedata.PlayerData;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.*;
@@ -13,7 +12,7 @@ import gameobject.renderable.item.*;
 import gameobject.renderable.DrawLayer;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
-import gamescreen.container.GridContainer;
+import gameobject.container.RenderableGridContainer;
 import gamescreen.mainmenu.MainMenuScreen;
 import gamescreen.mainmenu.options.OptionScreen;
 import main.utilities.Debug;
@@ -40,8 +39,9 @@ public class PauseMenu extends GameScreen {
 
     //endregion
 
-    public PauseMenu(ScreenManager screenManager) {
+    public PauseMenu(ScreenManager screenManager, Player p1) {
         super(screenManager, "PauseMenu", true, 450, 180);
+        player = p1;
     }
 
     /**
@@ -49,7 +49,6 @@ public class PauseMenu extends GameScreen {
      */
     @Override
     protected void initializeScreen() {
-        player = GameEngine.players.get(0);
         previousPlayerState = player.getState();
         player.setState(Player.PlayerState.asleep);
         playerInventory = playerData.getInventory();
@@ -216,7 +215,7 @@ public class PauseMenu extends GameScreen {
         //Set up the grid for the player inventory
         int rows = 7;
         int columns = 4;
-        GridContainer playerGrid = new GridContainer(this, rows, columns, 50, 50, 15, 140);
+        RenderableGridContainer playerGrid = new RenderableGridContainer(this, rows, columns, 50, 50, 15, 140);
 
         //region Add button to the Grid Containers
         int count = playerInventory.size();
@@ -238,7 +237,7 @@ public class PauseMenu extends GameScreen {
 
     private void initEquipButtons(){
         //Create grid for the cross pattern equipment stuff
-        GridContainer equipGrid = new GridContainer(this, 4, 3, 50, 50, 250, 140);
+        RenderableGridContainer equipGrid = new RenderableGridContainer(this, 4, 3, 50, 50, 250, 140);
         //Equipment Buttons
         ItemButton equipHead =  new ItemButton();
         equipGrid.dynamicAddAt(equipHead, 0, 1);

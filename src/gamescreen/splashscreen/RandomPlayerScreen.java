@@ -43,7 +43,7 @@ public class RandomPlayerScreen extends GameScreen {
     private ImageContainer getRandomImage(){
         ArrayList<ImageContainer> images = new ArrayList<>();
 
-        File file = new File("src/assets/player/images");
+        File file =  new File("src/assets/player/images");
         String[] directories = file.list();
         for(String filePath: directories) {
             ImageContainer image = new ImageContainer(912,723,

@@ -26,6 +26,7 @@ public class GameData implements Serializable {
     private InputSetting currentInputSetting;
     private SoundSetting[] currentSoundSetting = new SoundSetting[3];
     private PlayerData currentPlayerData;
+    private VendorData currentVendorData;
 
     public GameData(){
         try {
@@ -44,6 +45,7 @@ public class GameData implements Serializable {
                     }
                 }
                 currentPlayerData = new PlayerData();
+                currentVendorData = new VendorData();
                 save();
             } else {
                 FileInputStream file = new FileInputStream(dataFile);
@@ -60,6 +62,7 @@ public class GameData implements Serializable {
                     }
                 }
                 this.currentPlayerData = gameDataInput.getPlayerData();
+                this.currentVendorData = gameDataInput.getVendorData();
                 Debug.log(true, "Do I have shit?: " + currentPlayerData.getInventory().get(0).getImagePath());
 
                 in.close();
@@ -77,12 +80,11 @@ public class GameData implements Serializable {
         } catch (ClassNotFoundException ex) { Debug.error(DebugEnabler.GAME_DATA,"Loading Failed - ClassNotFoundException is caught" + ex.getMessage()); }
     }
 
-    public PlayerData getPlayerData() { return currentPlayerData; }
-
-    public void setPlayerData(PlayerData playerData){
-        this.currentPlayerData = playerData;
-        save();
+    public VendorData getVendorData() {
+        return currentVendorData;
     }
+
+    public PlayerData getPlayerData() { return currentPlayerData; }
 
     public GraphicsSetting getGraphicsSettings() {
         return currentGraphicsSetting;

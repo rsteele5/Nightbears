@@ -4,9 +4,7 @@ import gameobject.renderable.house.overworld.room.Room;
 import gameobject.renderable.house.overworld.room.SpawnPoint;
 import gameobject.renderable.house.overworld.room.SpawnType;
 import gamescreen.GameScreen;
-import gamescreen.container.GridContainer;
-import main.utilities.Debug;
-import main.utilities.DebugEnabler;
+import gameobject.container.TileGridContainer;
 
 import java.util.ArrayList;
 
@@ -15,13 +13,13 @@ import static gameobject.renderable.house.overworld.OverworldMeta.*;
 public class Map {
 
     private final GameScreen parentScreen;
-    private GridContainer[][] chunkMap;
+    private TileGridContainer[][] chunkMap;
     private ArrayList<Room> rooms;
 
-    public Map(GameScreen parentScreen, ArrayList<Room> rooms, ArrayList<ArrayList<GridContainer>> chunks){
+    public Map(GameScreen parentScreen, ArrayList<Room> rooms, ArrayList<ArrayList<TileGridContainer>> chunks){
         this.parentScreen = parentScreen;
         this.rooms = rooms;
-        chunkMap = new GridContainer[chunks.size()][chunks.get(0).size()];
+        chunkMap = new TileGridContainer[chunks.size()][chunks.get(0).size()];
         //Concrete chunks into 2D array
         for(int row = 0; row < chunkMap.length; row++){
             for(int col = 0; col < chunkMap[0].length; col++){
