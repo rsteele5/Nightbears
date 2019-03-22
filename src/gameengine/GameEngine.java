@@ -36,8 +36,8 @@ public class GameEngine implements Runnable {
     public static Vendor vendor;
 
     public GameEngine(GameData gameData){
-        p1 = new Player(0,0, "/assets/player/overworld/teddyidleanimation/Overworld-Teddy-Center.png", DrawLayer.Entity);
-        p2 = new Player(0,0,"/assets/testAssets/square2.png", DrawLayer.Entity);
+        p1 = new Player(0,0, "/assets/player/overworld/teddyidleanimation/Overworld-Teddy-Center.png", DrawLayer.Entity, gameData);
+        p2 = new Player(0,0,"/assets/testAssets/square2.png", DrawLayer.Entity, gameData);
         vendor = new Vendor(0,0);
         this.gameData = gameData;
         screenManager = new ScreenManager(gameData);

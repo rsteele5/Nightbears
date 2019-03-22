@@ -1,6 +1,7 @@
 package gamescreen.gameplay;
 
 import gameengine.GameEngine;
+import gameengine.gamedata.PlayerData;
 import gameobject.renderable.item.ItemComparator;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.*;
@@ -33,28 +34,45 @@ public class VendorScreen extends GameScreen {
     private CopyOnWriteArrayList<ItemButton> playerButtons;
     private CopyOnWriteArrayList<ItemButton> vendorButtons;
     private Player player;
+    private PlayerData playerData;
     private Player.PlayerState previousPlayerState;
     private Vendor vendor;
     //endregion ****************************************/
 
     public VendorScreen(ScreenManager screenManager) {
-        super(screenManager, "VendorScreen", true, 450, 180);
+        super(screenManager, "VendorScreen", true, 150, 80);
     }
 
     @Override
     protected void initializeScreen() {
-        int x_vendor = 570;
-        int y_vendor = 335;
-        int x_player = 330;
-
+        Point vendorLocation = new Point(850, 575);
+        Point playerLocation = new Point(500, 575);
+        Point screenSize = (new Point(1600,900));
+        Point vendorSize = (new Point(200,200));
+        Point playerSize = (new Point(125,200));
+        Point buttonSize = (new Point(200, 75));
+        Point exitButtonLocation = (new Point(25, 25));
+        Point buyButtonLocation = new Point(850, 780);
+        Point sellButtonLocation = new Point(425, 780);
+        Point playerTextLocation = new Point(410, 215);
+        Point vendorTextLocation = new Point(890, 215);
+        Point textBoxSize = new Point(210, 230);
+        Point itemButtonSize = new Point(85, 85);
+        Point goldTextboxLocation = new Point(1300, 20);
+        Point goldTextboxSize = new Point(300, 100);
+        Point playerGridLocation = new Point(75, 215);
+        Point vendorGridLocation = new Point(1100, 215);
+        int textBoxFont = 48;
+        int goldTextFont = 96;
 
         //region Initialize variables
         vendor = GameEngine.vendor;
         player = GameEngine.players.get(0);
+        playerData = gameData.getPlayerData();
         previousPlayerState = player.getState();
         player.setState(Player.PlayerState.asleep);
         vendorInventory = vendor.getItems();
-        playerInventory = player.getItems();
+        playerInventory = playerData.getInventory();
         playerButtons = new CopyOnWriteArrayList<>();
         vendorButtons = new CopyOnWriteArrayList<>();
         //endregion
@@ -63,28 +81,30 @@ public class VendorScreen extends GameScreen {
         for (RenderableObject renderable: vendor.getRenderables()){
             renderable.addToScreen(this, false);
         }
-        for (RenderableObject renderable: player.getRenderables()){
+        for (RenderableObject renderable: playerData.getInventory()){
             renderable.addToScreen(this, false);
         }
 
         ImageContainer imageContainer;
 
         imageContainer = new ImageContainer(0, 0, "/assets/vendor/VendorBackground.png", DrawLayer.Background);
+        imageContainer.setSize(screenSize.x, screenSize.y);
         imageContainer.addToScreen(this, true);
 
-        imageContainer = new ImageContainer(x_vendor, y_vendor, "/assets/vendor/Vendor.png", vendor.getDrawLayer());
-        imageContainer.setSize(150,150);
+
+        imageContainer = new ImageContainer(vendorLocation.x, vendorLocation.y, "/assets/vendor/Vendor.png", vendor.getDrawLayer());
+        imageContainer.setSize(vendorSize.x, vendorSize.y);
         imageContainer.addToScreen(this, true);
 
-        imageContainer = new ImageContainer(x_player, y_vendor, "/assets/player/sidescrolling/Teddy.png", player.getDrawLayer());
-        imageContainer.setSize(90, 140);
+        imageContainer = new ImageContainer(playerLocation.x, playerLocation.y, "/assets/player/sidescrolling/Teddy.png", player.getDrawLayer());
+        imageContainer.setSize(playerSize.x, playerSize.y);
         imageContainer.addToScreen(this, true);
         //endregion
 
         //region Create splashscreen button **/
         Button button;
 
-        button = new Button(25, 25,
+        button = new Button(exitButtonLocation.x, exitButtonLocation.y,
                 "/assets/buttons/Button-Vendor-Exit.png",
                 "/assets/buttons/Button-Vendor-ExitPressed.png",
                 DrawLayer.Entity,
@@ -93,9 +113,10 @@ public class VendorScreen extends GameScreen {
                     player.setState(previousPlayerState);
                     this.setScreenState(ScreenState.TransitionOff);
                 });
+        button.setSize(buttonSize.x, buttonSize.y);
         button.addToScreen(this, true);
 
-        button = new Button(585, 485,
+        button = new Button(buyButtonLocation.x, buyButtonLocation.y,
                 "/assets/buttons/Button-Vendor-Buy.png",
                 "/assets/buttons/Button-Vendor-BuyPressed.png",
                 DrawLayer.Entity,
@@ -119,7 +140,7 @@ public class VendorScreen extends GameScreen {
                                             player.changeGold(-currentItem.getValue());
                                             goldTextBox.setText("");
                                             goldTextBox.setText(getGoldText());
-                                            currentItem.depreciate();
+                                            currentItem.setValue(currentItem.depreciate(currentItem.getValue()));
                                             // Reset button item to the updated inventory arrays
                                             resetButtonItems();
                                             currentItemButton.deSelect();
@@ -136,9 +157,10 @@ public class VendorScreen extends GameScreen {
                         }
                     }
                 });
+        button.setSize(buttonSize.x, buttonSize.y);
         button.addToScreen(this, true);
 
-        button = new Button(310, 485,
+        button = new Button(sellButtonLocation.x, sellButtonLocation.y,
                 "/assets/buttons/Button-Vendor-Sell.png",
                 "/assets/buttons/Button-Vendor-SellPressed.png",
                 DrawLayer.Entity,
@@ -169,10 +191,11 @@ public class VendorScreen extends GameScreen {
                         }
                     }
                 });
+        button.setSize(buttonSize.x, buttonSize.y);
         button.addToScreen(this, true);
 
         // TODO: Remove after Sprint 3 testing and adjust restockItems() in Vendor
-        button = new Button(460, 485,
+        /*button = new Button(460, 485,
                 "/assets/testAssets/TestButton.png",
                 DrawLayer.Entity,
                 () -> {
@@ -192,37 +215,33 @@ public class VendorScreen extends GameScreen {
                     }
                 });
         button.setSize(100, 50);
-        button.addToScreen(this, true);
+        button.addToScreen(this, true);*/
 
         //endregion
 
         //region Create text boxes to hold item description
         /* x and y positions for text */
-        int x_playerText = 270;
-        int y_position = 125;
-        int x_vendorText = 550;
-        itemDetailsPlayer = new TextBox(x_playerText, y_position, 210, 230, "",
-                new Font("NoScary", Font.PLAIN, 24), Color.BLACK);
+
+        itemDetailsPlayer = new TextBox(playerTextLocation.x, playerTextLocation.y, textBoxSize.x, textBoxSize.y, "",
+                new Font("NoScary", Font.PLAIN, textBoxFont), Color.BLACK);
         itemDetailsPlayer.addToScreen(this,true);
-        itemDetailsVendor = new TextBox(x_vendorText, y_position, 210, 230, "",
-                new Font("NoScary", Font.PLAIN, 24), Color.BLACK);
+        itemDetailsVendor = new TextBox(vendorTextLocation.x, vendorTextLocation.y, textBoxSize.x, textBoxSize.y, "",
+                new Font("NoScary", Font.PLAIN, textBoxFont), Color.BLACK);
         itemDetailsVendor.addToScreen(this,true);
         //endregion
 
         //region TextBox to hold player's available gold
-        int x_goldText = 850;
-        int y_goldText = 20;
         String goldText = getGoldText();
-        goldTextBox = new TextBox(x_goldText, y_goldText, 150, 50, goldText,
-                new Font("NoScary", Font.PLAIN, 48), Color.BLACK);
+        goldTextBox = new TextBox(goldTextboxLocation.x, goldTextboxLocation.y, goldTextboxSize.x, goldTextboxSize.y, goldText,
+                new Font("NoScary", Font.PLAIN, goldTextFont), Color.BLACK);
         goldTextBox.addToScreen(this, true);
         //endregion
 
         // Create GridContainers for player and vendor item button
         int rows = 7;
         int columns = 4;
-        GridContainer playerGrid = new GridContainer(this, rows, columns, 50, 50, 50, 150);
-        GridContainer vendorGrid = new GridContainer(this, rows, columns, 50, 50, 760, 150);
+        GridContainer playerGrid = new GridContainer(this, rows, columns, itemButtonSize.x, itemButtonSize.y, playerGridLocation.x, playerGridLocation.y);
+        GridContainer vendorGrid = new GridContainer(this, rows, columns, itemButtonSize.x, itemButtonSize.y, vendorGridLocation.x, vendorGridLocation.y);
 
         //region Add item buttons to the Grid Containers
         int count = playerInventory.size();
@@ -230,9 +249,10 @@ public class VendorScreen extends GameScreen {
         for (int i = 0; i < rows; i++){
             for (int j = 0; j < columns; j++){
                 ItemButton itemContainerButton = new ItemButton();
+                itemContainerButton.setSize(itemButtonSize.x, itemButtonSize.y);
                 playerGrid.dynamicAddAt(itemContainerButton, i, j);
                 if (k < count) {
-                    itemContainerButton.setItem(playerInventory.get(k));
+                    itemContainerButton.setItem((Item)(playerInventory.get(k)));
                     k++;
                 }
                 setClickEvent(itemContainerButton, itemDetailsPlayer, itemDetailsVendor, "player" );
@@ -246,6 +266,7 @@ public class VendorScreen extends GameScreen {
         for (int i = 0; i < rows; i++){
             for (int j = 0; j < columns; j++){
                 ItemButton itemContainerButton = new ItemButton();
+                itemContainerButton.setSize(itemButtonSize.x, itemButtonSize.y);
                 vendorGrid.dynamicAddAt(itemContainerButton, i, j);
                 if (k < count) {
                     itemContainerButton.setItem(vendorInventory.get(k));
@@ -305,7 +326,7 @@ public class VendorScreen extends GameScreen {
         for (ItemButton pbutton : playerButtons) {
             pbutton.resetItem();
             if (k < count){
-                pbutton.setItem(playerInventory.get(k));
+                pbutton.setItem((Item)(playerInventory.get(k)));
                 setClickEvent(pbutton, itemDetailsPlayer, itemDetailsVendor, "player" );
                 k++;
             }
@@ -321,10 +342,11 @@ public class VendorScreen extends GameScreen {
     protected void transitionOff() {
         // Change player's image back to overworld image
         player.setImage("/assets/player/overworld/Overworld-Teddy.png");
+        gameData.save();
         // Update the original inventory arrays with all the changes that have been made here.
         if (vendorInventory != null && playerInventory != null) {
             vendor.replaceList(vendorInventory);
-            player.replaceList(playerInventory);
+            playerData.replaceList(playerInventory);
         } else {
             Debug.error(DebugEnabler.GAME_SCREEN_LOG, "VendorScreen: Unable to overwrite inventory list");
         }
