@@ -26,7 +26,7 @@ public class SideScroll extends GameScreen {
     final int xOFF = 2500;
     final int yOFF = 1500;
     public SideScroll(ScreenManager screenManager) {
-        super(screenManager, "level", 1f);
+        super(screenManager, "level", true, 1f);
     }
 
     /**

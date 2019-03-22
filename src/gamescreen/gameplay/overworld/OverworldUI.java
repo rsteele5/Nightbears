@@ -48,6 +48,7 @@ public class OverworldUI extends Overlay {
 
         actionButton = new ButtonText(350, 20,
                 "/assets/buttons/Button-Empty.png",
+                "/assets/buttons/Button-Empty.png",
                 DrawLayer.Entity, new Font("NoScary", Font.PLAIN, 72), Color.WHITE, "Fight!",
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - level");
@@ -59,6 +60,7 @@ public class OverworldUI extends Overlay {
         actionButton.addToScreen(this, true);
 
         leaveButton = new ButtonText(20, 120,
+                "/assets/buttons/Button-Empty.png",
                 "/assets/buttons/Button-Empty.png",
                 DrawLayer.Entity, new Font("NoScary", Font.PLAIN, 72), Color.WHITE, "Leave",
                 () ->{
@@ -74,6 +76,7 @@ public class OverworldUI extends Overlay {
 
         Button cameraOnButton = new ButtonText(650,20,
                 "/assets/buttons/Button-Empty.png",
+                "/assets/buttons/Button-Empty.png",
                 DrawLayer.Entity,
                 new Font("NoScary", Font.PLAIN, 58),
                 Color.WHITE, "Camera Off!",
@@ -84,6 +87,7 @@ public class OverworldUI extends Overlay {
         cameraOnButton.addToScreen(this, true);
 
         Button cameraOffButton = new ButtonText(920,20,
+                "/assets/buttons/Button-Empty.png",
                 "/assets/buttons/Button-Empty.png",
                 DrawLayer.Entity,
                 new Font("NoScary", Font.PLAIN, 58),

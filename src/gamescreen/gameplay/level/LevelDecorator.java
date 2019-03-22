@@ -11,7 +11,7 @@ public class LevelDecorator extends GameScreen {
     private OverworldUI UI;
 
     private LevelDecorator(ScreenManager screenManager) {
-        super(screenManager, "LevelDecorator", 1f);
+        super(screenManager, "LevelDecorator", true, 1f);
     }
 
     public static LevelDecorator create(ScreenManager screenManager, Level levelBuild) {

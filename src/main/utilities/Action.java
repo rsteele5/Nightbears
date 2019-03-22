@@ -1,7 +1,8 @@
 package main.utilities;
 
 /**
- * Action is an interface that utilizes a single function doIt() that is paramaterless and returns nothing.
+ * Action is an interface that utilizes a single function that is paramaterless and returns nothing.
+ * @see #doIt()
  */
 public interface Action {
     /**
