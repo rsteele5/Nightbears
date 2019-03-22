@@ -5,8 +5,10 @@ import gameobject.renderable.item.Item;
 import gameobject.renderable.item.ItemComparator;
 import gameobject.renderable.item.armor.ArmorBuilder;
 import gameobject.renderable.item.armor.ArmorType;
+import gameobject.renderable.item.weapon.Weapon;
 import gameobject.renderable.item.weapon.WeaponBuilder;
 import gameobject.renderable.item.weapon.WeaponType;
+import main.utilities.Debug;
 
 import java.io.Serializable;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -17,6 +19,7 @@ public class PlayerData implements Serializable {
 
     public PlayerData(){
         initializeInventory();
+
     }
 
     public PlayerData getPlayerData() { return this; }

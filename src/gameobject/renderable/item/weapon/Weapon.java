@@ -8,6 +8,7 @@ import gameobject.renderable.item.Item;
 import gameobject.renderable.item.ItemCategory;
 import gameobject.renderable.item.ItemMeta;
 import main.utilities.AssetLoader;
+import main.utilities.Debug;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -19,7 +20,7 @@ public class Weapon extends Item implements Kinematic, Serializable {
     //region <Variables>
 
     /** General item variables **/
-    private BufferedImage icon;
+    private transient BufferedImage icon;
     protected String name;
     private String description;
     protected int value;
@@ -176,6 +177,7 @@ public class Weapon extends Item implements Kinematic, Serializable {
      */
     @Override
     public void load() {
+        Debug.log(true, "The image path is: " + imagePath + " for item " + name);
         super.load();
         icon = AssetLoader.resizeImage(image, image.getWidth()/2, image.getHeight()/2);
     }

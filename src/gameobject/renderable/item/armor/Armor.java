@@ -16,7 +16,7 @@ public class Armor extends Item implements Serializable {
 
     //region <Variables>
     /** General item variables **/
-    private BufferedImage icon;
+    private transient BufferedImage icon;
     protected String name;
     private String description;
     protected int value;

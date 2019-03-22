@@ -2,6 +2,7 @@ package gameengine.gamedata;
 
 import gameengine.audio.BackgroundAudio;
 import gameengine.audio.SoundEffectAudio;
+import gameobject.renderable.RenderableObject;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -59,6 +60,8 @@ public class GameData implements Serializable {
                     }
                 }
                 this.currentPlayerData = gameDataInput.getPlayerData();
+                Debug.log(true, "Do I have shit?: " + currentPlayerData.getInventory().get(0).getImagePath());
+
                 in.close();
                 file.close();
             }
@@ -70,8 +73,8 @@ public class GameData implements Serializable {
             Debug.log(DebugEnabler.GAME_DATA, currentInputSetting.getCurrentOption().name());
             Debug.log(DebugEnabler.GAME_DATA, currentSoundSetting[0].getCurrentOption().name());
 
-        } catch (IOException ex) { Debug.error(DebugEnabler.GAME_DATA, "Loading Failed - IOException is caught");
-        } catch (ClassNotFoundException ex) { Debug.error(DebugEnabler.GAME_DATA,"Loading Failed - ClassNotFoundException is caught"); }
+        } catch (IOException ex) { Debug.error(DebugEnabler.GAME_DATA, "Loading Failed - IOException is caught " + ex.getMessage());
+        } catch (ClassNotFoundException ex) { Debug.error(DebugEnabler.GAME_DATA,"Loading Failed - ClassNotFoundException is caught" + ex.getMessage()); }
     }
 
     public PlayerData getPlayerData() { return currentPlayerData; }
