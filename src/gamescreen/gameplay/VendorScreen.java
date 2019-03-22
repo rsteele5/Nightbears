@@ -2,6 +2,7 @@ package gamescreen.gameplay;
 
 import gameengine.GameEngine;
 import gameengine.gamedata.PlayerData;
+import gameengine.gamedata.VendorData;
 import gameobject.renderable.item.ItemComparator;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.*;
@@ -37,6 +38,7 @@ public class VendorScreen extends GameScreen {
     private PlayerData playerData;
     private Player.PlayerState previousPlayerState;
     private Vendor vendor;
+    private VendorData vendorData;
     //endregion ****************************************/
 
     public VendorScreen(ScreenManager screenManager) {
@@ -45,40 +47,41 @@ public class VendorScreen extends GameScreen {
 
     @Override
     protected void initializeScreen() {
-        Point vendorLocation = new Point(850, 575);
-        Point playerLocation = new Point(500, 575);
+        Point vendorLocation = new Point(910, 575);
+        Point playerLocation = new Point(520, 575);
         Point screenSize = (new Point(1600,900));
         Point vendorSize = (new Point(200,200));
         Point playerSize = (new Point(125,200));
         Point buttonSize = (new Point(200, 75));
         Point exitButtonLocation = (new Point(25, 25));
-        Point buyButtonLocation = new Point(850, 780);
-        Point sellButtonLocation = new Point(425, 780);
-        Point playerTextLocation = new Point(410, 215);
-        Point vendorTextLocation = new Point(890, 215);
-        Point textBoxSize = new Point(210, 230);
+        Point buyButtonLocation = new Point(910, 780);
+        Point sellButtonLocation = new Point(485, 780);
+        Point playerTextLocation = new Point(440, 215);
+        Point vendorTextLocation = new Point(865, 215);
+        Point textBoxSize = new Point(315, 500);
         Point itemButtonSize = new Point(85, 85);
-        Point goldTextboxLocation = new Point(1300, 20);
-        Point goldTextboxSize = new Point(300, 100);
+        Point goldTextboxLocation = new Point(1285, 20);
+        Point goldTextboxSize = new Point(400, 100);
         Point playerGridLocation = new Point(75, 215);
-        Point vendorGridLocation = new Point(1100, 215);
-        int textBoxFont = 48;
-        int goldTextFont = 96;
+        Point vendorGridLocation = new Point(1175, 215);
+        int textBoxFont = 36;
+        int goldTextFont = 80;
 
         //region Initialize variables
-        vendor = GameEngine.vendor;
+        vendorData = gameData.getVendorData();
+        vendor = new Vendor(0,0,vendorData);
         player = GameEngine.players.get(0);
         playerData = gameData.getPlayerData();
         previousPlayerState = player.getState();
         player.setState(Player.PlayerState.asleep);
-        vendorInventory = vendor.getItems();
+        vendorInventory = vendorData.getInventory();
         playerInventory = playerData.getInventory();
         playerButtons = new CopyOnWriteArrayList<>();
         vendorButtons = new CopyOnWriteArrayList<>();
         //endregion
 
         //region Create all renderable
-        for (RenderableObject renderable: vendor.getRenderables()){
+        for (RenderableObject renderable: vendorData.getInventory()){
             renderable.addToScreen(this, false);
         }
         for (RenderableObject renderable: playerData.getInventory()){
@@ -126,7 +129,7 @@ public class VendorScreen extends GameScreen {
                         // Item must be in vendor's inventory
                         if (vendorInventory.indexOf(currentItem) >= 0) {
                             // Verify that player has enough gold
-                            if (player.getGold() >= currentItem.getValue()) {
+                            if (playerData.getGold() >= currentItem.getValue()) {
                                 // Confirmation
                                 screenManager.addScreen(new ConfirmationPopup(screenManager,
                                         "You want to purchase " + currentItem.getItemName() +
@@ -137,7 +140,7 @@ public class VendorScreen extends GameScreen {
                                             playerInventory.add(currentItem);
                                             playerInventory.sort(new ItemComparator());
                                             // Decrease player's gold and display on splashscreen
-                                            player.changeGold(-currentItem.getValue());
+                                            playerData.changeGold(-currentItem.getValue());
                                             goldTextBox.setText("");
                                             goldTextBox.setText(getGoldText());
                                             currentItem.setValue(currentItem.depreciate(currentItem.getValue()));
@@ -179,7 +182,7 @@ public class VendorScreen extends GameScreen {
                                         vendorInventory.add(currentItem);
                                         vendorInventory.sort(new ItemComparator());
                                         // Increase player's gold and display on splashscreen
-                                        player.changeGold(currentItem.getValue());
+                                        playerData.changeGold(currentItem.getValue());
                                         goldTextBox.setText("");
                                         goldTextBox.setText(getGoldText());
                                         // Reset button item to the updated inventory arrays
@@ -233,7 +236,7 @@ public class VendorScreen extends GameScreen {
         //region TextBox to hold player's available gold
         String goldText = getGoldText();
         goldTextBox = new TextBox(goldTextboxLocation.x, goldTextboxLocation.y, goldTextboxSize.x, goldTextboxSize.y, goldText,
-                new Font("NoScary", Font.PLAIN, goldTextFont), Color.BLACK);
+                new Font("NoScary", Font.BOLD, goldTextFont), Color.BLACK);
         goldTextBox.addToScreen(this, true);
         //endregion
 
@@ -334,7 +337,7 @@ public class VendorScreen extends GameScreen {
     }
 
     private String getGoldText(){
-        return "Gold: " + player.getGold();
+        return "Gold: " + playerData.getGold();
     }
     
 
@@ -345,7 +348,7 @@ public class VendorScreen extends GameScreen {
         gameData.save();
         // Update the original inventory arrays with all the changes that have been made here.
         if (vendorInventory != null && playerInventory != null) {
-            vendor.replaceList(vendorInventory);
+            vendorData.replaceList(vendorInventory);
             playerData.replaceList(playerInventory);
         } else {
             Debug.error(DebugEnabler.GAME_SCREEN_LOG, "VendorScreen: Unable to overwrite inventory list");

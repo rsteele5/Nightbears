@@ -1,6 +1,7 @@
 package gameengine;
 
 import gameengine.gamedata.GameData;
+import gameengine.gamedata.VendorData;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.vendor.Vendor;
 import gameobject.renderable.DrawLayer;
@@ -32,12 +33,13 @@ public class GameEngine implements Runnable {
     private RenderEngine renderEngine;
     public static ArrayList<Player> players;
     private static Player p1,p2;
-    public static Vendor vendor;
+    public Vendor vendor;
+    public VendorData vendorData;
 
     public GameEngine(GameData gameData){
         p1 = new Player(0,0, "/assets/player/overworld/teddyidleanimation/Overworld-Teddy-Center.png", DrawLayer.Entity, gameData);
         p2 = new Player(0,0,"/assets/testAssets/square2.png", DrawLayer.Entity, gameData);
-        vendor = new Vendor(0,0);
+        vendor = new Vendor(0,0, vendorData);
         this.gameData = gameData;
         screenManager = new ScreenManager(gameData);
         renderEngine = new RenderEngine(gameData, screenManager);

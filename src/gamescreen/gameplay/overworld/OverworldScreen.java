@@ -1,5 +1,6 @@
 package gamescreen.gameplay.overworld;
 
+import gameengine.gamedata.VendorData;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.overworld.Map;
 import gameobject.renderable.house.overworld.MapBuilder;
@@ -23,6 +24,7 @@ public class OverworldScreen extends GameScreen {
     private OverworldUI UI;
     private VendorDialogBox vendorDialogBox;
     private Map overworldMap;
+    private VendorData vendorData;
     //endregion
 
     public OverworldScreen(ScreenManager screenManager) {
@@ -55,7 +57,8 @@ public class OverworldScreen extends GameScreen {
         setCamera(new Camera(screenManager, this, GameEngine.players.get(0)));
 
         //Vendor
-        Vendor vendor = GameEngine.vendor;
+        vendorData = gameData.getVendorData();
+        Vendor vendor = new Vendor(0, 0, vendorData);
         SpawnPoint vendorSpawn = overworldMap.getVendorSpawn();
         vendor.setPosition(vendorSpawn.getTileX(), vendorSpawn.getTileY());
         vendor.setImage("/assets/vendor/vendoridleanimation/VendorOverworldForward.png");

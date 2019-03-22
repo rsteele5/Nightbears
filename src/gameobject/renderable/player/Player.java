@@ -43,8 +43,7 @@ public class Player extends RenderableObject implements Kinematic {
     private boolean crouchSet = true;
     public boolean interaction = false;
     private int movFlag = 0;
-    private int gold;
-    private double moveFactor = 1;
+        private double moveFactor = 1;
     private double rotation = 0;
     /*
     0b1     =   right
@@ -80,7 +79,6 @@ public class Player extends RenderableObject implements Kinematic {
         this.items = playerData.getInventory();
         //this.rItems = playerData.
         //initializeItems();*/
-        this.gold = 10;
         animator = new Animator(this);
         animator.addAnimation("Walking", new PlayerWalkingAnimation());
         animator.addAnimation("Idle", new PlayerIdleAnimation());
@@ -88,31 +86,6 @@ public class Player extends RenderableObject implements Kinematic {
         animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation());
     }
 
-    //Moving to PlayerData
-/*    private void initializeItems() {
-
-        addItem(new WeaponBuilder()
-                .imagePath("/assets/Items/sword1.png")
-                .name("My Fwirst Sword")
-                .type(WeaponType.Sword)
-                .value(10)
-                .minmaxDamage(5, 7)
-                .critChance(3)
-                .buildWeapon());
-
-        addItem(new ArmorBuilder()
-                .imagePath("/assets/Items/helmet1.png")
-                .name("My Fwirst Helmet")
-                .type(ArmorType.Head)
-                .value(12)
-                .armorPoints(10)
-                .buildArmor());
-
-        if (items.size() > 0) {
-            items.sort(new ItemComparator());
-        }
-
-    }*/
 
     @Override
     public void update() {
@@ -306,41 +279,6 @@ public class Player extends RenderableObject implements Kinematic {
         return false;
     }
     //endregion
-
-    //region <Inventory functions>
-/*    public CopyOnWriteArrayList<Item> getItems() {
-        return items;
-    }
-
-
-
-    public void addItem(Item item) {
-        items.add(item);
-        rItems.add((RenderableObject) item);
-    }
-
-    public void removeItem(Item item) {
-        items.remove(item);
-        rItems.remove(item);
-    }
-
-    // Needed for vendor splashscreen
-    public void replaceList(CopyOnWriteArrayList<Item> updatedItems) {
-        this.items = updatedItems;
-        rItems.removeAll(rItems);
-        for (Item item : items) {
-            rItems.add((RenderableObject) item);
-        }
-    }*/
-    //endregion
-
-    public int getGold() {
-        return gold;
-    }
-
-    public void changeGold(int amt) {
-        gold += amt;
-    }
 
     public void setImage(String imagePath) {
         this.imagePath = imagePath;
