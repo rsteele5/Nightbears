@@ -1,7 +1,6 @@
 package gamescreen.container;
 
 import gameobject.GameObject;
-import gameobject.renderable.RenderableObject;
 import gamescreen.GameScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
@@ -9,54 +8,48 @@ import main.utilities.DebugEnabler;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
-public class GridContainer extends GameObject {
+public abstract class GridContainer<T> extends GameObject {
 
     //region <Variables>
     protected GameScreen parentScreen;
-    private int rows;
-    private int cols;
-    private int padding;
-    private int itemWidth;
-    private int itemHeight;
+    protected int rows;
+    protected int cols;
+    protected int padding;
+    protected int itemWidth;
+    protected int itemHeight;
     protected int width;    //(size of item + padding) * cols + padding = width
     protected int height;   //(size of item + padding) * rows + padding = height
 
-    protected ArrayList<RenderableObject[]> renderableGrid;
+    protected ArrayList<ArrayList<T>> contents;
     //endregion
 
     //region <Construction and Initialization>
-    public GridContainer(GameScreen parentScreen, int rows, int cols, int itemWidth, int itemHeight) {
+    public GridContainer(GameScreen parentScreen, int rows, int cols, int itemWidth, int itemHeight, int xPos, int yPos, int padding) {
         super();
         this.parentScreen = parentScreen;
         this.rows = rows;
         this.cols = cols;
-        padding = 5;
         this.itemWidth = itemWidth;
         this.itemHeight = itemHeight;
         width = (itemWidth + padding) * cols + padding;
         height =(itemHeight + padding) * rows + padding;
-
-        renderableGrid = new ArrayList<>();
-        for(int row = 0; row < rows; row++)
-            renderableGrid.add(new RenderableObject[cols]);
-
-        Debug.warning(DebugEnabler.GRID_CONTAINER, "Create Grid - Width: "+ width +", Height: " + height);
-    }
-
-    public GridContainer(GameScreen parentScreen, int rows, int cols, int itemWidth , int itemHeight, int xPos, int yPos) {
-        this(parentScreen, rows, cols, itemWidth, itemHeight);
         x = xPos;
         y = yPos;
-    }
-
-    public GridContainer(GameScreen parentScreen, int rows, int cols, int itemWidth , int itemHeight, int xPos, int yPos, int padding) {
-        this(parentScreen, rows, cols, itemWidth, itemHeight,xPos, yPos);
         this.padding = padding;
+
+        contents = new ArrayList<>();
+        for(int row = 0; row < rows; row++) {
+            contents.add(new ArrayList<>(cols));
+            for(int col = 0; col < cols; col++){
+                contents.get(row).add(null);
+            }
+        }
+
+        Debug.log(DebugEnabler.GRID_CONTAINER, "Create Grid - Width: "+ width +", Height: " + height);
     }
     //endregion
 
     //region <Getters and Setters>
-
     /**
      * @return  a Retangle2D representing the grid container's bounding box.
      * @see     Rectangle2D
@@ -79,6 +72,10 @@ public class GridContainer extends GameObject {
         return cols;
     }
 
+    public T getContentAt(int row, int col) {
+        return contents.get(row).get(col);
+    }
+
     /**
      * Sets the position of the grid container and also sets the positions of all objects contained in the container
      * relative to their position in the grid.
@@ -90,54 +87,102 @@ public class GridContainer extends GameObject {
     public void setPosition(int xPos, int yPos){
         x = xPos;
         y = yPos;
-        for(int row = 0; row < renderableGrid.size(); row++){
-            for(int col = 0; col < renderableGrid.get(row).length; col++){
-                if(renderableGrid.get(row)[col] != null){
-                    renderableGrid.get(row)[col]
-                            .setPosition(x + ((itemWidth + padding) * col),
-                                    y + (itemHeight + padding) * row);
+        for(int row = 0; row < contents.size(); row++){
+            for(int col = 0; col < contents.get(row).size(); col++){
+                if(contents.get(row).get(col) != null){
+                    this.setContentPosition(contents.get(row).get(col),
+                            x + (itemWidth + padding) * col,
+                            y + (itemHeight + padding) * row);
                 }
             }
         }
     }
+
+    @Override
+    public boolean setActive(GameScreen screen){
+        if(super.setActive(screen)){
+            for (ArrayList<T> row : contents) {
+                for (T content : row) {
+                    if (content != null) {
+                        this.setContentActive(content, screen);
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean setInactive(GameScreen screen){
+        if(super.setInactive(screen)){
+            for (ArrayList<T> row : contents) {
+                for (T content : row) {
+                    if (content != null) {
+                        this.setContentInactive(content, screen);
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void addToScreen(GameScreen screen, boolean isActive){
+        super.addToScreen(screen, isActive);
+        for (ArrayList<T> row : contents) {
+            for (T content : row) {
+                if (content != null) {
+                    this.addContentToScreen(content, screen, isActive);
+                }
+            }
+        }
+    }
+
+    protected abstract void setContentPosition(T content, int newX, int newY);
+    protected abstract void setContentActive(T content, GameScreen screen);
+    protected abstract void setContentInactive(T content, GameScreen screen);
+    protected abstract void addContentToScreen(T content, GameScreen screen, boolean isActive);
     //endregion
 
     //region <Public Utilities>
     /**
-     * Adds a RenderableObject to the GridContainer at a specified row and column abiding by the rules of the
+     * Adds an Object to the GridContainer at a specified row and column abiding by the rules of the
      * container. If the adding was successful, the renderable is dynamically added to the parent screen of the grid.
      * All items being added should be the same size to avoid organization complications.
      *
-     * @param renderable    the object that is being added to the grid.
-     * @param row           row of the grid at which to add the renderable.
-     * @param col           column of the grid at which to add the renderable.
+     * @param content   the object that is being added to the grid.
+     * @param row       row of the grid at which to add the renderable.
+     * @param col       column of the grid at which to add the renderable.
      */
-    public void dynamicAddAt(RenderableObject renderable, int row, int col){
-        if(addAt(renderable,row,col))
-            renderable.addToScreen(parentScreen,true);
+    public void dynamicAddAt(T content, int row, int col){
+        if(addAt(content,row,col))
+            this.addContentToScreen(content, parentScreen,true);
         else Debug.warning(DebugEnabler.GRID_CONTAINER, "Add error was dynamic.");
     }
 
     /**
-     * Adds a RenderableObject to the GridContainer at a specified row and column abiding by the rules of the
+     * Adds an Object to the GridContainer at a specified row and column abiding by the rules of the
      * container, and returns True if the adding was successful. All items being added should be the same size to
      * avoid organization complications.
      *
-     * @param renderable    the object that is being added to the grid.
-     * @param row           row of the grid at which to add the renderable.
-     * @param col           column of the grid at which to add the renderable.
-     * @return              true indicates a successful addAt, and false indicates a failure to addAt.
+     * @param content   the object that is being added to the grid.
+     * @param row       row of the grid at which to add the renderable.
+     * @param col       column of the grid at which to add the renderable.
+     * @return          true indicates a successful addAt, and false indicates a failure to addAt.
      */
-    public boolean addAt(RenderableObject renderable, int row, int col){
+    public boolean addAt(T content, int row, int col){
         if((row >= 0 && col >= 0) && (row < rows && col < cols)) {
-            if(renderable != null) {
+            if(content != null) {
                 Debug.warning(DebugEnabler.GRID_CONTAINER, "AddAt("+row+", "+col+") - "
                         + "x: " + (x + ((itemWidth + padding) * col))
                         + ", y: " + (y + (itemHeight + padding) * row));
                 //Set the position of the renderable
-                renderable.setPosition(x + ((itemWidth + padding) * col)
-                        ,y + (itemHeight + padding) * row);
-                renderableGrid.get(row)[col] = renderable;
+                this.setContentPosition(content,
+                        x + (itemWidth + padding) * col,
+                        y + (itemHeight + padding) * row);
+                contents.get(row).set(col, content);
                 return true;
             }else {
                 Debug.error(DebugEnabler.GRID_CONTAINER, "- addAt() was passed null");
@@ -151,51 +196,6 @@ public class GridContainer extends GameObject {
         return false;
     }
 
-    @Override
-    public boolean setActive(GameScreen screen){
-        if(super.setActive(screen)){
-            for (RenderableObject[] row : renderableGrid) {
-                for (RenderableObject renderable : row) {
-                    if (renderable != null) {
-                        renderable.setActive(screen);
-                    }
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean setInactive(GameScreen screen){
-        if(super.setInactive(screen)){
-            for (RenderableObject[] row : renderableGrid) {
-                for (RenderableObject renderable : row) {
-                    if (renderable != null) {
-                        renderable.setInactive(screen);
-                    }
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void addToScreen(GameScreen screen, boolean isActive){
-        super.addToScreen(screen, isActive);
-        for (RenderableObject[] row : renderableGrid) {
-            for (RenderableObject renderable : row) {
-                if (renderable != null) {
-                    renderable.addToScreen(screen, isActive);
-                }
-            }
-        }
-    }
-
-    @Override
-    public void update() {
-
-    }
     //endregion
+
 }

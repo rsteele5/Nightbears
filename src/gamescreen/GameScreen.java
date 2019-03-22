@@ -104,11 +104,11 @@ public abstract class GameScreen {
         renderables = new ArrayList<>();
         this.gameData = screenManager.getGameData();
     }
-    /* Only for root GameScreens */
 
     /**
      * Used to construct a root screen with a particular alpha value. To easily override the default
      * {@link #transitionOn()} function, set the alpha value to 1f. Root screens will always be anchored at (0,0).
+     *
      * @param screenManager The Manager for this GameScreen.
      * @param name          Name of the GameScreen (Used for {@link Debug}ing).
      * @param screenAlpha   Starting alpha value of all of the GameScreen's renderables.
@@ -119,14 +119,13 @@ public abstract class GameScreen {
     /**
      * Used to construct a default root screen. The alpha value is set to 0 to utilize the default
      * {@link #transitionOn()} function. Root screens will always be anchored at (0,0).
+     *
      * @param screenManager The Manager for this GameScreen.
      * @param name          Name of the GameScreen (Used for {@link Debug}ing).
      */
     public GameScreen(ScreenManager screenManager, String name) {
         this(screenManager, name, 0f);
     }
-
-    /* Only for non-root GameScreens */
 
     /**
      * Used to construct exclusive and non exclusive popups that render on top of the Root screen and potentially
@@ -179,7 +178,7 @@ public abstract class GameScreen {
      * @param screenAlpha   Starting alpha value of all of the GameScreen's renderables.
      */
     public GameScreen(ScreenManager screenManager, String name, boolean isExclusive, float screenAlpha) {
-        this(screenManager, name, isExclusive, 0, 0, screenAlpha);
+       this(screenManager, name, isExclusive, 0, 0, screenAlpha);
     }
     /**
      * Used to construct exclusive and non exclusive popups that render on top of the Root screen and potentially
@@ -227,40 +226,76 @@ public abstract class GameScreen {
     //endregion
 
     //region <Getters and Setters>
+
+    /**
+     * @return x component of the position.
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * @return y component of the position.
+     */
     public int getY() {
         return y;
     }
 
+    /**
+     * Set the position of the screen dynamically.
+     * @param xPos  x position relative to the top left corner of the {@link main.GameWindow}.
+     * @param yPos  y position relative to the top left corner of the {@link main.GameWindow}.
+     */
     public void setPosition(int xPos, int yPos) {
         x = xPos;
         y = yPos;
     }
 
+    /**
+     * @return  current state of the GameScreen.
+     * @see     ScreenState
+     */
     public ScreenState getScreenState() {
         return currentState;
     }
 
+    /**
+     * Sets the GameScreen's {@link ScreenState}.
+     * @param state The state to be changed.
+     */
     public void setScreenState(ScreenState state) {
         currentState = state;
     }
 
+    /**
+     * Sets a GameScreen in front of this GameScreen.
+     * @param screen    GameScreen that will be this GameScreen's child.
+     */
     public void setChildScreen(GameScreen screen) {
         childScreen = screen;
     }
+
+    /**
+     * @return current GameScreen in front of this GameScreen.
+     */
     public GameScreen getChildScreen() {
         return childScreen;
     }
 
+    /**
+     * Sets the Alpha of all {@link #renderables}.
+     * @param alpha the alpha value between 0f and 1f.
+     */
     protected void setScreenAlpha(float alpha){
         screenAlpha = alpha;
         for(RenderableObject renderable : renderables)
             renderable.setAlpha(screenAlpha);
     }
 
+    /**
+     * Sets the {@link Camera} of this screen.
+     * @param camera    a camera used to set focus on a {@link GameObject}.
+     */
     public void setCamera(Camera camera){
         this.camera = camera;
     }
@@ -269,6 +304,9 @@ public abstract class GameScreen {
         this.keyHandler = keyHandler;
     }
 
+    /**
+     * @return {@link #renderables}
+     */
     public ArrayList<RenderableObject> getRenderables() {
         return renderables;
     }
@@ -298,7 +336,7 @@ public abstract class GameScreen {
     }
 
     /**
-     * Returns true if a splashscreen is active and can accept input or updates
+     * Returns true if a GameScreen is active and can accept input or updates.
      */
     public boolean isActive() {
         return currentState == ScreenState.Active;
@@ -308,12 +346,20 @@ public abstract class GameScreen {
         return currentState == ScreenState.Hidden;
     }
 
+    /**
+     * @return the exiting status of the GameScreen.
+     */
     public boolean isExiting() {
         return exiting;
     }
     //endregion
 
     //region <Update>
+
+    /**
+     * Controls how the GameScreen comes into view before it is Active.<BR>
+     * Default behaviour is to increase the alpha value by a factor of 0.05f until it reaches 1f.
+     */
     protected void transitionOn() {
         if(screenAlpha < 0.9f){
             screenAlpha += 0.05f;
@@ -330,6 +376,11 @@ public abstract class GameScreen {
         }
     }
 
+    /**
+     * Controls how the GameScreen leaves view before it is removed.<br>
+     * Default behaviour is to decrease the alpha value by a factor of 0.07f until it reaches 0f.
+     * exiting is set to true after the condition is met
+     */
     protected void transitionOff() {
         if(screenAlpha > 0.075f){
             screenAlpha -= 0.07f;

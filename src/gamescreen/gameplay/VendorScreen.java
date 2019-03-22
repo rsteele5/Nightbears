@@ -13,7 +13,7 @@ import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gameobject.renderable.item.Item;
 import gameobject.renderable.button.Button;
-import gamescreen.container.GridContainer;
+import gamescreen.container.RenderableGridContainer;
 import gamescreen.popup.ConfirmationPopup;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
@@ -221,8 +221,8 @@ public class VendorScreen extends GameScreen {
         // Create GridContainers for player and vendor item button
         int rows = 7;
         int columns = 4;
-        GridContainer playerGrid = new GridContainer(this, rows, columns, 50, 50, 50, 150);
-        GridContainer vendorGrid = new GridContainer(this, rows, columns, 50, 50, 760, 150);
+        RenderableGridContainer playerGrid = new RenderableGridContainer(this, rows, columns, 50, 50, 50, 150);
+        RenderableGridContainer vendorGrid = new RenderableGridContainer(this, rows, columns, 50, 50, 760, 150);
 
         //region Add item buttons to the Grid Containers
         int count = playerInventory.size();

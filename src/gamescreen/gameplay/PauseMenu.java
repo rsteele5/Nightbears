@@ -12,7 +12,7 @@ import gameobject.renderable.item.*;
 import gameobject.renderable.DrawLayer;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
-import gamescreen.container.GridContainer;
+import gamescreen.container.RenderableGridContainer;
 import gamescreen.mainmenu.MainMenuScreen;
 import gamescreen.mainmenu.options.OptionScreen;
 import main.utilities.Debug;
@@ -214,7 +214,7 @@ public class PauseMenu extends GameScreen {
         //Set up the grid for the player inventory
         int rows = 7;
         int columns = 4;
-        GridContainer playerGrid = new GridContainer(this, rows, columns, 50, 50, 15, 140);
+        RenderableGridContainer playerGrid = new RenderableGridContainer(this, rows, columns, 50, 50, 15, 140);
 
         //region Add button to the Grid Containers
         int count = playerInventory.size();
@@ -236,7 +236,7 @@ public class PauseMenu extends GameScreen {
 
     private void initEquipButtons(){
         //Create grid for the cross pattern equipment stuff
-        GridContainer equipGrid = new GridContainer(this, 4, 3, 50, 50, 250, 140);
+        RenderableGridContainer equipGrid = new RenderableGridContainer(this, 4, 3, 50, 50, 250, 140);
         //Equipment Buttons
         ItemButton equipHead =  new ItemButton();
         equipGrid.dynamicAddAt(equipHead, 0, 1);

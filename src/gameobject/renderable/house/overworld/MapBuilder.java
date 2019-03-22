@@ -2,7 +2,7 @@ package gameobject.renderable.house.overworld;
 
 import gameobject.renderable.house.overworld.room.Room;
 import gamescreen.GameScreen;
-import gamescreen.container.GridContainer;
+import gamescreen.container.TileGridContainer;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 import static gameobject.renderable.house.overworld.OverworldMeta.*;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class MapBuilder {
 
     private ChunkBuilder chunkBuilder;
-    private ArrayList<ArrayList<GridContainer>> chunks;
+    private ArrayList<ArrayList<TileGridContainer>> chunks;
     private ArrayList<Room> rooms;
     private GameScreen parentScreen;
 
@@ -31,7 +31,7 @@ public class MapBuilder {
         Debug.success(DebugEnabler.OVERWORLD, "MapBuilder - Built Map");
 
         // Build the Map Structure and returns a chunk grid that needs room data
-        ArrayList<ArrayList<GridContainer>> noBorderMap = buildMapStructure();
+        ArrayList<ArrayList<TileGridContainer>> noBorderMap = buildMapStructure();
 
         organizeChunks();
         roomToChunkConverter(noBorderMap);
@@ -50,7 +50,7 @@ public class MapBuilder {
         rooms.add(newRoom);
     }
 
-    private ArrayList<ArrayList<GridContainer>> buildMapStructure(){
+    private ArrayList<ArrayList<TileGridContainer>> buildMapStructure(){
         // Find the farthest cell from the origin
         int maxCellX = ChunkSize;
         int maxCellY = ChunkSize;
@@ -63,7 +63,7 @@ public class MapBuilder {
         int chunkCols = roundUpToChunk(maxCellY) / ChunkSize;
 
         // Build Chunks and put them into the chunks array list
-        ArrayList<ArrayList<GridContainer>> noBorderMap = new ArrayList<>();
+        ArrayList<ArrayList<TileGridContainer>> noBorderMap = new ArrayList<>();
         for(int row = 0; row < chunkRows+BorderBuffer*2; row++) {
             chunks.add(new ArrayList<>());
             if(row >= BorderBuffer && row < chunkRows+BorderBuffer)
@@ -100,7 +100,7 @@ public class MapBuilder {
         }
     }
 
-    private void roomToChunkConverter(ArrayList<ArrayList<GridContainer>> map) {
+    private void roomToChunkConverter(ArrayList<ArrayList<TileGridContainer>> map) {
         int cellX, cellY,
             chunkRow, chunkCol,
             chunkX, chunkY;
@@ -152,6 +152,8 @@ public class MapBuilder {
                     } else if(wallEW != null){
                         chunkBuilder.addHouseTileAt(chunkX, chunkY, wallEW);
                     } else chunkBuilder.addHouseTileAt(chunkX, chunkY);
+
+                    room.setTile(row,col, map.get(chunkRow).get(chunkCol).getContentAt(chunkX,chunkY));
                 }
             }
         }

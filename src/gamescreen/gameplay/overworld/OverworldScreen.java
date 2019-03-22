@@ -3,7 +3,9 @@ package gamescreen.gameplay.overworld;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.overworld.Map;
 import gameobject.renderable.house.overworld.MapBuilder;
+import gameobject.renderable.house.overworld.Tile;
 import gameobject.renderable.house.overworld.room.Bedroom;
+import gameobject.renderable.house.overworld.room.Room;
 import gameobject.renderable.house.overworld.room.SpawnPoint;
 import gameobject.renderable.house.sidescrolling.Floor;
 import gamescreen.gameplay.VendorDialogBox;
@@ -15,6 +17,7 @@ import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import main.utilities.Debug;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class OverworldScreen extends GameScreen {
