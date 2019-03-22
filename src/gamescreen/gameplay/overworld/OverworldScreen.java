@@ -13,6 +13,7 @@ import gameobject.renderable.player.Player;
 import gameobject.renderable.vendor.Vendor;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
+import input.listeners.OverworldKeyHandler;
 import main.utilities.Debug;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class OverworldScreen extends GameScreen {
      */
     @Override
     protected void initializeScreen() {
-
+        setKeyHandler(new OverworldKeyHandler());
         //House generation
         MapBuilder mapBuilder = new MapBuilder();
         mapBuilder.createMap(this);

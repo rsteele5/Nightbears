@@ -31,6 +31,8 @@ public class RenderEngine extends JPanel {
     //endregion
 
     public RenderEngine(GameData gameData, ScreenManager screenManager) {
+        setFocusable(true);
+        requestFocusInWindow();
         this.screenManager = screenManager;
         this.gameData = gameData;
         setBackground(Color.BLACK);

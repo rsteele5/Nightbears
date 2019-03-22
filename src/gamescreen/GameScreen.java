@@ -447,6 +447,7 @@ public abstract class GameScreen {
 
     public void handleKeyPressed(KeyEvent e){
         if(keyHandler != null){
+            Debug.success(true, "Screen handle this press " + e.getKeyCode());
             this.keyHandler.keyPressed(e);
         } else {
             Debug.criticalError("No key handler attached to screen!");
@@ -456,6 +457,7 @@ public abstract class GameScreen {
 
     public void handleKeyReleased(KeyEvent e){
         if(keyHandler != null){
+            Debug.success(true, "Screen handle this release " + e.getKeyCode());
             this.keyHandler.keyReleased(e);
         } else {
             Debug.criticalError("No key handler attached to screen!");
