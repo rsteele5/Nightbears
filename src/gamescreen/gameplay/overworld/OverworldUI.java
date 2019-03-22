@@ -20,6 +20,7 @@ import java.awt.*;
 
 public class OverworldUI extends Overlay {
 
+    private Player player;
     private Button actionButton;
     private Button inventoryButton;
     private Button leaveButton;
@@ -29,8 +30,9 @@ public class OverworldUI extends Overlay {
     private static String vendorBtnPath = "/assets/buttons/Button-Vendor.png";
 
 
-    public OverworldUI(ScreenManager screenManager, GameScreen parentScreen) {
+    public OverworldUI(ScreenManager screenManager, GameScreen parentScreen, Player player) {
         super(screenManager, parentScreen,"OverworldUI", 0,0, 1f);
+        this.player = player;
     }
 
     /**
@@ -42,7 +44,7 @@ public class OverworldUI extends Overlay {
         inventoryButton = new Button(20,20, inventoryBtnPath, inventoryBtnPressedPath, DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Inventory");
-                    screenManager.addScreen(new PauseMenu(screenManager));
+                    screenManager.addScreen(new PauseMenu(screenManager, player));
                 });
         inventoryButton.addToScreen(this, true);
 
@@ -67,8 +69,6 @@ public class OverworldUI extends Overlay {
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Leave");
                     //TODO save players location
                     parentScreen.setCamera(null);
-
-                    GameEngine.players.get(0).setState(Player.PlayerState.asleep);
                     screenManager.addScreen(new MainMenuScreen(screenManager));
 
                 });
@@ -94,7 +94,7 @@ public class OverworldUI extends Overlay {
                 Color.WHITE, "Camera On!",
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Vendor");
-                    parentScreen.setCamera(new Camera(screenManager, parentScreen, GameEngine.players.get(0)));
+                    parentScreen.setCamera(new Camera(screenManager, parentScreen, player));
                 });
         cameraOffButton.addToScreen(this, true);
 

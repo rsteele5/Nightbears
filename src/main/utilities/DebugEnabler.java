@@ -1,6 +1,6 @@
 package main.utilities;
 
-import gamescreen.container.RenderableGridContainer;
+import gameobject.container.RenderableGridContainer;
 
 /**
  * Holds booleans that enable or disable Debug functions throughout the program.

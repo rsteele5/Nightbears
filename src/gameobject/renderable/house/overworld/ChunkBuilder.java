@@ -2,7 +2,7 @@ package gameobject.renderable.house.overworld;
 
 import gameobject.renderable.DrawLayer;
 import gamescreen.GameScreen;
-import gamescreen.container.TileGridContainer;
+import gameobject.container.TileGridContainer;
 
 public class ChunkBuilder {
 

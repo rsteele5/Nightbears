@@ -1,4 +1,4 @@
-package gamescreen.container;
+package gameobject.container;
 
 import gameobject.renderable.RenderableObject;
 import gamescreen.GameScreen;

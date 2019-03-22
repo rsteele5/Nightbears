@@ -32,9 +32,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Player extends RenderableObject implements Kinematic {
 
     private int speed = 1;
-/*    private PlayerData playerData;
+    private PlayerData playerData;
     private CopyOnWriteArrayList<Item> items;
-    private CopyOnWriteArrayList<RenderableObject> rItems;*/
     private PhysicsVector moveState = new PhysicsVector(1, 1);
     private PhysicsVector magnitude = new PhysicsVector(0, 0);
     private final int[] ssKeys = new int[]{68, 65};
@@ -71,14 +70,16 @@ public class Player extends RenderableObject implements Kinematic {
         g2.dispose();
     }
 
-    public Player(int x, int y, String path, DrawLayer drawLayer, GameData gameData) {
-        super(x, y, path, drawLayer);
+    public Player(int x, int y, DrawLayer drawLayer, PlayerData playerData) {
+        //TODO: Set to the random bear selection.
+        super(x, y, "/assets/player/TeddySilhouette.png", drawLayer);
         playerState = PlayerState.asleep;
-/*        //private CopyOnWriteArrayList<Item> items = new CopyOnWriteArrayList<>();
-        this.playerData = gameData.getPlayerData();
-        this.items = playerData.getInventory();
-        //this.rItems = playerData.
-        //initializeItems();*/
+        //TODO:Review
+        this.playerData = playerData;
+        items = new CopyOnWriteArrayList<>();
+        items = playerData.getInventory();
+        //initializeItems()
+
         animator = new Animator(this);
         animator.addAnimation("Walking", new PlayerWalkingAnimation());
         animator.addAnimation("Idle", new PlayerIdleAnimation());

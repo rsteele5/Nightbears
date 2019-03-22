@@ -23,13 +23,13 @@ public class GameWindow extends JFrame implements KeyListener {
         if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
             System.exit(0);
         //TODO: Implement multiple players.
-        GameEngine.players.get(0).move(e);
+        //GameEngine.players.get(0).move(e);
     }
 
     @Override
     public void keyReleased(KeyEvent e){
         //TODO: Implement multiple players.
-        GameEngine.players.get(0).moveRelease(e);
+        //GameEngine.players.get(0).moveRelease(e);
     }
 }
 

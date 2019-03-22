@@ -2,6 +2,7 @@ package gamescreen.gameplay.level;
 
 import gameengine.GameEngine;
 import gameengine.rendering.Camera;
+import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.overworld.OverworldUI;
@@ -21,12 +22,13 @@ public class LevelDecorator extends GameScreen {
 
     @Override
     protected void initializeScreen() {
-        UI = new OverworldUI(screenManager, this);
-        addOverlay(UI);
+
         lBuild.buildBackground(this);
         lBuild.buildTerrain(this);
-        lBuild.buildPlayer(this);
+        Player player = lBuild.buildPlayer(this, gameData.getPlayerData());
         lBuild.buildEnemies(this);
-        setCamera(new Camera(screenManager, this, GameEngine.players.get(0)));
+        UI = new OverworldUI(screenManager, this, player);
+        addOverlay(UI);
+        setCamera(new Camera(screenManager, this, player));
     }
 }

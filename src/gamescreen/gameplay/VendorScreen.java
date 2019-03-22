@@ -1,6 +1,5 @@
 package gamescreen.gameplay;
 
-import gameengine.GameEngine;
 import gameengine.gamedata.PlayerData;
 import gameengine.gamedata.VendorData;
 import gameobject.renderable.item.ItemComparator;
@@ -15,7 +14,7 @@ import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gameobject.renderable.item.Item;
 import gameobject.renderable.button.Button;
-import gamescreen.container.RenderableGridContainer;
+import gameobject.container.RenderableGridContainer;
 import gamescreen.popup.ConfirmationPopup;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
@@ -41,8 +40,9 @@ public class VendorScreen extends GameScreen {
     private VendorData vendorData;
     //endregion ****************************************/
 
-    public VendorScreen(ScreenManager screenManager) {
+    public VendorScreen(ScreenManager screenManager, Player p1) {
         super(screenManager, "VendorScreen", true, 150, 80);
+        player = p1;
     }
 
     @Override
@@ -70,7 +70,6 @@ public class VendorScreen extends GameScreen {
         //region Initialize variables
         vendorData = gameData.getVendorData();
         vendor = new Vendor(0,0,vendorData);
-        player = GameEngine.players.get(0);
         playerData = gameData.getPlayerData();
         previousPlayerState = player.getState();
         player.setState(Player.PlayerState.asleep);
@@ -243,8 +242,8 @@ public class VendorScreen extends GameScreen {
         // Create GridContainers for player and vendor item button
         int rows = 7;
         int columns = 4;
-        GridContainer playerGrid = new GridContainer(this, rows, columns, itemButtonSize.x, itemButtonSize.y, playerGridLocation.x, playerGridLocation.y);
-        GridContainer vendorGrid = new GridContainer(this, rows, columns, itemButtonSize.x, itemButtonSize.y, vendorGridLocation.x, vendorGridLocation.y);
+        RenderableGridContainer playerGrid = new RenderableGridContainer(this, rows, columns, itemButtonSize.x, itemButtonSize.y, playerGridLocation.x, playerGridLocation.y);
+        RenderableGridContainer vendorGrid = new RenderableGridContainer(this, rows, columns, itemButtonSize.x, itemButtonSize.y, vendorGridLocation.x, vendorGridLocation.y);
 
         //region Add item buttons to the Grid Containers
         int count = playerInventory.size();

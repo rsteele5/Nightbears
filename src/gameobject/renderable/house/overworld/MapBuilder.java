@@ -2,7 +2,7 @@ package gameobject.renderable.house.overworld;
 
 import gameobject.renderable.house.overworld.room.Room;
 import gamescreen.GameScreen;
-import gamescreen.container.TileGridContainer;
+import gameobject.container.TileGridContainer;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 import static gameobject.renderable.house.overworld.OverworldMeta.*;

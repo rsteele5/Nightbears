@@ -4,8 +4,7 @@ import gameobject.renderable.house.overworld.room.Room;
 import gameobject.renderable.house.overworld.room.SpawnPoint;
 import gameobject.renderable.house.overworld.room.SpawnType;
 import gamescreen.GameScreen;
-import gamescreen.container.RenderableGridContainer;
-import gamescreen.container.TileGridContainer;
+import gameobject.container.TileGridContainer;
 
 import java.util.ArrayList;
 

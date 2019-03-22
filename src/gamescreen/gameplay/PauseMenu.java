@@ -1,6 +1,5 @@
 package gamescreen.gameplay;
 
-import gameengine.GameEngine;
 import gameengine.gamedata.PlayerData;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.*;
@@ -13,7 +12,7 @@ import gameobject.renderable.item.*;
 import gameobject.renderable.DrawLayer;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
-import gamescreen.container.RenderableGridContainer;
+import gameobject.container.RenderableGridContainer;
 import gamescreen.mainmenu.MainMenuScreen;
 import gamescreen.mainmenu.options.OptionScreen;
 import main.utilities.Debug;
@@ -40,8 +39,9 @@ public class PauseMenu extends GameScreen {
 
     //endregion
 
-    public PauseMenu(ScreenManager screenManager) {
+    public PauseMenu(ScreenManager screenManager, Player p1) {
         super(screenManager, "PauseMenu", true, 450, 180);
+        player = p1;
     }
 
     /**
@@ -49,7 +49,6 @@ public class PauseMenu extends GameScreen {
      */
     @Override
     protected void initializeScreen() {
-        player = GameEngine.players.get(0);
         previousPlayerState = player.getState();
         player.setState(Player.PlayerState.asleep);
         playerInventory = playerData.getInventory();

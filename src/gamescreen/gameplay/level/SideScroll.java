@@ -34,22 +34,16 @@ public class SideScroll extends GameScreen {
      */
     @Override
     protected void initializeScreen() {
-        UI = new OverworldUI(screenManager, this);
-        addOverlay(UI);
-        setCamera(new Camera(screenManager,this, GameEngine.players.get(0)));
 
         String bg = "/assets/backgrounds/mountains.jpg";
         String path = "/assets/testAssets/square.png";
-        RenderableObject player = GameEngine.players.get(0);
         ImageContainer background;
         background = (new ImageContainer(0,0, bg, DrawLayer.Background));
         background.addToScreen(this,true);
 
-        GameEngine.players.get(0).setState(Player.PlayerState.sideScroll);
-        GameEngine.players.get(0).addToScreen(this,true);
-        GameEngine.players.get(0).reset();
-        GameEngine.players.get(0).setX(xOFF);
-        GameEngine.players.get(0).setY(yOFF);
+        Player player = new Player(xOFF, yOFF, DrawLayer.Entity,gameData.getPlayerData());
+        player.setState(Player.PlayerState.sideScroll);
+        player.addToScreen(this,true);
 
         Square square;
 
@@ -90,12 +84,16 @@ public class SideScroll extends GameScreen {
         floor.addToScreen(this, true);
         floor1.addToScreen(this, true);
         floor2.addToScreen(this, true);
+
+
+        UI = new OverworldUI(screenManager, this, player);
+        addOverlay(UI);
+        setCamera(new Camera(screenManager,this, player));
     }
 
 
     @Override
     protected void transitionOff(){
-        GameEngine.players.get(0).setState(Player.PlayerState.asleep);
         exiting = true;
     }
 }

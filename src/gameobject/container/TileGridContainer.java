@@ -1,4 +1,4 @@
-package gamescreen.container;
+package gameobject.container;
 
 import gameobject.renderable.house.overworld.Tile;
 import gamescreen.GameScreen;

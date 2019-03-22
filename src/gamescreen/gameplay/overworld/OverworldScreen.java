@@ -1,5 +1,6 @@
 package gamescreen.gameplay.overworld;
 
+import gameengine.gamedata.GameData;
 import gameengine.gamedata.VendorData;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.overworld.Map;
@@ -43,27 +44,20 @@ public class OverworldScreen extends GameScreen {
         //House generation
         MapBuilder mapBuilder = new MapBuilder();
         mapBuilder.createMap(this);
-        //mapBuilder.addRoomAtCell(5, 5, new Bedroom());
         mapBuilder.addRoomAtCell(0, 0, new Bedroom());
-        //mapBuilder.addRoomAtCell(0,5, new Bedroom());
-        //mapBuilder.addRoomAtCell(5, 0, new Bedroom());
 
         overworldMap = mapBuilder.buildMap();
 
         //Player
-        GameEngine.players.get(0).setState(Player.PlayerState.overWorld);
-        Debug.log(true, String.valueOf(GameEngine.players.get(0).getState()));
-        GameEngine.players.get(0).reset();
         SpawnPoint playerSpawn = overworldMap.getPlayerSpawn();
-        GameEngine.players.get(0).setPosition(playerSpawn.getTileX(), playerSpawn.getTileY());
-        GameEngine.players.get(0).addToScreen(this,true);
-        setCamera(new Camera(screenManager, this, GameEngine.players.get(0)));
+        Player playerOW = new Player(playerSpawn.getTileX(), playerSpawn.getTileY(), DrawLayer.Entity, gameData.getPlayerData());
+        playerOW.setState(Player.PlayerState.overWorld);
+        playerOW.addToScreen(this,true);
+        setCamera(new Camera(screenManager, this, playerOW));
 
         //Vendor
-        vendorData = gameData.getVendorData();
-        Vendor vendor = new Vendor(0, 0, vendorData);
         SpawnPoint vendorSpawn = overworldMap.getVendorSpawn();
-        vendor.setPosition(vendorSpawn.getTileX(), vendorSpawn.getTileY());
+        Vendor vendor = new Vendor(vendorSpawn.getTileX(), vendorSpawn.getTileY(), gameData.getVendorData());
         vendor.setImage("/assets/vendor/vendoridleanimation/VendorOverworldForward.png");
         //TODO: make vendor trigger box
         vendor.addToScreen(this, true);
@@ -92,9 +86,9 @@ public class OverworldScreen extends GameScreen {
 //        southWall.setWidth(500);
 //        southWall.addToScreen(this,true);
 
-        //Overlay TODO: Fix layering
-        UI = new OverworldUI(screenManager, this);
-        vendorDialogBox = new VendorDialogBox(screenManager,this, 460,100);
+        //Overlay
+        UI = new OverworldUI(screenManager, this, playerOW);
+        vendorDialogBox = new VendorDialogBox(screenManager,this, 460,100, playerOW);
         addOverlay(UI);
         addOverlay(vendorDialogBox);
 
