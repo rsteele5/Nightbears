@@ -3,7 +3,7 @@ package gamescreen;
 import gameengine.gamedata.GameData;
 import gameengine.physics.Kinematic;
 import gameengine.rendering.Camera;
-import input.listeners.KeyHandler;
+import input.listeners.Key.KeyHandler;
 import input.listeners.MouseController;
 import main.utilities.*;
 import gameobject.GameObject;
@@ -242,24 +242,6 @@ public abstract class GameScreen {
     }
 
     /**
-     * Set the position of the screen dynamically.
-     * @param xPos  x position relative to the top left corner of the {@link main.GameWindow}.
-     * @param yPos  y position relative to the top left corner of the {@link main.GameWindow}.
-     */
-    public void setPosition(int xPos, int yPos) {
-        x = xPos;
-        y = yPos;
-    }
-
-    /**
-     * @return  current state of the GameScreen.
-     * @see     ScreenState
-     */
-    public ScreenState getScreenState() {
-        return currentState;
-    }
-
-    /**
      * Sets the GameScreen's {@link ScreenState}.
      * @param state The state to be changed.
      */
@@ -283,7 +265,7 @@ public abstract class GameScreen {
     }
 
     /**
-     * Sets the Alpha of all {@link #renderables}.
+     * Sets the Alpha of all active {@link #renderables}.
      * @param alpha the alpha value between 0f and 1f.
      */
     protected void setScreenAlpha(float alpha){
@@ -300,7 +282,11 @@ public abstract class GameScreen {
         this.camera = camera;
     }
 
-    public void setKeyHandler(KeyHandler keyHandler){
+    /**
+     * Sets the {@link KeyHandler} of the GameScreen
+     * @param keyHandler    a key handler used to handle key presses on a screen.
+     */
+    protected void setKeyHandler(KeyHandler keyHandler){
         this.keyHandler = keyHandler;
     }
 
@@ -331,12 +317,15 @@ public abstract class GameScreen {
         return isExclusive;
     }
 
+    /**
+     * @return true if the contents of the GameScreen are not loaded.
+     */
     public boolean isLoading() {
         return isLoading;
     }
 
     /**
-     * Returns true if a GameScreen is active and can accept input or updates.
+     * @return true if a GameScreen is active and can accept input or updates.
      */
     public boolean isActive() {
         return currentState == ScreenState.Active;
@@ -354,11 +343,13 @@ public abstract class GameScreen {
     }
     //endregion
 
-    //region <Update>
+    //region <Update and Draw>
 
     /**
      * Controls how the GameScreen comes into view before it is Active.<BR>
-     * Default behaviour is to increase the alpha value by a factor of 0.05f until it reaches 1f.
+     * Default behaviour is to increase the alpha value by a factor of 0.05f until it reaches 1f. Once the condition is
+     * met, the ScreenState is set to Active.
+     * @see ScreenState
      */
     protected void transitionOn() {
         if(screenAlpha < 0.9f){
@@ -379,7 +370,7 @@ public abstract class GameScreen {
     /**
      * Controls how the GameScreen leaves view before it is removed.<br>
      * Default behaviour is to decrease the alpha value by a factor of 0.07f until it reaches 0f.
-     * exiting is set to true after the condition is met
+     * Exiting is set to true after the condition is met.
      */
     protected void transitionOff() {
         if(screenAlpha > 0.075f){
@@ -396,6 +387,10 @@ public abstract class GameScreen {
     //Override if you know what ur doing
     protected void hiddenUpdate() {}
 
+    /**
+     * Controls how the GameScreen acts while in the active state.<br>
+     * Default behavior is to update all {@link #activeObjects}.
+     */
     protected void activeUpdate() {
         for(GameObject activeObject: activeObjects){
             activeObject.update();
@@ -403,7 +398,12 @@ public abstract class GameScreen {
     }
 
     /**
-     *  Updates the state of the screen
+     *  Recursively calls update on the GameScreens layered on top of this GameScreen until the front-most GameScreen is
+     *  found. That front most GameScreen handle the update call. A GameScreen does not update if it
+     *  {@link #isLoading()}. If the GameScreen is handling the update and contains any {@link Overlay}s, those Overlays
+     *  are also updated if they are not loading.<br><br>
+     *  If a GameScreen {@link #isExiting()} in the stack then it is removed here along with all of the screens that are
+     *  layered on top of the exiting GameScreen.
      */
     public void update(){
         // If I have an Exclusive child screen on top on me
@@ -441,11 +441,19 @@ public abstract class GameScreen {
         }
     }
 
+    /**
+     * The {@link Camera} handles the how and what {@link #renderables} are drawn to the screen. If a camera does not
+     * exist, all {@link #renderables} are drawn to the screen relative to the GameScreen's location.
+     * @param graphics - is conditionally sent to {@link #renderables} so they can draw themselves onto the screen.
+     */
     final void drawScreen(Graphics2D graphics) {
         if(!isLoading) {
             if(camera != null){
                 camera.track(graphics);
-            } else drawLayers(graphics);
+            } else {
+                for(RenderableObject renderable : renderables)
+                    renderable.draw(graphics);
+            }
 
             if(!overlayScreens.isEmpty()) {
                 for (GameScreen overlay : overlayScreens) {
@@ -463,74 +471,50 @@ public abstract class GameScreen {
             }
         }
     }
-
-    private void drawLayers(Graphics2D graphics) {
-        for(RenderableObject renderable : renderables)
-            renderable.draw(graphics);
-    }
     //endregion
 
     //region <Support Functions>
     public boolean handleMousePress(MouseController mouseController, int x, int y){
         //Handle press on the Exlusive splashscreen covering me
         if(childScreen != null) {
-            Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "-handle press on child");
+            Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "-handle mouse press on child");
             childScreen.handleMousePress(mouseController, x,y);
         } else {
             //Handle press on all overlays
             for (GameScreen overlay : overlayScreens) {
-                Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "-handle press on overlay");
+                Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "-handle mouse press on overlay");
                 if (overlay.handleMousePress(mouseController, x, y))
                     return true;
             }
             // If no overlays handled press
-            Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "- handle press " + x + " " + y);
+            Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "- handle mouse press " + x + " " + y);
+            boolean success = false;
             for(Clickable thing: clickables) {
                 if(thing.contains(x,y)) {
                     mouseController.setPressTarget(thing);
                     thing.setPressed(true);
-                    return true;
-                }
+                    success = true;
+                } else thing.setPressed(false);
             }
+            return success;
         }
         return false;
     }
 
-    public void handleKeyPressed(KeyEvent e){
-        if(keyHandler != null){
-            Debug.success(true, "Screen handle this press " + e.getKeyCode());
-            this.keyHandler.keyPressed(e);
-        } else {
-            Debug.criticalError("No key handler attached to screen!");
-        }
-
-    }
-
-    public void handleKeyReleased(KeyEvent e){
-        if(keyHandler != null){
-            Debug.success(true, "Screen handle this release " + e.getKeyCode());
-            this.keyHandler.keyReleased(e);
-        } else {
-            Debug.criticalError("No key handler attached to screen!");
-        }
-
-    }
-
-
     public boolean handleMouseRelease(MouseController mouseController, int x, int y){
         //Handle release on the Exlusive splashscreen covering me
         if(childScreen != null) {
-            Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "-handle release on child");
+            Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "-handle mouse release on child");
             childScreen.handleMouseRelease(mouseController, x,y);
         } else {
             //Handle release on all overlays
             for (GameScreen overlay : overlayScreens) {
-                Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "-handle release on overlay");
+                Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "-handle mouse release on overlay");
                 if (overlay.handleMouseRelease(mouseController, x, y))
                     return true;
             }
             // If no overlays handled press
-            Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "- handle release " + x + " " + y);
+            Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "- handle mouse release " + x + " " + y);
             for(Clickable thing: clickables) {
                 if(thing.equals(mouseController.getPressTarget())) {
                     if(thing.contains(x,y)){
@@ -549,28 +533,32 @@ public abstract class GameScreen {
         return false;
     }
 
-    public boolean handleClickEvent(int x, int y) {
-        //Handle click on the Exlusive splashscreen covering me
+    public void handleKeyPressed(KeyEvent e){
         if(childScreen != null) {
-            Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "-handle click on child");
-            childScreen.handleClickEvent(x,y);
+            Debug.log(DebugEnabler.KEY_EVENTS, name + " - handle key pressed on child");
+            childScreen.handleKeyPressed(e);
+        }else if(keyHandler != null){
+            Debug.log(DebugEnabler.KEY_EVENTS, name + " - handles key pressed: " + e.getKeyCode());
+            this.keyHandler.keyPressed(e);
         } else {
-            //Handle click on all overlays
-            for (GameScreen overlay : overlayScreens) {
-                Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "-handle click on overlay");
-                if (overlay.handleClickEvent(x, y))
-                    return true;
-            }
-            // If no overlays handled clicks
-            Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "- handle click " + x + " " + y);
-            for(Clickable thing: clickables) {
-                if(thing.contains(x,y)) {
-                    thing.onClick();
-                    return true;
-                }
-            }
+            Debug.warning(DebugEnabler.KEY_EVENTS,
+                    name + " - No key handler attached, cannot handle key pressed: " + e.getKeyCode());
         }
-        return false;
+
+    }
+
+    public void handleKeyReleased(KeyEvent e){
+        if(childScreen != null) {
+            Debug.log(DebugEnabler.KEY_EVENTS, name + " - handle key release on child");
+            childScreen.handleKeyReleased(e);
+        }else if(keyHandler != null){
+            Debug.log(DebugEnabler.KEY_EVENTS, name + " - handles key release: " + e.getKeyCode());
+            this.keyHandler.keyReleased(e);
+        } else {
+            Debug.warning(DebugEnabler.KEY_EVENTS,
+                    name + " - No key handler attached, cannot handle key release: " + e.getKeyCode());
+        }
+
     }
 
     public void reset(){

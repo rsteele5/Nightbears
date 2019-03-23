@@ -1,6 +1,6 @@
 package main.utilities;
 
-import gameobject.container.RenderableGridContainer;
+import input.listeners.Key.KeyHandler;
 
 /**
  * Holds booleans that enable or disable Debug functions throughout the program.
@@ -87,8 +87,13 @@ public class DebugEnabler {
      */
     public static boolean COLLISION =             true;
     /**
-     * Controls debugging RenderableGridContainer
-     * @see RenderableGridContainer
+     * Controls debugging GridContainer
+     * @see gameobject.container.GridContainer
      */
     public static boolean GRID_CONTAINER =        false;
+    /**
+     * Controls debugging Key Events
+     * @see KeyHandler
+     */
+    public static boolean KEY_EVENTS =            true;
 }

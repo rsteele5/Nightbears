@@ -1,26 +1,19 @@
 package gamescreen.gameplay.overworld;
 
-import gameengine.gamedata.GameData;
 import gameengine.gamedata.VendorData;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.overworld.Map;
 import gameobject.renderable.house.overworld.MapBuilder;
-import gameobject.renderable.house.overworld.Tile;
 import gameobject.renderable.house.overworld.room.Bedroom;
-import gameobject.renderable.house.overworld.room.Room;
 import gameobject.renderable.house.overworld.room.SpawnPoint;
-import gameobject.renderable.house.sidescrolling.Floor;
 import gamescreen.gameplay.VendorDialogBox;
-import gameengine.GameEngine;
 import gameengine.rendering.Camera;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.vendor.Vendor;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
-import input.listeners.OverworldKeyHandler;
-import main.utilities.Debug;
+import input.listeners.Key.OverworldKeyHandler;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class OverworldScreen extends GameScreen {
@@ -41,7 +34,6 @@ public class OverworldScreen extends GameScreen {
      */
     @Override
     protected void initializeScreen() {
-        setKeyHandler(new OverworldKeyHandler());
         //House generation
         MapBuilder mapBuilder = new MapBuilder();
         mapBuilder.createMap(this);
@@ -92,6 +84,9 @@ public class OverworldScreen extends GameScreen {
         vendorDialogBox = new VendorDialogBox(screenManager,this, 460,100, playerOW);
         addOverlay(UI);
         addOverlay(vendorDialogBox);
+
+        //KeyListener
+        setKeyHandler(new OverworldKeyHandler(playerOW, UI.clickables));
 
     }
 

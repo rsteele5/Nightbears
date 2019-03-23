@@ -1,12 +1,6 @@
 package main;
 
-import gameengine.GameEngine;
-import gameengine.gamedata.GameData;
-import gamescreen.ScreenManager;
-import input.listeners.KeyController;
-
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 

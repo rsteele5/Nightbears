@@ -3,7 +3,7 @@ package gameengine;
 import gameengine.gamedata.GameData;
 import gameengine.gamedata.VendorData;
 import gameobject.renderable.vendor.Vendor;
-import input.listeners.KeyController;
+import input.listeners.Key.KeyController;
 import input.listeners.MouseController;
 import gameengine.physics.PhysicsEngine;
 import gameengine.rendering.RenderEngine;
@@ -37,6 +37,7 @@ public class GameEngine implements Runnable {
         physicsEngine = new PhysicsEngine(gameData, screenManager);
         renderEngine.addMouseListener(new MouseController(screenManager));
         renderEngine.addKeyListener(new KeyController(screenManager));
+        renderEngine.setFocusTraversalKeysEnabled(false);                   //Lets us utilize TAB in te keyController.
     }
 
 

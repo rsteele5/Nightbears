@@ -4,7 +4,6 @@ import gameengine.gamedata.GameData;
 import gameengine.physics.Kinematic;
 import gamescreen.splashscreen.LoadingScreen;
 import gamescreen.splashscreen.TeamSplashScreen;
-import input.listeners.KeyHandler;
 import input.listeners.MouseController;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
@@ -112,16 +111,6 @@ public class ScreenManager extends JPanel {
         if(rootScreen.handleMouseRelease(mouseController, x,y)){
             Debug.success(DebugEnabler.GAME_SCREEN_LOG, "ScreenManager handled this release");
         }
-    }
-
-    /**
-     * Tells the root screen it has been clicked at location (x,y)
-     * @param x The x position of the mouse click
-     * @param y The y position of the mouse click
-     */
-    public void clickEventAtLocation(int x, int y) {
-        if(rootScreen.handleClickEvent(x,y))
-            Debug.success(DebugEnabler.GAME_SCREEN_LOG, "ScreenManager handled this click");
     }
 
     //TODO change how screens handle graphics changes

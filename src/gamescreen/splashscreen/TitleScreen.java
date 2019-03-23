@@ -7,6 +7,8 @@ import gamescreen.ScreenManager;
 import gameobject.renderable.ImageContainer;
 import gamescreen.mainmenu.MainMenuScreen;
 import input.listeners.MouseController;
+import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 
 
 public class TitleScreen extends GameScreen {
@@ -33,9 +35,6 @@ public class TitleScreen extends GameScreen {
         titleImg.addToScreen(this,true);
     }
 
-    //endregion
-
-    //region <Update>
     @Override
     public void transitionOn() {
         if(!musicStart) {
@@ -59,19 +58,9 @@ public class TitleScreen extends GameScreen {
         currentState = ScreenState.TransitionOff;
     }
 
-    //endregion
-
-    //region <Support Functions>
     @Override
     public boolean handleMousePress(MouseController mouseController, int x, int y){
         currentState = ScreenState.TransitionOff;
         return true;
     }
-
-    @Override
-    public boolean handleClickEvent(int x, int y) {
-        currentState = ScreenState.TransitionOff;
-        return true;
-    }
-    //endregion
 }
