@@ -2,11 +2,11 @@ package gameengine.gamedata;
 
 import gameengine.audio.BackgroundAudio;
 import gameengine.audio.SoundEffectAudio;
-import gameobject.renderable.RenderableObject;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
-import static gameengine.gamedata.GraphicsSetting.GraphicsOption.*;
+import static gameengine.gamedata.GraphicsSetting.Resolution;
+import static gameengine.gamedata.GraphicsSetting.Resolution.*;
 import static gameengine.gamedata.InputSetting.InputMethod.*;
 import static gameengine.gamedata.SoundSetting.SoundOption.*;
 
@@ -88,6 +88,10 @@ public class GameData implements Serializable {
 
     public GraphicsSetting getGraphicsSettings() {
         return currentGraphicsSetting;
+    }
+
+    public void changeResolution(Resolution resolution){
+        currentGraphicsSetting.setCurrentResolution(resolution);
     }
 
     public InputSetting getInputSetting() {
