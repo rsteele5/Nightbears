@@ -22,7 +22,7 @@ public class OverworldScreen extends GameScreen {
 
     //region <Variable Declaration>
     private OverworldUI UI;
-    private VendorDialogBox vendorDialogBox;
+    //private VendorDialogBox vendorDialogBox;
     private Map overworldMap;
     private VendorData vendorData;
     //endregion
@@ -91,9 +91,9 @@ public class OverworldScreen extends GameScreen {
 
         //Overlay TODO: Fix layering
         UI = new OverworldUI(screenManager, this);
-        vendorDialogBox = new VendorDialogBox(screenManager,this, 460,100);
+        ///vendorDialogBox = new VendorDialogBox(screenManager,this, 460,100);
         addOverlay(UI);
-        addOverlay(vendorDialogBox);
+        //addOverlay(vendorDialogBox);
 
     }
 
