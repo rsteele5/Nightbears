@@ -196,11 +196,10 @@ public class DescriptionAssistant {
      * @param quality is the consumable's quality
      * @param type is the consumable's type
      * @param affect is the consumable's effect
-     * @param name is the consumable's name
      * @return the consumable description
      */
     public String getConsumableDescription(ConsumableType type, AffectType affect,
-                                           String quality, String name){
+                                           String quality){
         String myAdj;
         String action = "";
         String maker1 = "";
