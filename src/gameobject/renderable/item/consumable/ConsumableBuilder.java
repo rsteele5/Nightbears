@@ -14,8 +14,8 @@ public class ConsumableBuilder {
      * Static global variables store and manipulate the min and max consumable points throughout the game
      */
     //TODO: Might not need to be static once the player and vendor classes are fixed
-    static int maxConsumable = (int)(ItemMeta.maxConsumable * ItemMeta.amplifier);
-    static int minConsumable = (int)(ItemMeta.minConsumable * ItemMeta.amplifier);
+    private static int maxConsumable = (int)(ItemMeta.maxConsumable * ItemMeta.amplifier);
+    private static int minConsumable = (int)(ItemMeta.minConsumable * ItemMeta.amplifier);
 
     // Renderable requirements
     private int _x = 0;
@@ -45,7 +45,7 @@ public class ConsumableBuilder {
     /**
      * This function can be called with or without assigning attributes. If no attributes
      * are assigned, then random attributes will be assigned.
-     * @return
+     * @return the newly created item
      */
     public Consumable buildConsumable() {
         type(this._type);
@@ -102,9 +102,8 @@ public class ConsumableBuilder {
      * Sets the affect type according to the consumable type. If no affect type was assigned, then a random
      * affect type will be assigned.
      * @param _affect affect type (fire, puncture, healthBoost, healthLevel, enchant)
-     * @return the ConsumableBuilder
      */
-    private ConsumableBuilder affect(AffectType _affect) {
+    private void affect(AffectType _affect) {
         if (_affect == null){
             // Set a temporary effect
             this._affect = AffectType.healthBoost;
@@ -119,7 +118,6 @@ public class ConsumableBuilder {
         } else {
             this._affect = _affect;
         }
-        return this;
     }
 
     /**

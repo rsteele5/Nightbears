@@ -56,14 +56,14 @@ public class OverworldScreen extends GameScreen {
         GameEngine.players.get(0).addToScreen(this,true);
         setCamera(new Camera(screenManager, this, GameEngine.players.get(0)));
 
-        //Vendor
-        vendorData = gameData.getVendorData();
+        //TODO: Generate vendor after a level has been completed by player
+/*        vendorData = gameData.getVendorData();
         Vendor vendor = new Vendor(0, 0, vendorData);
         SpawnPoint vendorSpawn = overworldMap.getVendorSpawn();
         vendor.setPosition(vendorSpawn.getTileX(), vendorSpawn.getTileY());
         vendor.setImage("/assets/vendor/vendoridleanimation/VendorOverworldForward.png");
         //TODO: make vendor trigger box
-        vendor.addToScreen(this, true);
+        vendor.addToScreen(this, true);*/
 
 
         //Walls

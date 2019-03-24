@@ -26,18 +26,18 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Vendor extends RenderableObject implements Kinematic, Interactable, Serializable {
 
-    private CopyOnWriteArrayList<Item> items = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<RenderableObject> rItems = new CopyOnWriteArrayList<>();
+    //region <Variables>
     private BufferedImage vendorOverworldImage;
     private BufferedImage vendorLevelImage;
     private final String vendorOverworldPath = "/assets/vendor/vendoridleanimation/VendorOverworldForward.png";
     private final String vendorLevelPath = "/assets/vendor/Vendor.png";
-    /* Restock timer */
     public static TimerTask restockTimer;
     private VendorData vendorData;
 
     int isSet = 0;
     Player p = null;
+    //endregion
+
     // Default constructor
     public Vendor(int x, int y, VendorData vendorData){
         super(x, y);
@@ -63,33 +63,6 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
     public VendorData getVendorData(){
         return vendorData;
     }
-
-/*    public CopyOnWriteArrayList<Item> getItems() {
-        return items;
-    }
-
-    public CopyOnWriteArrayList<RenderableObject> getRenderables() {
-        return rItems;
-    }
-
-    public void addItem(Item item){
-        items.add(item);
-        rItems.add((RenderableObject) item);
-    }
-
-    public void removeItem(Item item){
-        items.remove(item);
-        rItems.remove(item);
-    }
-
-    // Needed for vendor splashscreen
-    public void replaceList(CopyOnWriteArrayList<Item> updatedItems){
-        this.items = updatedItems;
-        rItems.removeAll(rItems);
-        for (Item item : items){
-            rItems.add((RenderableObject) item);
-        }
-    }*/
 
     public BufferedImage getOverworldImage(){
         return vendorOverworldImage;
@@ -132,7 +105,9 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
         }*/
     }
 
+    //region <Physics methods>
     private PhysicsVector accel = new PhysicsVector(0,1);
+
     PhysicsVector movement = new PhysicsVector(0,0);
 
     @Override
@@ -211,5 +186,6 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
         isSet = 0;
         return true;
     }
+    //endregion
 }
 

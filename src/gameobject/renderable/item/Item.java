@@ -14,7 +14,6 @@ public abstract class Item extends RenderableObject implements Serializable {
     public Item(int x, int y, String imagePath, DrawLayer layer) {
         super(x,y,imagePath,layer);
     }
-
     public abstract BufferedImage getIcon();
     public abstract String getItemName();
     public abstract String getDescription(boolean desc);

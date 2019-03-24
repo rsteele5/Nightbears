@@ -23,9 +23,6 @@ public class PlayerData implements Serializable {
         gold = 10;
     }
 
-    public PlayerData getPlayerData() { return this; }
-
-
     public CopyOnWriteArrayList<Item> getInventory(){
         return playerInventory;
     }

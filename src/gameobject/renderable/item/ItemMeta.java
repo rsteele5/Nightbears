@@ -11,7 +11,7 @@ public enum ItemMeta {;
     public static double amplifier = 1.0;
     public static double depreciator = 0.9;
 
-    public void attributeAmplifier(){
+    public static void attributeAmplifier(){
         amplifier += .25;
     }
 

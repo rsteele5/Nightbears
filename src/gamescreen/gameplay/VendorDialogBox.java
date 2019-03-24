@@ -14,9 +14,17 @@ import java.awt.*;
 
 public class VendorDialogBox extends Overlay {
 
+    //region <Variables>
     private final String welcome = "Hey Teddy! Would you like to come in and check out my new wares?";
+    //endregion
 
-
+    /**
+     * Creates the vendor dialog box
+     * @param screenManager screen manager
+     * @param parentScreen parent screen
+     * @param xPos x-location for screen
+     * @param yPos y-location for screen
+     */
     public VendorDialogBox(ScreenManager screenManager, GameScreen parentScreen, int xPos, int yPos) {
         super(screenManager, parentScreen, "VendorDialogBox", xPos, yPos, 1f);
     }
