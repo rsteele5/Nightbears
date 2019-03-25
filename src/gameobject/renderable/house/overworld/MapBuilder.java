@@ -2,13 +2,10 @@ package gameobject.renderable.house.overworld;
 
 import gameobject.renderable.house.overworld.room.Boundary;
 import gameobject.renderable.house.overworld.room.Room;
-import gameobject.renderable.house.sidescrolling.Floor;
-import gamescreen.GameScreen;
 import gameobject.container.TileGridContainer;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
-import javax.swing.plaf.basic.BasicOptionPaneUI;
 
 import static gameobject.renderable.house.overworld.OverworldMeta.*;
 import static gameobject.renderable.house.overworld.OverworldMeta.Tiles.House.*;
@@ -30,17 +27,6 @@ public class MapBuilder {
         chunkBuilder = new ChunkBuilder();
     }
 
-    public Map buildMap(){
-        Debug.success(DebugEnabler.OVERWORLD, "MapBuilder - Built Map");
-
-        // Build the Map Structure and returns a chunk grid that needs room data
-        ArrayList<ArrayList<TileGridContainer>> noBorderMap = buildMapStructure();
-        organizeChunks();
-        roomToChunkConverter(noBorderMap);
-        generateRoomObjects();
-        return new Map(rooms, chunks);
-    }
-
     public void addRoomAtCell(int x, int y, Room newRoom){
         newRoom.setCell(x,y);
         for(Room room : rooms){
@@ -52,6 +38,17 @@ public class MapBuilder {
         }
         newRoom.initializeSpawnPoints();
         rooms.add(newRoom);
+    }
+
+    public Map buildMap() {
+        Debug.success(DebugEnabler.OVERWORLD, "MapBuilder - Built Map");
+
+        // Build the Map Structure and returns a chunk grid that needs room data
+        ArrayList<ArrayList<TileGridContainer>> noBorderMap = buildMapStructure();
+        organizeChunks();
+        roomToChunkConverter(noBorderMap);
+        generateRoomObjects();
+        return new Map(rooms, chunks);
     }
 
     private ArrayList<ArrayList<TileGridContainer>> buildMapStructure(){
@@ -169,26 +166,14 @@ public class MapBuilder {
                 for (int col = 0; col < room.getWidth(); col++) {
                     switch (room.getLayout()[row][col]) {
                         case WALLNW:
-                            createNorthWall(room, row, col);
-                            //createWestWall(room, row, col);
-                            break;
                         case WALLNE:
-                            break;
+                        case WALLN: createNorthWall(room, row, col); break;
                         case WALLSE:
-                            break;
                         case WALLSW:
-                            break;
-
-                        case WALLN:
-                            break;
-                        case WALLE:
-                            break;
-                        case WALLS:
-                            break;
-                        case WALLW:
-                            break;
-                        default:
-                            break;
+                        case WALLS: createSouthWall(room, row, col); break;
+                        case WALLE: createEastWall(room, row, col);  break;
+                        case WALLW: createWestWall(room, row, col);  break;
+                        default: break;
                     }
                 }
             }
@@ -204,15 +189,17 @@ public class MapBuilder {
         for (int col = iCol; col < room.getWidth(); col++){
             switch(row[col]){
                 case WALLNW:
-                    width += 100;
+                    width += TileSize;
                     row[col] = WALLW;
+                    createWestWall(room, iRow, col);
                     break;
                 case WALLNE:
-                    width += 100;
+                    width += TileSize;
                     row[col] = WALLE;
+                    createEastWall(room, iRow, col);
                     break;
                 case WALLN:
-                    width += 100;
+                    width += TileSize;
                     row[col] = -WALLN;
                     break;
                 default: done = true;
@@ -220,7 +207,96 @@ public class MapBuilder {
             }
             if(done) break;
         }
-
         room.addBoundary(new Boundary(startTile.getX(), startTile.getY(), width, WallThickness));
+    }
+
+    private void createSouthWall(Room room, int iRow, int iCol) {
+        final Integer[] row = room.getLayout()[iRow];
+        final Tile startTile = room.getRoomTileAt(iRow, iCol);
+        int width = 0;
+        boolean done = false;
+
+        for (int col = iCol; col < room.getWidth(); col++){
+            switch(row[col]){
+                case WALLSW:
+                    width += TileSize;
+                    row[col] = WALLW;
+                    createWestWall(room, iRow, col);
+                    break;
+                case WALLSE:
+                    width += TileSize;
+                    row[col] = WALLE;
+                    createEastWall(room, iRow, col);
+                    break;
+                case WALLS:
+                    width += TileSize;
+                    row[col] = -WALLS;
+                    break;
+                default: done = true;
+                    break;
+            }
+            if(done) break;
+        }
+        room.addBoundary(new Boundary(startTile.getX(), startTile.getY() + TileSize - WallThickness,
+                                      width, WallThickness));
+    }
+
+    private void createEastWall(Room room, int iRow, int iCol) {
+        final Tile startTile = room.getRoomTileAt(iRow, iCol);
+        int height = 0;
+        boolean done = false;
+
+        for (int row = iRow; row < room.getHeight(); row++){
+            switch(room.getLayout()[row][iCol]){
+                case WALLNE:
+                    height += TileSize;
+                    room.getLayout()[row][iCol] = WALLN;
+                    createNorthWall(room, row, iCol);
+                    break;
+                case WALLSE:
+                    height += TileSize;
+                    room.getLayout()[row][iCol] = WALLS;
+                    createSouthWall(room, row, iCol);
+                    break;
+                case WALLE:
+                    height += TileSize;
+                    room.getLayout()[row][iCol] = -WALLE;
+                    break;
+                default: done = true;
+                    break;
+            }
+            if(done) break;
+        }
+        room.addBoundary(new Boundary(startTile.getX() + TileSize - WallThickness, startTile.getY(),
+                                      WallThickness, height));
+    }
+
+    private void createWestWall(Room room, int iRow, int iCol) {
+        final Tile startTile = room.getRoomTileAt(iRow, iCol);
+        int height = 0;
+        boolean done = false;
+
+        for (int row = iRow; row < room.getHeight(); row++){
+            switch(room.getLayout()[row][iCol]){
+                case WALLNW:
+                    height += TileSize;
+                    room.getLayout()[row][iCol] = WALLN;
+                    createNorthWall(room, row, iCol);
+                    break;
+                case WALLSW:
+                    height += TileSize;
+                    room.getLayout()[row][iCol] = WALLS;
+                    createSouthWall(room, row, iCol);
+                    break;
+                case WALLW:
+                    height += TileSize;
+                    room.getLayout()[row][iCol] = -WALLW;
+                    break;
+                default: done = true;
+                    break;
+            }
+            if(done) break;
+        }
+        room.addBoundary(new Boundary(startTile.getX(), startTile.getY(), WallThickness, height));
     }
 }

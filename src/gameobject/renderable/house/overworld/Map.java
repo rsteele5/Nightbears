@@ -71,7 +71,7 @@ public class Map extends GameObject {
                 SpawnPoint playerSpawn = new SpawnPoint(
                         tempSpawn.getTileX()*TileSize + room.getCellX()*TileSize + (ChunkSize*TileSize*BorderBuffer),
                         tempSpawn.getTileY()*TileSize + room.getCellY()*TileSize + (ChunkSize*TileSize*BorderBuffer),
-                        SpawnType.Player,room);
+                        SpawnType.Player);
                 return playerSpawn;
             }
         }
@@ -85,7 +85,7 @@ public class Map extends GameObject {
                 SpawnPoint vendorSpawn = new SpawnPoint(
                         tempSpawn.getTileX()*TileSize+TileSize/2 + room.getCellX()*TileSize + (ChunkSize*TileSize*BorderBuffer),
                         tempSpawn.getTileY()*TileSize+TileSize/2 + room.getCellY()*TileSize + (ChunkSize*TileSize*BorderBuffer),
-                        SpawnType.Vendor,room);
+                        SpawnType.Vendor);
                 return vendorSpawn;
             }
         }
