@@ -5,8 +5,10 @@ import gameobject.renderable.DrawLayer;
 import main.utilities.Action;
 import main.utilities.AssetLoader;
 import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 public class ItemButton extends Button{
@@ -65,7 +67,10 @@ public class ItemButton extends Button{
 
     @Override
     public void draw(Graphics2D graphics) {
-        super.draw(graphics);
+        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+        graphics.setComposite(alphaComposite);
+        Debug.drawRect(DebugEnabler.RENDERABLE_LOG,graphics, new Rectangle2D.Double(x,y,width, height));
+        graphics.drawImage(image, x , y, width, height, null);
         //If the image is not null draw it offset in the center of the button
         if(item != null)
             graphics.drawImage(item.getIcon(), x +7, y + 7, width -14, height -14, null);

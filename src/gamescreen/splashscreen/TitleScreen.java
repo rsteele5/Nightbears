@@ -6,15 +6,19 @@ import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gameobject.renderable.ImageContainer;
 import gamescreen.mainmenu.MainMenuScreen;
+import input.listeners.MouseController;
+import main.utilities.Debug;
+import main.utilities.DebugEnabler;
+
 
 public class TitleScreen extends GameScreen {
-    //region <Variables>
-    ImageContainer cover;
-    //endregion
+
+    private ImageContainer moonImg;
+    private ImageContainer titleImg;
     private boolean musicStart = false;
-    //region <Construction and Initialization>
-    public TitleScreen(ScreenManager screenManager, String name) {
-        super(screenManager,name);
+
+    public TitleScreen(ScreenManager screenManager) {
+        super(screenManager,"TitleScreen", 1f);
     }
 
     /**
@@ -23,30 +27,22 @@ public class TitleScreen extends GameScreen {
     @Override
     protected void initializeScreen() {
         ImageContainer image;
-        image = new ImageContainer(0,0, "/assets/backgrounds/BG-BlackCover.png", DrawLayer.Background);
-        image.addToScreen(this,true);
 
-        cover = new ImageContainer(0,-720, "/assets/backgrounds/BG-TitleScreenCover.png", DrawLayer.Scenery);
-        cover.addToScreen(this,true);
+        moonImg = new ImageContainer(585,-1058, "/assets/backgrounds/BG-Moon.png", DrawLayer.Scenery);
+        moonImg.addToScreen(this,true);
 
-        image = new ImageContainer(350,75, "/assets/backgrounds/BG-Title.png", DrawLayer.Scenery);
-        image.addToScreen(this,true);
-
-        image = new ImageContainer(575,660, "/assets/text/TXT-SkipMsg.png", DrawLayer.Scenery);
-        image.addToScreen(this,true);
+        titleImg = new ImageContainer(625,165, "/assets/backgrounds/BG-Title.png", DrawLayer.Scenery);
+        titleImg.addToScreen(this,true);
     }
 
-    //endregion
-
-    //region <Update>
     @Override
     public void transitionOn() {
         if(!musicStart) {
             musicStart = true;
             BackgroundAudio.play(this.getClass().getClassLoader().getResource("assets/music/title.wav"));
         }
-        if(cover.getY() < -240)
-            cover.setY(cover.getY() + 2);
+        if(moonImg.getY() < -248 * gameData.getGraphicsSettings().getScaleFactor())
+            moonImg.setY(moonImg.getY() + 2);
         else
             currentState = ScreenState.Active;
     }
@@ -62,13 +58,9 @@ public class TitleScreen extends GameScreen {
         currentState = ScreenState.TransitionOff;
     }
 
-    //endregion
-
-    //region <Support Functions>
     @Override
-    public boolean handleClickEvent(int x, int y) {
+    public boolean handleMousePress(MouseController mouseController, int x, int y){
         currentState = ScreenState.TransitionOff;
         return true;
     }
-    //endregion
 }

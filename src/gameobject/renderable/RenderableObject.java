@@ -1,16 +1,20 @@
 package gameobject.renderable;
 
+import gameengine.gamedata.GraphicsSetting;
 import gameengine.rendering.animation.Animator;
 import gameobject.GameObject;
 import gamescreen.GameScreen;
 import main.utilities.AssetLoader;
+import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 import main.utilities.Loadable;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
-public abstract class RenderableObject extends GameObject implements Loadable {
+public abstract class RenderableObject extends GameObject implements Loadable, Serializable {
 
     //region <Variables>
     protected DrawLayer drawLayer;
@@ -18,7 +22,7 @@ public abstract class RenderableObject extends GameObject implements Loadable {
     protected int width;
     protected int height;
     protected String imagePath;
-    protected BufferedImage image;
+    protected transient BufferedImage image;
     protected Animator animator;
     //endregion
 
@@ -130,6 +134,7 @@ public abstract class RenderableObject extends GameObject implements Loadable {
         if(animator != null){
             animator.animate();
         }
+        Debug.drawRect(DebugEnabler.RENDERABLE_LOG,graphics, new Rectangle2D.Double(x,y,width, height));
         graphics.drawImage(image, x , y, width, height, null);
     }
 
@@ -168,6 +173,7 @@ public abstract class RenderableObject extends GameObject implements Loadable {
     @Override
     public void addToScreen(GameScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
+        screen.renderables.remove(this);    //Remove if the renderable is already in the list.
         if(isActive) addToRenderables(screen);
         screen.loadables.add(this);
         if(animator != null){
@@ -190,5 +196,11 @@ public abstract class RenderableObject extends GameObject implements Loadable {
 
     public abstract void update();
 
+    @Override
+    public void scale(float scaleFactor) {
+        super.scale(scaleFactor);
+        width *= scaleFactor;
+        height *= scaleFactor;
+    }
 }
 

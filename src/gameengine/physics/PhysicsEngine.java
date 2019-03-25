@@ -1,6 +1,12 @@
 package gameengine.physics;
 
+import _test.Square;
 import gameengine.GameEngine;
+import gameengine.gamedata.PlayerData;
+import gameobject.renderable.enemy.Enemy;
+import gameobject.renderable.enemy.Minion;
+import gameobject.renderable.enemy.Walker;
+import gameobject.renderable.house.sidescrolling.Floor;
 import gameengine.gamedata.GameData;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.item.weapon.Weapon;
@@ -15,9 +21,10 @@ import java.util.ArrayList;
 public class PhysicsEngine {
 
     private GameData gameData;
+    private PlayerData playerData;
     private ScreenManager screenManager;
-    private final int winWidth = Game.WIN_WIDTH;
-    private final int winHeight = Game.WIN_HEIGHT;
+    private final int winWidth = 1920;
+    private final int winHeight = 1080;
     //Collide with edges of Screen?
 
     public PhysicsEngine(GameData gameData, ScreenManager myScreenManager) {
@@ -75,8 +82,24 @@ public class PhysicsEngine {
                 }
                 if (((Kinematic) obj1).getHitbox().intersects(((Kinematic) obj2).getHitbox())) {
                     if (obj1 instanceof Weapon && obj2 instanceof Player) {
-                        GameEngine.players.get(0).addItem((Weapon) obj1);
+                        //GameEngine.players.get(0).addItem((Weapon) obj1);
+                        playerData = gameData.getPlayerData();
+                        playerData.addItem((Weapon) obj1);
                         Debug.log(true, "Weapon Get!");
+                    }
+                    if (obj1 instanceof Enemy && obj2 instanceof Square) {
+                        //Debug.success(true,"ENEMY->SQUARE");
+                        if(!(obj2 instanceof Floor)) {
+                            Minion e = (Minion) obj1;
+                            e.changeState();
+                        }
+
+                    }
+                    if (obj1 instanceof Minion && obj2 instanceof Player) {
+                        Debug.success(true,"ENEMY->Player");
+                        Minion e = (Minion) obj1; e.addhp(-1);//todo sword damage
+                        Debug.success(true,Integer.toString(e.getHp()));
+                        if(e.getHp() < 1) e.setInactive(e.getScreen());
                     }
                     ((Kinematic) obj1).setAcceleration(new PhysicsVector(1, 1));
                     if (!((Kinematic) obj2).isStatic()) ((Kinematic) obj2).setAcceleration(new PhysicsVector(1, 1));

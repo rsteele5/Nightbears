@@ -1,14 +1,18 @@
 package gameobject.renderable.item;
 
+import gameobject.renderable.RenderableObject;
 import gameobject.renderable.item.Item;
 
 import java.util.Comparator;
 
-// Method to sort item list
-public class ItemComparator implements Comparator<Item> {
+
+/**
+ * Sorts item list by item category
+ */
+public class ItemComparator implements Comparator<RenderableObject> {
 
     @Override
-    public int compare(Item o1, Item o2) {
-        return o1.getCategory().compareTo(o2.getCategory());
+    public int compare(RenderableObject o1, RenderableObject o2) {
+        return ((Item)o1).getCategory().compareTo(((Item)o2).getCategory());
     }
 }

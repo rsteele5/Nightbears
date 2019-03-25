@@ -7,6 +7,7 @@ import gamescreen.ScreenManager;
 import gameobject.renderable.ImageContainer;
 import gameobject.renderable.button.Button;
 import gamescreen.popup.ConfirmationPopup;
+import gamescreen.splashscreen.RandomPlayerScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -14,7 +15,7 @@ import main.utilities.DebugEnabler;
 public class PlayerCountScreen extends GameScreen {
     //region <Variables>
     private final int X_INIT_BUTTON = 64;
-    private final int Y_INIT_BUTTON = 576;
+    private final int Y_INIT_BUTTON = 920;
     private final int X_BUFFER = 48;
     private final int WIDTH_BUTTON = 256;
     private final int TEDDY_HEIGHT = 200;
@@ -47,17 +48,19 @@ public class PlayerCountScreen extends GameScreen {
         //Create Buttons
         button = new Button(X_INIT_BUTTON,Y_INIT_BUTTON,
                 "/assets/buttons/Button-Solo.png",
+                "/assets/buttons/Button-SoloPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Solo");
                     screenManager.addScreen(new ConfirmationPopup(screenManager,
                             "You selected... \nSOLO\nIs this correct?",
-                            ()-> screenManager.addScreen(new IntroCutScene(screenManager))));
+                            ()-> screenManager.addScreen(new RandomPlayerScreen(screenManager))));
                 });
         button.addToScreen(this, true);
 
         button = new Button(X_INIT_BUTTON+2*(X_BUFFER+WIDTH_BUTTON),Y_INIT_BUTTON,
                 "/assets/buttons/Button-Coop.png",
+                "/assets/buttons/Button-CoopPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Coop");
@@ -69,6 +72,7 @@ public class PlayerCountScreen extends GameScreen {
 
         button = new Button(X_INIT_BUTTON+3*(X_BUFFER+WIDTH_BUTTON),Y_INIT_BUTTON,
                 "/assets/buttons/Button-Back.png",
+                "/assets/buttons/Button-BackPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Back");

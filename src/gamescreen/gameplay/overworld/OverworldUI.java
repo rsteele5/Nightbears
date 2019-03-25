@@ -20,16 +20,19 @@ import java.awt.*;
 
 public class OverworldUI extends Overlay {
 
+    private Player player;
     private Button actionButton;
     private Button inventoryButton;
     private Button leaveButton;
     private static String inventoryBtnPath = "/assets/buttons/Button-Inventory.png";
+    private static String inventoryBtnPressedPath = "/assets/buttons/Button-InventoryPressed.png";
     private static String fightBtnPath = "/assets/buttons/Button-Fight.png";
     private static String vendorBtnPath = "/assets/buttons/Button-Vendor.png";
 
 
-    public OverworldUI(ScreenManager screenManager, GameScreen parentScreen) {
+    public OverworldUI(ScreenManager screenManager, GameScreen parentScreen, Player player) {
         super(screenManager, parentScreen,"OverworldUI", 0,0, 1f);
+        this.player = player;
     }
 
     /**
@@ -38,14 +41,15 @@ public class OverworldUI extends Overlay {
     @Override
     protected void initializeScreen() {
 
-        inventoryButton = new Button(20,20, inventoryBtnPath, DrawLayer.Entity,
+        inventoryButton = new Button(20,20, inventoryBtnPath, inventoryBtnPressedPath, DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Inventory");
-                    screenManager.addScreen(new PauseMenu(screenManager));
+                    screenManager.addScreen(new PauseMenu(screenManager, player));
                 });
         inventoryButton.addToScreen(this, true);
 
         actionButton = new ButtonText(350, 20,
+                "/assets/buttons/Button-Empty.png",
                 "/assets/buttons/Button-Empty.png",
                 DrawLayer.Entity, new Font("NoScary", Font.PLAIN, 72), Color.WHITE, "Fight!",
                 () ->{
@@ -59,19 +63,19 @@ public class OverworldUI extends Overlay {
 
         leaveButton = new ButtonText(20, 120,
                 "/assets/buttons/Button-Empty.png",
+                "/assets/buttons/Button-Empty.png",
                 DrawLayer.Entity, new Font("NoScary", Font.PLAIN, 72), Color.WHITE, "Leave",
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Leave");
                     //TODO save players location
                     parentScreen.setCamera(null);
-
-                    GameEngine.players.get(0).setState(Player.PlayerState.asleep);
                     screenManager.addScreen(new MainMenuScreen(screenManager));
 
                 });
         leaveButton.addToScreen(this, true);
 
         Button cameraOnButton = new ButtonText(650,20,
+                "/assets/buttons/Button-Empty.png",
                 "/assets/buttons/Button-Empty.png",
                 DrawLayer.Entity,
                 new Font("NoScary", Font.PLAIN, 58),
@@ -84,13 +88,16 @@ public class OverworldUI extends Overlay {
 
         Button cameraOffButton = new ButtonText(920,20,
                 "/assets/buttons/Button-Empty.png",
+                "/assets/buttons/Button-Empty.png",
                 DrawLayer.Entity,
                 new Font("NoScary", Font.PLAIN, 58),
                 Color.WHITE, "Camera On!",
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Vendor");
-                    parentScreen.setCamera(new Camera(parentScreen, GameEngine.players.get(0)));
+                    parentScreen.setCamera(new Camera(screenManager, parentScreen, player));
                 });
         cameraOffButton.addToScreen(this, true);
+
+
     }
 }

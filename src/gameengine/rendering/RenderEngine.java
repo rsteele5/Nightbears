@@ -11,6 +11,7 @@ import java.io.IOException;
 
 //Project Imports
 import gameengine.gamedata.GameData;
+import gameengine.gamedata.GraphicsSetting;
 import gamescreen.ScreenManager;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
@@ -20,6 +21,8 @@ public class RenderEngine extends JPanel {
 
     //region <Variables>
     private ScreenManager screenManager;
+    private GameData gameData;
+    private String fps = "";
 
     // off splashscreen rendering
     private Graphics2D graphics;
@@ -27,8 +30,11 @@ public class RenderEngine extends JPanel {
     private GraphicsConfiguration graphicsConfig;
     //endregion
 
-    public RenderEngine(GameData gameData, ScreenManager myScreenManager) {
-        screenManager = myScreenManager;
+    public RenderEngine(GameData gameData, ScreenManager screenManager) {
+        setFocusable(true);
+        requestFocusInWindow();
+        this.screenManager = screenManager;
+        this.gameData = gameData;
         setBackground(Color.BLACK);
         graphicsConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
         try {
@@ -40,30 +46,38 @@ public class RenderEngine extends JPanel {
         }
     }
 
-    //TODO: Greg FIx  this shit usage in mouse controller
-    public ScreenManager getScreenManager() {
-        return screenManager;
+    public void setFPS(String fps){
+        if(System.currentTimeMillis() % 7 == 0)
+        this.fps = fps;
     }
 
     public void draw() {
         // size of the canvas - determined at runtime once rendered
-        int width = getSize().width;
-        int height = getSize().height;
-        if(width > 0 && height > 0) {
-            if (dbImage == null) {
-                //Creates an off-splashscreen drawable image to be used for double buffering
-                dbImage = graphicsConfig.createCompatibleImage(width, height, Transparency.OPAQUE);
-                if (dbImage == null) {
-                    Debug.error(DebugEnabler.RENDER_ENGINE,"Critical Error: dbImage is null");
-                    System.exit(1);
-                } else {
-                    graphics = (Graphics2D) dbImage.getGraphics();
-                }
-                graphics.clearRect(0, 0, width, height);
-                graphics.setBackground(Color.BLACK);
-            }
+        int width = gameData.getGraphicsSettings().getRenderWidth();
+        int height = gameData.getGraphicsSettings().getRenderHeight();
 
+        //TODO change to run in windowed mode. Need to change the GameWindow class, future Greg!
+        switch(gameData.getGraphicsSettings().getCurrentOption()){
+            case High: setBounds(0,0,width, height); break;
+            case Medium: setBounds(320, 180, width, height); break;
+            case Low: setBounds(480, 270, width, height); break;
+        }
+
+        this.setSize(width, height);
+        if (dbImage == null || (dbImage.getWidth() != width)) {
+            //Creates an off-splashscreen drawable image to be used for double buffering
+            dbImage = graphicsConfig.createCompatibleImage(width, height, Transparency.OPAQUE);
+            if (dbImage == null) {
+                Debug.error(DebugEnabler.RENDER_ENGINE,"Critical Error: dbImage is null");
+                System.exit(1);
+            } else {
+                graphics = (Graphics2D) dbImage.getGraphics();
+                graphics.clearRect(0, 0, width, height);
+            }
+            graphics.setBackground(Color.BLACK);
+        } else {
             screenManager.draw(graphics);
+            Debug.drawString(DebugEnabler.FPS_CURRENT,graphics,20,20,fps);
             renderBufferToScreen();
             graphics.clearRect(0, 0, width, height);
         }

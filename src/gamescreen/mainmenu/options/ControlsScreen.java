@@ -34,11 +34,12 @@ public class ControlsScreen extends GameScreen {
     @Override
     protected void initializeScreen() {
         //Grab the graphics settings so we can keep our changes local until we confirm them
-        localSetting = new InputSetting(gameData.getInputSetting().getCurrentOption());
+        localSetting = gameData.getInputSetting();
 
         //Initial position of the first button
         int X_INIT_BUTTON = 64;
-        int Y_INIT_BUTTON = 576;
+        int Y_INIT_BUTTON = 920;
+        int WIDTH_BUTTON = 256;
         int X_BUFFER = 48;
 
         //Create Background
@@ -46,16 +47,27 @@ public class ControlsScreen extends GameScreen {
         background.addToScreen(this, true);
 
         //Create Text Box
+        controlsText = new TextBox(32, 800,
+                450,
+                80,
+                "Controls Settings",
+                new Font("NoScary", Font.PLAIN, 72),
+                Color.WHITE, true);
+
+        controlsText.addToScreen(this, true);
+
+        //Create Text Box
         controlsText = new TextBox(X_INIT_BUTTON + X_BUFFER, Y_INIT_BUTTON,
-                300,
-                150,
+                240,
+                75,
                 localSetting.getCurrentOption().name(),
                 new Font("NoScary", Font.PLAIN, 60),
-                Color.WHITE);
+                Color.WHITE, true);
         controlsText.addToScreen(this, true);
 
         //Create button
-        Button leftArrow = new Button(X_INIT_BUTTON, Y_INIT_BUTTON, "/assets/buttons/Button-LeftArrow.png", DrawLayer.Entity,
+        Button leftArrow = new Button(X_INIT_BUTTON, Y_INIT_BUTTON, "/assets/buttons/Button-LeftArrow.png",
+                "/assets/buttons/Button-LeftArrowPressed.png", DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Left Arrow");
                     int nextOptionOrdinal = (localSetting.getCurrentOption().ordinal() - 1) % optionCount;
@@ -65,8 +77,10 @@ public class ControlsScreen extends GameScreen {
                 });
         leftArrow.addToScreen(this, true);
 
-        int WIDTH_BUTTON = 256;
-        Button rightArrow = new Button(X_INIT_BUTTON + X_BUFFER + WIDTH_BUTTON, Y_INIT_BUTTON, "/assets/buttons/Button-RightArrow.png", DrawLayer.Entity,
+        Button rightArrow = new Button(X_INIT_BUTTON + X_BUFFER + WIDTH_BUTTON, Y_INIT_BUTTON,
+                "/assets/buttons/Button-RightArrow.png",
+                "/assets/buttons/Button-RightArrowPressed.png",
+                DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Right Arrow");
                     int nextOptionOrdinal = (localSetting.getCurrentOption().ordinal() + 1) % optionCount;
@@ -78,17 +92,19 @@ public class ControlsScreen extends GameScreen {
 
         Button confirm = new Button(X_INIT_BUTTON + 2 * (X_BUFFER + WIDTH_BUTTON), Y_INIT_BUTTON,
                 "/assets/buttons/Button-Confirm.png",
+                "/assets/buttons/Button-ConfrimPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Confirm");
                     this.setScreenState(ScreenState.TransitionOff);
-                    gameData.setInputSetting(localSetting);
+                    gameData.save();
                 });
         confirm.addToScreen(this, true);
 
         Button back = new Button(X_INIT_BUTTON + 3 * (X_BUFFER + WIDTH_BUTTON),
                 Y_INIT_BUTTON,
                 "/assets/buttons/Button-Back.png",
+                "/assets/buttons/Button-BackPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Back");

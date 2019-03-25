@@ -52,7 +52,7 @@ public class Square extends RenderableObject implements Kinematic {
 
     @Override
     public Rectangle getHitbox() {
-        return new Rectangle(x, y, image.getWidth(), image.getHeight());
+        return new Rectangle(x, y, width, height);
     }
 
     public String description(){

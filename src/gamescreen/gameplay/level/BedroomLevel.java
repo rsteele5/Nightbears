@@ -2,9 +2,14 @@ package gamescreen.gameplay.level;
 
 import _test.Square;
 import gameengine.GameEngine;
+import gameengine.gamedata.PlayerData;
 import gameengine.rendering.Camera;
 import gameobject.renderable.house.sidescrolling.Floor;
+import gameobject.renderable.enemy.Minion;
+import gameobject.renderable.enemy.WalkLeftMS;
+import gameobject.renderable.enemy.Walker;
 import gameobject.renderable.player.Player;
+import gameobject.renderable.enemy.Enemy;
 import gameobject.renderable.ImageContainer;
 import gameobject.renderable.item.weapon.Weapon;
 import gameobject.renderable.item.weapon.WeaponBuilder;
@@ -14,13 +19,13 @@ import gamescreen.GameScreen;
 
 public class BedroomLevel implements Level {
 
-
     @Override
     public void buildBackground(GameScreen gameScreen) {
         ImageContainer background = new ImageContainer(0, 0, "/assets/backgrounds/BG-Level.png", DrawLayer.Background);
         background.addToScreen(gameScreen, true);
     }
 
+    @Override
     public void buildTerrain(GameScreen gameScreen) {
         //This is where the instruction for how to procedurally generate a level would go
         Floor floorTile = new Floor(10, 576, "/assets/levelObjects/WoodTile1.png",DrawLayer.Entity);
@@ -41,6 +46,9 @@ public class BedroomLevel implements Level {
             }
         }
 
+        square = new Square(800,75,"/assets/testAssets/square.png",DrawLayer.Entity);
+        square.addToScreen(gameScreen, true);
+
         Weapon myWeap = new WeaponBuilder()
                 .position(800, 476)
                 .imagePath("/assets/Items/sword1.png")
@@ -55,20 +63,21 @@ public class BedroomLevel implements Level {
     }
 
     @Override
-    public void buildPlayer(GameScreen gameScreen) {
-        Player player = GameEngine.players.get(0);
+    public Player buildPlayer(GameScreen gameScreen, PlayerData playerData) {
+        Player player = new Player(10, 476, DrawLayer.Entity, playerData);
         player.setState(Player.PlayerState.sideScroll);
-        gameScreen.setCamera(new Camera(gameScreen, player));
-        player.reset();
-        player.setX(10);
-        player.setY(476);
         player.addToScreen(gameScreen, true);
+        return player;
 
     }
 
 
     @Override
     public void buildEnemies(GameScreen gameScreen) {
+        Minion guy1 = new Walker(600,0, "/assets/enemies/minions/walker/walker.png", DrawLayer.Entity);
+        guy1.setState(new WalkLeftMS());
+        guy1.addToScreen(gameScreen,true);
+
     }
 
 }

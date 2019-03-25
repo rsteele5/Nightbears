@@ -1,6 +1,5 @@
 package gameobject;
 
-
 import gamescreen.GameScreen;
 
 public abstract class GameObject {
@@ -67,11 +66,20 @@ public abstract class GameObject {
         x += screen.getX();
         y += screen.getY();
 
+        //Remove if the object is already in the list.
+        screen.activeObjects.remove(this);
+        screen.inactiveObjects.remove(this);
+
         if(isActive){
             screen.activeObjects.add(this);
         } else {
             screen.inactiveObjects.add(this);
         }
+    }
+
+    public void scale(float scaleFactor) {
+        x *= scaleFactor;
+        y *= scaleFactor;
     }
 
     public abstract void update();
