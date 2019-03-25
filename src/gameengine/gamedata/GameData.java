@@ -76,7 +76,9 @@ public class GameData implements Serializable {
             Debug.log(DebugEnabler.GAME_DATA, currentInputSetting.getCurrentOption().name());
             Debug.log(DebugEnabler.GAME_DATA, currentSoundSetting[0].getCurrentOption().name());
 
-        } catch (IOException ex) { Debug.error(DebugEnabler.GAME_DATA, "Loading Failed - IOException is caught " + ex.getMessage());
+        } catch (IOException ex) {
+            Debug.error(DebugEnabler.GAME_DATA, "Loading Failed - IOException is caught \n" + ex.getMessage());
+            System.exit(-1);
         } catch (ClassNotFoundException ex) { Debug.error(DebugEnabler.GAME_DATA,"Loading Failed - ClassNotFoundException is caught" + ex.getMessage()); }
     }
 

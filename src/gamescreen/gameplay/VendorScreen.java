@@ -70,7 +70,7 @@ public class VendorScreen extends GameScreen {
 
         //region <Initialize all other variables>
         vendorData = gameData.getVendorData();
-        vendor = new Vendor(0,0,vendorData);
+
         playerData = gameData.getPlayerData();
         previousPlayerState = player.getState();
         player.setState(Player.PlayerState.asleep);
@@ -97,7 +97,7 @@ public class VendorScreen extends GameScreen {
 
 
         imageContainer = new ImageContainer(vendorLocation.x, vendorLocation.y,
-                "/assets/vendor/Vendor.png", vendor.getDrawLayer());
+                "/assets/vendor/Vendor.png", DrawLayer.Entity);
         imageContainer.setSize(vendorSize.x, vendorSize.y);
         imageContainer.addToScreen(this, true);
 
