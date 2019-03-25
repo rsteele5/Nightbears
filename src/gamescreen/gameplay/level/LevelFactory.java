@@ -14,6 +14,13 @@ public class LevelFactory extends GameScreen {
         super(screenManager, "LevelFactory", 1f);
     }
 
+    /**
+     * <p>Initialize variables needed before level construction can begin
+     *    and create a LevelFactory object</p>
+     * @param screenManager the object that instructs how drawables are added/removed from the screen
+     * @param levelBuild the object that is the level that is being built
+     * @return an instantiation of LevelFactory
+     */
     public static LevelFactory create(ScreenManager screenManager, Level levelBuild) {
         lBuild = levelBuild;
         return new LevelFactory(screenManager);
