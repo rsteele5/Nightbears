@@ -4,6 +4,8 @@ import gameobject.renderable.DrawLayer;
 import gameobject.renderable.item.AffectType;
 import gameobject.renderable.item.DescriptionAssistant;
 import gameobject.renderable.item.ItemMeta;
+import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 
 import java.util.Random;
 
@@ -14,8 +16,8 @@ public class ConsumableBuilder {
      * Static global variables store and manipulate the min and max consumable points throughout the game
      */
     //TODO: Might not need to be static once the player and vendor classes are fixed
-    static int maxConsumable = (int)(ItemMeta.maxConsumable * ItemMeta.amplifier);
-    static int minConsumable = (int)(ItemMeta.minConsumable * ItemMeta.amplifier);
+    private static int maxConsumable = (int)(ItemMeta.maxConsumable * ItemMeta.amplifier);
+    private static int minConsumable = (int)(ItemMeta.minConsumable * ItemMeta.amplifier);
 
     // Renderable requirements
     private int _x = 0;
@@ -45,7 +47,7 @@ public class ConsumableBuilder {
     /**
      * This function can be called with or without assigning attributes. If no attributes
      * are assigned, then random attributes will be assigned.
-     * @return
+     * @return the newly created item
      */
     public Consumable buildConsumable() {
         type(this._type);
@@ -102,9 +104,8 @@ public class ConsumableBuilder {
      * Sets the affect type according to the consumable type. If no affect type was assigned, then a random
      * affect type will be assigned.
      * @param _affect affect type (fire, puncture, healthBoost, healthLevel, enchant)
-     * @return the ConsumableBuilder
      */
-    private ConsumableBuilder affect(AffectType _affect) {
+    private void affect(AffectType _affect) {
         if (_affect == null){
             // Set a temporary effect
             this._affect = AffectType.healthBoost;
@@ -119,7 +120,6 @@ public class ConsumableBuilder {
         } else {
             this._affect = _affect;
         }
-        return this;
     }
 
     /**
@@ -143,8 +143,9 @@ public class ConsumableBuilder {
      * will be assigned according to the minimum and maximum affect of consumable items.
      * @param _minAffect is the minimum affect value
      * @param _maxAffect is the maximum affect value
+     * @return the ConsumableBuilder
      */
-    private void minmaxAffect(int _minAffect, int _maxAffect) {
+    public ConsumableBuilder minmaxAffect(int _minAffect, int _maxAffect) {
         if (_maxAffect == 0){
             int num1 = getRandomNumber(minConsumable, maxConsumable);
             int num2 = getRandomNumber(minConsumable, maxConsumable);
@@ -156,6 +157,7 @@ public class ConsumableBuilder {
             this._maxAffect = _maxAffect;
             this._minAffect = _minAffect;
         }
+        return this;
     }
 
     /**
@@ -167,9 +169,11 @@ public class ConsumableBuilder {
     private void quality(String _quality){
         if (_quality.equals("")){
             int partition = (int) (Math.ceil(maxConsumable +1 - minConsumable) / 3);  //Three possible qualities: good, better, best
-            if (_maxAffect < (minConsumable + partition)) this._quality = "good";
+            if (_maxAffect <= (minConsumable + partition)) this._quality = "good";
             else if (_maxAffect > (maxConsumable - partition)) this._quality =  "best";
             else this._quality =  "better";
+            Debug.log(DebugEnabler.LOGGING_ACTIVE, "Consumable max: " + _maxAffect +
+                    " partition: " + partition + " quality: " + this._quality);
         } else {
             this._quality = _quality;
         }
@@ -212,7 +216,7 @@ public class ConsumableBuilder {
      */
     private void description(String _description) {
         if (_description.equals("")){
-            this._description = assistant.getConsumableDescription(_type, _affect, _quality, _name);
+            this._description = assistant.getConsumableDescription(_type, _affect, _quality);
         }else {
             this._description = _description;
         }

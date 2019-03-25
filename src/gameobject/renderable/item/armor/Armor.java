@@ -130,6 +130,15 @@ public class Armor extends Item implements Serializable {
     public int getArmorValue() { return armor; }
     //endregion
 
+    //region <Setters>
+    /**
+     * Sets description attribute. Description is intended to be one or two sentences.
+     * @param myDescription is a string description for the item.
+     */
+    private void setDescription(String myDescription) {
+        description = "\n" + myDescription;
+    }
+
     /**
      * Sets the value of the item
      * @param value is the new value
@@ -137,7 +146,7 @@ public class Armor extends Item implements Serializable {
     public void setValue(int value) {
         this.value = value;
     }
-
+    //endregion
 
     //TODO: Armor may be damaged or upgraded. Add item update here.
     @Override

@@ -14,8 +14,8 @@ public class ArmorBuilder {
      * Static global variables store and manipulate the min and max armor points throughout the game
      */
     //TODO: Might not need to be static once the player and vendor classes are fixed
-    static int maxArmor = (int)(ItemMeta.maxArmor * ItemMeta.amplifier);
-    static int minArmor = (int)(ItemMeta.minArmor * ItemMeta.amplifier);
+    private static int maxArmor = (int)(ItemMeta.maxArmor * ItemMeta.amplifier);
+    private static int minArmor = (int)(ItemMeta.minArmor * ItemMeta.amplifier);
 
     //Renderable requirements (default)
     private int _x = 0;

@@ -20,7 +20,7 @@ public class OverworldScreen extends GameScreen {
 
     //region <Variable Declaration>
     private OverworldUI UI;
-    private VendorDialogBox vendorDialogBox;
+    //private VendorDialogBox vendorDialogBox;
     private Map overworldMap;
     private VendorData vendorData;
     //endregion
@@ -49,12 +49,14 @@ public class OverworldScreen extends GameScreen {
         playerOW.addToScreen(this,true);
         setCamera(new Camera(screenManager, this, playerOW));
 
-        //Vendor
+        //TODO: Generate vendor after a level has been completed by player
+/*        vendorData = gameData.getVendorData();
+        Vendor vendor = new Vendor(0, 0, vendorData);
         SpawnPoint vendorSpawn = overworldMap.getVendorSpawn();
         Vendor vendor = new Vendor(vendorSpawn.getTileX(), vendorSpawn.getTileY(), gameData.getVendorData());
         vendor.setImage("/assets/vendor/vendoridleanimation/VendorOverworldForward.png");
         //TODO: make vendor trigger box
-        vendor.addToScreen(this, true);
+        vendor.addToScreen(this, true);*/
 
 
         //Walls
@@ -80,11 +82,11 @@ public class OverworldScreen extends GameScreen {
 //        southWall.setWidth(500);
 //        southWall.addToScreen(this,true);
 
-        //Overlay
-        UI = new OverworldUI(screenManager, this, playerOW);
-        vendorDialogBox = new VendorDialogBox(screenManager,this, 460,100, playerOW);
+        //Overlay TODO: Fix layering
+        UI = new OverworldUI(screenManager, this);
+        ///vendorDialogBox = new VendorDialogBox(screenManager,this, 460,100);
         addOverlay(UI);
-        addOverlay(vendorDialogBox);
+        //addOverlay(vendorDialogBox);
 
         //KeyListener
         setKeyHandler(new OverworldKeyHandler(playerOW, UI.clickables));

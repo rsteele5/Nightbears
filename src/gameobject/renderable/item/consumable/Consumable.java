@@ -144,6 +144,15 @@ public class Consumable extends Item implements Serializable {
     public int getMaxAffect() { return maxAffect;}
     //endregion
 
+    //region <Setters>
+    /**
+     * Sets description attribute. Description is intended to be one or two sentences.
+     * @param myDescription is a string description for the item.
+     */
+    private void setDescription(String myDescription) {
+        description = "\n" + myDescription;
+    }
+
     /**
      * Sets the value of the item
      * @param value is the new value
@@ -151,6 +160,7 @@ public class Consumable extends Item implements Serializable {
     public void setValue(int value) {
         this.value = value;
     }
+    //endregion
 
     //TODO: Consumables are one-time use items. Add item update here.
     @Override

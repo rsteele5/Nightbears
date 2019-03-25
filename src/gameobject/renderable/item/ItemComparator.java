@@ -5,7 +5,10 @@ import gameobject.renderable.item.Item;
 
 import java.util.Comparator;
 
-// Method to sort item list
+
+/**
+ * Sorts item list by item category
+ */
 public class ItemComparator implements Comparator<RenderableObject> {
 
     @Override

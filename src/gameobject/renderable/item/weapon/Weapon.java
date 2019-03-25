@@ -151,6 +151,7 @@ public class Weapon extends Item implements Kinematic, Serializable {
     public int getCritChance() { return critChance;}
     //endregion
 
+    //region <Setters>
     /**
      * Sets description attribute. Description is intended to be one or two sentences.
      * @param myDescription is a string description for the item.
@@ -166,7 +167,9 @@ public class Weapon extends Item implements Kinematic, Serializable {
     public void setValue(int value) {
         this.value = value;
     }
+    //endregion
 
+    //TODO: Weapons may be damaged or upgraded. Add item update here.
     @Override
     public void update() {
 
@@ -182,6 +185,7 @@ public class Weapon extends Item implements Kinematic, Serializable {
         icon = AssetLoader.resizeImage(image, image.getWidth()/2, image.getHeight()/2);
     }
 
+    //region <Physics Methods>
     @Override
     public boolean isStatic() {
         return false;
@@ -211,6 +215,7 @@ public class Weapon extends Item implements Kinematic, Serializable {
     public Rectangle getHitbox() {
         return new Rectangle(x, y, width, height);
     }
+    //endregion
 }
 
 
