@@ -48,6 +48,7 @@ public class PlayerCountScreen extends GameScreen {
         //Create Buttons
         button = new Button(X_INIT_BUTTON,Y_INIT_BUTTON,
                 "/assets/buttons/Button-Solo.png",
+                "/assets/buttons/Button-SoloPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Solo");
@@ -59,6 +60,7 @@ public class PlayerCountScreen extends GameScreen {
 
         button = new Button(X_INIT_BUTTON+2*(X_BUFFER+WIDTH_BUTTON),Y_INIT_BUTTON,
                 "/assets/buttons/Button-Coop.png",
+                "/assets/buttons/Button-CoopPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Coop");
@@ -70,6 +72,7 @@ public class PlayerCountScreen extends GameScreen {
 
         button = new Button(X_INIT_BUTTON+3*(X_BUFFER+WIDTH_BUTTON),Y_INIT_BUTTON,
                 "/assets/buttons/Button-Back.png",
+                "/assets/buttons/Button-BackPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Back");

@@ -1,18 +1,16 @@
 package gamescreen.splashscreen;
 
-import gameengine.GameEngine;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.ImageContainer;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
-import gamescreen.gameplay.overworld.OverworldScreen;
+import input.listeners.MouseController;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
-import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 
 public class RandomPlayerScreen extends GameScreen {
 
@@ -45,17 +43,13 @@ public class RandomPlayerScreen extends GameScreen {
     private ImageContainer getRandomImage(){
         ArrayList<ImageContainer> images = new ArrayList<>();
 
-        File file = new File("src/assets/player/images");
+        File file =  new File("src/assets/player/images");
         String[] directories = file.list();
-        int xPos = 20;
         for(String filePath: directories) {
-            Debug.error(true, "Directory: " + filePath);
             ImageContainer image = new ImageContainer(912,723,
-                    "/src/assets/player/images/" + filePath,
+                    "/assets/player/images/" + filePath,
                     DrawLayer.Entity);
             images.add(image);
-
-            xPos += 220;
         }
 
         int totalImages = images.size() - 1;
@@ -64,9 +58,9 @@ public class RandomPlayerScreen extends GameScreen {
     }
 
     @Override
-    public boolean handleClickEvent(int x, int y) {
+    public boolean handleMousePress(MouseController mouseController, int x, int y){
         if(!clicked) {
-            Debug.log(DebugEnabler.GAME_SCREEN_LOG, "Revealing Character");
+            Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "- handle click " + x + " " + y);
             silhouette.setAlpha(0f);
             clicked = true;
         } else {

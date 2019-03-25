@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class GraphicsSetting implements Serializable {
 
-    private GraphicsOption currentGraphicsOption;
+    private Resolution currentGraphicsOption;
 
     private static final float SCALE_FACTOR_HIGH = 1f;
     private static final float SCALE_FACTOR_MEDIUM = 0.6666f;
@@ -14,15 +14,15 @@ public class GraphicsSetting implements Serializable {
     private int renderWidth = 1920;
     private int renderHeight = 1080;
 
-    public enum GraphicsOption implements Serializable { High, Medium, Low }
+    public enum Resolution implements Serializable { High, Medium, Low }
 
-    public GraphicsSetting(GraphicsOption setting) { setCurrentOption(setting); }
+    public GraphicsSetting(Resolution setting) { setCurrentResolution(setting); }
 
-    public GraphicsOption getCurrentOption(){
+    public Resolution getCurrentOption(){
         return currentGraphicsOption;
     }
 
-    public void setCurrentOption(GraphicsOption setting){
+    public void setCurrentResolution(Resolution setting){
         this.currentGraphicsOption = setting;
         switch(setting){
             case High: renderWidth = 1920; renderHeight = 1080; scaleFactor = SCALE_FACTOR_HIGH; break;

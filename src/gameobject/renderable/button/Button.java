@@ -3,13 +3,18 @@ package gameobject.renderable.button;
 import gameobject.renderable.DrawLayer;
 import gamescreen.GameScreen;
 import gameobject.renderable.RenderableObject;
-import main.utilities.Clickable;
-import main.utilities.Action;
-import main.utilities.Debug;
+import main.utilities.*;
+
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 
 public class Button extends RenderableObject implements Clickable{
 
     protected boolean isClicked = false;
+    protected boolean isPressed = false;
+    protected String pressedImagePath;
+    protected BufferedImage pressedImage;
 
     //public static ButtonType type
     public Button(int x, int y, String imagePath, DrawLayer drawLayer) {
@@ -23,6 +28,12 @@ public class Button extends RenderableObject implements Clickable{
 
     public Button(String imagePath, Action handleOnClick) {
         this(0, 0, imagePath, DrawLayer.Entity, handleOnClick);
+    }
+
+    public Button(int x, int y, String imagePath, String pressedImagePath, DrawLayer drawLayer, Action handleOnClick) {
+        this(x, y, imagePath, drawLayer);
+        onClick = handleOnClick;
+        this.pressedImagePath = pressedImagePath;
     }
 
     @Override
@@ -80,5 +91,29 @@ public class Button extends RenderableObject implements Clickable{
         if(isActive) {
             screen.clickables.add(this);
         }
+    }
+
+    public void draw(Graphics2D graphics) {
+        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+        graphics.setComposite(alphaComposite);
+        if(animator != null){
+            animator.animate();
+        }
+        Debug.drawRect(DebugEnabler.RENDERABLE_LOG,graphics, new Rectangle2D.Double(x,y,width, height));
+        if(isPressed) {
+            graphics.drawImage(pressedImage, x - 10  , y - 10, width + 20, height + 20, null);
+        } else {
+            graphics.drawImage(image, x , y, width, height, null);
+        }
+    }
+
+    @Override
+    public void load() {
+        super.load();
+        pressedImage = AssetLoader.load(pressedImagePath);
+    }
+
+    public void setPressed(boolean isPressed) {
+        this.isPressed = isPressed;
     }
 }

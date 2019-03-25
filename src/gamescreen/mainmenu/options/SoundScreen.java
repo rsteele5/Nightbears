@@ -46,9 +46,9 @@ public class SoundScreen extends GameScreen {
         localSettings = new SoundSetting[3];
         for (int i = 0; i < localSettings.length; i++) {
             if (i < 2) {
-                localSettings[i] = new SoundSetting(gameData.getSoundSetting(i).getCurrentOption());
+                localSettings[i] = gameData.getSoundSetting(i);
             } else {
-                localSettings[i] = new SoundSetting(gameData.getSoundSetting(i).getCurrentVolume());
+                localSettings[i] = gameData.getSoundSetting(i);
             }
         }
         ImageContainer imageContainer;
@@ -81,7 +81,10 @@ public class SoundScreen extends GameScreen {
             controlsText.addToScreen(this, true);
             final int index = i;
 
-            butt = new Button(X_INIT_BUTTON, Y_INIT_BUTTON + (i * 226) / 2, "/assets/buttons/Button-LeftArrow.png", DrawLayer.Entity,
+            butt = new Button(X_INIT_BUTTON, Y_INIT_BUTTON + (i * 226) / 2,
+                    "/assets/buttons/Button-LeftArrow.png",
+                    "/assets/buttons/Button-LeftArrowPressed.png",
+                    DrawLayer.Entity,
                     () -> {
                         Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Left Arrow");
                         if (index < 2) {
@@ -98,7 +101,10 @@ public class SoundScreen extends GameScreen {
                     });
             butt.addToScreen(this, true);
 
-            butt = new Button(X_INIT_BUTTON + X_BUFFER + WIDTH_BUTTON, Y_INIT_BUTTON + (i * 226) / 2, "/assets/buttons/Button-RightArrow.png", DrawLayer.Entity,
+            butt = new Button(X_INIT_BUTTON + X_BUFFER + WIDTH_BUTTON, Y_INIT_BUTTON + (i * 226) / 2,
+                    "/assets/buttons/Button-RightArrow.png",
+                    "/assets/buttons/Button-RightArrowPressed.png",
+                    DrawLayer.Entity,
                     () -> {
                         Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Right Arrow");
                         if (index < 2) {
@@ -118,12 +124,13 @@ public class SoundScreen extends GameScreen {
 
         butt = new Button((X_INIT_BUTTON - 600)+ 2 * (X_BUFFER + WIDTH_BUTTON), Y_INIT_BUTTON * 2 + Y_BUFFER,
                 "/assets/buttons/Button-Confirm.png",
+                "/assets/buttons/Button-ConfrimPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Confirm");
                     this.setScreenState(ScreenState.TransitionOff);
                     for (int i = 0; i < localSettings.length; i++) {
-                        gameData.setSoundSetting(localSettings[i], i);
+                        gameData.save();
                         switch(i) {
                             case 0:
                                 if (localSettings[0].getCurrentOption().equals(SoundSetting.SoundOption.On)) {
@@ -154,6 +161,7 @@ public class SoundScreen extends GameScreen {
         butt = new Button((X_INIT_BUTTON - 600) + 3 * (X_BUFFER + WIDTH_BUTTON),
                 Y_INIT_BUTTON * 2 + Y_BUFFER,
                 "/assets/buttons/Button-Back.png",
+                "/assets/buttons/Button-BackPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Back");

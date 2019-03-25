@@ -1,6 +1,7 @@
 package gameobject.renderable.vendor;
 
 import gameengine.MyTimerTask;
+import gameengine.gamedata.VendorData;
 import gameengine.physics.Interactable;
 import gameengine.physics.Kinematic;
 import gameengine.physics.PhysicsMeta;
@@ -18,54 +19,33 @@ import main.utilities.AssetLoader;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Vendor extends RenderableObject implements Kinematic, Interactable {
+public class Vendor extends RenderableObject implements Kinematic, Interactable, Serializable {
 
-    private CopyOnWriteArrayList<Item> items = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<RenderableObject> rItems = new CopyOnWriteArrayList<>();
+    //region <Variables>
     private BufferedImage vendorOverworldImage;
     private BufferedImage vendorLevelImage;
     private final String vendorOverworldPath = "/assets/vendor/vendoridleanimation/VendorOverworldForward.png";
     private final String vendorLevelPath = "/assets/vendor/Vendor.png";
-    /* Restock timer */
     public static TimerTask restockTimer;
+    private VendorData vendorData;
 
     int isSet = 0;
     Player p = null;
+    //endregion
+
     // Default constructor
-    public Vendor(int x, int y){
+    public Vendor(int x, int y, VendorData vendorData){
         super(x, y);
         this.imagePath = vendorLevelPath;
         this.drawLayer = DrawLayer.Entity;
-        initializeItems();
-        restockTimer = new MyTimerTask();
+        this.vendorData = vendorData;
+        restockTimer = new MyTimerTask(vendorData);
         //startRestockTimer();
-    }
-
-    private void initializeItems() {
-
-        for (int i = 0; i < 8; i++){
-            items.add(new ArmorBuilder()
-                    .buildArmor()
-            );
-            items.add(new WeaponBuilder()
-                    .buildWeapon()
-            );
-            items.add(new ConsumableBuilder()
-                    .buildConsumable()
-            );
-        }
-
-        if (items.size() > 0) {
-            items.sort(new ItemComparator());
-        }
-
-        for (Item item : items){
-            rItems.add((RenderableObject) item);
-        }
     }
 
     @Override
@@ -78,33 +58,10 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable 
         }
     }
 
-    public CopyOnWriteArrayList<Item> getItems() {
-        return items;
-    }
-
-    public CopyOnWriteArrayList<RenderableObject> getRenderables() {
-        return rItems;
-    }
-
     public void setImage(String imagePath){ this.imagePath = imagePath; }
 
-    public void addItem(Item item){
-        items.add(item);
-        rItems.add((RenderableObject) item);
-    }
-
-    public void removeItem(Item item){
-        items.remove(item);
-        rItems.remove(item);
-    }
-
-    // Needed for vendor splashscreen
-    public void replaceList(CopyOnWriteArrayList<Item> updatedItems){
-        this.items = updatedItems;
-        rItems.removeAll(rItems);
-        for (Item item : items){
-            rItems.add((RenderableObject) item);
-        }
+    public VendorData getVendorData(){
+        return vendorData;
     }
 
     public BufferedImage getOverworldImage(){
@@ -129,89 +86,6 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable 
         }
     }
 
-    public CopyOnWriteArrayList<Item> restockItems(){
-        CopyOnWriteArrayList<Item> restock = new CopyOnWriteArrayList<>();
-        restock.add(new ArmorBuilder()
-                .buildArmor()
-        );
-        restock.add(new ArmorBuilder()
-                .buildArmor()
-        );
-        restock.add(new ArmorBuilder()
-                .buildArmor()
-        );
-        restock.add(new ArmorBuilder()
-                .buildArmor()
-        );
-        restock.add(new ArmorBuilder()
-                .buildArmor()
-        );
-        restock.add(new ArmorBuilder()
-                .buildArmor()
-        );
-        restock.add(new ArmorBuilder()
-                .buildArmor()
-        );
-
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-
-        restock.add(new ConsumableBuilder()
-                .buildConsumable()
-        );
-        restock.add(new ConsumableBuilder()
-                .buildConsumable()
-        );
-        restock.add(new ConsumableBuilder()
-                .buildConsumable()
-        );
-        restock.add(new ConsumableBuilder()
-                .buildConsumable()
-        );
-        restock.add(new ConsumableBuilder()
-                .buildConsumable()
-        );
-        restock.add(new ConsumableBuilder()
-                .buildConsumable()
-        );
-        restock.add(new ConsumableBuilder()
-                .buildConsumable()
-        );
-
-        if (restock.size() > 0) {
-            restock.sort(new ItemComparator());
-        }
-
-        rItems.removeAll(rItems);
-        for (Item item : restock){
-            rItems.add((RenderableObject) item);
-        }
-
-        return restock;
-    }
-
     //TODO: Don't think I need this anymore
     public void startRestockTimer(){
         Timer timer = new Timer(true);
@@ -231,7 +105,9 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable 
         }*/
     }
 
+    //region <Physics methods>
     private PhysicsVector accel = new PhysicsVector(0,1);
+
     PhysicsVector movement = new PhysicsVector(0,0);
 
     @Override
@@ -290,7 +166,7 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable 
     @Override
     public void addToScreen(GameScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
-
+        screen.kinematics.remove(this);
         if(isActive) {
             screen.kinematics.add(this);
         }
@@ -310,5 +186,6 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable 
         isSet = 0;
         return true;
     }
+    //endregion
 }
 
