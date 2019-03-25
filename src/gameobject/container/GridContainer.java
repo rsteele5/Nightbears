@@ -11,7 +11,6 @@ import java.util.ArrayList;
 public abstract class GridContainer<T> extends GameObject {
 
     //region <Variables>
-    protected GameScreen parentScreen;
     protected int rows;
     protected int cols;
     protected int padding;
@@ -24,9 +23,8 @@ public abstract class GridContainer<T> extends GameObject {
     //endregion
 
     //region <Construction and Initialization>
-    public GridContainer(GameScreen parentScreen, int rows, int cols, int itemWidth, int itemHeight, int xPos, int yPos, int padding) {
+    public GridContainer(int rows, int cols, int itemWidth, int itemHeight, int xPos, int yPos, int padding) {
         super();
-        this.parentScreen = parentScreen;
         this.rows = rows;
         this.cols = cols;
         this.itemWidth = itemWidth;
@@ -103,14 +101,10 @@ public abstract class GridContainer<T> extends GameObject {
         if(super.setActive(screen)){
             for (ArrayList<T> row : contents) {
                 for (T content : row) {
-                    if (content != null) {
-                        this.setContentActive(content, screen);
-                    }
+                    if (content != null) this.setContentActive(content, screen);
                 }
-            }
-            return true;
-        }
-        return false;
+            }return true;
+        }return false;
     }
 
     @Override
@@ -118,14 +112,10 @@ public abstract class GridContainer<T> extends GameObject {
         if(super.setInactive(screen)){
             for (ArrayList<T> row : contents) {
                 for (T content : row) {
-                    if (content != null) {
-                        this.setContentInactive(content, screen);
-                    }
+                    if (content != null) this.setContentInactive(content, screen);
                 }
-            }
-            return true;
-        }
-        return false;
+            }return true;
+        }return false;
     }
 
     @Override
@@ -133,9 +123,7 @@ public abstract class GridContainer<T> extends GameObject {
         super.addToScreen(screen, isActive);
         for (ArrayList<T> row : contents) {
             for (T content : row) {
-                if (content != null) {
-                    this.addContentToScreen(content, screen, isActive);
-                }
+                if (content != null) this.addContentToScreen(content, screen, isActive);
             }
         }
     }
@@ -147,20 +135,6 @@ public abstract class GridContainer<T> extends GameObject {
     //endregion
 
     //region <Public Utilities>
-    /**
-     * Adds an Object to the GridContainer at a specified row and column abiding by the rules of the
-     * container. If the adding was successful, the renderable is dynamically added to the parent screen of the grid.
-     * All items being added should be the same size to avoid organization complications.
-     *
-     * @param content   the object that is being added to the grid.
-     * @param row       row of the grid at which to add the renderable.
-     * @param col       column of the grid at which to add the renderable.
-     */
-    public void dynamicAddAt(T content, int row, int col){
-        if(addAt(content,row,col))
-            this.addContentToScreen(content, parentScreen,true);
-        else Debug.warning(DebugEnabler.GRID_CONTAINER, "Add error was dynamic.");
-    }
 
     /**
      * Adds an Object to the GridContainer at a specified row and column abiding by the rules of the

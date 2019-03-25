@@ -36,10 +36,11 @@ public class OverworldScreen extends GameScreen {
     protected void initializeScreen() {
         //House generation
         MapBuilder mapBuilder = new MapBuilder();
-        mapBuilder.createMap(this);
+        mapBuilder.createMap();
         mapBuilder.addRoomAtCell(0, 0, new Bedroom());
 
         overworldMap = mapBuilder.buildMap();
+        overworldMap.addToScreen(this, true);
 
         //Player
         SpawnPoint playerSpawn = overworldMap.getPlayerSpawn();
@@ -57,10 +58,10 @@ public class OverworldScreen extends GameScreen {
 
 
         //Walls
-        ArrayList<SpawnPoint> objectSpawns = overworldMap.getObjectSpawns();
-        SpawnPoint TLC = objectSpawns.get(0);
-        SpawnPoint TRC = objectSpawns.get(1);
-        SpawnPoint BLC = objectSpawns.get(2);
+//        ArrayList<SpawnPoint> objectSpawns = overworldMap.getObjectSpawns();
+//        SpawnPoint TLC = objectSpawns.get(0);
+//        SpawnPoint TRC = objectSpawns.get(1);
+//        SpawnPoint BLC = objectSpawns.get(2);
 
 //        Floor northWall = new Floor(TLC.getTileX()-50,TLC.getTileY()-50,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
 //        northWall.setHeight(25);

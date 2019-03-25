@@ -1,5 +1,6 @@
 package gameobject.renderable.house.overworld;
 
+import gameobject.GameObject;
 import gameobject.renderable.house.overworld.room.Room;
 import gameobject.renderable.house.overworld.room.SpawnPoint;
 import gameobject.renderable.house.overworld.room.SpawnType;
@@ -10,14 +11,13 @@ import java.util.ArrayList;
 
 import static gameobject.renderable.house.overworld.OverworldMeta.*;
 
-public class Map {
+public class Map extends GameObject {
 
-    private final GameScreen parentScreen;
     private TileGridContainer[][] chunkMap;
     private ArrayList<Room> rooms;
 
-    public Map(GameScreen parentScreen, ArrayList<Room> rooms, ArrayList<ArrayList<TileGridContainer>> chunks){
-        this.parentScreen = parentScreen;
+    Map(ArrayList<Room> rooms, ArrayList<ArrayList<TileGridContainer>> chunks){
+        super();
         this.rooms = rooms;
         chunkMap = new TileGridContainer[chunks.size()][chunks.get(0).size()];
         //Concrete chunks into 2D array
@@ -28,6 +28,41 @@ public class Map {
         }
     }
 
+    //region <GameObject Overrides>
+    @Override
+    public boolean setActive(GameScreen screen){
+        if(super.setActive(screen)){
+            for (Room room : rooms) room.setActive(screen);
+            for(TileGridContainer[] row : chunkMap){
+                for(TileGridContainer chunk : row) chunk.setActive(screen);
+            }return true;
+        }return false;
+    }
+
+    @Override
+    public boolean setInactive(GameScreen screen){
+        if(super.setInactive(screen)){
+            for (Room room : rooms) room.setInactive(screen);
+            for(TileGridContainer[] row : chunkMap){
+                for(TileGridContainer chunk : row) chunk.setInactive(screen);
+            }return true;
+        }return false;
+    }
+
+    @Override
+    public void addToScreen(GameScreen screen, boolean isActive){
+        super.addToScreen(screen, isActive);
+        for (Room room : rooms) room.addToScreen(screen, isActive);
+        for(TileGridContainer[] row : chunkMap){
+            for(TileGridContainer chunk : row) chunk.addToScreen(screen, isActive);
+        }
+    }
+
+    @Override
+    public void update() {}
+    //endregion
+
+    //**************************************************************************************************************
     //TODO: CHANGE THIS
     public SpawnPoint getPlayerSpawn(){
         for(Room room : rooms){
@@ -52,24 +87,6 @@ public class Map {
                         tempSpawn.getTileY()*TileSize+TileSize/2 + room.getCellY()*TileSize + (ChunkSize*TileSize*BorderBuffer),
                         SpawnType.Vendor,room);
                 return vendorSpawn;
-            }
-        }
-        return null;
-    }
-
-    //TODO: CHANGE THIS
-    public ArrayList<SpawnPoint> getObjectSpawns(){
-        for(Room room : rooms){
-            if(room.getObjectSpawnOptions() != null){
-                ArrayList<SpawnPoint> objectSpawns = new ArrayList<>();
-                for(SpawnPoint spawn : room.getObjectSpawnOptions()) {
-                    SpawnPoint objectSpawn = new SpawnPoint(
-                            spawn.getTileX() * TileSize + TileSize / 2 + room.getCellX() * TileSize + (ChunkSize * TileSize * BorderBuffer),
-                            spawn.getTileY() * TileSize + TileSize / 2 + room.getCellY() * TileSize + (ChunkSize * TileSize * BorderBuffer),
-                            SpawnType.Objcect, room);
-                    objectSpawns.add(objectSpawn);
-                }
-                return objectSpawns;
             }
         }
         return null;

@@ -1,10 +1,15 @@
 package gameobject.renderable.house.overworld;
 
+import gameobject.renderable.house.overworld.room.Boundary;
 import gameobject.renderable.house.overworld.room.Room;
+import gameobject.renderable.house.sidescrolling.Floor;
 import gamescreen.GameScreen;
 import gameobject.container.TileGridContainer;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
+
+import javax.swing.plaf.basic.BasicOptionPaneUI;
+
 import static gameobject.renderable.house.overworld.OverworldMeta.*;
 import static gameobject.renderable.house.overworld.OverworldMeta.Tiles.House.*;
 
@@ -15,13 +20,11 @@ public class MapBuilder {
     private ChunkBuilder chunkBuilder;
     private ArrayList<ArrayList<TileGridContainer>> chunks;
     private ArrayList<Room> rooms;
-    private GameScreen parentScreen;
 
 
 
-    public void createMap(GameScreen parentScreen){
+    public void createMap(){
         Debug.log(DebugEnabler.OVERWORLD, "MapBuilder - Start creating Map");
-        this.parentScreen = parentScreen;
         rooms = new ArrayList<>();
         chunks = new ArrayList<>();
         chunkBuilder = new ChunkBuilder();
@@ -32,11 +35,10 @@ public class MapBuilder {
 
         // Build the Map Structure and returns a chunk grid that needs room data
         ArrayList<ArrayList<TileGridContainer>> noBorderMap = buildMapStructure();
-
         organizeChunks();
         roomToChunkConverter(noBorderMap);
-
-        return new Map(parentScreen, rooms, chunks);
+        generateRoomObjects();
+        return new Map(rooms, chunks);
     }
 
     public void addRoomAtCell(int x, int y, Room newRoom){
@@ -44,9 +46,11 @@ public class MapBuilder {
         for(Room room : rooms){
             if(room.isConflicting(newRoom)){
                 Debug.error(DebugEnabler.OVERWORLD, newRoom.getName() + " - is conflicting with: " + room.getName());
+                newRoom.setCell(-1,-1);
                 return;
             }
         }
+        newRoom.initializeSpawnPoints();
         rooms.add(newRoom);
     }
 
@@ -72,11 +76,11 @@ public class MapBuilder {
                 if(row >= BorderBuffer && row < chunkRows+BorderBuffer
                         && col >= BorderBuffer && col < chunkCols+BorderBuffer){
                     // Create an empty chunk
-                    chunkBuilder.createChunk(parentScreen);
+                    chunkBuilder.createChunk();
                     chunks.get(row).add(chunkBuilder.getChunk());
                     noBorderMap.get(row-BorderBuffer).add(chunks.get(row).get(col));
                 } else {
-                    chunkBuilder.createChunk(parentScreen);
+                    chunkBuilder.createChunk();
                     chunkBuilder.fillWithGrass();
                     chunks.get(row).add(chunkBuilder.getChunk());
                 }
@@ -157,5 +161,66 @@ public class MapBuilder {
                 }
             }
         }
+    }
+
+    private void generateRoomObjects() {
+        for(Room room : rooms){
+            for(int row = 0; row < room.getHeight(); row++) {
+                for (int col = 0; col < room.getWidth(); col++) {
+                    switch (room.getLayout()[row][col]) {
+                        case WALLNW:
+                            createNorthWall(room, row, col);
+                            //createWestWall(room, row, col);
+                            break;
+                        case WALLNE:
+                            break;
+                        case WALLSE:
+                            break;
+                        case WALLSW:
+                            break;
+
+                        case WALLN:
+                            break;
+                        case WALLE:
+                            break;
+                        case WALLS:
+                            break;
+                        case WALLW:
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+    }
+
+    private void createNorthWall(Room room, int iRow, int iCol) {
+        final Integer[] row = room.getLayout()[iRow];
+        final Tile startTile = room.getRoomTileAt(iRow, iCol);
+        int width = 0;
+        boolean done = false;
+
+        for (int col = iCol; col < room.getWidth(); col++){
+            switch(row[col]){
+                case WALLNW:
+                    width += 100;
+                    row[col] = WALLW;
+                    break;
+                case WALLNE:
+                    width += 100;
+                    row[col] = WALLE;
+                    break;
+                case WALLN:
+                    width += 100;
+                    row[col] = -WALLN;
+                    break;
+                default: done = true;
+                    break;
+            }
+            if(done) break;
+        }
+
+        room.addBoundary(new Boundary(startTile.getX(), startTile.getY(), width, WallThickness));
     }
 }

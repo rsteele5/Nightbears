@@ -1,18 +1,15 @@
 package input.listeners.Key;
 
 import gameobject.renderable.player.Player;
-import gamescreen.Overlay;
 import main.utilities.Clickable;
-import main.utilities.Debug;
-
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class OverworldKeyHandler implements KeyHandler {
 
     private Player player;
-    private final int CYCLE = 9;
-    private final int SELECT = 10;
+    private final int CYCLE = KeyEvent.VK_TAB;
+    private final int SELECT = KeyEvent.VK_ENTER;
     private ArrayList<Clickable> clickables;
     private Clickable target;
 

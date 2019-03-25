@@ -19,11 +19,14 @@ public class Bedroom extends Room {
     }
 
     @Override
-    protected void initializeSpawnPoints() {
+    public void initializeSpawnPoints() {
         spawnPoints.add(new SpawnPoint(1,1, SpawnType.Player, this));
         spawnPoints.add(new SpawnPoint(2,1, SpawnType.Vendor,this));
         spawnPoints.add(new SpawnPoint(0,0, SpawnType.Objcect,this));
         spawnPoints.add(new SpawnPoint(4,0, SpawnType.Objcect,this));
         spawnPoints.add(new SpawnPoint(4,4, SpawnType.Objcect,this));
     }
+
+    @Override
+    public void update() {}
 }

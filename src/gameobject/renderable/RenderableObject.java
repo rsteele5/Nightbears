@@ -173,6 +173,7 @@ public abstract class RenderableObject extends GameObject implements Loadable, S
     @Override
     public void addToScreen(GameScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
+        screen.renderables.remove(this);    //Remove if the renderable is already in the list.
         if(isActive) addToRenderables(screen);
         screen.loadables.add(this);
         if(animator != null){

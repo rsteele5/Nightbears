@@ -191,7 +191,7 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
     @Override
     public void addToScreen(GameScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
-
+        screen.kinematics.remove(this);
         if(isActive) {
             screen.kinematics.add(this);
         }

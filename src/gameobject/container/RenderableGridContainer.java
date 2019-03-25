@@ -5,16 +5,16 @@ import gamescreen.GameScreen;
 
 public class RenderableGridContainer extends GridContainer<RenderableObject> {
 
-    public RenderableGridContainer(GameScreen parentScreen, int rows, int cols, int itemWidth, int itemHeight) {
-        super(parentScreen, rows, cols, itemWidth, itemHeight, 0, 0, 5);
+    public RenderableGridContainer(int rows, int cols, int itemWidth, int itemHeight) {
+        super(rows, cols, itemWidth, itemHeight, 0, 0, 5);
     }
 
-    public RenderableGridContainer(GameScreen parentScreen, int rows, int cols, int itemWidth , int itemHeight, int xPos, int yPos) {
-        super(parentScreen, rows, cols, itemWidth, itemHeight, xPos, yPos, 5);
+    public RenderableGridContainer(int rows, int cols, int itemWidth , int itemHeight, int xPos, int yPos) {
+        super(rows, cols, itemWidth, itemHeight, xPos, yPos, 5);
     }
 
-    public RenderableGridContainer(GameScreen parentScreen, int rows, int cols, int itemWidth , int itemHeight, int xPos, int yPos, int padding) {
-        super(parentScreen, rows, cols, itemWidth, itemHeight, xPos, yPos, padding);
+    public RenderableGridContainer(int rows, int cols, int itemWidth , int itemHeight, int xPos, int yPos, int padding) {
+        super(rows, cols, itemWidth, itemHeight, xPos, yPos, padding);
     }
 
     @Override

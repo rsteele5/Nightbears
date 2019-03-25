@@ -242,8 +242,8 @@ public class VendorScreen extends GameScreen {
         // Create GridContainers for player and vendor item button
         int rows = 7;
         int columns = 4;
-        RenderableGridContainer playerGrid = new RenderableGridContainer(this, rows, columns, itemButtonSize.x, itemButtonSize.y, playerGridLocation.x, playerGridLocation.y);
-        RenderableGridContainer vendorGrid = new RenderableGridContainer(this, rows, columns, itemButtonSize.x, itemButtonSize.y, vendorGridLocation.x, vendorGridLocation.y);
+        RenderableGridContainer playerGrid = new RenderableGridContainer(rows, columns, itemButtonSize.x, itemButtonSize.y, playerGridLocation.x, playerGridLocation.y);
+        RenderableGridContainer vendorGrid = new RenderableGridContainer(rows, columns, itemButtonSize.x, itemButtonSize.y, vendorGridLocation.x, vendorGridLocation.y);
 
         //region Add item buttons to the Grid Containers
         int count = playerInventory.size();
@@ -252,7 +252,7 @@ public class VendorScreen extends GameScreen {
             for (int j = 0; j < columns; j++){
                 ItemButton itemContainerButton = new ItemButton();
                 itemContainerButton.setSize(itemButtonSize.x, itemButtonSize.y);
-                playerGrid.dynamicAddAt(itemContainerButton, i, j);
+                playerGrid.addAt(itemContainerButton, i, j);
                 if (k < count) {
                     itemContainerButton.setItem((Item)(playerInventory.get(k)));
                     k++;
@@ -262,6 +262,7 @@ public class VendorScreen extends GameScreen {
                 playerButtons.add(itemContainerButton);
             }
         }
+        playerGrid.addToScreen(this, true);
 
         count = vendorInventory.size();
         k = 0;
@@ -269,7 +270,7 @@ public class VendorScreen extends GameScreen {
             for (int j = 0; j < columns; j++){
                 ItemButton itemContainerButton = new ItemButton();
                 itemContainerButton.setSize(itemButtonSize.x, itemButtonSize.y);
-                vendorGrid.dynamicAddAt(itemContainerButton, i, j);
+                vendorGrid.addAt(itemContainerButton, i, j);
                 if (k < count) {
                     itemContainerButton.setItem(vendorInventory.get(k));
                     k++;
@@ -279,6 +280,7 @@ public class VendorScreen extends GameScreen {
                 vendorButtons.add(itemContainerButton);
             }
         }
+        vendorGrid.addToScreen(this, true);
         //endregion
     }
 

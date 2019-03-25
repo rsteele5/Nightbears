@@ -5,8 +5,8 @@ import gamescreen.GameScreen;
 
 public class TileGridContainer extends GridContainer<Tile> {
 
-    public TileGridContainer(GameScreen parentScreen, int rows, int cols, int itemWidth, int itemHeight, int xPos, int yPos) {
-        super(parentScreen, rows, cols, itemWidth, itemHeight, xPos, yPos, 0);
+    public TileGridContainer(int rows, int cols, int itemWidth, int itemHeight, int xPos, int yPos) {
+        super(rows, cols, itemWidth, itemHeight, xPos, yPos, 0);
     }
 
     @Override

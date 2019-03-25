@@ -66,6 +66,10 @@ public abstract class GameObject {
         x += screen.getX();
         y += screen.getY();
 
+        //Remove if the object is already in the list.
+        screen.activeObjects.remove(this);
+        screen.inactiveObjects.remove(this);
+
         if(isActive){
             screen.activeObjects.add(this);
         } else {
