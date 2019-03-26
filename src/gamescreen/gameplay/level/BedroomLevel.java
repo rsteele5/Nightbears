@@ -1,13 +1,13 @@
 package gamescreen.gameplay.level;
 
-import _test.Square;
+import gameengine.physics.PhysicsObject;
 import gameengine.gamedata.PlayerData;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.ImageContainer;
 import gameobject.renderable.enemy.Minion;
 import gameobject.renderable.enemy.WalkLeftMS;
 import gameobject.renderable.enemy.Walker;
-import gameobject.renderable.house.sidescrolling.Floor;
+import gameengine.physics.PhysicsObjectStatic;
 import gameobject.renderable.item.weapon.Weapon;
 import gameobject.renderable.item.weapon.WeaponBuilder;
 import gameobject.renderable.item.weapon.WeaponType;
@@ -26,26 +26,26 @@ public class BedroomLevel implements Level {
     @Override
     public void buildTerrain(GameScreen gameScreen) {
         //This is where the instruction for how to procedurally generate a level would go
-        Floor floorTile = new Floor(10, 576, "/assets/levelObjects/WoodTile1.png",DrawLayer.Entity);
-        Floor floorTile2 = new Floor(10, 576, "/assets/levelObjects/WoodTile1.png",DrawLayer.Entity);
-        floorTile.setWidth(1260);
-        floorTile.setHeight(50);
-        floorTile2.setWidth(50);
-        floorTile2.setHeight(96);
-        gameScreen.kinematics.add(floorTile);
-        gameScreen.kinematics.add(floorTile2);
-        floorTile.addToScreen(gameScreen, true);
+        PhysicsObjectStatic physicsObjectStaticTile = new PhysicsObjectStatic(10, 576, "/assets/levelObjects/WoodTile1.png",DrawLayer.Entity);
+        PhysicsObjectStatic physicsObjectStaticTile2 = new PhysicsObjectStatic(10, 576, "/assets/levelObjects/WoodTile1.png",DrawLayer.Entity);
+        physicsObjectStaticTile.setWidth(1260);
+        physicsObjectStaticTile.setHeight(50);
+        physicsObjectStaticTile2.setWidth(50);
+        physicsObjectStaticTile2.setHeight(96);
+        gameScreen.kinematics.add(physicsObjectStaticTile);
+        gameScreen.kinematics.add(physicsObjectStaticTile2);
+        physicsObjectStaticTile.addToScreen(gameScreen, true);
 
-        Square square;
+        PhysicsObject physicsObject;
         for(int x1 = 0; x1 < 5; x1++){
             for(int y1 = 0; y1 < x1; y1++){
-                square = new Square(x1 * 75 + 100,y1 * 75,"/assets/testAssets/square.png",DrawLayer.Entity);
-                square.addToScreen(gameScreen, true);
+                physicsObject = new PhysicsObject(x1 * 75 + 100,y1 * 75,"/assets/testAssets/square.png",DrawLayer.Entity);
+                physicsObject.addToScreen(gameScreen, true);
             }
         }
 
-        square = new Square(800,75,"/assets/testAssets/square.png",DrawLayer.Entity);
-        square.addToScreen(gameScreen, true);
+        physicsObject = new PhysicsObject(800,75,"/assets/testAssets/square.png",DrawLayer.Entity);
+        physicsObject.addToScreen(gameScreen, true);
 
         Weapon myWeap = new WeaponBuilder()
                 .position(800, 476)

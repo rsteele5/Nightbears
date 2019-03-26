@@ -27,7 +27,7 @@ public class Weapon extends Item implements Kinematic, Serializable, Interactabl
     public boolean action(GameObject g){
         if(g instanceof Player){
             ((Player)g).addItem(this);
-            System.out.println("ADDED WEAPON");
+            //TODO: Fix temp solution for removing image from screen.
             image = null;
             return true;
         }

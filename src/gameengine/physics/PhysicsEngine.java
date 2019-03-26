@@ -51,7 +51,7 @@ public class PhysicsEngine {
                 Kinematic obj2 = objects.get(i2);
                 if(obj2 instanceof Interactable && (obj1.getHitbox().intersects(((Interactable) obj2).collision()))) {
                     if(((Interactable) obj2).action((GameObject) obj1)) {
-                        objects.remove(i2);
+                        objects.remove(obj2);
                         indices = objects.size();
                         continue;
                     }

@@ -1,13 +1,9 @@
 package gameobject.renderable.enemy;
 
-import _test.Square;
-import gameengine.physics.Interactable;
-import gameengine.physics.Kinematic;
-import gameengine.physics.PhysicsMeta;
-import gameengine.physics.PhysicsVector;
+import gameengine.physics.*;
 import gameobject.GameObject;
 import gameobject.renderable.DrawLayer;
-import gameobject.renderable.house.sidescrolling.Floor;
+import gameengine.physics.PhysicsObjectStatic;
 import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
 import main.utilities.Debug;
@@ -21,13 +17,13 @@ public abstract class Minion extends Enemy implements Kinematic, Interactable {
 
     @Override
     public Rectangle collision(){
-        return new Rectangle(x,y,(int)(image.getWidth()),(int)(image.getHeight()));
+        return new Rectangle(x,y,image.getWidth(),image.getHeight());
     }
 
     @Override
     public boolean action(GameObject g){
 
-        if(g instanceof Square && !(g instanceof Floor)) {
+        if(g instanceof PhysicsObject && !(g instanceof PhysicsObjectStatic)) {
             changeState();
         }
 
