@@ -16,7 +16,7 @@ public class MainMenuScreen extends GameScreen {
 
     //region <Variables>
     private final int X_START = -150;
-    private final int Y_START = 400;
+    private final int Y_START = 150;
     private final int BUTTON_HEIGHT = 96;
     private final int Y_BUFFER = 48;
     //endregion
@@ -64,7 +64,27 @@ public class MainMenuScreen extends GameScreen {
                 }));
         devModeButton.addToScreen(this,true);
 
-        Button exitButton = (new Button(X_START, Y_START + 3 * (BUTTON_HEIGHT + Y_BUFFER),
+        Button heroHallButton = (new Button(X_START, Y_START + 3 * (BUTTON_HEIGHT + Y_BUFFER),
+                "/assets/buttons/Button-HeroHall.png",
+                "/assets/buttons/Button-HeroHallPressed.png",
+                DrawLayer.Entity,
+                () -> {
+                    Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Hall of Heroes");
+                    screenManager.addScreen(new DevScreen(screenManager));
+                }));
+        heroHallButton.addToScreen(this,true);
+
+        Button fallenHallButton = (new Button(X_START, Y_START + 4 * (BUTTON_HEIGHT + Y_BUFFER),
+                "/assets/buttons/Button-FallenHeroHall.png",
+                "/assets/buttons/Button-FallenHeroHallPressed.png",
+                DrawLayer.Entity,
+                () -> {
+                    Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Hall of Fallen");
+                    screenManager.addScreen(new DevScreen(screenManager));
+                }));
+        fallenHallButton.addToScreen(this,true);
+
+        Button exitButton = (new Button(X_START, Y_START + 5 * (BUTTON_HEIGHT + Y_BUFFER),
                 "/assets/buttons/Button-Quit.png",
                 "/assets/buttons/Button-QuitPressed.png",
                 DrawLayer.Entity,
