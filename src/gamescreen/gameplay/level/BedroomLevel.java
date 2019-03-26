@@ -1,21 +1,19 @@
 package gamescreen.gameplay.level;
 
 import _test.Square;
-import gameengine.GameEngine;
 import gameengine.gamedata.PlayerData;
-import gameengine.rendering.Camera;
-import gameobject.renderable.house.sidescrolling.Floor;
+import gameobject.renderable.DrawLayer;
+import gameobject.renderable.ImageContainer;
 import gameobject.renderable.enemy.Minion;
 import gameobject.renderable.enemy.WalkLeftMS;
 import gameobject.renderable.enemy.Walker;
-import gameobject.renderable.player.Player;
-import gameobject.renderable.enemy.Enemy;
-import gameobject.renderable.ImageContainer;
+import gameobject.renderable.house.sidescrolling.Floor;
 import gameobject.renderable.item.weapon.Weapon;
 import gameobject.renderable.item.weapon.WeaponBuilder;
 import gameobject.renderable.item.weapon.WeaponType;
-import gameobject.renderable.DrawLayer;
+import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
+import input.listeners.Key.SideScrollKeyHandler;
 
 public class BedroomLevel implements Level {
 
@@ -23,6 +21,7 @@ public class BedroomLevel implements Level {
     public void buildBackground(GameScreen gameScreen) {
         ImageContainer background = new ImageContainer(0, 0, "/assets/backgrounds/BG-Level.png", DrawLayer.Background);
         background.addToScreen(gameScreen, true);
+
     }
 
     @Override
@@ -67,6 +66,7 @@ public class BedroomLevel implements Level {
         Player player = new Player(10, 476, DrawLayer.Entity, playerData);
         player.setState(Player.PlayerState.sideScroll);
         player.addToScreen(gameScreen, true);
+
         return player;
 
     }

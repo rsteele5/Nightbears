@@ -5,6 +5,7 @@ import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.overworld.OverworldUI;
+import input.listeners.Key.SideScrollKeyHandler;
 
 public class LevelDecorator extends GameScreen {
     private static Level lBuild;
@@ -29,5 +30,6 @@ public class LevelDecorator extends GameScreen {
         UI = new OverworldUI(screenManager, this, player);
         addOverlay(UI);
         setCamera(new Camera(screenManager, this, player));
+        setKeyHandler(new SideScrollKeyHandler(player));
     }
 }

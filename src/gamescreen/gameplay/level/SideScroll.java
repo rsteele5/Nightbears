@@ -1,21 +1,17 @@
 package gamescreen.gameplay.level;
 
 import _test.Square;
-import gameengine.GameEngine;
+import gameengine.physics.Kinematic;
 import gameengine.rendering.Camera;
-import gameobject.renderable.player.Player;
-import gameobject.renderable.house.sidescrolling.Floor;
-import gameobject.renderable.ImageContainer;
-import gameobject.renderable.button.Button;
+import gameobject.GameObject;
 import gameobject.renderable.DrawLayer;
+import gameobject.renderable.ImageContainer;
+import gameobject.renderable.house.sidescrolling.Floor;
+import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
-import gameengine.physics.Kinematic;
-import gameobject.GameObject;
-import gameobject.renderable.RenderableObject;
 import gamescreen.gameplay.overworld.OverworldUI;
-import main.utilities.Debug;
-import main.utilities.DebugEnabler;
+import input.listeners.Key.SideScrollKeyHandler;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -24,9 +20,12 @@ public class SideScroll extends GameScreen {
     private CopyOnWriteArrayList<Kinematic> kinematicObjects;
     private OverworldUI UI;
     final int xOFF = 2500;
+    Player player;
     final int yOFF = 1500;
     public SideScroll(ScreenManager screenManager) {
         super(screenManager, "level", true, 1f);
+
+
     }
 
     /**
@@ -41,9 +40,6 @@ public class SideScroll extends GameScreen {
         background = (new ImageContainer(0,0, bg, DrawLayer.Background));
         background.addToScreen(this,true);
 
-        Player player = new Player(xOFF, yOFF, DrawLayer.Entity,gameData.getPlayerData());
-        player.setState(Player.PlayerState.sideScroll);
-        player.addToScreen(this,true);
 
         Square square;
 
@@ -84,11 +80,14 @@ public class SideScroll extends GameScreen {
         floor.addToScreen(this, true);
         floor1.addToScreen(this, true);
         floor2.addToScreen(this, true);
-
+        Player player = new Player(xOFF,yOFF,DrawLayer.Entity, gameData.getPlayerData());
+        player.setState(Player.PlayerState.sideScroll);
+        player.addToScreen(this,true);
 
         UI = new OverworldUI(screenManager, this, player);
         addOverlay(UI);
         setCamera(new Camera(screenManager,this, player));
+        setKeyHandler(new SideScrollKeyHandler(player));
     }
 
 

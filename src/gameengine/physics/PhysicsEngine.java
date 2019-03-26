@@ -1,16 +1,15 @@
 package gameengine.physics;
 
 import _test.Square;
-import gameengine.GameEngine;
+import gameengine.gamedata.GameData;
 import gameengine.gamedata.PlayerData;
+import gameobject.GameObject;
 import gameobject.renderable.enemy.Enemy;
 import gameobject.renderable.enemy.Minion;
 import gameobject.renderable.house.sidescrolling.Floor;
-import gameengine.gamedata.GameData;
-import gameobject.renderable.player.Player;
 import gameobject.renderable.item.weapon.Weapon;
+import gameobject.renderable.player.Player;
 import gamescreen.ScreenManager;
-import gameobject.GameObject;
 import main.utilities.Debug;
 
 import java.awt.*;
@@ -23,6 +22,7 @@ public class PhysicsEngine {
     private ScreenManager screenManager;
     public PhysicsEngine(GameData gameData, ScreenManager myScreenManager) {
         screenManager = myScreenManager;
+
     }
 
     public void update() {
