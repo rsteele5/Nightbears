@@ -1,31 +1,48 @@
 package gameobject.renderable.enemy;
 
 import _test.Square;
+import gameengine.physics.Interactable;
 import gameengine.physics.Kinematic;
 import gameengine.physics.PhysicsMeta;
 import gameengine.physics.PhysicsVector;
-import gameengine.rendering.animation.Animator;
+import gameobject.GameObject;
 import gameobject.renderable.DrawLayer;
-import gameobject.renderable.RenderableObject;
+import gameobject.renderable.house.sidescrolling.Floor;
 import gameobject.renderable.player.Player;
-import gameobject.renderable.player.overworld.PlayerIdleAnimation;
-import gameobject.renderable.player.overworld.PlayerWalkingAnimation;
-import gameobject.renderable.player.sidescrolling.PlayerSSIdleAnimation;
 import gamescreen.GameScreen;
-import main.utilities.AssetLoader;
 import main.utilities.Debug;
-import main.utilities.DebugEnabler;
+
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.File;
 
-import javax.imageio.ImageIO;
+public abstract class Minion extends Enemy implements Kinematic, Interactable {
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
+    @Override
+    public Rectangle collision(){
+        return new Rectangle(x,y,(int)(image.getWidth()),(int)(image.getHeight()));
+    }
 
-public abstract class Minion extends Enemy implements Kinematic {
+    @Override
+    public boolean action(GameObject g){
+
+        if(g instanceof Square && !(g instanceof Floor)) {
+            changeState();
+        }
+
+        if(g instanceof Player){
+            Debug.success(true,"ENEMY->Player");
+            addhp(-1);//todo sword damage
+            Debug.success(true,Integer.toString(getHp()));
+            if(getHp() < 1) {
+                image = null;
+                return true;
+            }
+            else return false;
+        }
+        return false;
+    }
 
     protected MinionState state;
     private int speed = 1;

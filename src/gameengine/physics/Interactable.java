@@ -1,7 +1,6 @@
 package gameengine.physics;
 
 import gameobject.GameObject;
-import org.w3c.dom.css.Rect;
 
 import java.awt.*;
 
@@ -13,7 +12,7 @@ public interface Interactable {
 
     /***
      Performs an action on the passed game object when it intersects collision().
-     Returns true or false depending on the user defined execution.
+     If true is returned, delete upon interaction. Otherwise don't.
      */
     default boolean action(GameObject g){return false;}
 }

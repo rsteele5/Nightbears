@@ -13,7 +13,6 @@ import gameobject.renderable.item.weapon.WeaponBuilder;
 import gameobject.renderable.item.weapon.WeaponType;
 import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
-import input.listeners.Key.SideScrollKeyHandler;
 
 public class BedroomLevel implements Level {
 

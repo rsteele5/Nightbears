@@ -1,20 +1,13 @@
 package gameobject.renderable.player;
 
-import gameengine.GameEngine;
-import gameengine.gamedata.GameData;
 import gameengine.gamedata.PlayerData;
 import gameengine.physics.Kinematic;
 import gameengine.physics.PhysicsMeta;
 import gameengine.physics.PhysicsVector;
 import gameengine.rendering.animation.Animator;
-import gameobject.renderable.RenderableObject;
-import gameobject.renderable.item.ItemComparator;
-import gameobject.renderable.item.*;
 import gameobject.renderable.DrawLayer;
-import gameobject.renderable.item.armor.ArmorBuilder;
-import gameobject.renderable.item.armor.ArmorType;
-import gameobject.renderable.item.weapon.WeaponBuilder;
-import gameobject.renderable.item.weapon.WeaponType;
+import gameobject.renderable.RenderableObject;
+import gameobject.renderable.item.Item;
 import gameobject.renderable.player.overworld.PlayerIdleAnimation;
 import gameobject.renderable.player.overworld.PlayerWalkingAnimation;
 import gameobject.renderable.player.sidescrolling.PlayerSSCrouchingAnimation;
@@ -83,6 +76,9 @@ public class Player extends RenderableObject implements Kinematic {
         animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation());
     }
 
+    public void addItem(Item i){
+        playerData.addItem(i);
+    }
 
     @Override
     public void update() {

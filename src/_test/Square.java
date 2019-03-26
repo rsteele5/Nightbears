@@ -15,6 +15,7 @@ public class Square extends RenderableObject implements Kinematic {
         super(x,y,path,drawLayer);
     }
     PhysicsVector movement = new PhysicsVector(0,0);
+    public String name = "square";
     @Override
     public void update() {
 

@@ -1,12 +1,13 @@
 package gameobject.renderable.item.weapon;
 
+import gameengine.physics.Interactable;
 import gameengine.physics.Kinematic;
 import gameengine.physics.PhysicsVector;
-import gameobject.renderable.RenderableObject;
+import gameobject.GameObject;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.item.Item;
 import gameobject.renderable.item.ItemCategory;
-import gameobject.renderable.item.ItemMeta;
+import gameobject.renderable.player.Player;
 import main.utilities.AssetLoader;
 import main.utilities.Debug;
 
@@ -14,11 +15,25 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
-import static java.lang.Math.round;
-
-public class Weapon extends Item implements Kinematic, Serializable {
+public class Weapon extends Item implements Kinematic, Serializable, Interactable {
     //region <Variables>
 
+    @Override
+    public Rectangle collision(){
+        return new Rectangle(x,y,image.getWidth(),image.getHeight());
+    }
+
+    @Override
+    public boolean action(GameObject g){
+        if(g instanceof Player){
+            ((Player)g).addItem(this);
+            System.out.println("ADDED WEAPON");
+            image = null;
+            return true;
+        }
+        else return false;
+
+    }
     /** General item variables **/
     private transient BufferedImage icon;
     protected String name;

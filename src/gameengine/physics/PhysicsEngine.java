@@ -1,16 +1,10 @@
 package gameengine.physics;
 
-import _test.Square;
 import gameengine.gamedata.GameData;
 import gameengine.gamedata.PlayerData;
 import gameobject.GameObject;
-import gameobject.renderable.enemy.Enemy;
-import gameobject.renderable.enemy.Minion;
-import gameobject.renderable.house.sidescrolling.Floor;
-import gameobject.renderable.item.weapon.Weapon;
 import gameobject.renderable.player.Player;
 import gamescreen.ScreenManager;
-import main.utilities.Debug;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -55,30 +49,22 @@ public class PhysicsEngine {
                     continue;
 
                 Kinematic obj2 = objects.get(i2);
-                if(obj2 instanceof Interactable && (obj1.getHitbox().intersects(((Interactable) obj2).collision())))
-                        ((Interactable) obj2).action((GameObject)obj1);
+                if(obj2 instanceof Interactable && (obj1.getHitbox().intersects(((Interactable) obj2).collision()))) {
+                    if(((Interactable) obj2).action((GameObject) obj1)) {
+                        objects.remove(i2);
+                        indices = objects.size();
+                        continue;
+                    }
+                }
+                if(obj1 instanceof Interactable && (obj2.getHitbox().intersects(((Interactable) obj1).collision()))){
+                    if(((Interactable) obj1).action((GameObject) obj2)) {
+                        objects.remove(obj1);
+                        indices = objects.size();
+                        continue;
+                    }
+                }
 
                 if (obj1.getHitbox().intersects(obj2.getHitbox())) {
-                    if (obj1 instanceof Weapon && obj2 instanceof Player) {
-                        //GameEngine.players.get(0).addItem((Weapon) obj1);
-                        playerData = gameData.getPlayerData();
-                        playerData.addItem((Weapon) obj1);
-                        Debug.log(true, "Weapon Get!");
-                    }
-
-                    if (obj1 instanceof Enemy && obj2 instanceof Square) {
-                        if(!(obj2 instanceof Floor)) {
-                            Minion e = (Minion) obj1;
-                            e.changeState();
-                        }
-                    }
-
-                    if (obj1 instanceof Minion && obj2 instanceof Player) {
-                        Debug.success(true,"ENEMY->Player");
-                        Minion e = (Minion) obj1; e.addhp(-1);//todo sword damage
-                        Debug.success(true,Integer.toString(e.getHp()));
-                        if(e.getHp() < 1) e.setInactive(e.getScreen());
-                    }
 
                     obj1.setAcceleration(new PhysicsVector(1, 1));
                     if (!obj2.isStatic())
