@@ -1,11 +1,9 @@
 package gameengine;
 
 import gameengine.gamedata.GameData;
-import gameengine.gamedata.GameSettings;
-import gameengine.physics.OverworldEngine;
-import gameobject.renderable.player.Player;
+import gameengine.gamedata.VendorData;
 import gameobject.renderable.vendor.Vendor;
-import gameobject.renderable.DrawLayer;
+import input.listeners.Key.KeyController;
 import input.listeners.MouseController;
 import gameengine.physics.PhysicsEngine;
 import gameengine.rendering.RenderEngine;
@@ -13,9 +11,7 @@ import gamescreen.ScreenManager;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 import javax.swing.JFrame;
-import java.awt.Graphics;
 import java.awt.Container;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class GameEngine implements Runnable {
@@ -30,26 +26,20 @@ public class GameEngine implements Runnable {
     private ScreenManager screenManager;
     private PhysicsEngine physicsEngine;
     private RenderEngine renderEngine;
-    private OverworldEngine overworldEngine;
-    public static ArrayList<Player> players;
-    private static Player p1,p2;
-    public static Vendor vendor;
+    public Vendor vendor;
+    public VendorData vendorData;
 
     public GameEngine(GameData gameData){
-        p1 = new Player(0,0, "/assets/player/overworld/teddyidleanimation/Overworld-Teddy-Center.png", DrawLayer.Entity);
-        p2 = new Player(0,0,"/assets/testAssets/square2.png", DrawLayer.Entity);
-        vendor = new Vendor(0,0);
+        vendor = new Vendor(0,0, vendorData);
         this.gameData = gameData;
         screenManager = new ScreenManager(gameData);
         renderEngine = new RenderEngine(gameData, screenManager);
         physicsEngine = new PhysicsEngine(gameData, screenManager);
         renderEngine.addMouseListener(new MouseController(screenManager));
-        players = new ArrayList<>(){{
-            add(p1);
-            add(p2);
-        }};
-        overworldEngine = new OverworldEngine(screenManager);
+        renderEngine.addKeyListener(new KeyController(screenManager));
+        renderEngine.setFocusTraversalKeysEnabled(false);                   //Lets us utilize TAB in te keyController.
     }
+
 
     public void initializeWindow(JFrame gameWindow){
         Container contentPane = gameWindow.getContentPane();
@@ -61,15 +51,7 @@ public class GameEngine implements Runnable {
         while(true){
             frameCounter++;
             long startTime = System.currentTimeMillis();
-            //Update
-            switch (players.get(0).getState()){
-                case sideScroll:
-                    physicsEngine.update();
-                    break;
-                case overWorld:
-                    overworldEngine.update();
-                    break;
-            }
+            physicsEngine.update();
             screenManager.update();
             //Render
             renderEngine.draw();
@@ -78,17 +60,19 @@ public class GameEngine implements Runnable {
             int sleepTime = (int) (1.0 / FRAMES_PER_SECOND * 1000)
                     - (int) (endTime - startTime);
 
-            Debug.success(DebugEnabler.FPS_CURRENT,"Current FPS: " + 1000 / (endTime - startTime) );
-            renderEngine.setFPS("Current FPS: " + 1000 / (endTime - startTime));
+
             if (sleepTime >= 0) {
                 try {
-                    if(endTime-startTime > 0 /*&& frameCounter % 60 == 0*/)
-                    TimeUnit.MILLISECONDS.sleep(sleepTime);
+                    if(endTime-startTime > 0 /*&& frameCounter % 60 == 0*/) {
+                        Debug.success(DebugEnabler.FPS_CURRENT,"Current FPS: " + 1000 / (endTime - startTime) );
+                        renderEngine.setFPS("Current FPS: " + 1000 / (endTime - startTime));
+                        TimeUnit.MILLISECONDS.sleep(sleepTime);
+                    }
                 } catch (InterruptedException e) {
-                    Debug.error(DebugEnabler.FPS, "Thread Interupted: " + e.toString());
+                    Debug.error(DebugEnabler.FPS_WARNING, "Thread Interupted: " + e.toString());
                 }
             } else {
-                Debug.warning(DebugEnabler.FPS,"FPS below 60! - current FPS: " + 1000 / (endTime - startTime) );
+                Debug.warning(DebugEnabler.FPS_WARNING,"FPS_WARNING below 60! - current FPS_WARNING: " + 1000 / (endTime - startTime) );
             }
         }
     }

@@ -36,6 +36,7 @@ public class MainMenuScreen extends GameScreen {
         //Create buttons
         Button newGameButton = (new Button(X_START, Y_START,
                 "/assets/buttons/Button-NewGame.png",
+                "/assets/buttons/Button-NewGamePressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - New Game");
@@ -45,6 +46,7 @@ public class MainMenuScreen extends GameScreen {
 
         Button optionsButton = (new Button(X_START, Y_START + BUTTON_HEIGHT + Y_BUFFER,
                 "/assets/buttons/Button-Options.png",
+                "/assets/buttons/Button-OptionsPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Options");
@@ -54,6 +56,7 @@ public class MainMenuScreen extends GameScreen {
 
         Button devModeButton = (new Button(X_START, Y_START + 2 * (BUTTON_HEIGHT + Y_BUFFER),
                 "/assets/buttons/Button-Dev.png",
+                "/assets/buttons/Button-DevPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - DevMode");
@@ -63,6 +66,7 @@ public class MainMenuScreen extends GameScreen {
 
         Button exitButton = (new Button(X_START, Y_START + 3 * (BUTTON_HEIGHT + Y_BUFFER),
                 "/assets/buttons/Button-Quit.png",
+                "/assets/buttons/Button-QuitPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Exit");

@@ -4,18 +4,20 @@ import gameobject.renderable.DrawLayer;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gameobject.renderable.ImageContainer;
+import input.listeners.MouseController;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
-
+/**
+ * This screen is contains our teams logo and slowly fades
+ * into view before fading out of view. Once the transition
+ * is complete the title screen should be displayed.
+ */
 public class TeamSplashScreen extends GameScreen {
 
-    //region <Variables>
     private ImageContainer logo;
-    private ImageContainer skipMsg;
     //endregion
 
-    //region <Construction and Initialization>
     public TeamSplashScreen(ScreenManager screenManager) {
         super(screenManager, "TeamSplashScreen");
     }
@@ -28,17 +30,10 @@ public class TeamSplashScreen extends GameScreen {
         logo = new ImageContainer(670,420, "/assets/backgrounds/BG-TeamLogo.png", DrawLayer.Background);
         logo.addToScreen(this,true);
         logo.setAlpha(0);
-
-        skipMsg = new ImageContainer(900,980, "/assets/text/TXT-SkipMsg.png", DrawLayer.Scenery);
-        skipMsg.addToScreen(this, true);
     }
 
-
-    //endregion
-
-    //region <Update>
     @Override
-    public void transitionOn() {
+    protected void transitionOn() {
         float alpha = logo.getAlpha();
         if(alpha < 0.991f){
             logo.setAlpha(alpha + 0.008f);
@@ -48,7 +43,7 @@ public class TeamSplashScreen extends GameScreen {
     }
 
     @Override
-    public void transitionOff() {
+    protected void transitionOff() {
         float alpha = logo.getAlpha();
         if(alpha > 0.008f) {
             logo.setAlpha(alpha - 0.008f);
@@ -60,7 +55,7 @@ public class TeamSplashScreen extends GameScreen {
     }
 
     @Override
-    public void hiddenUpdate() {
+    protected void hiddenUpdate() {
         exiting = true;
     }
 
@@ -69,15 +64,11 @@ public class TeamSplashScreen extends GameScreen {
         currentState = ScreenState.TransitionOff;
     }
 
-    //endregion
-
-    //region <Support Functions>
     @Override
-    public boolean handleClickEvent(int x, int y) {
-        Debug.log(DebugEnabler.GAME_SCREEN_LOG, "Clicked the splash screen");
+    public boolean handleMousePress(MouseController mouseController, int x, int y){
+        Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "- handle click " + x + " " + y);
         exiting = true;
         screenManager.addScreen(new TitleScreen(screenManager));
         return true;
     }
-    //endregion
 }
