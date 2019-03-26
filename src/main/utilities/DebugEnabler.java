@@ -1,5 +1,7 @@
 package main.utilities;
 
+import input.listeners.Key.KeyHandler;
+
 /**
  * Holds booleans that enable or disable Debug functions throughout the program.
  */
@@ -9,6 +11,11 @@ public class DebugEnabler {
      * @see Debug
      */
     public static boolean LOGGING_ACTIVE =        true;
+    /**
+     * Controls debugging of Garbage Collection. (Only used in Debug)
+     * @see Debug
+     */
+    static boolean GARBAGE_COLLECTION =           true;
     /**
      * Controls Debug functions that draw to the screen.
      * @see Debug
@@ -50,11 +57,6 @@ public class DebugEnabler {
      */
     public static boolean FPS_WARNING =           false;
     /**
-     * Controls debugging of Garbage Collection. (Only used in Debug)
-     * @see Debug
-     */
-    public static boolean GARBAGE_COLLECTION =    true;
-    /**
      * Controls debugging The current FPS.
      * @see gameengine.GameEngine
      */
@@ -86,7 +88,12 @@ public class DebugEnabler {
     public static boolean COLLISION =             true;
     /**
      * Controls debugging GridContainer
-     * @see gamescreen.container.GridContainer
+     * @see gameobject.container.GridContainer
      */
-    public static boolean GRID_CONTAINER =        true;
+    public static boolean GRID_CONTAINER =        false;
+    /**
+     * Controls debugging Key Events
+     * @see KeyHandler
+     */
+    public static boolean KEY_EVENTS =            true;
 }

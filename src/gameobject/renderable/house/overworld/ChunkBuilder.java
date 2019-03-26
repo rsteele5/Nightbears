@@ -1,26 +1,24 @@
 package gameobject.renderable.house.overworld;
 
 import gameobject.renderable.DrawLayer;
-import gamescreen.GameScreen;
-import gamescreen.container.GridContainer;
+import gameobject.container.TileGridContainer;
 
 public class ChunkBuilder {
 
-    GridContainer chunk;
+    TileGridContainer chunk;
     private DrawLayer layer = DrawLayer.Background;
     private String roomPath = "/assets/overworld/room/Overworld-";
     private String outsidePath = "/assets/overworld/outside/Overworld-";
 
-    public void createChunk(GameScreen parentScreen) {
-        chunk = new GridContainer(parentScreen, OverworldMeta.ChunkSize, OverworldMeta.ChunkSize,
-                                                OverworldMeta.TileSize, OverworldMeta.TileSize,
-                                                0, 0,0);
+    public void createChunk() {
+        chunk = new TileGridContainer(OverworldMeta.ChunkSize, OverworldMeta.ChunkSize,
+                                                OverworldMeta.TileSize, OverworldMeta.TileSize, 0, 0);
     }
-    public void editChunk(GridContainer chunk){
+    public void editChunk(TileGridContainer chunk){
         this.chunk = chunk;
     }
 
-    public GridContainer getChunk(){
+    public TileGridContainer getChunk(){
         return chunk;
     }
 
@@ -51,7 +49,7 @@ public class ChunkBuilder {
     }
 
     private void addTitleAt(String imagePath, int row, int col){
-        chunk.dynamicAddAt(new Tile(imagePath), row, col);
+        chunk.addAt(new Tile(imagePath), row, col);
     }
 
     public void setDrawLayer(DrawLayer drawLayer){

@@ -1,6 +1,6 @@
 package gamescreen.gameplay;
 
-import gameengine.GameEngine;
+import gameengine.gamedata.PlayerData;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.*;
 import gameobject.renderable.ImageContainer;
@@ -12,7 +12,7 @@ import gameobject.renderable.item.*;
 import gameobject.renderable.DrawLayer;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
-import gamescreen.container.GridContainer;
+import gameobject.container.RenderableGridContainer;
 import gamescreen.mainmenu.MainMenuScreen;
 import gamescreen.mainmenu.options.OptionScreen;
 import main.utilities.Debug;
@@ -35,11 +35,13 @@ public class PauseMenu extends GameScreen {
     private Item currentItem = null;
     private ButtonText useButton;
     Player player;
+    private PlayerData playerData = gameData.getPlayerData();
 
     //endregion
 
-    public PauseMenu(ScreenManager screenManager) {
+    public PauseMenu(ScreenManager screenManager, Player p1) {
         super(screenManager, "PauseMenu", true, 450, 180);
+        player = p1;
     }
 
     /**
@@ -47,15 +49,14 @@ public class PauseMenu extends GameScreen {
      */
     @Override
     protected void initializeScreen() {
-        player = GameEngine.players.get(0);
         previousPlayerState = player.getState();
         player.setState(Player.PlayerState.asleep);
-        playerInventory = player.getItems();
+        playerInventory = playerData.getInventory();
         playerButtons = new CopyOnWriteArrayList<>();
         equipButtons = new CopyOnWriteArrayList<>();
 
         //Add all the item in the dev splashscreen player to the splashscreen
-        for (RenderableObject renderable: player.getRenderables()){
+        for (RenderableObject renderable: playerInventory){
             renderable.addToScreen(this, false);
         }
         //Create Labels
@@ -108,7 +109,7 @@ public class PauseMenu extends GameScreen {
         for (ItemButton pbutton : playerButtons) {
             pbutton.resetItem();
             if (k < count){
-                pbutton.setItem(playerInventory.get(k));
+                pbutton.setItem((Item)(playerInventory.get(k)));
                 setClickEvent(pbutton, itemDetails);
                 k++;
             }
@@ -159,6 +160,7 @@ public class PauseMenu extends GameScreen {
         //Main Menu Button
         Button mainMenuButton = new gameobject.renderable.button.Button(765,30,
                 "/assets/buttons/Button-MainMenu.png",
+                "/assets/buttons/Button-MainMenuPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Main Menu");
@@ -171,6 +173,7 @@ public class PauseMenu extends GameScreen {
         //Save Button
         Button saveButton = new gameobject.renderable.button.Button(765,132,
                 "/assets/buttons/Button-Save.png",
+                "/assets/buttons/Button-SavePressed.png",
                 DrawLayer.Entity,
                 () ->{
                     //TODO Save stuff
@@ -183,6 +186,7 @@ public class PauseMenu extends GameScreen {
         //Options Button
         Button optionsButton = new gameobject.renderable.button.Button(765,234,
                 "/assets/buttons/Button-Options.png",
+                "/assets/buttons/Button-OptionsPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Options");
@@ -195,6 +199,7 @@ public class PauseMenu extends GameScreen {
         //Back Button
         Button backButton = new gameobject.renderable.button.Button(765,336,
                 "/assets/buttons/Button-Back.png",
+                "/assets/buttons/Button-BackPressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Back");
@@ -210,7 +215,7 @@ public class PauseMenu extends GameScreen {
         //Set up the grid for the player inventory
         int rows = 7;
         int columns = 4;
-        GridContainer playerGrid = new GridContainer(this, rows, columns, 50, 50, 15, 140);
+        RenderableGridContainer playerGrid = new RenderableGridContainer(rows, columns, 50, 50, 15, 140);
 
         //region Add button to the Grid Containers
         int count = playerInventory.size();
@@ -218,9 +223,9 @@ public class PauseMenu extends GameScreen {
         for (int i = 0; i < rows; i++){
             for (int j = 0; j < columns; j++){
                 ItemButton itemContainerButton = new ItemButton();
-                playerGrid.dynamicAddAt(itemContainerButton, i, j);
+                playerGrid.addAt(itemContainerButton, i, j);
                 if (k < count) {
-                    itemContainerButton.setItem(playerInventory.get(k));
+                    itemContainerButton.setItem((Item)(playerInventory.get(k)));
                     k++;
                 }
                 setClickEvent(itemContainerButton, itemDetails);
@@ -228,41 +233,44 @@ public class PauseMenu extends GameScreen {
                 playerButtons.add(itemContainerButton);
             }
         }
+        playerGrid.addToScreen(this, true);
     }
 
     private void initEquipButtons(){
         //Create grid for the cross pattern equipment stuff
-        GridContainer equipGrid = new GridContainer(this, 4, 3, 50, 50, 250, 140);
+        RenderableGridContainer equipGrid = new RenderableGridContainer(4, 3, 50, 50, 250, 140);
         //Equipment Buttons
         ItemButton equipHead =  new ItemButton();
-        equipGrid.dynamicAddAt(equipHead, 0, 1);
+        equipGrid.addAt(equipHead, 0, 1);
         equipButtons.add(equipHead);
         setClickEvent(equipHead, itemDetails);
 
         ItemButton equipOffHand =  new ItemButton();
-        equipGrid.dynamicAddAt(equipOffHand, 1, 0);
+        equipGrid.addAt(equipOffHand, 1, 0);
         equipButtons.add(equipOffHand);
         setClickEvent(equipOffHand, itemDetails);
 
         ItemButton equipChest =  new ItemButton();
-        equipGrid.dynamicAddAt(equipChest, 1, 1);
+        equipGrid.addAt(equipChest, 1, 1);
         equipButtons.add(equipChest);
         setClickEvent(equipChest, itemDetails);
 
         ItemButton equipWeapon =  new ItemButton();
-        equipGrid.dynamicAddAt(equipWeapon, 1, 2);
+        equipGrid.addAt(equipWeapon, 1, 2);
         equipButtons.add(equipWeapon);
         setClickEvent(equipWeapon, itemDetails);
 
         ItemButton equipLegs =  new ItemButton();
-        equipGrid.dynamicAddAt(equipLegs, 2, 1);
+        equipGrid.addAt(equipLegs, 2, 1);
         equipButtons.add(equipLegs);
         setClickEvent(equipLegs, itemDetails);
 
         ItemButton equipFeet =  new ItemButton();
-        equipGrid.dynamicAddAt(equipFeet, 3, 1);
+        equipGrid.addAt(equipFeet, 3, 1);
         equipButtons.add(equipFeet);
         setClickEvent(equipFeet, itemDetails);
+
+        equipGrid.addToScreen(this, true);
     }
 
     private void initItemDisplay() {

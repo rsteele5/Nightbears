@@ -1,12 +1,14 @@
 package gameobject.renderable.house.overworld.room;
 
-import gameobject.renderable.player.Player;
+import gameobject.GameObject;
+import gameobject.renderable.house.overworld.Tile;
+import gamescreen.GameScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
 import java.util.ArrayList;
 
-public abstract class Room {
+public abstract class Room extends GameObject {
 
     //region <Variables>
     protected String name;
@@ -15,26 +17,37 @@ public abstract class Room {
     protected Integer[][] layout;
     protected int width;
     protected int height;
+    protected Tile[][] roomTiles;
 
     protected ArrayList<SpawnPoint> spawnPoints;
-
-    //private ArrayList<Boundary> boundaries;
+    protected ArrayList<Boundary> boundaries;
     //endregion
 
+    //region <Construction and Initialization>
     public Room(String name){
         this.name = "Room: "+name;
         cellX = -1;
         cellY = -1;
         layout = constructLayout();
+        roomTiles = new Tile[layout.length][layout[0].length];
         width = layout[0].length;
         height = layout.length;
+        boundaries = new ArrayList<>();
         spawnPoints = new ArrayList<>();
-        initializeSpawnPoints();
     }
 
     protected abstract Integer[][] constructLayout();
-    protected abstract void initializeSpawnPoints();
 
+    /**
+     * Creates all of the spawn points in this room. This is called when you add this room to a Map using the
+     * MapBuilder.
+     * @see gameobject.renderable.house.overworld.Map
+     * @see gameobject.renderable.house.overworld.MapBuilder
+     */
+    public abstract void initializeSpawnPoints();
+    //endregion
+
+    //region <Getters and Setters>
     public String getName() {
         return name;
     }
@@ -69,19 +82,12 @@ public abstract class Room {
         return vendorSpawnOptions;
     }
 
-    public ArrayList<SpawnPoint> getObjectSpawnOptions(){
-        ArrayList<SpawnPoint> ObjectSpawnOptions = new ArrayList<>();
-        for(SpawnPoint spawn : spawnPoints){
-            if(spawn.getSpawnType() == SpawnType.Objcect)
-                ObjectSpawnOptions.add(spawn);
-        }
-        if(ObjectSpawnOptions.isEmpty())
-            return null;
-        return ObjectSpawnOptions;
-    }
-
     public Integer[][] getLayout() {
         return layout;
+    }
+
+    public Tile getRoomTileAt(int row, int col) {
+        return roomTiles[row][col];
     }
 
     public int getWidth() {
@@ -97,6 +103,12 @@ public abstract class Room {
         cellY = y;
     }
 
+    public void setTile(int row, int col, Tile content) {
+        roomTiles[row][col] = content;
+    }
+    //endregion
+
+    //region <Support Functions>
     public boolean isConflicting(Room newRoom) {
         if(cellX >= 0 && cellY >= 0){
             if(newRoom.cellX >= 0 && newRoom.cellY >= 0){
@@ -115,4 +127,39 @@ public abstract class Room {
         }
         return false;
     }
+
+    public void addBoundary(Boundary boundary){
+        boundaries.add(boundary);
+    }
+    //endregion
+
+
+
+    //region <GameObject Overrides>
+    @Override
+    public boolean setActive(GameScreen screen){
+        if(super.setActive(screen)){
+            for (Boundary boundary : boundaries) {
+                boundary.setActive(screen);
+            }return true;
+        }return false;
+    }
+
+    @Override
+    public boolean setInactive(GameScreen screen){
+        if(super.setInactive(screen)){
+            for (Boundary boundary : boundaries) {
+                boundary.setInactive(screen);
+            }return true;
+        }return false;
+    }
+
+    @Override
+    public void addToScreen(GameScreen screen, boolean isActive){
+        super.addToScreen(screen, isActive);
+        for (Boundary boundary : boundaries) {
+            boundary.addToScreen(screen, isActive);
+        }
+    }
+    //endregion
 }

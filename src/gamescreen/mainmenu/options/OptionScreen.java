@@ -34,6 +34,7 @@ public class OptionScreen extends GameScreen {
         Button button;
         button = new Button(X_INIT_BUTTON,Y_INIT_BUTTON,
                 "/assets/buttons/Button-Graphics.png",
+                "/assets/buttons/Button-GraphicsPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Graphics");
@@ -43,6 +44,7 @@ public class OptionScreen extends GameScreen {
 
         button = new Button(X_INIT_BUTTON+X_BUFFER+WIDTH_BUTTON,Y_INIT_BUTTON,
                 "/assets/buttons/Button-Sound.png",
+                "/assets/buttons/Button-SoundPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Sound");
@@ -52,6 +54,7 @@ public class OptionScreen extends GameScreen {
 
         button = new Button(X_INIT_BUTTON+2*(X_BUFFER+WIDTH_BUTTON),Y_INIT_BUTTON,
                 "/assets/buttons/Button-Controls.png",
+                "/assets/buttons/Button-ControlsPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Controls");
@@ -61,6 +64,7 @@ public class OptionScreen extends GameScreen {
 
         button = new Button(X_INIT_BUTTON+3*(X_BUFFER+WIDTH_BUTTON),Y_INIT_BUTTON,
                 "/assets/buttons/Button-Back.png",
+                "/assets/buttons/Button-BackPressed.png",
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Back");

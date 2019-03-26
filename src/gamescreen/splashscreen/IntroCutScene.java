@@ -6,11 +6,19 @@ import gameobject.renderable.DrawLayer;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.overworld.OverworldScreen;
+import input.listeners.MouseController;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
-import java.awt.*;
+import java.awt.Font;
+import java.awt.Color;
 
+
+/**
+ * The intro IntroCutScene adds a bit of narration before our game
+ * starts. The screen is skippable if the gamer so wishes. After the
+ * IntroCutScene is done the overworld is displayed.
+ */
 public class IntroCutScene extends GameScreen {
 
     public IntroCutScene(ScreenManager screenManager) {
@@ -33,17 +41,21 @@ public class IntroCutScene extends GameScreen {
         DialogBox diagBox = new DialogBox(480,90, 960, 540, text,
                 new Font("NoScary", Font.PLAIN, 56), Color.WHITE, true);
         diagBox.addToScreen(this, true);
-
-        ImageContainer skipMsg = new ImageContainer(900,980, "/assets/text/TXT-SkipMsg.png", DrawLayer.Scenery);
-        skipMsg.addToScreen(this, true);
     }
 
     @Override
-    public boolean handleClickEvent(int x, int y) {
+    public boolean handleMousePress(MouseController mouseController, int x, int y){
         Debug.log(DebugEnabler.GAME_SCREEN_LOG, "Clicked the splash intro cut scene");
         setScreenState(ScreenState.TransitionOff);
         return true;
     }
+
+//    @Override
+//    public boolean handleClickEvent(int x, int y) {
+//        Debug.log(DebugEnabler.GAME_SCREEN_LOG, "Clicked the splash intro cut scene");
+//        setScreenState(ScreenState.TransitionOff);
+//        return true;
+//    }
 
     @Override
     protected void transitionOn() { this.setScreenState(ScreenState.Active); }

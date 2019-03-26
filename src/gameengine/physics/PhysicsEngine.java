@@ -2,6 +2,7 @@ package gameengine.physics;
 
 import _test.Square;
 import gameengine.GameEngine;
+import gameengine.gamedata.PlayerData;
 import gameobject.renderable.enemy.Enemy;
 import gameobject.renderable.enemy.Minion;
 import gameobject.renderable.house.sidescrolling.Floor;
@@ -16,6 +17,9 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class PhysicsEngine {
+
+    private GameData gameData;
+    private PlayerData playerData;
     private ScreenManager screenManager;
     public PhysicsEngine(GameData gameData, ScreenManager myScreenManager) {
         screenManager = myScreenManager;
@@ -56,7 +60,9 @@ public class PhysicsEngine {
 
                 if (obj1.getHitbox().intersects(obj2.getHitbox())) {
                     if (obj1 instanceof Weapon && obj2 instanceof Player) {
-                        GameEngine.players.get(0).addItem((Weapon) obj1);
+                        //GameEngine.players.get(0).addItem((Weapon) obj1);
+                        playerData = gameData.getPlayerData();
+                        playerData.addItem((Weapon) obj1);
                         Debug.log(true, "Weapon Get!");
                     }
 

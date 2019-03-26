@@ -1,5 +1,8 @@
 package gameobject.renderable.player;
 
+import gameengine.GameEngine;
+import gameengine.gamedata.GameData;
+import gameengine.gamedata.PlayerData;
 import gameengine.physics.Kinematic;
 import gameengine.physics.PhysicsMeta;
 import gameengine.physics.PhysicsVector;
@@ -27,8 +30,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Player extends RenderableObject implements Kinematic {
 
     private int speed = 1;
-    private CopyOnWriteArrayList<Item> items = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<RenderableObject> rItems = new CopyOnWriteArrayList<>();
+    private PlayerData playerData;
+    private CopyOnWriteArrayList<Item> items;
     private PhysicsVector moveState = new PhysicsVector(1, 1);
     private PhysicsVector magnitude = new PhysicsVector(0, 0);
     private final int[] ssKeys = new int[]{68, 65};
@@ -63,11 +66,16 @@ public class Player extends RenderableObject implements Kinematic {
         g2.dispose();
     }
 
-    public Player(int x, int y, String path, DrawLayer drawLayer) {
-        super(x, y, path, drawLayer);
+    public Player(int x, int y, DrawLayer drawLayer, PlayerData playerData) {
+        //TODO: Set to the random bear selection.
+        super(x, y, "/assets/player/TeddySilhouette.png", drawLayer);
         playerState = PlayerState.asleep;
-        initializeItems();
-        this.gold = 10;
+        //TODO:Review
+        this.playerData = playerData;
+        items = new CopyOnWriteArrayList<>();
+        items = playerData.getInventory();
+        //initializeItems()
+
         animator = new Animator(this);
         animator.addAnimation("Walking", new PlayerWalkingAnimation());
         animator.addAnimation("Idle", new PlayerIdleAnimation());
@@ -75,37 +83,10 @@ public class Player extends RenderableObject implements Kinematic {
         animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation());
     }
 
-    private void initializeItems() {
-        items.add(new WeaponBuilder()
-                .imagePath("/assets/Items/sword1.png")
-                .name("My Fwirst Sword")
-                .type(WeaponType.Sword)
-                .value(10)
-                .minDamage(5)
-                .maxDamage(7)
-                .critChance(3)
-                .buildWeapon());
-
-        items.add(new ArmorBuilder()
-                .imagePath("/assets/Items/helmet1.png")
-                .name("My Fwirst Helmet")
-                .type(ArmorType.Head)
-                .value(12)
-                .armorPoints(10)
-                .buildArmor());
-
-        if (items.size() > 0) {
-            items.sort(new ItemComparator());
-        }
-
-        for (Item item : items) {
-            rItems.add((RenderableObject) item);
-        }
-    }
 
     @Override
     public void update() {
-        if(interaction) Debug.log(DebugEnabler.PLAYER_STATUS,"Interaction Avaiable! Act now!");
+        if(interaction) Debug.log(DebugEnabler.PLAYER_STATUS,"Interaction Available! Act now!");
         if(playerState == PlayerState.sideScroll && !crouchSet  ){
             crouchSet = true;
             if(crouch) {
@@ -280,41 +261,7 @@ public class Player extends RenderableObject implements Kinematic {
         }
         return false;
     }
-
-    public CopyOnWriteArrayList<Item> getItems() {
-        return items;
-    }
-
-    public CopyOnWriteArrayList<RenderableObject> getRenderables() {
-        return rItems;
-    }
-
-    public void addItem(Item item) {
-        items.add(item);
-        rItems.add((RenderableObject) item);
-    }
-
-    public void removeItem(Item item) {
-        items.remove(item);
-        rItems.remove(item);
-    }
-
-    // Needed for vendor splashscreen
-    public void replaceList(CopyOnWriteArrayList<Item> updatedItems) {
-        this.items = updatedItems;
-        rItems.removeAll(rItems);
-        for (Item item : items) {
-            rItems.add((RenderableObject) item);
-        }
-    }
-
-    public int getGold() {
-        return gold;
-    }
-
-    public void changeGold(int amt) {
-        gold += amt;
-    }
+    //endregion
 
     public void setImage(String imagePath) {
         this.imagePath = imagePath;

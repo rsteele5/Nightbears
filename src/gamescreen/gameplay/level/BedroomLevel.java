@@ -2,6 +2,7 @@ package gamescreen.gameplay.level;
 
 import _test.Square;
 import gameengine.GameEngine;
+import gameengine.gamedata.PlayerData;
 import gameengine.rendering.Camera;
 import gameobject.renderable.house.sidescrolling.Floor;
 import gameobject.renderable.enemy.Minion;
@@ -62,13 +63,11 @@ public class BedroomLevel implements Level {
     }
 
     @Override
-    public void buildPlayer(GameScreen gameScreen) {
-        Player player = GameEngine.players.get(0);
+    public Player buildPlayer(GameScreen gameScreen, PlayerData playerData) {
+        Player player = new Player(10, 476, DrawLayer.Entity, playerData);
         player.setState(Player.PlayerState.sideScroll);
-        player.reset();
-        player.setX(10);
-        player.setY(476);
         player.addToScreen(gameScreen, true);
+        return player;
 
     }
 
