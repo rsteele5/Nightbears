@@ -70,7 +70,7 @@ public class MainMenuScreen extends GameScreen {
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Hall of Heroes");
-                    screenManager.addScreen(new DevScreen(screenManager));
+                    screenManager.addScreen(new HeroHallScreen(screenManager));
                 }));
         heroHallButton.addToScreen(this,true);
 
@@ -80,7 +80,7 @@ public class MainMenuScreen extends GameScreen {
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Hall of Fallen");
-                    screenManager.addScreen(new DevScreen(screenManager));
+                    screenManager.addScreen(new FallenHeroHallScreen(screenManager));
                 }));
         fallenHallButton.addToScreen(this,true);
 
