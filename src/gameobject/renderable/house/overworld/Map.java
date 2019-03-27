@@ -67,11 +67,7 @@ public class Map extends GameObject {
     public SpawnPoint getPlayerSpawn(){
         for(Room room : rooms){
             if(room.getPlayerSpawnOptions() != null){
-                SpawnPoint tempSpawn = room.getPlayerSpawnOptions().get(0);
-                SpawnPoint playerSpawn = new SpawnPoint(
-                        tempSpawn.getTileX()*TileSize + room.getCellX()*TileSize + (ChunkSize*TileSize*BorderBuffer),
-                        tempSpawn.getTileY()*TileSize + room.getCellY()*TileSize + (ChunkSize*TileSize*BorderBuffer),
-                        SpawnType.Player);
+                SpawnPoint playerSpawn = room.getPlayerSpawnOptions().get(0);
                 return playerSpawn;
             }
         }

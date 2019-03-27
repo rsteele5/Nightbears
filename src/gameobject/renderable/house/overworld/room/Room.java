@@ -131,6 +131,11 @@ public abstract class Room extends GameObject {
     public void addBoundary(Boundary boundary){
         boundaries.add(boundary);
     }
+
+    protected void createSpawnPoint(int row, int col, SpawnType type){
+        Tile spawnTile = roomTiles[row][col];
+        spawnPoints.add(new SpawnPoint(spawnTile.getX(), spawnTile.getY(), type));
+    }
     //endregion
 
 

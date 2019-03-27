@@ -36,7 +36,6 @@ public class MapBuilder {
                 return;
             }
         }
-        newRoom.initializeSpawnPoints();
         rooms.add(newRoom);
     }
 
@@ -122,36 +121,42 @@ public class MapBuilder {
                     chunkBuilder.editChunk(map.get(chunkRow).get(chunkCol));
                     Compass wallNS = null;
                     Compass wallEW = null;
+                    boolean endcap = false;
+                    Compass capDirection = null;
                     switch(room.getLayout()[row][col]){
                         case CARPET: break;
+                        case WALLNC: endcap = true; //TODO: capDirection Implement
                         case WALLN : wallNS = Compass.North; break;
+                        case WALLEC: endcap = true;
                         case WALLE : wallEW = Compass.East; break;
+                        case WALLSC: endcap = true;
                         case WALLS : wallNS = Compass.South; break;
+                        case WALLWC: endcap = true;
                         case WALLW : wallEW = Compass.West; break;
+                        case WALLNEC: endcap = true;
                         case WALLNE:
                             wallNS = Compass.North;
                             wallEW = Compass.East;
                             break;
+                        case WALLSEC: endcap = true;
                         case WALLSE:
                             wallNS = Compass.South;
                             wallEW = Compass.East;
                             break;
+                        case WALLSWC: endcap = true;
                         case WALLSW:
                             wallNS = Compass.South;
                             wallEW = Compass.West;
                             break;
+                        case WALLNWC: endcap = true;
                         case WALLNW:
                             wallNS = Compass.North;
                             wallEW = Compass.West;
                             break;
                         default: break;
                     }
-                    if(wallNS != null){
-                        if(wallEW != null){
-                            chunkBuilder.addHouseTileAt(chunkX, chunkY, wallNS, wallEW);
-                        } else chunkBuilder.addHouseTileAt(chunkX, chunkY, wallNS);
-                    } else if(wallEW != null){
-                        chunkBuilder.addHouseTileAt(chunkX, chunkY, wallEW);
+                    if(wallNS != null || wallEW != null){
+                        chunkBuilder.addHouseTileAt(chunkX, chunkY, wallNS, wallEW, endcap, capDirection);
                     } else chunkBuilder.addHouseTileAt(chunkX, chunkY);
 
                     room.setTile(row,col, map.get(chunkRow).get(chunkCol).getContentAt(chunkX,chunkY));
@@ -162,6 +167,7 @@ public class MapBuilder {
 
     private void generateRoomObjects() {
         for(Room room : rooms){
+            room.initializeSpawnPoints();
             for(int row = 0; row < room.getHeight(); row++) {
                 for (int col = 0; col < room.getWidth(); col++) {
                     switch (room.getLayout()[row][col]) {
