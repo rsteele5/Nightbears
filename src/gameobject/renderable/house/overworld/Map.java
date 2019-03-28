@@ -77,11 +77,7 @@ public class Map extends GameObject {
     public SpawnPoint getVendorSpawn(){
         for(Room room : rooms){
             if(room.getVendorSpawnOptions() != null){
-                SpawnPoint tempSpawn = room.getVendorSpawnOptions().get(0);
-                SpawnPoint vendorSpawn = new SpawnPoint(
-                        tempSpawn.getTileX()*TileSize+TileSize/2 + room.getCellX()*TileSize + (ChunkSize*TileSize*BorderBuffer),
-                        tempSpawn.getTileY()*TileSize+TileSize/2 + room.getCellY()*TileSize + (ChunkSize*TileSize*BorderBuffer),
-                        SpawnType.Vendor);
+                SpawnPoint vendorSpawn = room.getVendorSpawnOptions().get(0);
                 return vendorSpawn;
             }
         }

@@ -28,7 +28,7 @@ public class Bedroom extends Room {
     public void initializeSpawnPoints() {
         createSpawnPoint(1,1, SpawnType.Player);
         createSpawnPoint(2,1, SpawnType.Vendor);
-    }
+}
 
     @Override
     public void update() {}

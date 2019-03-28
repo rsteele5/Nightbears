@@ -8,6 +8,7 @@ import main.utilities.DebugEnabler;
 
 
 import static gameobject.renderable.house.overworld.OverworldMeta.*;
+import static gameobject.renderable.house.overworld.OverworldMeta.Tiles.EMPTY;
 import static gameobject.renderable.house.overworld.OverworldMeta.Tiles.House.*;
 
 import java.util.ArrayList;
@@ -119,35 +120,68 @@ public class MapBuilder {
                     chunkY = cellY % ChunkSize;
                     // edit chunk
                     chunkBuilder.editChunk(map.get(chunkRow).get(chunkCol));
+                    boolean empty = false;
                     Compass wallNS = null;
                     Compass wallEW = null;
                     boolean endcap = false;
                     Compass capDirection = null;
+
                     switch(room.getLayout()[row][col]){
+                        //The Void...
+                        case EMPTY: empty = true; break;
+                        //Just Carpet...
                         case CARPET: break;
-                        case WALLNC: endcap = true; //TODO: capDirection Implement
+
+                        //Setup North Wall Variants
+                        case WALLNCW: capDirection = Compass.West;
+                        case WALLNCE:
+                            if(capDirection == null) capDirection = Compass.East;
+                            endcap = true;
                         case WALLN : wallNS = Compass.North; break;
-                        case WALLEC: endcap = true;
+
+                        //Setup East Wall Variants
+                        case WALLECN: capDirection = Compass.North;
+                        case WALLECS:
+                            if(capDirection == null) capDirection = Compass.South;
+                            endcap = true;
                         case WALLE : wallEW = Compass.East; break;
-                        case WALLSC: endcap = true;
+
+                        //Setup South Wall Variants
+                        case WALLSCE: capDirection = Compass.East;
+                        case WALLSCW:
+                            if(capDirection == null) capDirection = Compass.West;
+                            endcap = true;
                         case WALLS : wallNS = Compass.South; break;
-                        case WALLWC: endcap = true;
+
+                        //Setup West Wall Variants
+                        case WALLWCS: capDirection = Compass.South;
+                        case WALLWCN:
+                            if(capDirection == null) capDirection = Compass.North;
+                            endcap = true;
                         case WALLW : wallEW = Compass.West; break;
+
+                        //Setup NorthEast Wall Variants
                         case WALLNEC: endcap = true;
                         case WALLNE:
                             wallNS = Compass.North;
                             wallEW = Compass.East;
                             break;
+
+                        //Setup SouthEast Wall Variants
                         case WALLSEC: endcap = true;
                         case WALLSE:
                             wallNS = Compass.South;
                             wallEW = Compass.East;
                             break;
+
+                        //Setup SouthWest Wall Variants
                         case WALLSWC: endcap = true;
                         case WALLSW:
                             wallNS = Compass.South;
                             wallEW = Compass.West;
                             break;
+
+                        //Setup NorthWest Wall Variants
                         case WALLNWC: endcap = true;
                         case WALLNW:
                             wallNS = Compass.North;
@@ -155,7 +189,9 @@ public class MapBuilder {
                             break;
                         default: break;
                     }
-                    if(wallNS != null || wallEW != null){
+                    if(empty){
+                      chunkBuilder.removeAt(chunkX, chunkY);
+                    } else if(wallNS != null || wallEW != null){
                         chunkBuilder.addHouseTileAt(chunkX, chunkY, wallNS, wallEW, endcap, capDirection);
                     } else chunkBuilder.addHouseTileAt(chunkX, chunkY);
 
@@ -175,17 +211,17 @@ public class MapBuilder {
                         case WALLNWC:
                         case WALLNE:
                         case WALLNEC:
-                        case WALLNC:
+                        //case WALLNC:
                         case WALLN: createNorthWall(room, row, col); break;
                         case WALLSE:
                         case WALLSEC:
                         case WALLSW:
                         case WALLSWC:
-                        case WALLSC:
+                        //case WALLSC:
                         case WALLS: createSouthWall(room, row, col); break;
-                        case WALLEC:
+                        //case WALLEC:
                         case WALLE: createEastWall(room, row, col);  break;
-                        case WALLWC:
+                        //case WALLWC:
                         case WALLW: createWestWall(room, row, col);  break;
                         default: break;
                     }

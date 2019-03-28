@@ -56,4 +56,7 @@ public class ChunkBuilder {
         layer = drawLayer;
     }
 
+    public void removeAt(int chunkX, int chunkY) {
+        chunk.removeAt(chunkX,chunkY);
+    }
 }
