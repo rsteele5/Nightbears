@@ -83,7 +83,7 @@ public class OverworldScreen extends GameScreen {
 //        southWall.addToScreen(this,true);
 
         //Overlay TODO: Fix layering
-        UI = new OverworldUI(screenManager, this, playerOW);
+        UI = new OverworldUI(screenManager, this, playerOW, overworldMap.getVendorSpawn());
         ///vendorDialogBox = new VendorDialogBox(screenManager,this, 460,100);
         addOverlay(UI);
         //addOverlay(vendorDialogBox);

@@ -5,7 +5,9 @@ import gameengine.rendering.Camera;
 import gameobject.renderable.button.Button;
 import gameobject.renderable.button.ButtonText;
 import gameobject.renderable.DrawLayer;
+import gameobject.renderable.house.overworld.room.SpawnPoint;
 import gameobject.renderable.player.Player;
+import gameobject.renderable.vendor.Vendor;
 import gamescreen.GameScreen;
 import gamescreen.Overlay;
 import gamescreen.ScreenManager;
@@ -28,11 +30,14 @@ public class OverworldUI extends Overlay {
     private static String inventoryBtnPressedPath = "/assets/buttons/Button-InventoryPressed.png";
     private static String fightBtnPath = "/assets/buttons/Button-Fight.png";
     private static String vendorBtnPath = "/assets/buttons/Button-Vendor.png";
+    private SpawnPoint vendorSpawn;
 
 
-    public OverworldUI(ScreenManager screenManager, GameScreen parentScreen, Player player) {
+    public OverworldUI(ScreenManager screenManager, GameScreen parentScreen, Player player, SpawnPoint vendorSpawn) {
         super(screenManager, parentScreen,"OverworldUI", 0,0, 1f);
         this.player = player;
+        this.vendorSpawn = vendorSpawn;
+
     }
 
     /**
@@ -81,7 +86,7 @@ public class OverworldUI extends Overlay {
                 new Font("NoScary", Font.PLAIN, 58),
                 Color.WHITE, "Camera Off!",
                 () ->{
-                    Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Vendor");
+                    Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Camera off");
                     parentScreen.setCamera(null);
                 });
         cameraOnButton.addToScreen(this, true);
@@ -93,11 +98,25 @@ public class OverworldUI extends Overlay {
                 new Font("NoScary", Font.PLAIN, 58),
                 Color.WHITE, "Camera On!",
                 () ->{
-                    Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Vendor");
+                    Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Camera On");
                     parentScreen.setCamera(new Camera(screenManager, parentScreen, player));
                 });
         cameraOffButton.addToScreen(this, true);
 
+        Button showVendor = new ButtonText(1250, 20,
+                "/assets/button/button-Test.png",
+                "/assets/buttons/Button-TestPressed.png",
+                DrawLayer.Entity,
+                new Font("NoScary", Font.PLAIN, 58),
+                Color.WHITE, "Vendor",
+                () ->{
+                    Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Vendor");
+                    Vendor vendor = new Vendor(vendorSpawn.getTileX(), vendorSpawn.getTileY(), gameData.getVendorData());
+                    vendor.setState(Vendor.VendorState.crawling);
+                    //TODO: make vendor trigger box
+                    vendor.addToScreen(this, true);
+                });
+        showVendor.addToScreen(this, true);
 
     }
 }

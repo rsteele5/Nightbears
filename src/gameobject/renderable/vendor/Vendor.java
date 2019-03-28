@@ -6,23 +6,21 @@ import gameengine.physics.Interactable;
 import gameengine.physics.Kinematic;
 import gameengine.physics.PhysicsMeta;
 import gameengine.physics.PhysicsVector;
+import gameengine.rendering.animation.Animator;
 import gameobject.GameObject;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.RenderableObject;
-import gameobject.renderable.item.*;
-import gameobject.renderable.item.armor.ArmorBuilder;
-import gameobject.renderable.item.consumable.ConsumableBuilder;
-import gameobject.renderable.item.weapon.WeaponBuilder;
 import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
 import main.utilities.AssetLoader;
+import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Vendor extends RenderableObject implements Kinematic, Interactable, Serializable {
 
@@ -33,19 +31,52 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
     private final String vendorLevelPath = "/assets/vendor/Vendor.png";
     public static TimerTask restockTimer;
     private VendorData vendorData;
+    private VendorState vendorState;
+    private int moveFactor = 1;
+    private double rotation = 0;
+    private boolean isIdle = false;
+    private int speed = 1;
+
 
     int isSet = 0;
     Player p = null;
     //endregion
 
+    /**
+     * VendorState specifies when vendor is active or inactive
+     */
+    public enum VendorState {
+        hiding,
+        crawling,
+        sittingup,
+        idle
+    }
+
     // Default constructor
     public Vendor(int x, int y, VendorData vendorData){
         super(x, y);
+        vendorState = VendorState.hiding;
         this.imagePath = vendorLevelPath;
         this.drawLayer = DrawLayer.Entity;
         this.vendorData = vendorData;
         restockTimer = new MyTimerTask(vendorData);
         //startRestockTimer();
+
+        animator = new Animator(this);
+        animator.addAnimation("Crawling", new VendorCrawlingAnimation());
+        animator.addAnimation("SittingUp", new VendorSittingUpAnimation());
+        animator.addAnimation("Idle", new VendorIdleAnimation());
+    }
+
+    public void draw(Graphics2D graphics2D) {
+        if(animator != null){
+            animator.animate();
+        }
+
+        Graphics2D g2 = (Graphics2D) graphics2D.create();
+        g2.rotate(rotation, x + (width / 2.0), y + (height / 2.0));
+        g2.drawImage(image, x, y, null);
+        g2.dispose();
     }
 
     @Override
@@ -56,6 +87,19 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
             p.interaction = false;
             p = null;
         }
+
+        if (vendorState == VendorState.crawling) {
+            animator.setAnimation("Crawling");
+
+        }
+        else if (vendorState == VendorState.sittingup)
+            animator.setAnimation("SittingUp");
+        else if (vendorState == VendorState.idle) {
+            animator.setAnimation("Idle");
+            isIdle = true;
+        }
+
+
     }
 
     public void setImage(String imagePath){ this.imagePath = imagePath; }
@@ -106,38 +150,36 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
     }
 
     //region <Physics methods>
-    private PhysicsVector accel = new PhysicsVector(0,1);
 
-    PhysicsVector movement = new PhysicsVector(0,0);
+    PhysicsVector zerovector = new PhysicsVector(0,0);
 
     @Override
     public PhysicsVector getVelocity() {
-        int gravSign = PhysicsMeta.Gravity != 0 ? 1 : 0;
-        PhysicsVector pV = movement.add(new PhysicsVector(0,gravSign)).mult(accel);
-        double y = pV.y;
-        y = y < 1 && y > .5 ? 1 : y;
-        y = y < -.5 && y > -1 ? -1 : y;
-        return new PhysicsVector(pV.x,y);
+        return zerovector;
     }
 
     @Override
     public void setVelocity(PhysicsVector pv) {
-        movement = pv;
     }
 
     @Override
     public PhysicsVector getAcceleration() {
-        return accel;
+        return zerovector;
     }
 
     @Override
     public void setAcceleration(PhysicsVector pv) {
-        accel = pv;
     }
 
     @Override
     public Rectangle getHitbox() {
-        return new Rectangle(x + (int)(image.getWidth()*.25), y + (int)(image.getHeight()*.25), (int) (image.getWidth()*.5), (int)(image.getHeight()*.5));
+        return new Rectangle(x + (int)(image.getWidth()*.25), y + (int)(image.getHeight()*.25),
+                (int) (image.getWidth()*.5), (int)(image.getHeight()*.5));
+    }
+
+    @Override
+    public Rectangle hitbox() {
+        return new Rectangle(x,y,image.getWidth(),image.getHeight());
     }
 
     @Override
@@ -145,6 +187,51 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
         return  true;
     }
 
+    @Override
+    public boolean action(GameObject g) {
+        if(g instanceof Player) {
+            ((Player) g).interaction = true;
+            p = (Player)g;
+        }
+        isSet = 0;
+        return true;
+    }
+
+    public boolean setState(VendorState vs) {
+        //TODO: Implement error checking
+        switch (vs) {
+            case hiding:
+                Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: hidden");
+                vendorState = vs;
+                return true;
+            case crawling:
+                Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: crawling");
+                speed = 3;
+                width = 200;
+                height = 200;
+                animator.setAnimation("Crawling");
+                vendorState = vs;
+                return true;
+            case sittingup:
+                Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: sitting up");
+                speed = 3;
+                animator.setAnimation("SittingUp");
+                vendorState = vs;
+                return true;
+            case idle:
+                Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: idle");
+                speed = 1;
+                width = 100;
+                height = 100;
+                animator.setAnimation("Idle");
+                vendorState = vs;
+                return true;
+        }
+        return false;
+    }
+    //endregion
+
+    //region <GameScreen Methods>
     @Override
     public boolean setActive(GameScreen screen){
         if(super.setActive(screen)){
@@ -170,21 +257,6 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
         if(isActive) {
             screen.kinematics.add(this);
         }
-    }
-
-    @Override
-    public Rectangle hitbox() {
-        return new Rectangle(x,y,image.getWidth(),image.getHeight());
-    }
-
-    @Override
-    public boolean action(GameObject g) {
-        if(g instanceof Player) {
-            ((Player) g).interaction = true;
-            p = (Player)g;
-        }
-        isSet = 0;
-        return true;
     }
     //endregion
 }
