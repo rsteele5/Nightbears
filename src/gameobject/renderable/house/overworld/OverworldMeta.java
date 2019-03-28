@@ -11,18 +11,32 @@ public enum OverworldMeta {;
         public static final int EMPTY = 0;
         //House tiles
         public enum House {;
-            public static final int CARPET =  1;
-            public static final int WALLN  =  2;
-            public static final int WALLNE =  3;
-            public static final int WALLE  =  4;
-            public static final int WALLSE =  5;
-            public static final int WALLS  =  6;
-            public static final int WALLSW =  7;
-            public static final int WALLW  =  8;
-            public static final int WALLNW =  9;
+            public static final int CARPET  =   1;
+            public static final int WALLN   =   2;
+            public static final int WALLNE  =   3;
+            public static final int WALLE   =   4;
+            public static final int WALLSE  =   5;
+            public static final int WALLS   =   6;
+            public static final int WALLSW  =   7;
+            public static final int WALLW   =   8;
+            public static final int WALLNW  =   9;
+            public static final int WALLNWC =  10;
+            public static final int WALLNEC =  11;
+            public static final int WALLSWC =  12;
+            public static final int WALLSEC =  13;
+            public static final int WALLNCW =  14;
+            public static final int WALLECN =  15;
+            public static final int WALLSCW =  16;
+            public static final int WALLWCN =  17;
+            public static final int WALLNCE =  18;
+            public static final int WALLECS =  19;
+            public static final int WALLSCE =  20;
+            public static final int WALLWCS =  21;
+
+
         }
         public enum Outside{;
-            public static final int GRASS  =  20;
+            public static final int GRASS  =  30;
         }
     }
     //endregion
