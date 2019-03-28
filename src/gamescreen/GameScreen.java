@@ -422,7 +422,7 @@ public abstract class GameScreen {
                     case TransitionOff: transitionOff(); break;
                     case Active: activeUpdate(); break;
                     case Hidden: hiddenUpdate(); break;
-                    default: Debug.error(DebugEnabler.GAME_SCREEN_LOG, "Unknown splashscreen state");
+                    default: Debug.error(DebugEnabler.GAME_SCREEN_LOG, "Unknown screen state");
                 }
             }
             if(!overlayScreens.isEmpty()) {

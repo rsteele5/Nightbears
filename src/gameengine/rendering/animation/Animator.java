@@ -1,6 +1,7 @@
 package gameengine.rendering.animation;
 
 import gameobject.renderable.RenderableObject;
+import main.utilities.Debug;
 import main.utilities.Loadable;
 
 import java.awt.image.BufferedImage;
@@ -22,6 +23,7 @@ public class Animator implements Loadable {
     }
 
     public final void setAnimation(String string){
+        Debug.log(true, "Setting Animation");
         activeAnimation = animations.get(string);
         displayImage = activeAnimation.start();
         renderableObject.setCurrentImage(displayImage.getImage());

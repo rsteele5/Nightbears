@@ -55,7 +55,7 @@ public class DebugEnabler {
      * Controls debugging The FPS when it reaches below the desired results.
      * @see gameengine.GameEngine
      */
-    public static boolean FPS_WARNING =           false;
+    public static boolean FPS_WARNING =           true;
     /**
      * Controls debugging The current FPS.
      * @see gameengine.GameEngine

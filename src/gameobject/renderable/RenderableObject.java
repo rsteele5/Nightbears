@@ -1,6 +1,7 @@
 package gameobject.renderable;
 
 import gameengine.gamedata.GraphicsSetting;
+import gameengine.physics.Kinematic;
 import gameengine.rendering.animation.Animator;
 import gameobject.GameObject;
 import gamescreen.GameScreen;
@@ -178,6 +179,10 @@ public abstract class RenderableObject extends GameObject implements Loadable, S
         screen.loadables.add(this);
         if(animator != null){
             screen.loadables.add(animator);
+        }
+
+        if(this instanceof Kinematic){
+            screen.kinematics.add((Kinematic)this);
         }
     }
 

@@ -126,9 +126,11 @@ public class PhysicsEngine {
                             }
                         }
                     }
-                    i2 = 0;
+
                 }
+
             }
         }
+
     }
 }

@@ -56,7 +56,7 @@ public class OverworldUI extends Overlay {
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - level");
                     //TODO save players location
                     parentScreen.setCamera(null);
-                    screenManager.addScreen(LevelDecorator.create(screenManager, new BedroomLevel()));
+                    screenManager.addScreen(new BedroomLevel(screenManager));
 
         });
         actionButton.addToScreen(this, true);

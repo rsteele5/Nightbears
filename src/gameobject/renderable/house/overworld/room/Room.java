@@ -40,7 +40,7 @@ public abstract class Room extends GameObject {
 
     /**
      * Creates all of the spawn points in this room. This is called when you add this room to a Map using the
-     * MapBuilder.
+     * BackgroundBuilder.
      * @see gameobject.renderable.house.overworld.Map
      * @see gameobject.renderable.house.overworld.MapBuilder
      */

@@ -24,14 +24,14 @@ public class MapBuilder {
 
 
     public void createMap(){
-        Debug.log(DebugEnabler.OVERWORLD, "MapBuilder - Start creating Map");
+        Debug.log(DebugEnabler.OVERWORLD, "BackgroundBuilder - Start creating Map");
         rooms = new ArrayList<>();
         chunks = new ArrayList<>();
         chunkBuilder = new ChunkBuilder();
     }
 
     public Map buildMap(){
-        Debug.success(DebugEnabler.OVERWORLD, "MapBuilder - Built Map");
+        Debug.success(DebugEnabler.OVERWORLD, "BackgroundBuilder - Built Map");
 
         // Build the Map Structure and returns a chunk grid that needs room data
         ArrayList<ArrayList<TileGridContainer>> noBorderMap = buildMapStructure();
