@@ -83,13 +83,13 @@ public class DescriptionAssistant {
         }
         String name = adj[rand.nextInt(adj.length)];
         switch (type){
-            case Magic:
+            case OffHand:
                 name += " Cape";
                 break;
-            case Foot:
+            case Feet:
                 name += " Boots";
                 break;
-            case Leg:
+            case Legs:
                 name += " Pants";
                 break;
             case Chest:

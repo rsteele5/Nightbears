@@ -18,6 +18,16 @@ public class ItemButton extends Button{
     private static String selectedImagePath = "/assets/buttons/Button-Inventory-Selected.png";
     private BufferedImage notSelectedImage;
     private BufferedImage selectedImage;
+    /*private enum Slot{
+        Helmet,
+        OffHand,
+        Chest,
+        Weapon,
+        Legs,
+        Feet,
+        Item
+    }
+    private Slot slot= Slot.Item;*///Obsolete
 
     public ItemButton(int x, int y, DrawLayer drawLayer) {
         super(x, y, notSelectedImagePath, drawLayer);
@@ -38,6 +48,22 @@ public class ItemButton extends Button{
     public void setItem(Item item) {
         this.item = item;
     }
+
+    /*public int getSlot() {
+        return slot.ordinal();
+    }
+
+    public void setSlot(int slot) {
+        switch (slot) {
+            case 0 : this.slot = Slot.Helmet; break;
+            case 1 : this.slot = Slot.OffHand; break;
+            case 2 : this.slot = Slot.Chest; break;
+            case 3 : this.slot = Slot.Weapon; break;
+            case 4 : this.slot = Slot.Legs; break;
+            case 5 : this.slot = Slot.Feet; break;
+            default: this.slot = Slot.Item; break;
+        }
+    }*///Obsolete
 
     public void resetItem() {this.item = null;}
 
@@ -87,4 +113,6 @@ public class ItemButton extends Button{
             }
         }
     }
+
+
 }

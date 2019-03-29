@@ -1,6 +1,8 @@
 package gamescreen.gameplay;
 
 import gameengine.gamedata.PlayerData;
+import gameobject.renderable.item.armor.Armor;
+import gameobject.renderable.item.weapon.Weapon;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.*;
 import gameobject.renderable.ImageContainer;
@@ -29,6 +31,7 @@ public class PauseMenu extends GameScreen {
     private CopyOnWriteArrayList<Item> playerInventory;
     private CopyOnWriteArrayList<ItemButton> playerButtons;
     private CopyOnWriteArrayList<ItemButton> equipButtons;
+    private CopyOnWriteArrayList<Item> currentEquipment;
     private ItemButton bigEquipment;
     private TextBox itemDetails;
     private ItemButton currentItemButton = null;
@@ -36,6 +39,14 @@ public class PauseMenu extends GameScreen {
     private ButtonText useButton;
     Player player;
     private PlayerData playerData = gameData.getPlayerData();
+    public enum Equipments{
+        Helmet,
+        OffHand,
+        Chest,
+        Weapon,
+        Legs,
+        Feet
+    }
 
     //endregion
 
@@ -52,12 +63,18 @@ public class PauseMenu extends GameScreen {
         previousPlayerState = player.getState();
         player.setState(Player.PlayerState.asleep);
         playerInventory = playerData.getInventory();
+        currentEquipment = playerData.getPlayerEquipment();
         playerButtons = new CopyOnWriteArrayList<>();
         equipButtons = new CopyOnWriteArrayList<>();
+
 
         //Add all the item in the dev splashscreen player to the splashscreen
         for (RenderableObject renderable: playerInventory){
             renderable.addToScreen(this, false);
+        }
+
+        for (RenderableObject renderable: currentEquipment){
+            if(renderable!=null)renderable.addToScreen(this, false);
         }
         //Create Labels
         initLabels();
@@ -81,6 +98,7 @@ public class PauseMenu extends GameScreen {
                     bigEquipment.setItem(null);
                 }
             }
+
             currentItemButton = itemContainerButton;
             currentItem = currentItemButton.getItem();
 
@@ -89,8 +107,32 @@ public class PauseMenu extends GameScreen {
                 bigEquipment.setItem(currentItemButton.getItem());
                 if(currentItem.getCategory().toString() == "Consumable"){
                     useButton.setText("Consume");
+                    useButton.setOnClick(() -> {
+                        playerInventory.remove(currentItem);
+                        playerData.removeItem(currentItem);
+                        bigEquipment.resetItem();
+                        itemDetails.setText("");
+                        currentItemButton.resetItem();
+                        currentItemButton.deSelect();
+                        useButton.setText("");
+                        //todo offer healing or bonuses
+                    });
                 } else if(currentItem.getCategory().toString() == "Armor" || currentItem.getCategory().toString() == "Weapon"){
                     useButton.setText("Equip");
+                    useButton.setOnClick(() -> {
+
+                        if(currentItem instanceof Weapon)
+                            playerData.equipItem(currentItem, 3);//3 is weapon slot
+                        if(currentItem instanceof Armor)
+                            playerData.equipItem(currentItem, currentItem.getType());
+                        currentEquipment = playerData.getPlayerEquipment();
+                        playerInventory = playerData.getInventory();
+                        playerInventory.sort(new ItemComparator());
+                        playerButtons.
+                        currentItem = null;
+                        currentItemButton.deSelect();
+
+                    });
                 }
                 Debug.success(true,currentItem.getCategory().toString());
             } else {
@@ -104,16 +146,11 @@ public class PauseMenu extends GameScreen {
 
     private void resetButtonItems(){
         // Reset all player item button to null, set item button again, and establish click events
-        int count = playerInventory.size();
-        int k = 0;
-        for (ItemButton pbutton : playerButtons) {
-            pbutton.resetItem();
-            if (k < count){
-                pbutton.setItem((Item)(playerInventory.get(k)));
-                setClickEvent(pbutton, itemDetails);
-                k++;
-            }
-        }
+
+        /*for(ItemButton btn : playerButtons)
+        {
+
+        }*/
     }
 
     private void initLabels() {
@@ -225,7 +262,7 @@ public class PauseMenu extends GameScreen {
                 ItemButton itemContainerButton = new ItemButton();
                 playerGrid.addAt(itemContainerButton, i, j);
                 if (k < count) {
-                    itemContainerButton.setItem((Item)(playerInventory.get(k)));
+                    itemContainerButton.setItem(playerInventory.get(k));
                     k++;
                 }
                 setClickEvent(itemContainerButton, itemDetails);
@@ -241,34 +278,59 @@ public class PauseMenu extends GameScreen {
         RenderableGridContainer equipGrid = new RenderableGridContainer(4, 3, 50, 50, 250, 140);
         //Equipment Buttons
         ItemButton equipHead =  new ItemButton();
+        if(currentEquipment.get(Equipments.Helmet.ordinal()) != null) {
+            equipHead.setItem(currentEquipment.get(Equipments.Helmet.ordinal()));
+        }
+        //equipHead.setSlot(Equipments.Helmet.ordinal());//todo remove??
         equipGrid.addAt(equipHead, 0, 1);
         equipButtons.add(equipHead);
         setClickEvent(equipHead, itemDetails);
 
         ItemButton equipOffHand =  new ItemButton();
+        if(currentEquipment.get(Equipments.OffHand.ordinal()) != null) {
+            equipOffHand.setItem(currentEquipment.get(Equipments.OffHand.ordinal()));
+        }
+        //equipHead.setSlot(Equipments.OffHand.ordinal());
         equipGrid.addAt(equipOffHand, 1, 0);
         equipButtons.add(equipOffHand);
         setClickEvent(equipOffHand, itemDetails);
 
         ItemButton equipChest =  new ItemButton();
+        if(currentEquipment.get(Equipments.Chest.ordinal()) != null) {
+            equipChest.setItem(currentEquipment.get(Equipments.Chest.ordinal()));
+        }
+        //equipHead.setSlot(Equipments.Chest.ordinal());
         equipGrid.addAt(equipChest, 1, 1);
         equipButtons.add(equipChest);
         setClickEvent(equipChest, itemDetails);
 
         ItemButton equipWeapon =  new ItemButton();
+        if(currentEquipment.get(Equipments.Weapon.ordinal()) != null) {
+            equipWeapon.setItem(currentEquipment.get(Equipments.Weapon.ordinal()));
+        }
+        //equipHead.setSlot(Equipments.Weapon.ordinal());
         equipGrid.addAt(equipWeapon, 1, 2);
         equipButtons.add(equipWeapon);
         setClickEvent(equipWeapon, itemDetails);
 
         ItemButton equipLegs =  new ItemButton();
+        if(currentEquipment.get(Equipments.Legs.ordinal()) != null) {
+            equipLegs.setItem(currentEquipment.get(Equipments.Legs.ordinal()));
+        }
+        //equipHead.setSlot(Equipments.Legs.ordinal());
         equipGrid.addAt(equipLegs, 2, 1);
         equipButtons.add(equipLegs);
         setClickEvent(equipLegs, itemDetails);
 
         ItemButton equipFeet =  new ItemButton();
+        if(currentEquipment.get(Equipments.Feet.ordinal()) != null) {
+            equipFeet.setItem(currentEquipment.get(Equipments.Feet.ordinal()));
+        }
+       // equipHead.setSlot(Equipments.Feet.ordinal());
         equipGrid.addAt(equipFeet, 3, 1);
         equipButtons.add(equipFeet);
         setClickEvent(equipFeet, itemDetails);
+        //endregion
 
         equipGrid.addToScreen(this, true);
     }
@@ -289,7 +351,7 @@ public class PauseMenu extends GameScreen {
 
         //Use Buttons
         Font noScaryHeader2 = new Font("NoScary", Font.PLAIN, 35);
-        useButton = new ButtonText(503, 465, "/assets/buttons/Button-Inventory-Empty.png", DrawLayer.Entity,noScaryHeader2,Color.BLACK);
+        useButton = new ButtonText(503, 465, "/assets/buttons/Button-Inventory-Empty.png","/assets/buttons/Button-Inventory-Empty.png", DrawLayer.Entity,noScaryHeader2,Color.BLACK);
         useButton.addToScreen(this, true);
     }
 }
