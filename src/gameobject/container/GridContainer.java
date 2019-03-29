@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public abstract class GridContainer<T> extends GameObject {
 
     //region <Variables>
+    protected String name;
     protected int rows;
     protected int cols;
     protected int padding;
@@ -23,8 +24,9 @@ public abstract class GridContainer<T> extends GameObject {
     //endregion
 
     //region <Construction and Initialization>
-    public GridContainer(int rows, int cols, int itemWidth, int itemHeight, int xPos, int yPos, int padding) {
+    public GridContainer(String name, int rows, int cols, int itemWidth, int itemHeight, int xPos, int yPos, int padding) {
         super();
+        this.name = name;
         this.rows = rows;
         this.cols = cols;
         this.itemWidth = itemWidth;
@@ -72,6 +74,13 @@ public abstract class GridContainer<T> extends GameObject {
 
     public T getContentAt(int row, int col) {
         return contents.get(row).get(col);
+    }
+
+    public ArrayList<T> getAllContent(){
+        ArrayList<T> allContent = new ArrayList<>();
+        for(ArrayList<T> row : contents)
+            allContent.addAll(row);
+        return allContent;
     }
 
     /**
@@ -149,7 +158,7 @@ public abstract class GridContainer<T> extends GameObject {
     public boolean addAt(T content, int row, int col){
         if((row >= 0 && col >= 0) && (row < rows && col < cols)) {
             if(content != null) {
-                Debug.warning(DebugEnabler.GRID_CONTAINER, "AddAt("+row+", "+col+") - "
+                Debug.warning(DebugEnabler.GRID_CONTAINER, name+": AddAt("+row+", "+col+") - "
                         + "x: " + (x + ((itemWidth + padding) * col))
                         + ", y: " + (y + (itemHeight + padding) * row));
                 //Set the position of the renderable
@@ -159,13 +168,25 @@ public abstract class GridContainer<T> extends GameObject {
                 contents.get(row).set(col, content);
                 return true;
             }else {
-                Debug.error(DebugEnabler.GRID_CONTAINER, "- addAt() was passed null");
+                Debug.error(DebugEnabler.GRID_CONTAINER, name+" - addAt() was passed null");
             }
         } else{
             Debug.error(DebugEnabler.GRID_CONTAINER,
-                    "Grid dynamicAddAt failed- Current Range: row: 0-" + (rows-1) + ", col: 0-" + (cols-1));
+                    name+"Grid Current Range: row: 0-" + (rows-1) + ", col: 0-" + (cols-1));
             Debug.error(DebugEnabler.GRID_CONTAINER,
-                    "Grid dynamicAddAt failed- dynamicAddAt( row: " + row + ", col: " + col + ") is out of bounds");
+                    name+"Grid addAt failed- addAt( row: " + row + ", col: " + col + ") is out of bounds");
+        }
+        return false;
+    }
+
+    public boolean removeAt(int row, int col){
+        if((row >= 0 && col >= 0) && (row < rows && col < cols)) {
+            contents.get(row).set(col, null);
+        } else {
+            Debug.error(DebugEnabler.GRID_CONTAINER,
+                    name+"Grid Current Range: row: 0-" + (rows-1) + ", col: 0-" + (cols-1));
+            Debug.error(DebugEnabler.GRID_CONTAINER,
+                    name+"Grid addAt failed- removeAt( row: " + row + ", col: " + col + ") is out of bounds");
         }
         return false;
     }

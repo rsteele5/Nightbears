@@ -1,6 +1,8 @@
 package gamescreen.gameplay.level;
 
 import gameengine.rendering.Camera;
+import gameobject.renderable.house.overworld.room.SpawnPoint;
+import gameobject.renderable.house.overworld.room.SpawnType;
 import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
@@ -26,7 +28,7 @@ public class LevelDecorator extends GameScreen {
         lBuild.buildTerrain(this);
         Player player = lBuild.buildPlayer(this, gameData.getPlayerData());
         lBuild.buildEnemies(this);
-        UI = new OverworldUI(screenManager, this, player);
+        UI = new OverworldUI(screenManager, this, player, new SpawnPoint(0,0, SpawnType.Vendor));
         addOverlay(UI);
         setCamera(new Camera(screenManager, this, player));
     }

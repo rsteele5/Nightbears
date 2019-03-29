@@ -1,6 +1,8 @@
 package gameobject.renderable.house.overworld.room;
 
 
+import gameobject.renderable.house.overworld.Compass;
+
 public class Bedroom extends Room {
 
     public Bedroom() {
@@ -10,21 +12,24 @@ public class Bedroom extends Room {
     @Override
     protected Integer[][] constructLayout() {
         return new Integer[][]{
-                new Integer[]{9,2,2,2,2,2,3},
-                new Integer[]{8,1,1,1,1,1,4},
-                new Integer[]{8,1,1,1,1,1,4},
-                new Integer[]{8,1,1,1,1,1,4},
-                new Integer[]{7,6,6,6,6,6,5}
+                new Integer[]{14, 2, 2, 2, 2, 2, 2,15,},
+                new Integer[]{11, 1, 1, 1, 1, 1, 1, 5,},
+                new Integer[]{11, 1, 1, 1, 1, 1, 1, 7,},
+                new Integer[]{11, 1, 1, 1, 1, 1, 1, 1,},
+                new Integer[]{11, 1, 1, 1, 1, 1, 1, 6,},
+                new Integer[]{11, 1, 1, 1, 1, 1, 1, 5,},
+                new Integer[]{11, 1, 1, 1, 1, 1, 1, 5,},
+                new Integer[]{17, 8, 8, 9, 1,10, 8,16,}
         };
     }
 
     @Override
-    public void initializeSpawnPoints() {
-        spawnPoints.add(new SpawnPoint(1,1, SpawnType.Player, this));
-        spawnPoints.add(new SpawnPoint(2,1, SpawnType.Vendor,this));
-        spawnPoints.add(new SpawnPoint(0,0, SpawnType.Objcect,this));
-        spawnPoints.add(new SpawnPoint(4,0, SpawnType.Objcect,this));
-        spawnPoints.add(new SpawnPoint(4,4, SpawnType.Objcect,this));
+    public void initializeRoom() {
+        createSpawnPoint(1,1, SpawnType.Player);
+        createSpawnPoint(2,1, SpawnType.Vendor);
+
+        createDoor(7, 3, Compass.East);
+        createDoor(4, 7, Compass.South);
     }
 
     @Override

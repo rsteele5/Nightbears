@@ -40,6 +40,11 @@ public abstract class GameObject {
         this.y = y;
     }
 
+    public void translate(int x, int y){
+        this.x += x;
+        this.y += y;
+    }
+
     public boolean setActive(GameScreen screen){
         if(!isActive){
             screen.inactiveObjects.remove(this);
