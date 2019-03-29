@@ -218,7 +218,7 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
     }
 
     @Override
-    public Rectangle hitbox() {
+    public Rectangle getRequestArea() {
         return new Rectangle(x,y,image.getWidth(),image.getHeight());
     }
 

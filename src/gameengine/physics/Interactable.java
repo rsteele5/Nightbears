@@ -5,6 +5,7 @@ import gameobject.GameObject;
 import java.awt.*;
 
 public interface Interactable {
-    Rectangle hitbox();
+    Rectangle getRequestArea();
+    //boolean requ
     boolean action(GameObject g);
 }

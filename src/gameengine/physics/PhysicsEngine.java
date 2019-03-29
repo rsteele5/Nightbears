@@ -1,18 +1,15 @@
 package gameengine.physics;
 
 import _test.Square;
-import gameengine.GameEngine;
 import gameengine.gamedata.PlayerData;
 import gameobject.renderable.enemy.Enemy;
 import gameobject.renderable.enemy.Minion;
-import gameobject.renderable.enemy.Walker;
 import gameobject.renderable.house.sidescrolling.Floor;
 import gameengine.gamedata.GameData;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.item.weapon.Weapon;
 import gamescreen.ScreenManager;
 import gameobject.GameObject;
-import main.Game;
 import main.utilities.Debug;
 
 import java.awt.*;
@@ -76,7 +73,7 @@ public class PhysicsEngine {
                 if (i2 == i1) continue;
                 GameObject obj2 = (GameObject) objects.get(i2);
                 if(obj2 instanceof Interactable){
-                    if(((Kinematic) obj1).getHitbox().intersects(((Interactable) obj2).hitbox())){
+                    if(((Kinematic) obj1).getHitbox().intersects(((Interactable) obj2).getRequestArea())){
                         ((Interactable) obj2).action(obj1);
                     }
                 }

@@ -18,14 +18,14 @@ public class Door extends RenderableObject implements Kinematic, Interactable {
     public Door(int x, int y, boolean orientation, Rectangle interactionBox){
         super(x,y,DrawLayer.Entity);
         imagePath = BASEPATH;
-        imagePath += orientation ? "Vert.png" : "Hori.png";
+        imagePath += orientation ? "Hori.png" : "Vert.png";
         this.interactionBox = interactionBox;
         openable = false;
     }
 
 
     @Override
-    public Rectangle hitbox() {
+    public Rectangle getRequestArea() {
         return interactionBox;
     }
 

@@ -32,9 +32,7 @@ public class OverworldScreen extends GameScreen {
         mapBuilder.addRoomAtCell(0,8, new Bathroom());
         overworldMap = mapBuilder.buildMap();
         overworldMap.addToScreen(this, true);
-        for(Room room : overworldMap.getRooms()){
-            room.setInactive(this);
-        }
+        //overworldMap.getRooms().forEach(room -> room.setInactive(this));
         overworldMap.getRooms().get(0).setActive(this);
 
         //Player
