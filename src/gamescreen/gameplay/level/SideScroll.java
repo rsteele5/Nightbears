@@ -3,6 +3,8 @@ package gamescreen.gameplay.level;
 import _test.Square;
 import gameengine.GameEngine;
 import gameengine.rendering.Camera;
+import gameobject.renderable.house.overworld.room.SpawnPoint;
+import gameobject.renderable.house.overworld.room.SpawnType;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.house.sidescrolling.Floor;
 import gameobject.renderable.ImageContainer;
@@ -86,7 +88,7 @@ public class SideScroll extends GameScreen {
         floor2.addToScreen(this, true);
 
 
-        UI = new OverworldUI(screenManager, this, player);
+        UI = new OverworldUI(screenManager, this, player, new SpawnPoint(0,0, SpawnType.Vendor));
         addOverlay(UI);
         setCamera(new Camera(screenManager,this, player));
     }

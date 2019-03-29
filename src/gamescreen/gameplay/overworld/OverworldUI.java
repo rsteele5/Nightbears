@@ -1,15 +1,20 @@
 package gamescreen.gameplay.overworld;
 
 import gameengine.GameEngine;
+import gameengine.gamedata.VendorData;
 import gameengine.rendering.Camera;
 import gameobject.renderable.button.Button;
 import gameobject.renderable.button.ButtonText;
 import gameobject.renderable.DrawLayer;
+import gameobject.renderable.house.overworld.room.SpawnPoint;
+import gameobject.renderable.item.ItemMeta;
 import gameobject.renderable.player.Player;
+import gameobject.renderable.vendor.Vendor;
 import gamescreen.GameScreen;
 import gamescreen.Overlay;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.PauseMenu;
+import gamescreen.gameplay.VendorScreen;
 import gamescreen.gameplay.level.BedroomLevel;
 import gamescreen.gameplay.level.LevelDecorator;
 import gamescreen.mainmenu.MainMenuScreen;
@@ -28,11 +33,14 @@ public class OverworldUI extends Overlay {
     private static String inventoryBtnPressedPath = "/assets/buttons/Button-InventoryPressed.png";
     private static String fightBtnPath = "/assets/buttons/Button-Fight.png";
     private static String vendorBtnPath = "/assets/buttons/Button-Vendor.png";
+    private SpawnPoint vendorSpawn;
 
 
-    public OverworldUI(ScreenManager screenManager, GameScreen parentScreen, Player player) {
+    public OverworldUI(ScreenManager screenManager, GameScreen parentScreen, Player player, SpawnPoint vendorSpawn) {
         super(screenManager, parentScreen,"OverworldUI", 0,0, 1f);
         this.player = player;
+        this.vendorSpawn = vendorSpawn;
+
     }
 
     /**
@@ -81,7 +89,7 @@ public class OverworldUI extends Overlay {
                 new Font("NoScary", Font.PLAIN, 58),
                 Color.WHITE, "Camera Off!",
                 () ->{
-                    Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Vendor");
+                    Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Camera off");
                     parentScreen.setCamera(null);
                 });
         cameraOnButton.addToScreen(this, true);
@@ -93,11 +101,43 @@ public class OverworldUI extends Overlay {
                 new Font("NoScary", Font.PLAIN, 58),
                 Color.WHITE, "Camera On!",
                 () ->{
-                    Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Vendor");
+                    Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Camera On");
                     parentScreen.setCamera(new Camera(screenManager, parentScreen, player));
                 });
         cameraOffButton.addToScreen(this, true);
 
+        Vendor vendor = new Vendor(vendorSpawn.getTileX(), vendorSpawn.getTileY(), gameData.getVendorData());
+        vendor.addToScreen(this, false);
+        Button showVendor = new ButtonText(1250, 20,
+                "/assets/buttons/Button-Empty.png",
+                "/assets/buttons/Button-Empty.png",
+                DrawLayer.Entity,
+                new Font("NoScary", Font.PLAIN, 58),
+                Color.WHITE, "Vendor",
+                () ->{
+                    Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Vendor");
+                    if (vendor.getState() != Vendor.VendorState.idle) {
+                        vendor.setState(Vendor.VendorState.crawling);
+                        //TODO: make vendor trigger box
+                        vendor.addToScreen(parentScreen, true);
+                    }
+                    else {
+                        ItemMeta.attributeAmplifier();
+                        vendor.getVendorData().restockItems();
+                    }
+                });
+        showVendor.addToScreen(this, true);
 
+        Button warebearWares = new ButtonText(1500, 20,
+                "/assets/buttons/Button-Empty.png",
+                "/assets/buttons/Button-Empty.png",
+                DrawLayer.Entity,
+                new Font("NoScary", Font.PLAIN, 38),
+                Color.WHITE, "Wearbear's\nWares",
+                () ->{
+                    Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Warebear's Wares");
+                    screenManager.addScreen(new VendorScreen(screenManager, player));
+                });
+        warebearWares.addToScreen(this, true);
     }
 }
