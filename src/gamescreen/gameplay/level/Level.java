@@ -22,7 +22,7 @@ public interface Level {
      * attributes and equipment
      * @param gameScreen the screen that the player(s) is/are rendered on
      */
-    void buildPlayer(GameScreen gameScreen);
+    Player buildPlayer(GameScreen gameScreen, PlayerData playerData);
 
     /**
      * Constructs the enemies for a level

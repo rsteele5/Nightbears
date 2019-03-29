@@ -2,12 +2,15 @@ package gamescreen.gameplay.level;
 
 import gameengine.GameEngine;
 import gameengine.rendering.Camera;
+import gameobject.renderable.DrawLayer;
+import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.overworld.OverworldUI;
 
 public class LevelFactory extends GameScreen {
     private static Level lBuild;
+    private Player player;
     private OverworldUI UI;
 
     private LevelFactory(ScreenManager screenManager) {
@@ -28,12 +31,12 @@ public class LevelFactory extends GameScreen {
 
     @Override
     protected void initializeScreen() {
-        UI = new OverworldUI(screenManager, this);
+        player = lBuild.buildPlayer(this, gameData.getPlayerData());
+        UI = new OverworldUI(screenManager, this, player);
         addOverlay(UI);
         lBuild.buildBackground(this);
         lBuild.buildTerrain(this);
-        lBuild.buildPlayer(this);
         lBuild.buildEnemies(this);
-        setCamera(new Camera(screenManager, this, GameEngine.players.get(0)));
+        setCamera(new Camera(screenManager, this, player));
     }
 }
