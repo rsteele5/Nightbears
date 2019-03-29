@@ -76,6 +76,13 @@ public abstract class GridContainer<T> extends GameObject {
         return contents.get(row).get(col);
     }
 
+    public ArrayList<T> getAllContent(){
+        ArrayList<T> allContent = new ArrayList<>();
+        for(ArrayList<T> row : contents)
+            allContent.addAll(row);
+        return allContent;
+    }
+
     /**
      * Sets the position of the grid container and also sets the positions of all objects contained in the container
      * relative to their position in the grid.

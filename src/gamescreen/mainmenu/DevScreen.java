@@ -12,6 +12,7 @@ import gamescreen.gameplay.level.LevelDecorator;
 import gamescreen.gameplay.PauseMenu;
 import gamescreen.gameplay.VendorScreen;
 import gamescreen.gameplay.level.SideScroll;
+import input.listeners.Key.ClickableKeyHandler;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -107,7 +108,7 @@ public class DevScreen extends GameScreen {
                 });
         button.addToScreen(this, true);
 
-        // Initialize vendor
+        setKeyHandler(new ClickableKeyHandler(this.clickables));
 
     }
 

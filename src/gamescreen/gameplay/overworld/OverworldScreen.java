@@ -49,41 +49,12 @@ public class OverworldScreen extends GameScreen {
         playerOW.addToScreen(this,true);
         setCamera(new Camera(screenManager, this, playerOW));
 
-        //TODO: Generate vendor after a level has been completed by player
-        /*vendorData = gameData.getVendorData();
-        Vendor vendor = new Vendor(0, 0, vendorData);
-        SpawnPoint vendorSpawn = overworldMap.getVendorSpawn();
-        Vendor vendor = new Vendor(vendorSpawn.getTileX(), vendorSpawn.getTileY(), gameData.getVendorData());
-        vendor.setImage("/assets/vendor/vendoridleanimation/VendorOverworldForward.png");
-        //TODO: make vendor trigger box
-        vendor.addToScreen(this, true);*/
-
-
-        //Overlay TODO: Fix layering
+        //Overlays
         UI = new OverworldUI(screenManager, this, playerOW, overworldMap.getVendorSpawn());
-        ///vendorDialogBox = new VendorDialogBox(screenManager,this, 460,100);
         addOverlay(UI);
 
         //KeyListener
-        setKeyHandler(new OverworldKeyHandler(playerOW, UI.clickables));
+        setKeyHandler(new OverworldKeyHandler(playerOW, UI.clickables, UI.getPauseBtn()));
 
     }
-
-//    @Override
-//    protected void loadContent() {
-//
-//        if (loadingScreenRequired) {
-//            loadingScreen = screenManager.getLoadingScreen();
-//            loadingScreen.initializeLoadingScreen(loadables.size());
-//            coverWith(loadingScreen);
-//            for (int i = 0; i < loadables.size(); i++) {
-//                loadables.get(i).load();
-//                loadingScreen.dataLoaded(i);
-//            }
-//            isLoading = false;
-//            childScreen = null;
-//            loadingScreen.reset();
-//
-//        }
-//    }
 }
