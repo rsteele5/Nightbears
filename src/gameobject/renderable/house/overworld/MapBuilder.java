@@ -1,5 +1,6 @@
 package gameobject.renderable.house.overworld;
 
+import gameobject.renderable.house.overworld.room.Bedroom;
 import gameobject.renderable.house.overworld.room.Boundary;
 import gameobject.renderable.house.overworld.room.Room;
 import gameobject.container.TileGridContainer;
@@ -60,8 +61,8 @@ public class MapBuilder {
         int maxCellX = ChunkSize;
         int maxCellY = ChunkSize;
         for(Room room : rooms){
-            maxCellX = maxCellX < (room.getCellX()+room.getHeight()) ? (room.getCellX()+room.getHeight()) : maxCellX;
-            maxCellY = maxCellY < (room.getCellY()+room.getWidth()) ? (room.getCellY()+room.getWidth()) : maxCellY;
+            maxCellX = maxCellX < (room.getCellRow()+room.getHeight()) ? (room.getCellRow()+room.getHeight()) : maxCellX;
+            maxCellY = maxCellY < (room.getCellCol()+room.getWidth()) ? (room.getCellCol()+room.getWidth()) : maxCellY;
         }
         // Calculate the max chunks needed
         int chunkRows = roundUpToChunk(maxCellX) / ChunkSize;
@@ -113,9 +114,9 @@ public class MapBuilder {
         for(Room room : rooms){
             // get cell location
             for(int row = 0; row < room.getHeight(); row++) {
-                cellX = room.getCellX() + row;
+                cellX = room.getCellRow() + row;
                 for(int col = 0; col < room.getWidth(); col++) {
-                    cellY = room.getCellY() + col;
+                    cellY = room.getCellCol() + col;
                     // get chunk location from cell
                     chunkRow = Math.floorDiv(cellX, ChunkSize);
                     chunkCol = Math.floorDiv(cellY, ChunkSize);
@@ -218,7 +219,7 @@ public class MapBuilder {
     //region<Room Object Generation>
     private void generateRoomObjects() {
         for(Room room : rooms){
-            room.initializeSpawnPoints();
+            room.initializeRoom();
             for(int row = 0; row < room.getHeight(); row++) {
                 for (int col = 0; col < room.getWidth(); col++) {
                     switch (room.getLayout()[row][col]) {

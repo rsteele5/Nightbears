@@ -83,4 +83,8 @@ public class Map extends GameObject {
         }
         return null;
     }
+
+    public ArrayList<Room> getRooms() {
+        return rooms;
+    }
 }

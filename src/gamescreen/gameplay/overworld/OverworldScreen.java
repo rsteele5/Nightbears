@@ -4,17 +4,12 @@ import gameengine.gamedata.VendorData;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.overworld.Map;
 import gameobject.renderable.house.overworld.MapBuilder;
-import gameobject.renderable.house.overworld.room.Bedroom;
-import gameobject.renderable.house.overworld.room.SpawnPoint;
-import gamescreen.gameplay.VendorDialogBox;
+import gameobject.renderable.house.overworld.room.*;
 import gameengine.rendering.Camera;
 import gameobject.renderable.player.Player;
-import gameobject.renderable.vendor.Vendor;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import input.listeners.Key.OverworldKeyHandler;
-
-import java.util.ArrayList;
 
 public class OverworldScreen extends GameScreen {
 
@@ -38,9 +33,14 @@ public class OverworldScreen extends GameScreen {
         MapBuilder mapBuilder = new MapBuilder();
         mapBuilder.createMap();
         mapBuilder.addRoomAtCell(0, 0, new Bedroom());
-
+        mapBuilder.addRoomAtCell(8,0, new LivingRoom());
+        mapBuilder.addRoomAtCell(0,8, new Bathroom());
         overworldMap = mapBuilder.buildMap();
         overworldMap.addToScreen(this, true);
+        for(Room room : overworldMap.getRooms()){
+            room.setInactive(this);
+        }
+        overworldMap.getRooms().get(0).setActive(this);
 
         //Player
         SpawnPoint playerSpawn = overworldMap.getPlayerSpawn();
