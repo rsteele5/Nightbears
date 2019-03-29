@@ -10,17 +10,19 @@ public class Bedroom extends Room {
     @Override
     protected Integer[][] constructLayout() {
         return new Integer[][]{
-                new Integer[]{9,2,2,2,2,2,2,2,2,2,2,3},
-                new Integer[]{8,1,1,1,1,1,1,1,1,1,1,4},
-                new Integer[]{8,1,1,1,1,1,1,1,1,1,1,4},
-                new Integer[]{8,1,1,1,1,1,1,1,1,1,1,4},
-                new Integer[]{8,1,1,1,1,1,1,1,1,1,1,4},
-                new Integer[]{7,6,6,6,6,6,1,6,6,6,6,5},
-                new Integer[]{9,2,2,1,1,1,1,1,1,1,1,4},
-                new Integer[]{8,1,1,1,1,1,1,1,1,1,1,4},
-                new Integer[]{8,1,1,1,1,1,1,1,9,2,2,2},
-                new Integer[]{8,1,1,1,1,1,1,1,8,0,0,0},
-                new Integer[]{7,6,6,6,6,6,6,6,8,0,0,0}
+                new Integer[]{14, 2, 2, 2, 2, 2, 2,15,14, 2, 2, 2, 2, 2, 2, 2, 2,15},
+                new Integer[]{11, 1, 1, 1, 1, 1, 1, 5,11, 1, 1, 1, 1, 1, 1, 1, 1, 5},
+                new Integer[]{11, 1, 1, 1, 1, 1, 1, 7,13, 1, 1, 1, 1, 1, 1, 1, 1, 5},
+                new Integer[]{11, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5},
+                new Integer[]{11, 1, 1, 1, 1, 1, 1, 6,12, 1, 1, 1, 1, 1, 1, 1, 1, 5},
+                new Integer[]{11, 1, 1, 1, 1, 1, 1, 5,11, 1, 1, 1, 1, 1, 1, 1, 1, 5},
+                new Integer[]{11, 1, 1, 1, 1, 1, 1, 5,11, 1, 1,21, 8, 8,20, 1, 1, 5},
+                new Integer[]{17, 8, 8, 9, 1,10, 8,16,11, 1, 1, 5, 0, 0,11, 1, 1, 5},
+                new Integer[]{14, 2, 2, 3, 1, 4, 2, 2,18, 1, 1, 5, 0, 0,11, 1, 1, 5},
+                new Integer[]{11, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,19, 2, 2,18, 1, 1, 5},
+                new Integer[]{11, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5},
+                new Integer[]{11, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5},
+                new Integer[]{17, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,16}
         };
     }
 
@@ -28,7 +30,7 @@ public class Bedroom extends Room {
     public void initializeSpawnPoints() {
         createSpawnPoint(1,1, SpawnType.Player);
         createSpawnPoint(2,1, SpawnType.Vendor);
-}
+    }
 
     @Override
     public void update() {}

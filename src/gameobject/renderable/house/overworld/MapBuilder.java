@@ -48,9 +48,13 @@ public class MapBuilder {
         organizeChunks();
         roomToChunkConverter(noBorderMap);
         generateRoomObjects();
+        fillEmptySpace(noBorderMap);
         return new Map(rooms, chunks);
     }
 
+    //region<Support Functions>
+
+    //region<Tile Structure>
     private ArrayList<ArrayList<TileGridContainer>> buildMapStructure(){
         // Find the farthest cell from the origin
         int maxCellX = ChunkSize;
@@ -201,6 +205,17 @@ public class MapBuilder {
         }
     }
 
+    private void fillEmptySpace(ArrayList<ArrayList<TileGridContainer>> noBorderMap) {
+        for(ArrayList<TileGridContainer> row : noBorderMap){
+            for(TileGridContainer chunk : row){
+                chunkBuilder.editChunk(chunk);
+                chunkBuilder.fillWithGrass();
+            }
+        }
+    }
+    //endregion
+
+    //region<Room Object Generation>
     private void generateRoomObjects() {
         for(Room room : rooms){
             room.initializeSpawnPoints();
@@ -211,18 +226,26 @@ public class MapBuilder {
                         case WALLNWC:
                         case WALLNE:
                         case WALLNEC:
-                        //case WALLNC:
-                        case WALLN: createNorthWall(room, row, col); break;
+                        case WALLNCW:
+                        case WALLNCE:
+                        case WALLN: createNorthWall(room, row, col);
+                            break;
                         case WALLSE:
                         case WALLSEC:
                         case WALLSW:
                         case WALLSWC:
-                        //case WALLSC:
-                        case WALLS: createSouthWall(room, row, col); break;
-                        //case WALLEC:
-                        case WALLE: createEastWall(room, row, col);  break;
-                        //case WALLWC:
-                        case WALLW: createWestWall(room, row, col);  break;
+                        case WALLSCW:
+                        case WALLSCE:
+                        case WALLS: createSouthWall(room, row, col);
+                            break;
+                        case WALLECN:
+                        case WALLECS:
+                        case WALLE: createEastWall(room, row, col);
+                            break;
+                        case WALLWCN:
+                        case WALLWCS:
+                        case WALLW: createWestWall(room, row, col);
+                            break;
                         default: break;
                     }
                 }
@@ -234,7 +257,6 @@ public class MapBuilder {
         final Integer[] row = room.getLayout()[iRow];
         final Tile startTile = room.getRoomTileAt(iRow, iCol);
         int x = startTile.getX();
-        int y = startTile.getY();
         int width = 0;
         boolean done = false;
 
@@ -246,21 +268,26 @@ public class MapBuilder {
                         row[col] = WALLW;
                         createWestWall(room, iRow, col);
                         break;
-                    case WALLNWC:
-                        width += WallThickness;
-                        row[col] = -WALLNWC;
-                        done = true;
-                        break;
                     case WALLNE:
                         width += TileSize;
                         row[col] = WALLE;
                         createEastWall(room, iRow, col);
                         break;
-                    case WALLNEC:
-                        //TODO: Adjust position
+                    case WALLNWC:
                         width += WallThickness;
-                        row[col] = -WALLNEC;
+                        row[col] = -WALLNWC;
+                        done = true;
                         break;
+                    case WALLNEC:
+                        if(col != iCol) done = true;
+                        else {
+                            x += TileSize-WallThickness;
+                            width += WallThickness;
+                            row[col] = -WALLNEC;
+                        }
+                        break;
+                    case WALLNCW:
+                    case WALLNCE: done = true;
                     case WALLN:
                         width += TileSize;
                         row[col] = -WALLN;
@@ -271,12 +298,13 @@ public class MapBuilder {
                 }
             }else break;
         }
-        room.addBoundary(new Boundary(startTile.getX(), startTile.getY(), width, WallThickness));
+        room.addBoundary(new Boundary(x, startTile.getY(), width, WallThickness));
     }
 
     private void createSouthWall(Room room, int iRow, int iCol) {
         final Integer[] row = room.getLayout()[iRow];
         final Tile startTile = room.getRoomTileAt(iRow, iCol);
+        int x = startTile.getX();
         int width = 0;
         boolean done = false;
 
@@ -292,6 +320,21 @@ public class MapBuilder {
                     row[col] = WALLE;
                     createEastWall(room, iRow, col);
                     break;
+                case WALLSWC:
+                    width += WallThickness;
+                    row[col] = -WALLSWC;
+                    done = true;
+                    break;
+                case WALLSEC:
+                    if(col != iCol) done = true;
+                    else {
+                        x += TileSize-WallThickness;
+                        width += WallThickness;
+                        row[col] = -WALLSEC;
+                    }
+                    break;
+                case WALLSCW:
+                case WALLSCE: done = true;
                 case WALLS:
                     width += TileSize;
                     row[col] = -WALLS;
@@ -301,12 +344,13 @@ public class MapBuilder {
             }
             if(done) break;
         }
-        room.addBoundary(new Boundary(startTile.getX(), startTile.getY() + TileSize - WallThickness,
+        room.addBoundary(new Boundary(x, startTile.getY() + TileSize - WallThickness,
                                       width, WallThickness));
     }
 
     private void createEastWall(Room room, int iRow, int iCol) {
         final Tile startTile = room.getRoomTileAt(iRow, iCol);
+        int y = startTile.getY();
         int height = 0;
         boolean done = false;
 
@@ -322,6 +366,21 @@ public class MapBuilder {
                     room.getLayout()[row][iCol] = WALLS;
                     createSouthWall(room, row, iCol);
                     break;
+                case WALLNEC:
+                    height += WallThickness;
+                    room.getLayout()[row][iCol] = -WALLSWC;
+                    done = true;
+                    break;
+                case WALLSEC:
+                    if(row != iRow) done = true;
+                    else {
+                        y += TileSize-WallThickness;
+                        height += WallThickness;
+                        room.getLayout()[row][iCol] = -WALLSEC;
+                    }
+                    break;
+                case WALLECN:
+                case WALLECS: done = true;
                 case WALLE:
                     height += TileSize;
                     room.getLayout()[row][iCol] = -WALLE;
@@ -331,12 +390,12 @@ public class MapBuilder {
             }
             if(done) break;
         }
-        room.addBoundary(new Boundary(startTile.getX() + TileSize - WallThickness, startTile.getY(),
-                                      WallThickness, height));
+        room.addBoundary(new Boundary(startTile.getX() + TileSize - WallThickness, y, WallThickness, height));
     }
 
     private void createWestWall(Room room, int iRow, int iCol) {
         final Tile startTile = room.getRoomTileAt(iRow, iCol);
+        int y = startTile.getY();
         int height = 0;
         boolean done = false;
 
@@ -352,6 +411,21 @@ public class MapBuilder {
                     room.getLayout()[row][iCol] = WALLS;
                     createSouthWall(room, row, iCol);
                     break;
+                case WALLNWC:
+                    height += WallThickness;
+                    room.getLayout()[row][iCol] = -WALLSWC;
+                    done = true;
+                    break;
+                case WALLSWC:
+                    if(row != iRow) done = true;
+                    else {
+                        y += TileSize-WallThickness;
+                        height += WallThickness;
+                        room.getLayout()[row][iCol] = -WALLSEC;
+                    }
+                    break;
+                case WALLWCN:
+                case WALLWCS: done = true;
                 case WALLW:
                     height += TileSize;
                     room.getLayout()[row][iCol] = -WALLW;
@@ -361,6 +435,9 @@ public class MapBuilder {
             }
             if(done) break;
         }
-        room.addBoundary(new Boundary(startTile.getX(), startTile.getY(), WallThickness, height));
+        room.addBoundary(new Boundary(startTile.getX(), y, WallThickness, height));
     }
+    //endregion
+
+    //endregion
 }
