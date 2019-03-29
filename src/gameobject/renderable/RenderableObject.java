@@ -47,7 +47,6 @@ public abstract class RenderableObject extends GameObject implements Loadable, S
 
     public RenderableObject(int x, int y, DrawLayer layer) {
         super(x,y);
-        this.imagePath = imagePath;
         drawLayer = layer;
     }
 

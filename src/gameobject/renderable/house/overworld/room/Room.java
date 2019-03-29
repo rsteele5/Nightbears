@@ -7,10 +7,12 @@ import gamescreen.GameScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import static gameobject.renderable.house.overworld.OverworldMeta.TileSize;
+import static gameobject.renderable.house.overworld.OverworldMeta.WallThickness;
 
 public abstract class Room extends GameObject {
 
@@ -39,6 +41,7 @@ public abstract class Room extends GameObject {
         width = layout[0].length;
         height = layout.length;
         boundaries = new ArrayList<>();
+        doors = new ArrayList<>();
         spawnPoints = new ArrayList<>();
     }
 
@@ -148,8 +151,36 @@ public abstract class Room extends GameObject {
 
     protected void createDoor(int row, int col, Compass attachedDirection) {
         Tile refernceTile = roomTiles[row][col];
+        int doorX = refernceTile.getX();
+        int doorY = refernceTile.getY();
+        int interactX = doorX;
+        int interactY = doorY;
+        int interactW = TileSize;
+        int interactH = TileSize;
+        boolean orientation = true;
 
+        switch(attachedDirection){
+            case South:
+                //doorY += TileSize - WallThickness;
+                //interactH += TileSize;
+                break;
+            case North:
+                //interactY -= TileSize;
+                //interactH += TileSize;
+                break;
+            case East:
+                //doorX += TileSize - WallThickness;
+                //interactW += TileSize;
+                orientation = false;
+                break;
+            case West:
+                //interactX -= TileSize;
+                //interactW += TileSize;
+                orientation = false;
+                break;
+        }
 
+        doors.add(new Door(doorX,doorY,orientation, new Rectangle(interactX, interactY, interactW, interactH)));
     }
     //endregion
 
@@ -161,6 +192,8 @@ public abstract class Room extends GameObject {
         if(super.setActive(screen)){
             for (Boundary boundary : boundaries) {
                 boundary.setActive(screen);
+            }for (Door door : doors) {
+                door.setActive(screen);
             }for(Tile[] row : roomTiles){
                 for(Tile tile : row)
                     if(tile != null) tile.setActive(screen);
@@ -173,6 +206,8 @@ public abstract class Room extends GameObject {
         if(super.setInactive(screen)){
             for (Boundary boundary : boundaries) {
                 boundary.setInactive(screen);
+            }for (Door door : doors) {
+                door.setInactive(screen);
             }
             for(Tile[] row : roomTiles){
                 for(Tile tile : row)
@@ -186,6 +221,8 @@ public abstract class Room extends GameObject {
         super.addToScreen(screen, isActive);
         for (Boundary boundary : boundaries) {
             boundary.addToScreen(screen, isActive);
+        }for (Door door : doors) {
+            door.addToScreen(screen, isActive);
         }
     }
     //endregion
