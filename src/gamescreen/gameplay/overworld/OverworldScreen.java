@@ -1,6 +1,5 @@
 package gamescreen.gameplay.overworld;
 
-import gameengine.gamedata.VendorData;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.overworld.Map;
 import gameobject.renderable.house.overworld.MapBuilder;
@@ -15,18 +14,14 @@ public class OverworldScreen extends GameScreen {
 
     //region <Variable Declaration>
     private OverworldUI UI;
-    //private VendorDialogBox vendorDialogBox;
     private Map overworldMap;
-    private VendorData vendorData;
     //endregion
 
     public OverworldScreen(ScreenManager screenManager) {
         super(screenManager, "Overworld", 0f);
     }
 
-    /**
-     * Initializes all of the stuff you want on your splashscreen
-     */
+
     @Override
     protected void initializeScreen() {
         //House generation
@@ -55,6 +50,5 @@ public class OverworldScreen extends GameScreen {
 
         //KeyListener
         setKeyHandler(new OverworldKeyHandler(playerOW, UI.clickables, UI.getPauseBtn()));
-
     }
 }

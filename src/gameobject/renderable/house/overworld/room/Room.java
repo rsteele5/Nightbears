@@ -25,6 +25,7 @@ public abstract class Room extends GameObject {
 
     protected ArrayList<SpawnPoint> spawnPoints;
     protected ArrayList<Boundary> boundaries;
+    protected ArrayList<Door> doors;
     //endregion
 
     //region <Construction and Initialization>
@@ -146,6 +147,8 @@ public abstract class Room extends GameObject {
     }
 
     protected void createDoor(int row, int col, Compass attachedDirection) {
+        Tile refernceTile = roomTiles[row][col];
+
 
     }
     //endregion
