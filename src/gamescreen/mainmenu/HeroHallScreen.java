@@ -1,34 +1,21 @@
 package gamescreen.mainmenu;
 
-import gameengine.gamedata.GraphicsSetting;
-import gameobject.renderable.text.TextBox;
 import gameobject.renderable.DrawLayer;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gameobject.renderable.ImageContainer;
 import gameobject.renderable.button.Button;
-import gamescreen.popup.ConfirmationPopup;
-import gamescreen.splashscreen.GraphicsChangeScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
-
-import javax.imageio.ImageIO;
-
-import static gameengine.gamedata.GraphicsSetting.Resolution;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 
 public class HeroHallScreen extends GameScreen {
 
     //region <Variables>
-    ArrayList<Button> heroes = new ArrayList<>();
-    final int MAX_NUMBER_OF_HEROES = 3;
-    Button[] heroesOnScreen = new Button[MAX_NUMBER_OF_HEROES];
+    private ArrayList<Button> heroes = new ArrayList<>();
+    private final int MAX_NUMBER_OF_HEROES = 3;
+    private int[] heroesOnScreenIndex = new int[MAX_NUMBER_OF_HEROES];
     //endregion
 
     //region <Construction and Initialization>
@@ -50,13 +37,24 @@ public class HeroHallScreen extends GameScreen {
         heroes.add(new Button(0, 0, "/assets/player/images/TeddyRed.png", DrawLayer.Entity));
         heroes.add(new Button(0, 0,"/assets/player/images/TeddyOrange.png", DrawLayer.Entity));
         heroes.add(new Button(0,0,"/assets/player/images/TeddyYellow.png", DrawLayer.Entity));
+        heroes.add(new Button(0,0,"/assets/player/images/TeddyBlue.png", DrawLayer.Entity));
 
-        for (int i = 0; i < MAX_NUMBER_OF_HEROES; i++) {
-            heroesOnScreen[i] = heroes.get(i);
-            heroesOnScreen[i].setX(X_INIT_BUTTON + (i * 2 + 1) * (X_BUFFER + WIDTH_BUTTON - 30));
-            heroesOnScreen[i].setY(Y_INIT_BUTTON - 230);
-            heroesOnScreen[i].addToScreen(this, true);
+        for (Button b: heroes) {
+            b.addToScreen(this, true); //NOTE: isActive/isInactive cannot be called inside lambda expressions
+                                                      //Therefore, any teddy bear not displayed has to be rendered off screen
         }
+
+        for (int i = 0; i < heroes.size(); i++) {
+            if (i < MAX_NUMBER_OF_HEROES) {
+                heroesOnScreenIndex[i] = i;
+                heroes.get(i).setX(X_INIT_BUTTON + (i * 2 + 1) * (X_BUFFER + WIDTH_BUTTON - 30));
+                heroes.get(i).setY(Y_INIT_BUTTON - 230);
+            } else {
+                heroes.get(i).setX(9999);
+                heroes.get(i).setY(9999);
+            }
+        }
+
 
         //Create Background
         ImageContainer imageContainer;
@@ -74,9 +72,18 @@ public class HeroHallScreen extends GameScreen {
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Left Arrow");
-                    for (int i = 0; i < MAX_NUMBER_OF_HEROES; i++) {
-                        int newIndex = (heroes.indexOf(heroesOnScreen[i]) - 1 < 0) ? heroes.size() - 1 : heroes.indexOf(heroesOnScreen[i]) - 1;
-                        heroesOnScreen[i] = heroes.get(newIndex);
+                    for (int i = 0; i < heroes.size(); i++) {
+                        if (i < MAX_NUMBER_OF_HEROES) {
+                            int newIndex = ((heroesOnScreenIndex[i]) - 1 < 0) ? heroes.size() - 1 : heroesOnScreenIndex[i] - 1;
+                            heroesOnScreenIndex[i] = newIndex;
+                        }
+                        heroes.get(i).setX(9999);
+                        heroes.get(i).setY(9999);
+                    }
+
+                    for (int i = 0; i < heroesOnScreenIndex.length; i++) {
+                        heroes.get(heroesOnScreenIndex[i]).setX(X_INIT_BUTTON + (i * 2 + 1) * (X_BUFFER + WIDTH_BUTTON - 30));
+                        heroes.get(heroesOnScreenIndex[i]).setY(Y_INIT_BUTTON - 230);
                     }
                 });
         butt.addToScreen(this, true);
@@ -88,9 +95,18 @@ public class HeroHallScreen extends GameScreen {
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Right Arrow");
-                    for (int i = 0; i < MAX_NUMBER_OF_HEROES; i++) {
-                        int newIndex = (heroes.indexOf(heroesOnScreen[i]) + 1 > heroes.size() - 1) ? 0 : heroes.indexOf(heroesOnScreen[i]) + 1;
-                        heroesOnScreen[i] = heroes.get(newIndex);
+                    for (int i = 0; i < heroes.size(); i++) {
+                        if (i < MAX_NUMBER_OF_HEROES) {
+                            int newIndex = (heroesOnScreenIndex[i] + 1 > heroes.size() - 1) ? 0 : heroesOnScreenIndex[i] + 1;
+                            heroesOnScreenIndex[i] = newIndex;
+                        }
+                        heroes.get(i).setX(9999);
+                        heroes.get(i).setY(9999);
+                    }
+
+                    for (int i = 0; i < heroesOnScreenIndex.length; i++) {
+                        heroes.get(heroesOnScreenIndex[i]).setX(X_INIT_BUTTON + (i * 2 + 1) * (X_BUFFER + WIDTH_BUTTON - 30));
+                        heroes.get(heroesOnScreenIndex[i]).setY(Y_INIT_BUTTON - 230);
                     }
                 });
         butt.addToScreen(this, true);
