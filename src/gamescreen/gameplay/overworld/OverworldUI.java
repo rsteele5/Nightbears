@@ -1,17 +1,20 @@
 package gamescreen.gameplay.overworld;
 
 import gameengine.GameEngine;
+import gameengine.gamedata.VendorData;
 import gameengine.rendering.Camera;
 import gameobject.renderable.button.Button;
 import gameobject.renderable.button.ButtonText;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.overworld.room.SpawnPoint;
+import gameobject.renderable.item.ItemMeta;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.vendor.Vendor;
 import gamescreen.GameScreen;
 import gamescreen.Overlay;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.PauseMenu;
+import gamescreen.gameplay.VendorScreen;
 import gamescreen.gameplay.level.BedroomLevel;
 import gamescreen.gameplay.level.LevelDecorator;
 import gamescreen.mainmenu.MainMenuScreen;
@@ -103,20 +106,38 @@ public class OverworldUI extends Overlay {
                 });
         cameraOffButton.addToScreen(this, true);
 
+        Vendor vendor = new Vendor(vendorSpawn.getTileX(), vendorSpawn.getTileY(), gameData.getVendorData());
+        vendor.addToScreen(this, false);
         Button showVendor = new ButtonText(1250, 20,
-                "/assets/button/button-Test.png",
-                "/assets/buttons/Button-TestPressed.png",
+                "/assets/buttons/Button-Empty.png",
+                "/assets/buttons/Button-Empty.png",
                 DrawLayer.Entity,
                 new Font("NoScary", Font.PLAIN, 58),
                 Color.WHITE, "Vendor",
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Vendor");
-                    Vendor vendor = new Vendor(vendorSpawn.getTileX(), vendorSpawn.getTileY(), gameData.getVendorData());
-                    vendor.setState(Vendor.VendorState.crawling);
-                    //TODO: make vendor trigger box
-                    vendor.addToScreen(this, true);
+                    if (vendor.getState() != Vendor.VendorState.idle) {
+                        vendor.setState(Vendor.VendorState.crawling);
+                        //TODO: make vendor trigger box
+                        vendor.addToScreen(parentScreen, true);
+                    }
+                    else {
+                        ItemMeta.attributeAmplifier();
+                        vendor.getVendorData().restockItems();
+                    }
                 });
         showVendor.addToScreen(this, true);
 
+        Button warebearWares = new ButtonText(1500, 20,
+                "/assets/buttons/Button-Empty.png",
+                "/assets/buttons/Button-Empty.png",
+                DrawLayer.Entity,
+                new Font("NoScary", Font.PLAIN, 38),
+                Color.WHITE, "Wearbear's\nWares",
+                () ->{
+                    Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Warebear's Wares");
+                    screenManager.addScreen(new VendorScreen(screenManager, player));
+                });
+        warebearWares.addToScreen(this, true);
     }
 }

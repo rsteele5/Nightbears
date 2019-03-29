@@ -10,6 +10,7 @@ import gameengine.rendering.animation.Animator;
 import gameobject.GameObject;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.RenderableObject;
+import gameobject.renderable.house.overworld.OverworldMeta;
 import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
 import main.utilities.AssetLoader;
@@ -36,6 +37,11 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
     private double rotation = 0;
     private boolean isIdle = false;
     private int speed = 1;
+    private int endCrawl;
+
+    private static String firstNotice = "I created lots of goodies that might help you defeat those monsters. Come see what I have!";
+    private static String subsequentNotices = "I have all NEW items that are even more powerful than before! Come see what I have!";
+    private static String firstLevel = "Whew! That was a super scary monster!";
 
 
     int isSet = 0;
@@ -67,6 +73,7 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
         animator.addAnimation("SittingUp", new VendorSittingUpAnimation());
         animator.addAnimation("Idle", new VendorIdleAnimation());
     }
+    //endregion
 
     public void draw(Graphics2D graphics2D) {
         if(animator != null){
@@ -89,17 +96,15 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
         }
 
         if (vendorState == VendorState.crawling) {
-            animator.setAnimation("Crawling");
-
+            if (getX() <= endCrawl)
+                this.translate(5, 0);
+            else this.setState(VendorState.sittingup);
         }
-        else if (vendorState == VendorState.sittingup)
-            animator.setAnimation("SittingUp");
-        else if (vendorState == VendorState.idle) {
-            animator.setAnimation("Idle");
-            isIdle = true;
+        else if (vendorState == VendorState.sittingup){
+            if (this.animator.getCurrentAnimation().getFrameToDisplay() == 7){
+                this.setState(VendorState.idle);
+            }
         }
-
-
     }
 
     public void setImage(String imagePath){ this.imagePath = imagePath; }
@@ -129,6 +134,41 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
             }
         }
     }
+
+    public boolean setState(VendorState vs) {
+        //TODO: Implement error checking
+        switch (vs) {
+            case hiding:
+                Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: hidden");
+                vendorState = vs;
+                return true;
+            case crawling:
+                Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: crawling");
+                width = 200;
+                height = 200;
+
+                endCrawl = getX() + OverworldMeta.TileSize;
+                animator.setAnimation("Crawling");
+                vendorState = vs;
+                return true;
+            case sittingup:
+                Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: sitting up");
+                animator.setAnimation("SittingUp");
+                vendorState = vs;
+                return true;
+            case idle:
+                Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: idle");
+                width = 200;
+                height = 200;
+                animator.setAnimation("Idle");
+                isIdle = true;
+                vendorState = vs;
+                return true;
+        }
+        return false;
+    }
+
+    public VendorState getState() { return vendorState;}
 
     //TODO: Don't think I need this anymore
     public void startRestockTimer(){
@@ -197,38 +237,6 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
         return true;
     }
 
-    public boolean setState(VendorState vs) {
-        //TODO: Implement error checking
-        switch (vs) {
-            case hiding:
-                Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: hidden");
-                vendorState = vs;
-                return true;
-            case crawling:
-                Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: crawling");
-                speed = 3;
-                width = 200;
-                height = 200;
-                animator.setAnimation("Crawling");
-                vendorState = vs;
-                return true;
-            case sittingup:
-                Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: sitting up");
-                speed = 3;
-                animator.setAnimation("SittingUp");
-                vendorState = vs;
-                return true;
-            case idle:
-                Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: idle");
-                speed = 1;
-                width = 100;
-                height = 100;
-                animator.setAnimation("Idle");
-                vendorState = vs;
-                return true;
-        }
-        return false;
-    }
     //endregion
 
     //region <GameScreen Methods>
