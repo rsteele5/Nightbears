@@ -21,6 +21,7 @@ import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
 import java.awt.*;
+import java.util.Comparator;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -37,6 +38,7 @@ public class PauseMenu extends GameScreen {
     private ItemButton currentItemButton = null;
     private Item currentItem = null;
     private ButtonText useButton;
+    private RenderableGridContainer playerGrid;
     Player player;
     private PlayerData playerData = gameData.getPlayerData();
     public enum Equipments{
@@ -128,7 +130,7 @@ public class PauseMenu extends GameScreen {
                         currentEquipment = playerData.getPlayerEquipment();
                         playerInventory = playerData.getInventory();
                         playerInventory.sort(new ItemComparator());
-                        playerButtons.
+                        //playersGrid
                         currentItem = null;
                         currentItemButton.deSelect();
 
@@ -252,7 +254,7 @@ public class PauseMenu extends GameScreen {
         //Set up the grid for the player inventory
         int rows = 7;
         int columns = 4;
-        RenderableGridContainer playerGrid = new RenderableGridContainer(rows, columns, 50, 50, 15, 140);
+        playerGrid = new RenderableGridContainer(rows, columns, 50, 50, 15, 140);
 
         //region Add button to the Grid Containers
         int count = playerInventory.size();
