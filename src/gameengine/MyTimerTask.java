@@ -1,17 +1,24 @@
 package gameengine;
 
+import gameengine.gamedata.VendorData;
+
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
 
 public class MyTimerTask extends TimerTask {
+    private VendorData vendorData;
+
+
+    public MyTimerTask (VendorData vendorData){
+        this.vendorData = vendorData;
+    }
 
     @Override
     public void run() {
-        System.out.println("Restock Timer started at:"+new Date());
-        completeTask();
         System.out.println("Time to restock:"+new Date());
+        completeTask();
     }
 
     private void completeTask() {
@@ -22,16 +29,17 @@ public class MyTimerTask extends TimerTask {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }*/
-        GameEngine.vendor.restockItems();
+        vendorData.restockItems();
     }
 
-    public static void main(String args[]){
-        TimerTask timerTask = new MyTimerTask();
+    public static void main(String args[], VendorData vendorData){
+        TimerTask timerTask = new MyTimerTask(vendorData);
         //running timer task as daemon thread
         Timer timer = new Timer(true);
         timer.scheduleAtFixedRate(timerTask, 0, 10*1000);
         System.out.println("TimerTask started");
-        //cancel after sometime
+
+        //cancel after some time
         /*try {
             Thread.sleep(120000);
         } catch (InterruptedException e) {

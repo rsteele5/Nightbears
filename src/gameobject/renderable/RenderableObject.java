@@ -1,6 +1,7 @@
 package gameobject.renderable;
 
 import gameengine.gamedata.GraphicsSetting;
+import gameengine.physics.Kinematic;
 import gameengine.rendering.animation.Animator;
 import gameobject.GameObject;
 import gamescreen.GameScreen;
@@ -12,8 +13,9 @@ import main.utilities.Loadable;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
-public abstract class RenderableObject extends GameObject implements Loadable {
+public abstract class RenderableObject extends GameObject implements Loadable, Serializable {
 
     //region <Variables>
     protected DrawLayer drawLayer;
@@ -21,7 +23,7 @@ public abstract class RenderableObject extends GameObject implements Loadable {
     protected int width;
     protected int height;
     protected String imagePath;
-    protected BufferedImage image;
+    protected transient BufferedImage image;
     protected Animator animator;
     //endregion
 
@@ -46,7 +48,6 @@ public abstract class RenderableObject extends GameObject implements Loadable {
 
     public RenderableObject(int x, int y, DrawLayer layer) {
         super(x,y);
-        this.imagePath = imagePath;
         drawLayer = layer;
     }
 
@@ -82,8 +83,10 @@ public abstract class RenderableObject extends GameObject implements Loadable {
 
     public void setCurrentImage(BufferedImage currentImage) {
         this.image = currentImage;
-//        width = currentImage.getWidth();
-//        height = currentImage.getHeight();
+        if(currentImage != null){
+            width = currentImage.getWidth();
+            height = currentImage.getHeight();
+        }
     }
 
     public DrawLayer getDrawLayer() {
@@ -172,10 +175,15 @@ public abstract class RenderableObject extends GameObject implements Loadable {
     @Override
     public void addToScreen(GameScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
+        screen.renderables.remove(this);    //Remove if the renderable is already in the list.
         if(isActive) addToRenderables(screen);
         screen.loadables.add(this);
         if(animator != null){
             screen.loadables.add(animator);
+        }
+
+        if(this instanceof Kinematic){
+            screen.kinematics.add((Kinematic)this);
         }
     }
 

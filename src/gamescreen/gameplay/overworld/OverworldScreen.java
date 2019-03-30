@@ -1,97 +1,93 @@
 package gamescreen.gameplay.overworld;
 
-import _test.Square;
+import gameengine.gamedata.VendorData;
+import gameengine.physics.PhysicsObjectStatic;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.overworld.Map;
 import gameobject.renderable.house.overworld.MapBuilder;
+import gameobject.renderable.house.overworld.room.Bathroom;
 import gameobject.renderable.house.overworld.room.Bedroom;
+import gameobject.renderable.house.overworld.room.LivingRoom;
 import gameobject.renderable.house.overworld.room.SpawnPoint;
-import gameobject.renderable.house.sidescrolling.Floor;
-import gamescreen.gameplay.VendorDialogBox;
-import gameengine.GameEngine;
+import gameobject.renderable.text.DialogBox;
 import gameengine.rendering.Camera;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.vendor.Vendor;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
-import main.utilities.Debug;
-
-import java.util.Timer;
-import java.util.TimerTask;
-
-import java.util.ArrayList;
+import gamescreen.gameplay.VendorDialogBox;
+import input.listeners.Key.OverworldKeyHandler;
 
 public class OverworldScreen extends GameScreen {
 
     //region <Variable Declaration>
     private OverworldUI UI;
-    private VendorDialogBox vendorDialogBox;
     private Map overworldMap;
+    private Player player;
+    private Vendor vendor;
+    private int vendorVisits = -1;
     //endregion
 
     public OverworldScreen(ScreenManager screenManager) {
-        super(screenManager, "Overworld", 1f);
+        super(screenManager, "Overworld", 0f);
     }
 
-    /**
-     * Initializes all of the stuff you want on your splashscreen
-     */
+
     @Override
     protected void initializeScreen() {
-
         //House generation
         MapBuilder mapBuilder = new MapBuilder();
         mapBuilder.createMap(this);
-        mapBuilder.addRoomAtCell(0,0, new Bedroom());
-        mapBuilder.addRoomAtCell(4,4, new Bedroom());
+        mapBuilder.addRoomAtCell(0, 0, new Bedroom());
+        mapBuilder.addRoomAtCell(8,0, new LivingRoom());
+        mapBuilder.addRoomAtCell(0,8, new Bathroom());
         overworldMap = mapBuilder.buildMap();
+        overworldMap.addToScreen(this, true);
+        overworldMap.getRooms().forEach(room -> room.setInactive(this));
+        overworldMap.getRooms().get(0).setActive(this);
+
+        //Bed
+        SpawnPoint bedSpawn = overworldMap.getRooms().get(0).getSpawnETCOptions().get(0);
+        PhysicsObjectStatic bed = new PhysicsObjectStatic(bedSpawn.getTileX(),bedSpawn.getTileY(),
+                "/assets/overworld/bedroom/Overworld-Bed2.png", DrawLayer.Props);
+        bed.addToScreen(this, true);
 
         //Player
-        GameEngine.players.get(0).setState(Player.PlayerState.overWorld);
-        Debug.log(true, String.valueOf(GameEngine.players.get(0).getState()));
-        GameEngine.players.get(0).reset();
         SpawnPoint playerSpawn = overworldMap.getPlayerSpawn();
-        GameEngine.players.get(0).setPosition(playerSpawn.getTileX(), playerSpawn.getTileY());
-        GameEngine.players.get(0).addToScreen(this,true);
-        setCamera(new Camera(screenManager, this, GameEngine.players.get(0)));
+        player = new Player(playerSpawn.getTileX(), playerSpawn.getTileY(), DrawLayer.Entity, gameData.getPlayerData());
+        player.setState(Player.PlayerState.overWorld);
+        player.addToScreen(this,true);
+        setCamera(new Camera(screenManager, this, player));
 
         //Vendor
-        Vendor vendor = GameEngine.vendor;
-        SpawnPoint vendorSpawn = overworldMap.getVendorSpawn();
-        vendor.setPosition(vendorSpawn.getTileX(), vendorSpawn.getTileY());
-        vendor.setImage("/assets/vendor/vendoridleanimation/VendorOverworldForward.png");
-        //TODO: make vendor trigger box
-        vendor.addToScreen(this, true);
+        SpawnPoint vSpawn = overworldMap.getVendorSpawn();
+        vendor = new Vendor(vSpawn.getTileX(), vSpawn.getTileY(), gameData.getVendorData());
+        vendor.addToScreen(this, false);
 
-
-        //Walls
-        ArrayList<SpawnPoint> objectSpawns = overworldMap.getObjectSpawns();
-        SpawnPoint TLC = objectSpawns.get(0);
-        SpawnPoint TRC = objectSpawns.get(1);
-        SpawnPoint BLC = objectSpawns.get(2);
-
-        Floor northWall = new Floor(TLC.getTileX()-50,TLC.getTileY()-50,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
-        northWall.setHeight(25);
-        northWall.setWidth(500);
-        northWall.addToScreen(this,true);
-        Floor westWall = new Floor(TLC.getTileX()-50,TLC.getTileY()-50,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
-        westWall.setHeight(500);
-        westWall.setWidth(25);
-        westWall.addToScreen(this,true);
-        Floor eastWall = new Floor(TRC.getTileX()+25,TRC.getTileY()-50,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
-        eastWall.setHeight(500);
-        eastWall.setWidth(25);
-        eastWall.addToScreen(this,true);
-        Floor southWall = new Floor(BLC.getTileX()-450,BLC.getTileY()+25,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
-        southWall.setHeight(25);
-        southWall.setWidth(500);
-        southWall.addToScreen(this,true);
-
-        //Overlay TODO: Fix layering
+        //Overlays
         UI = new OverworldUI(screenManager, this);
-        vendorDialogBox = new VendorDialogBox(screenManager,this, 460,100);
         addOverlay(UI);
-        addOverlay(vendorDialogBox);
 
+        //KeyListener
+        setKeyHandler(new OverworldKeyHandler(player, UI.clickables, UI.getPauseBtn()));
+    }
+
+    @Override
+    protected void activeUpdate() {
+        super.activeUpdate();
+
+    }
+
+    public void onLevelComplete(){
+        //Vendor
+        vendorVisits++;
+        SpawnPoint vSpawn = overworldMap.getVendorSpawn();
+        vendor.setPosition(vSpawn.getTileX(), vSpawn.getTileY());
+        vendor.setState(Vendor.VendorState.crawling);
+        vendor.setActive(this);
+        vendor.setPlayerInteractionOW(() ->
+            addOverlay(new VendorDialogBox(screenManager,this, 0, 0, vendorVisits)));
+        //Doors
+        overworldMap.getRooms().get(0).getDoors().forEach(door -> door.setOpenable(true));
     }
 }

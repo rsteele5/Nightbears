@@ -31,6 +31,8 @@ public class RenderEngine extends JPanel {
     //endregion
 
     public RenderEngine(GameData gameData, ScreenManager screenManager) {
+        setFocusable(true);
+        requestFocusInWindow();
         this.screenManager = screenManager;
         this.gameData = gameData;
         setBackground(Color.BLACK);
@@ -54,6 +56,7 @@ public class RenderEngine extends JPanel {
         int width = gameData.getGraphicsSettings().getRenderWidth();
         int height = gameData.getGraphicsSettings().getRenderHeight();
 
+        //TODO change to run in windowed mode. Need to change the GameWindow class, future Greg!
         switch(gameData.getGraphicsSettings().getCurrentOption()){
             case High: setBounds(0,0,width, height); break;
             case Medium: setBounds(320, 180, width, height); break;

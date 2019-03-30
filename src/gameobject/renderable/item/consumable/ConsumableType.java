@@ -5,5 +5,5 @@ public enum ConsumableType {
     throwable,
     spell,
     ammunition,
-    misc
+    misc        //TODO: consider removing. Requires updating type() method in ConsumableBuilder
 }

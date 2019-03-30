@@ -5,11 +5,19 @@ import gameengine.audio.SoundEffectAudio;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
-import static gameengine.gamedata.GraphicsSetting.GraphicsOption.*;
+import static gameengine.gamedata.GraphicsSetting.Resolution;
+import static gameengine.gamedata.GraphicsSetting.Resolution.*;
 import static gameengine.gamedata.InputSetting.InputMethod.*;
 import static gameengine.gamedata.SoundSetting.SoundOption.*;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.io.IOException;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class GameData implements Serializable {
@@ -18,12 +26,16 @@ public class GameData implements Serializable {
     private GraphicsSetting currentGraphicsSetting;
     private InputSetting currentInputSetting;
     private SoundSetting[] currentSoundSetting = new SoundSetting[3];
+    private PlayerData currentPlayerData;
+    private VendorData currentVendorData;
+    private CopyOnWriteArrayList<EndGamePlayerData> previousPlayerData;
 
     public GameData(){
         try {
             Debug.success(DebugEnabler.GAME_DATA,"Loading GameData from file");
 
             File dataFile = new File(FILE_NAME);
+
             if(!dataFile.exists()) {
                 currentGraphicsSetting = new GraphicsSetting(High);
                 currentInputSetting = new InputSetting(KeyBoard);
@@ -34,6 +46,9 @@ public class GameData implements Serializable {
                         currentSoundSetting[i] = new SoundSetting(SoundSetting.SoundVolume.Medium);
                     }
                 }
+                currentPlayerData = new PlayerData();
+                currentVendorData = new VendorData();
+                previousPlayerData = new CopyOnWriteArrayList<>();
                 save();
             } else {
                 FileInputStream file = new FileInputStream(dataFile);
@@ -49,6 +64,10 @@ public class GameData implements Serializable {
                         currentSoundSetting[i] = new SoundSetting(SoundSetting.SoundVolume.Medium);
                     }
                 }
+                this.currentPlayerData = gameDataInput.getPlayerData();
+                this.currentVendorData = gameDataInput.getVendorData();
+                this.previousPlayerData = gameDataInput.getPreviousPlayerData();
+                Debug.log(true, "Do I have shit?: " + currentPlayerData.getInventory().get(0).getImagePath());
 
                 in.close();
                 file.close();
@@ -61,35 +80,36 @@ public class GameData implements Serializable {
             Debug.log(DebugEnabler.GAME_DATA, currentInputSetting.getCurrentOption().name());
             Debug.log(DebugEnabler.GAME_DATA, currentSoundSetting[0].getCurrentOption().name());
 
-        } catch (IOException ex) { Debug.error(DebugEnabler.GAME_DATA, "Loading Failed - IOException is caught");
-        } catch (ClassNotFoundException ex) { Debug.error(DebugEnabler.GAME_DATA,"Loading Failed - ClassNotFoundException is caught"); }
+        } catch (IOException ex) {
+            Debug.error(DebugEnabler.GAME_DATA, "Loading Failed - IOException is caught \n" + ex.getMessage());
+            System.exit(-1);
+        } catch (ClassNotFoundException ex) { Debug.error(DebugEnabler.GAME_DATA,"Loading Failed - ClassNotFoundException is caught" + ex.getMessage()); }
+    }
+
+    public VendorData getVendorData() {
+        return currentVendorData;
+    }
+
+    public PlayerData getPlayerData() { return currentPlayerData; }
+
+    public CopyOnWriteArrayList<EndGamePlayerData> getPreviousPlayerData() {
+        return previousPlayerData;
     }
 
     public GraphicsSetting getGraphicsSettings() {
         return currentGraphicsSetting;
     }
 
-    public void setGraphicsSetting(GraphicsSetting setting) {
-        this.currentGraphicsSetting = setting;
-        save();
+    public void changeResolution(Resolution resolution){
+        currentGraphicsSetting.setCurrentResolution(resolution);
     }
 
     public InputSetting getInputSetting() {
         return currentInputSetting;
     }
 
-    public void setInputSetting(InputSetting setting) {
-        this.currentInputSetting = setting;
-        save();
-    }
-
     public SoundSetting getSoundSetting(int index) {
         return currentSoundSetting[index];
-    }
-
-    public void setSoundSetting(SoundSetting setting, int index) {
-        this.currentSoundSetting[index] = setting;
-        save();
     }
 
     public void save() {

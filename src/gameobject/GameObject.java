@@ -1,7 +1,5 @@
 package gameobject;
 
-
-import static gameengine.gamedata.GraphicsSetting.GraphicsOption;
 import gamescreen.GameScreen;
 
 public abstract class GameObject {
@@ -42,6 +40,11 @@ public abstract class GameObject {
         this.y = y;
     }
 
+    public void translate(int x, int y){
+        this.x += x;
+        this.y += y;
+    }
+
     public boolean setActive(GameScreen screen){
         if(!isActive){
             screen.inactiveObjects.remove(this);
@@ -67,6 +70,10 @@ public abstract class GameObject {
         this.isActive = isActive;
         x += screen.getX();
         y += screen.getY();
+
+        //Remove if the object is already in the list.
+        screen.activeObjects.remove(this);
+        screen.inactiveObjects.remove(this);
 
         if(isActive){
             screen.activeObjects.add(this);

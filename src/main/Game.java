@@ -4,9 +4,17 @@ import gameengine.GameEngine;
 import gameengine.gamedata.GameData;
 import main.utilities.Debug;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 import java.awt.*;
 
+/**
+ * This is the entry point of our Game. The Game class instantiates
+ * everything it needs to create the game. It creates a window, sets
+ * the window properties. Then instantiates an instance of GameData
+ * (the data is read from disk in the GameData constructor). Finally
+ * it creates an instance of the GameEngine, creates a thread and
+ * runs the GameEngine in that thread.
+ */
 public class Game {
 
     public static void main(String[] args) {

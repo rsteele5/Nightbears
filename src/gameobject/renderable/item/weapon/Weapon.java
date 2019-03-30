@@ -1,32 +1,78 @@
 package gameobject.renderable.item.weapon;
 
+import gameengine.physics.Interactable;
 import gameengine.physics.Kinematic;
 import gameengine.physics.PhysicsVector;
-import gameobject.renderable.RenderableObject;
+import gameobject.GameObject;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.item.Item;
 import gameobject.renderable.item.ItemCategory;
+import gameobject.renderable.player.Player;
 import main.utilities.AssetLoader;
+import main.utilities.Debug;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
-import static java.lang.Math.round;
+public class Weapon extends Item implements Kinematic, Serializable, Interactable {
+    //region <Variables>
 
-public class Weapon extends RenderableObject implements Item, Kinematic {
-    // Item Variables
-    private BufferedImage icon;
+    @Override
+    public Rectangle getRequestArea(){
+        return new Rectangle(x,y,image.getWidth(),image.getHeight());
+    }
+
+    @Override
+    public void setRequesting(boolean isRequesting) {
+    }
+
+    @Override
+    public boolean isRequesting() {
+        return false;
+    }
+
+    @Override
+    public boolean action(GameObject g){
+        if(g instanceof Player){
+            ((Player)g).addItem(this);
+            //TODO: Fix temp solution for removing image from screen.
+            image = null;
+            return true;
+        }
+        else return false;
+
+    }
+    /** General item variables **/
+    private transient BufferedImage icon;
     protected String name;
     private String description;
     protected int value;
 
-    // Weapon Variables
+    /** Weapon variables pertain only to weapon items **/
     protected WeaponType type;
     private int maxDamage;
     private int minDamage;
     private int critChance;
     private String quality;
+    //endregion
 
+    //region <Constructors>
+    /**
+     * Weapon constructor is used only by the WeaponBuilder
+     * @param x is x-location
+     * @param y is y-location
+     * @param imagePath is the main image associated with the item
+     * @param layer is the draw layer
+     * @param name is the name assigned to the item
+     * @param value is the item's worth
+     * @param type is the type of weapon (sword, club, spear)
+     * @param minDamage is the minimum damage value
+     * @param maxDamage is the maximum damage value
+     * @param critChance is the possibility of a critical hit
+     * @param quality describes the quality (good, better, best)
+     * @param description is a full description of the weapon attributes
+     */
     Weapon(int x, int y, String imagePath, DrawLayer layer,
            String name, int value, WeaponType type, int minDamage, int maxDamage,
            int critChance, String quality, String description){
@@ -40,17 +86,33 @@ public class Weapon extends RenderableObject implements Item, Kinematic {
         this.quality = quality;
         this.description = description;
     }
+    //endregion
 
+    //region <Getters>
+
+    /**
+     * Getter
+     * @return icon image
+     */
     @Override
     public BufferedImage getIcon() {
         return icon;
     }
 
+    /**
+     * Getter
+     * @return name assigned to weapon item
+     */
     @Override
     public String getItemName() {
         return name;
     }
 
+    /**
+     * Getter for the vendor and inventory screen
+     * @param desc is the item description created by the Description Assistant
+     * @return full description that includes the weapon type, damage, critChance, and value
+     */
     @Override
     public String getDescription(boolean desc) {
         return  name +
@@ -61,49 +123,93 @@ public class Weapon extends RenderableObject implements Item, Kinematic {
                 (desc ? description : "");
     }
 
+    /**
+     * Getter
+     * @return always returns Weapon
+     */
     @Override
     public ItemCategory getCategory() {
         return ItemCategory.Weapon;
     }
 
+    /**
+     * Getter
+     * @return item type (sword, club, spear)
+     */
     @Override
     public int getType() {
         return type.ordinal();
     }
 
+    /**
+     * Getter
+     * @return value of weapon item
+     */
     @Override
     public int getValue() {
         return value;
     }
 
-    @Override
-    public void depreciate() {
-        this.value = round((float)(value * (0.9)));
-    }
-
+    /**
+     * Getter
+     * @return item's quality
+     */
     public String getQuality(){return quality;}
 
+    /**
+     * Getter
+     * @return item's minimum damage value
+     */
     public int getMinDamage() { return minDamage;}
 
+    /**
+     * Getter
+     * @return item's maximum damage value
+     */
     public int getMaxDamage() { return maxDamage;}
 
+    /**
+     * Getter
+     * @return item's critical hit possibility
+     */
     public int getCritChance() { return critChance;}
+    //endregion
 
+    //region <Setters>
+    /**
+     * Sets description attribute. Description is intended to be one or two sentences.
+     * @param myDescription is a string description for the item.
+     */
     private void setDescription(String myDescription) {
         description = "\n" + myDescription;
     }
 
+    /**
+     * Sets the value of the item
+     * @param value is the new value
+     */
+    public void setValue(int value) {
+        this.value = value;
+    }
+    //endregion
+
+    //TODO: Weapons may be damaged or upgraded. Add item update here.
     @Override
     public void update() {
 
     }
 
+    /**
+     * All images are 100 x 100. This function reduces image size by half.
+     */
     @Override
     public void load() {
+        Debug.log(true, "The image path is: " + imagePath + " for item " + name);
         super.load();
         icon = AssetLoader.resizeImage(image, image.getWidth()/2, image.getHeight()/2);
     }
 
+    //region <Physics Methods>
     @Override
     public boolean isStatic() {
         return false;
@@ -134,11 +240,8 @@ public class Weapon extends RenderableObject implements Item, Kinematic {
         return new Rectangle(x, y, width, height);
     }
 
-    public void increaseMaxAttribute(int num){
-        WeaponBuilder.maxWeapon += num;
-        WeaponBuilder.minWeapon += num;
-    }
 
+    //endregion
 }
 
 

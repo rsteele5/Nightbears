@@ -2,8 +2,11 @@ package gameobject.renderable.button;
 
 import gameobject.renderable.DrawLayer;
 import main.utilities.Action;
+import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 
 public class ButtonText extends Button{
 
@@ -31,17 +34,42 @@ public class ButtonText extends Button{
         this(x, y, imagepath, drawLayer,font,color, text);
         onClick = handleOnClick;
     }
+    public ButtonText(int x, int y, String imagePath, String pressedImagePath, DrawLayer drawLayer, Font font, Color color) {
+        this(x, y, imagePath, drawLayer, font,color);
+        this.pressedImagePath = pressedImagePath;
+    }
+
+    public ButtonText(int x, int y, String imagePath, String pressedImagePath, DrawLayer drawLayer, Font font, Color color, String text, Action handleOnClick) {
+        this(x, y, imagePath, drawLayer, font,color, text);
+        onClick = handleOnClick;
+        this.pressedImagePath = pressedImagePath;
+    }
 
     @Override
     public void draw(Graphics2D graphics) {
         graphics.setColor(color);
-        super.draw(graphics);
         graphics.setFont(font);
-        //graphics.setColor(color);
+        int textWidth = graphics.getFontMetrics().stringWidth(text);
         int fontHeight = graphics.getFontMetrics().getHeight();
-        int width = graphics.getFontMetrics().stringWidth(text);
-        int fontAscent = graphics.getFontMetrics().getAscent();
-        graphics.drawString(text, x+(image.getWidth()/2)-(width/2), y+fontHeight);
+        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+        graphics.setComposite(alphaComposite);
+        if(animator != null){
+            animator.animate();
+        }
+        Debug.drawRect(DebugEnabler.RENDERABLE_LOG,graphics, new Rectangle2D.Double(x,y,width, height));
+        if(isPressed) {
+            graphics.drawImage(pressedImage, x - 10  , y - 10, width + 20, height + 20, null);
+            graphics.setColor(Color.YELLOW);
+            graphics.drawString(text, x+(image.getWidth()/2)-(textWidth/2), y+fontHeight);
+            graphics.setColor(Color.WHITE);
+        } else {
+            graphics.drawImage(image, x , y, width, height, null);
+            graphics.drawString(text, x+(image.getWidth()/2)-(textWidth/2), y+fontHeight);
+        }
+
+        //graphics.setColor(color);
+
+
     }
 
     @Override

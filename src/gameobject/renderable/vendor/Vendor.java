@@ -1,110 +1,95 @@
 package gameobject.renderable.vendor;
 
 import gameengine.MyTimerTask;
+import gameengine.gamedata.GameData;
+import gameengine.gamedata.VendorData;
 import gameengine.physics.Interactable;
 import gameengine.physics.Kinematic;
 import gameengine.physics.PhysicsMeta;
 import gameengine.physics.PhysicsVector;
+import gameengine.rendering.animation.Animator;
 import gameobject.GameObject;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.RenderableObject;
-import gameobject.renderable.item.*;
-import gameobject.renderable.item.armor.ArmorBuilder;
-import gameobject.renderable.item.consumable.ConsumableBuilder;
-import gameobject.renderable.item.weapon.WeaponBuilder;
+import gameobject.renderable.house.overworld.OverworldMeta;
 import gameobject.renderable.player.Player;
+import gameobject.renderable.text.DialogBox;
 import gamescreen.GameScreen;
+import main.utilities.Action;
 import main.utilities.AssetLoader;
+import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Vendor extends RenderableObject implements Kinematic, Interactable {
+public class Vendor extends RenderableObject implements Kinematic, Interactable, Serializable {
 
-    private CopyOnWriteArrayList<Item> items = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<RenderableObject> rItems = new CopyOnWriteArrayList<>();
+    //region <Variables>
     private BufferedImage vendorOverworldImage;
     private BufferedImage vendorLevelImage;
     private final String vendorOverworldPath = "/assets/vendor/vendoridleanimation/VendorOverworldForward.png";
     private final String vendorLevelPath = "/assets/vendor/Vendor.png";
-    /* Restock timer */
     public static TimerTask restockTimer;
+    private VendorData vendorData;
+    private VendorState vendorState;
+    private int endCrawl;
+    private Action playerInteractionOW;
 
-    int isSet = 0;
-    Player p = null;
+    //endregion
+
+    /**
+     * VendorState specifies when vendor is active or inactive
+     */
+    public enum VendorState {
+        hiding,
+        crawling,
+        sittingup,
+        idle
+    }
+
     // Default constructor
-    public Vendor(int x, int y){
+    public Vendor(int x, int y, VendorData vendorData){
         super(x, y);
+        vendorState = VendorState.hiding;
         this.imagePath = vendorLevelPath;
         this.drawLayer = DrawLayer.Entity;
-        initializeItems();
-        restockTimer = new MyTimerTask();
+        this.vendorData = vendorData;
+        restockTimer = new MyTimerTask(vendorData);
         //startRestockTimer();
+
+        animator = new Animator(this);
+        animator.addAnimation("Wait", new VendorUnderAnimation());
+        animator.addAnimation("Crawling", new VendorCrawlingAnimation());
+        animator.addAnimation("SittingUp", new VendorSittingUpAnimation());
+        animator.addAnimation("Idle", new VendorIdleAnimation());
     }
-
-    private void initializeItems() {
-
-        for (int i = 0; i < 8; i++){
-            items.add(new ArmorBuilder()
-                    .buildArmor()
-            );
-            items.add(new WeaponBuilder()
-                    .buildWeapon()
-            );
-            items.add(new ConsumableBuilder()
-                    .buildConsumable()
-            );
-        }
-
-        if (items.size() > 0) {
-            items.sort(new ItemComparator());
-        }
-
-        for (Item item : items){
-            rItems.add((RenderableObject) item);
-        }
-    }
+    //endregion
 
     @Override
     public void update() {
-        isSet++;
-        isSet %= 5;
-        if(isSet == 4 && p != null){
-            p.interaction = false;
-            p = null;
+        if (vendorState == VendorState.crawling) {
+            if (animator.getCurrentAnimationName().equals("Wait") && animator.getCurrentAnimation().getFrameToDisplay() > 0)
+                animator.setAnimation("Crawling");
+            else if (animator.getCurrentAnimationName().equals("Crawling")) {
+                if(getX() <= endCrawl) this.translate(2, 0);
+                else this.setState(VendorState.sittingup);
+            }
         }
-    }
-
-    public CopyOnWriteArrayList<Item> getItems() {
-        return items;
-    }
-
-    public CopyOnWriteArrayList<RenderableObject> getRenderables() {
-        return rItems;
+        else if (vendorState == VendorState.sittingup){
+            if (this.animator.getCurrentAnimation().getFrameToDisplay() >= 7){
+                this.setState(VendorState.idle);
+            }
+        }
     }
 
     public void setImage(String imagePath){ this.imagePath = imagePath; }
 
-    public void addItem(Item item){
-        items.add(item);
-        rItems.add((RenderableObject) item);
-    }
-
-    public void removeItem(Item item){
-        items.remove(item);
-        rItems.remove(item);
-    }
-
-    // Needed for vendor splashscreen
-    public void replaceList(CopyOnWriteArrayList<Item> updatedItems){
-        this.items = updatedItems;
-        rItems.removeAll(rItems);
-        for (Item item : items){
-            rItems.add((RenderableObject) item);
-        }
+    public VendorData getVendorData(){
+        return vendorData;
     }
 
     public BufferedImage getOverworldImage(){
@@ -129,88 +114,39 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable 
         }
     }
 
-    public CopyOnWriteArrayList<Item> restockItems(){
-        CopyOnWriteArrayList<Item> restock = new CopyOnWriteArrayList<>();
-        restock.add(new ArmorBuilder()
-                .buildArmor()
-        );
-        restock.add(new ArmorBuilder()
-                .buildArmor()
-        );
-        restock.add(new ArmorBuilder()
-                .buildArmor()
-        );
-        restock.add(new ArmorBuilder()
-                .buildArmor()
-        );
-        restock.add(new ArmorBuilder()
-                .buildArmor()
-        );
-        restock.add(new ArmorBuilder()
-                .buildArmor()
-        );
-        restock.add(new ArmorBuilder()
-                .buildArmor()
-        );
+    public boolean setState(VendorState vs) {
+        //TODO: Implement error checking
+        switch (vs) {
+            case hiding:
+                Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: hidden");
+                vendorState = vs;
+                return true;
+            case crawling:
+                Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: crawling");
+                width = 200;
+                height = 200;
+                endCrawl = getX() + OverworldMeta.TileSize*2;
+                animator.setAnimation("Wait");
+                vendorState = vs;
+                return true;
+            case sittingup:
+                Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: sitting up");
+                animator.setAnimation("SittingUp");
+                vendorState = vs;
+                return true;
+            case idle:
+                Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: idle");
+                width = 200;
+                height = 200;
+                animator.setAnimation("Idle");
+                vendorState = vs;
 
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-        restock.add(new WeaponBuilder()
-                .buildWeapon()
-        );
-
-        restock.add(new ConsumableBuilder()
-                .buildConsumable()
-        );
-        restock.add(new ConsumableBuilder()
-                .buildConsumable()
-        );
-        restock.add(new ConsumableBuilder()
-                .buildConsumable()
-        );
-        restock.add(new ConsumableBuilder()
-                .buildConsumable()
-        );
-        restock.add(new ConsumableBuilder()
-                .buildConsumable()
-        );
-        restock.add(new ConsumableBuilder()
-                .buildConsumable()
-        );
-        restock.add(new ConsumableBuilder()
-                .buildConsumable()
-        );
-
-        if (restock.size() > 0) {
-            restock.sort(new ItemComparator());
+                return true;
         }
-
-        rItems.removeAll(rItems);
-        for (Item item : restock){
-            rItems.add((RenderableObject) item);
-        }
-
-        return restock;
+        return false;
     }
+
+    public VendorState getState() { return vendorState;}
 
     //TODO: Don't think I need this anymore
     public void startRestockTimer(){
@@ -231,37 +167,22 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable 
         }*/
     }
 
-    private PhysicsVector accel = new PhysicsVector(0,1);
-    PhysicsVector movement = new PhysicsVector(0,0);
+    public void setPlayerInteractionOW(Action playerInteractionOW) {
+        this.playerInteractionOW = playerInteractionOW;
+    }
 
+    //region <Kinematic>
     @Override
     public PhysicsVector getVelocity() {
-        int gravSign = PhysicsMeta.Gravity != 0 ? 1 : 0;
-        PhysicsVector pV = movement.add(new PhysicsVector(0,gravSign)).mult(accel);
-        double y = pV.y;
-        y = y < 1 && y > .5 ? 1 : y;
-        y = y < -.5 && y > -1 ? -1 : y;
-        return new PhysicsVector(pV.x,y);
+        return PhysicsVector.ZERO;
     }
 
     @Override
-    public void setVelocity(PhysicsVector pv) {
-        movement = pv;
-    }
+    public void setVelocity(PhysicsVector pv) { }
 
     @Override
     public PhysicsVector getAcceleration() {
-        return accel;
-    }
-
-    @Override
-    public void setAcceleration(PhysicsVector pv) {
-        accel = pv;
-    }
-
-    @Override
-    public Rectangle getHitbox() {
-        return new Rectangle(x + (int)(image.getWidth()*.25), y + (int)(image.getHeight()*.25), (int) (image.getWidth()*.5), (int)(image.getHeight()*.5));
+        return PhysicsVector.ZERO;
     }
 
     @Override
@@ -269,6 +190,41 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable 
         return  true;
     }
 
+    @Override
+    public void setAcceleration(PhysicsVector pv) {
+    }
+
+    @Override
+    public Rectangle getHitbox() {
+        return new Rectangle(x + (int)(image.getWidth()*.25), y + (int)(image.getHeight()*.25),
+                (int) (image.getWidth()*.5), (int)(image.getHeight()*.5));
+    }
+    //endregion
+
+    //region <Interactable>
+    @Override
+    public Rectangle getRequestArea() {
+        return new Rectangle(x-20,y-20,image.getWidth()+20,image.getHeight()+20);
+    }
+
+    @Override
+    public void setRequesting(boolean isRequesting) { }
+
+    @Override
+    public boolean isRequesting() { return false; }
+
+    @Override
+    public boolean action(GameObject g) {
+        if(g instanceof Player) {
+            if(((Player)g).getState() == Player.PlayerState.overWorld && playerInteractionOW != null)
+            playerInteractionOW.doIt();
+            return true;
+        }return false;
+
+    }
+    //endregion
+
+    //region <GameScreen Methods>
     @Override
     public boolean setActive(GameScreen screen){
         if(super.setActive(screen)){
@@ -290,25 +246,11 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable 
     @Override
     public void addToScreen(GameScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
-
+        screen.kinematics.remove(this);
         if(isActive) {
             screen.kinematics.add(this);
         }
     }
-
-    @Override
-    public Rectangle hitbox() {
-        return new Rectangle(x,y,image.getWidth(),image.getHeight());
-    }
-
-    @Override
-    public boolean action(GameObject g) {
-        if(g instanceof Player) {
-            ((Player) g).interaction = true;
-            p = (Player)g;
-        }
-        isSet = 0;
-        return true;
-    }
+    //endregion
 }
 

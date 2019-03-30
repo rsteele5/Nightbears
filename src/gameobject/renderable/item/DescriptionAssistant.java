@@ -1,30 +1,30 @@
 package gameobject.renderable.item;
 
 
-import gameobject.renderable.item.armor.Armor;
 import gameobject.renderable.item.armor.ArmorType;
-import gameobject.renderable.item.consumable.Consumable;
 import gameobject.renderable.item.consumable.ConsumableType;
-import gameobject.renderable.item.weapon.Weapon;
 import gameobject.renderable.item.weapon.WeaponType;
-import main.utilities.Debug;
-import main.utilities.DebugEnabler;
 
-import java.util.Arrays;
 import java.util.Random;
 
 
 public class DescriptionAssistant {
 
+    //region <Variables>
     private Random rand = new Random();
     private String[] good = {"Fine", "Great", "Good", "Basic", "Standard"};
     private String[] better = {"Choice", "Finer", "Greater", "Better"};
     private String[] best = {"Ultimate", "Supreme","Finest", "Superior", "Greatest", "Best"};
     private String[] error = {"Quality Error", "Quality Error"};
+    //endregion
 
+    /**
+     * Sets the weapon name according to the type and quality
+     * @param type is the type of weapon (sword, club, spear, mystery)
+     * @param quality is the quality of the weapon (good, better, best)
+     * @return weapon name
+     */
     public String getWeaponName(WeaponType type, String quality){
-
-
         String[] adj;
         switch (quality) {
             case "good":
@@ -44,21 +44,27 @@ public class DescriptionAssistant {
         String myAdj = adj[rand.nextInt(adj.length)];
         switch (type){
             case Sword:
-                myAdj = adj[rand.nextInt(adj.length)] + " Sword";
+                myAdj += " Sword";
                 break;
             case Club:
-                myAdj = adj[rand.nextInt(adj.length)] + " Club";
+                myAdj += " Club";
                 break;
             case Spear:
-                myAdj = adj[rand.nextInt(adj.length)] + " Spear";
+                myAdj += " Spear";
                 break;
             case Misc:
-                myAdj = adj[rand.nextInt(adj.length)] + " Mystery";
+                myAdj += " Mystery";
                 break;
         }
         return myAdj;
     }
 
+    /**
+     * Sets the armor name according to the type and quality
+     * @param type is the type of armor (head, chest, leg, foot, magic)
+     * @param quality is the quality of the armor (good, better, best)
+     * @return armor name
+     */
     public String getArmorName(ArmorType type, String quality){
         String[] adj;
         switch (quality) {
@@ -75,27 +81,33 @@ public class DescriptionAssistant {
                 adj = error;
                 break;
         }
-        String name;
+        String name = adj[rand.nextInt(adj.length)];
         switch (type){
-            case Magic:
-                name = adj[rand.nextInt(adj.length)] + " Cape";
+            case OffHand:
+                name += " Cape";
                 break;
-            case Foot:
-                name = adj[rand.nextInt(adj.length)] + " Boots";
+            case Feet:
+                name += " Boots";
                 break;
-            case Leg:
-                name = adj[rand.nextInt(adj.length)] + " Pants";
+            case Legs:
+                name += " Pants";
                 break;
             case Chest:
-                name = adj[rand.nextInt(adj.length)] + " Chest Plate";
+                name += " Chest Plate";
                 break;
             default:
-                name = adj[rand.nextInt(adj.length)] + " Helmet";
+                name += " Helmet";
                 break;
         }
         return name;
     }
 
+    /**
+     * Sets the consumable name according to the type and quality
+     * @param cType is the type of consumable (spell, edible, throwable, ammunition)
+     * @param quality is the quality of the armor (good, better, best)
+     * @return consumable name
+     */
     public String getConsumableName(ConsumableType cType, String quality){
         String[] adj;
         switch (quality) {
@@ -113,28 +125,34 @@ public class DescriptionAssistant {
                 break;
         }
 
-        String myName = "";
+        String myName = adj[rand.nextInt(adj.length)];
         switch (cType){
             case misc:
-                myName = adj[rand.nextInt(adj.length)] + "Mystery Consumable";
+                myName += "Mystery Consumable";
                 break;
             case spell:
-                myName = adj[rand.nextInt(adj.length)] + " Spell";
+                myName += " Spell";
                 break;
             case edible:
-                myName = adj[rand.nextInt(adj.length)] + " Edible";
+                myName += " Edible";
                 break;
             case throwable:
-                myName = adj[rand.nextInt(adj.length)] + " Throwable";
+                myName += " Throwable";
                 break;
             case ammunition:
-                myName = adj[rand.nextInt(adj.length)] + " Ammunition";
+                myName += " Ammunition";
                 break;
         }
-
         return myName;
     }
 
+    /**
+     * Sets the weapon description
+     * @param quality is the weapon's quality
+     * @param type is the weapon's type
+     * @param name is the weapon's name
+     * @return the weapon description
+     */
     public String getWeaponDescription(String quality, WeaponType type, String name){
         String[] adj = {"formidable", "dreadful", "fierce", "menacing", "impressive",
                 "robust", "hefty"};
@@ -150,6 +168,13 @@ public class DescriptionAssistant {
         return description;
     }
 
+    /**
+     * Sets the armor description
+     * @param quality is the armor's quality
+     * @param type is the armor's type
+     * @param name is the armor's name
+     * @return the armor description
+     */
     public String getArmorDescription(ArmorType type, String quality, String name){
         String[] adj = {"insulates", "shields", "defends", "covers",
                 "upholds", "repels danger"};
@@ -166,12 +191,20 @@ public class DescriptionAssistant {
 
     }
 
+    /**
+     * Sets the consumable description
+     * @param quality is the consumable's quality
+     * @param type is the consumable's type
+     * @param affect is the consumable's effect
+     * @return the consumable description
+     */
     public String getConsumableDescription(ConsumableType type, AffectType affect,
-                                           String quality, String name){
-
-        String myAdj = "";
+                                           String quality){
+        String myAdj;
         String action = "";
         String maker1 = "";
+
+        //First sentence sets the action. Maker1 is set according to the item's effect
         switch (affect){
             case random:
                 String[] list1 = {"random", "strange", "dubious", "shady"};
@@ -210,6 +243,7 @@ public class DescriptionAssistant {
                 break;
         }
 
+        //Maker2 is set according to the item's type
         String maker2 = "";
         switch (type){
             case ammunition:
@@ -229,7 +263,7 @@ public class DescriptionAssistant {
                 break;
         }
 
-
+        //Combine first sentence and create 2nd sentence which includes both makers.
         String description;
         if (quality.equals("good")){
             description = "\n" + action + " It was made by a novice " + maker1 + " and " + maker2 + ".";
@@ -240,6 +274,4 @@ public class DescriptionAssistant {
         }
         return description;
     }
-
-
 }

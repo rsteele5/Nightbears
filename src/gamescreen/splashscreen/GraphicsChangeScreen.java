@@ -6,10 +6,15 @@ import gameobject.renderable.text.TextBox;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gamescreen.mainmenu.MainMenuScreen;
-import main.utilities.Debug;
 
-import java.awt.*;
+import java.awt.Font;
+import java.awt.Color;
 
+/**
+ * This is a temporary screen that hides the uglyness of
+ * changing the graphics of our game. It appears for exactly
+ * two seconds then disappears.
+ */
 public class GraphicsChangeScreen extends GameScreen {
 
     private int framesToDisplay = 120;
@@ -20,6 +25,10 @@ public class GraphicsChangeScreen extends GameScreen {
     private int randomMessage = 0;
     private String[] waitMessages;
 
+    /**
+     * Constructs a GraphicsChangeScreen.
+     * @param screenManager The ScreenManager that controls this screen.
+     */
     public GraphicsChangeScreen(ScreenManager screenManager) {
         super(screenManager, "GraphicsChangeScreen", 1f);
         screenManager.changeGraphics();
@@ -53,10 +62,25 @@ public class GraphicsChangeScreen extends GameScreen {
 
         ImageContainer blackCover = new ImageContainer(0,0, "/assets/backgrounds/BG-BlackCover.png", DrawLayer.Background);
         blackCover.addToScreen(this, true);
+
         randomMessage = (int)(Math.random() * (waitMessages.length));
-        waitText = new TextBox(0,480, 1980, 900, "Please wait", new Font("NoScary", Font.PLAIN, 120), Color.WHITE, true);
-        TextBox waitMessage = new TextBox(0, 320, 1980, 900, waitMessages[randomMessage], new Font("NoScary", Font.PLAIN, 120), Color.WHITE, true);
+
+        waitText = new TextBox(0,480,
+                1980, 900,
+                "Please wait",
+                new Font("NoScary", Font.PLAIN, 120),
+                Color.WHITE,
+                true);
+
+        TextBox waitMessage = new TextBox(
+                0, 320,
+                1980, 900,
+                waitMessages[randomMessage],
+                new Font("NoScary", Font.PLAIN, 120),
+                Color.WHITE,
+                true);
         waitMessage.addToScreen(this,true);
+
         waitText.addToScreen(this,true);
     }
 

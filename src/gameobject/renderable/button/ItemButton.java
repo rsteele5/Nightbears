@@ -5,8 +5,10 @@ import gameobject.renderable.DrawLayer;
 import main.utilities.Action;
 import main.utilities.AssetLoader;
 import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 public class ItemButton extends Button{
@@ -16,6 +18,16 @@ public class ItemButton extends Button{
     private static String selectedImagePath = "/assets/buttons/Button-Inventory-Selected.png";
     private BufferedImage notSelectedImage;
     private BufferedImage selectedImage;
+    /*private enum Slot{
+        Helmet,
+        OffHand,
+        Chest,
+        Weapon,
+        Legs,
+        Feet,
+        Item
+    }
+    private Slot slot= Slot.Item;*///Obsolete
 
     public ItemButton(int x, int y, DrawLayer drawLayer) {
         super(x, y, notSelectedImagePath, drawLayer);
@@ -36,6 +48,22 @@ public class ItemButton extends Button{
     public void setItem(Item item) {
         this.item = item;
     }
+
+    /*public int getSlot() {
+        return slot.ordinal();
+    }
+
+    public void setSlot(int slot) {
+        switch (slot) {
+            case 0 : this.slot = Slot.Helmet; break;
+            case 1 : this.slot = Slot.OffHand; break;
+            case 2 : this.slot = Slot.Chest; break;
+            case 3 : this.slot = Slot.Weapon; break;
+            case 4 : this.slot = Slot.Legs; break;
+            case 5 : this.slot = Slot.Feet; break;
+            default: this.slot = Slot.Item; break;
+        }
+    }*///Obsolete
 
     public void resetItem() {this.item = null;}
 
@@ -65,7 +93,10 @@ public class ItemButton extends Button{
 
     @Override
     public void draw(Graphics2D graphics) {
-        super.draw(graphics);
+        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+        graphics.setComposite(alphaComposite);
+        Debug.drawRect(DebugEnabler.RENDERABLE_LOG,graphics, new Rectangle2D.Double(x,y,width, height));
+        graphics.drawImage(image, x , y, width, height, null);
         //If the image is not null draw it offset in the center of the button
         if(item != null)
             graphics.drawImage(item.getIcon(), x +7, y + 7, width -14, height -14, null);
@@ -82,4 +113,6 @@ public class ItemButton extends Button{
             }
         }
     }
+
+
 }
