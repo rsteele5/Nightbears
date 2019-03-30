@@ -37,12 +37,6 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
     private boolean crouch = false;
     private boolean crouchSet = true;
     public boolean interaction = false;
-    /*
-    0b1     =   right
-    0b10    =   left
-    0b100   =   down
-    0b1000  =   up
-     */
     private int movFlag = 0;
     private int gold;
     private double moveFactor = 1;
@@ -158,11 +152,25 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
     //endregion
 
     //region <Support functions>
+        /*
+    0b1     =   right
+    0b10    =   left
+    0b100   =   down
+    0b1000  =   up
+     */
     private void setMovementState(int flags) {
         int x1 = 0b1 & flags;
         x1 += (((0b10 & flags) / 0b10) * -1);
         int y1 = ((0b100 & flags) / 0b100);
         y1 += (((0b1000 & flags) / 0b1000) * -1);
+
+        Debug.warning(true, "x1 is: " + x1);
+        if(x1 == 1 && grounded && animator.getCurrentAnimation().getName() != "SS_Running_Right") {
+            animator.setAnimation("SS_Running_Right");
+        } else if (x1 == -1 && grounded && animator.getCurrentAnimation().getName() != "SS_Running_Left") {
+            animator.setAnimation("SS_Running_Left");
+        }
+
         setVelocity(new PhysicsVector(x1, y1));
     }
 
@@ -195,9 +203,6 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
                 }
                 if (PhysicsMeta.Gravity == 0) calculateMove(e, owKeys);
                 else calculateMove(e, ssKeys);
-                if(animator.getCurrentAnimation().getName() != "SS_Running_Right" && grounded){
-                    animator.setAnimation("SS_Running_Right");
-                }
                 break;
             case overWorld:
                 calculateMove(e, owKeys);
@@ -218,11 +223,15 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
                 if(e.getKeyCode() == 16) {
                     moveFactor = 1;
                 }
+
                 if (PhysicsMeta.Gravity == 0) calculateRelease(e, owKeys);
                 else calculateRelease(e, ssKeys);
-                if(animator.getCurrentAnimation().getName() == "SS_Running"){
-                    animator.setAnimation("SS_Idle");
+                if(animator.getCurrentAnimation().getName() == "SS_Running_Left") {
+                    animator.setAnimation("SS_Idle_Left");
+                } else if (animator.getCurrentAnimation().getName() == "SS_Running_Right") {
+                    animator.setAnimation("SS_Idle_Right");
                 }
+
                 break;
 
             case overWorld:

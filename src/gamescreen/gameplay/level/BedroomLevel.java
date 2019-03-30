@@ -1,6 +1,7 @@
 package gamescreen.gameplay.level;
 
 import gameengine.rendering.Camera;
+import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.sidescrolling.BedroomBackgroundLayout;
 import gameobject.renderable.house.sidescrolling.Door;
 import gameobject.renderable.player.Player;
