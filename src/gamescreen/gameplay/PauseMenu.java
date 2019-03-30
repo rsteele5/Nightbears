@@ -1,6 +1,7 @@
 package gamescreen.gameplay;
 
 import gameengine.gamedata.PlayerData;
+import gameobject.container.GridContainer;
 import gameobject.renderable.item.armor.Armor;
 import gameobject.renderable.item.weapon.Weapon;
 import gameobject.renderable.player.Player;
@@ -112,14 +113,10 @@ public class PauseMenu extends GameScreen {
                     useButton.setOnClick(() -> {
                         playerInventory.remove(currentItem);
                         playerData.removeItem(currentItem);
-                        bigEquipment.resetItem();
-                        itemDetails.setText("");
-                        currentItemButton.resetItem();
-                        currentItemButton.deSelect();
-                        useButton.setText("");
+                        clearFields();
                         //todo offer healing or bonuses
                     });
-                } else if(currentItem.getCategory().toString() == "Armor" || currentItem.getCategory().toString() == "Weapon"){
+                } else if((currentItem.getCategory().toString() == "Armor" || currentItem.getCategory().toString() == "Weapon") && !equipButtons.contains(itemContainerButton)){
                     useButton.setText("Equip");
                     useButton.setOnClick(() -> {
 
@@ -127,16 +124,19 @@ public class PauseMenu extends GameScreen {
                             playerData.equipItem(currentItem, 3);//3 is weapon slot
                         if(currentItem instanceof Armor)
                             playerData.equipItem(currentItem, currentItem.getType());
-                        currentEquipment = playerData.getPlayerEquipment();
-                        playerInventory = playerData.getInventory();
-                        playerInventory.sort(new ItemComparator());
-                        //playersGrid
-                        currentItem = null;
-                        currentItemButton.deSelect();
+                        clearFields();
 
                     });
+                } else if((currentItem.getCategory().toString() == "Armor" || currentItem.getCategory().toString() == "Weapon") && equipButtons.contains(itemContainerButton)){
+                    useButton.setText("Unequip");
+                    useButton.setOnClick(() -> {
+                        if (currentItem instanceof Weapon)
+                            playerData.unequipItem(currentItem,3);
+                        else
+                            playerData.unequipItem(currentItem,currentItem.getType());
+                        clearFields();
+                    });
                 }
-                Debug.success(true,currentItem.getCategory().toString());
             } else {
                 currentItem = null;
                 currentItemButton.deSelect();
@@ -146,13 +146,36 @@ public class PauseMenu extends GameScreen {
         });
     }
 
+    private void clearFields() {
+        currentEquipment = playerData.getPlayerEquipment();
+        playerInventory = playerData.getInventory();
+        playerInventory.sort(new ItemComparator());
+        bigEquipment.resetItem();
+        itemDetails.setText("");
+        useButton.setText("");
+        currentItem = null;
+        resetButtonItems();
+        currentItemButton.deSelect();
+    }
+
+
     private void resetButtonItems(){
         // Reset all player item button to null, set item button again, and establish click events
 
-        /*for(ItemButton btn : playerButtons)
-        {
-
-        }*/
+        int count = playerInventory.size();
+        int k = 0;
+        for (ItemButton pbutton : playerButtons) {
+            pbutton.resetItem();
+            if (k < count){
+                pbutton.setItem(playerInventory.get(k));
+                setClickEvent(pbutton, itemDetails );
+                k++;
+            }
+        }
+        for(int x = 0; x < 6/*todo make 6 from somewhere else*/; x++) {
+                equipButtons.get(x).setItem(currentEquipment.get(x));
+                setClickEvent(equipButtons.get(x), itemDetails );
+        }
     }
 
     private void initLabels() {

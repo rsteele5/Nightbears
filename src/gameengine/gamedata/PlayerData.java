@@ -46,15 +46,13 @@ public class PlayerData implements Serializable {
     public void equipItem(Item equip, int type) {
         if(playerEquipment.get(type) != null) {
             playerInventory.add(playerEquipment.get(type));
-            Debug.log(true,"Add Inv :" + playerEquipment.get(type).getItemName());
         }
-
-        Debug.log(true,"New Type of " + type);
-
         if(playerInventory.contains(equip)) playerInventory.remove(equip);
-
         playerEquipment.set(type,equip);
-        Debug.log(true,"Add Equip :" + equip.getItemName());
+    }
+    public void unequipItem(Item remove, int type) {
+        playerEquipment.set(type,null);
+        playerInventory.add(remove);
     }
 
     public void replaceList(CopyOnWriteArrayList<Item> updatedItems) {
@@ -85,6 +83,22 @@ public class PlayerData implements Serializable {
                 .value(12)
                 .type(ConsumableType.edible)
                 .buildConsumable());
+
+        addItem(new ArmorBuilder()
+                .imagePath("/assets/Items/chest1.png")
+                .name("My foist chesty")
+                .type(ArmorType.Chest)
+                .value(24)
+                .armorPoints(16)
+                .buildArmor());
+
+        addItem(new ArmorBuilder()
+                .imagePath("/assets/Items/pants1.png")
+                .name("My cool pants")
+                .type(ArmorType.Legs)
+                .value(7)
+                .armorPoints(5)
+                .buildArmor());
 
         if (playerInventory.size() > 0) {
             playerInventory.sort(new ItemComparator());
