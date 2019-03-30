@@ -21,8 +21,8 @@ public class Door extends RenderableObject implements Interactable {
     }
 
     @Override
-    public Rectangle hitbox() {
-        return  new Rectangle(x, y, image.getWidth(), image.getHeight());
+    public Rectangle getRequestArea() {
+        return new Rectangle(x, y, image.getWidth(), image.getHeight());
     }
 
     @Override
