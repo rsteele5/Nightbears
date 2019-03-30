@@ -150,7 +150,7 @@ public class PlayerData implements Serializable {
                 .type(ArmorType.Feet)
                 .value(13)
                 .armorPoints(3)
-                .buildArmor(), ArmorType.Feet.ordinal());
+                .buildArmor(), ArmorType.Feet.ordinal()+1);
     }
 
     public int getGold() {

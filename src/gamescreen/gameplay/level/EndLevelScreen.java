@@ -33,7 +33,7 @@ public class EndLevelScreen extends GameScreen {
         //Create buttons
         ButtonGridContainer buttonLayout = new ButtonGridContainer(4,1, 256, 96,
                 X_START, Y_START, Y_BUFFER);
-        Button newGameButton = (new Button(0, 0,
+        Button continueBtn = (new Button(0, 0,
                 "/assets/buttons/Button-Continue.png",
                 "/assets/buttons/Button-ContinuePressed.png",
                 DrawLayer.Entity,
@@ -41,7 +41,7 @@ public class EndLevelScreen extends GameScreen {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Continue");
                     setScreenState(ScreenState.TransitionOff);
                 }));
-        buttonLayout.addAt(newGameButton, 0, 0);
+        buttonLayout.addAt(continueBtn, 0, 0);
 
         buttonLayout.addToScreen(this, true);
     }

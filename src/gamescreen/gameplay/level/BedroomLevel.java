@@ -11,6 +11,7 @@ import gameobject.renderable.item.weapon.WeaponType;
 import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
+import gamescreen.gameplay.overworld.OverworldScreen;
 import input.listeners.Key.SideScrollKeyHandler;
 
 import java.awt.event.KeyEvent;
@@ -20,9 +21,11 @@ public class BedroomLevel extends GameScreen {
 
     private BedroomBackgroundLayout background;
     private Player player;
+    private OverworldScreen parentScreen;
 
-    public BedroomLevel(ScreenManager screenManager) {
+    public BedroomLevel(ScreenManager screenManager, OverworldScreen parentScreen) {
         super(screenManager, "BedroomLevel", true);
+        this.parentScreen= parentScreen;
     }
 
     @Override
@@ -32,6 +35,7 @@ public class BedroomLevel extends GameScreen {
                 () -> {
                     setScreenState(ScreenState.TransitionOff);
                     screenManager.addScreen(new EndLevelScreen(screenManager,  true));
+                    parentScreen.onLevelComplete();
                 });
 
         finishDoor.addToScreen(this, true);

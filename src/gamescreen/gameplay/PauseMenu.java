@@ -1,10 +1,8 @@
 package gamescreen.gameplay;
 
 import gameengine.gamedata.PlayerData;
-import gameobject.container.GridContainer;
 import gameobject.renderable.item.armor.Armor;
 import gameobject.renderable.item.weapon.Weapon;
-import gameobject.renderable.player.Player;
 import gameobject.renderable.*;
 import gameobject.renderable.ImageContainer;
 import gameobject.renderable.text.TextBox;
@@ -18,18 +16,20 @@ import gamescreen.ScreenManager;
 import gameobject.container.RenderableGridContainer;
 import gamescreen.mainmenu.MainMenuScreen;
 import gamescreen.mainmenu.options.OptionScreen;
+import input.listeners.Key.ClickableKeyHandler;
+import main.utilities.Clickable;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
-import java.awt.*;
-import java.util.Comparator;
+import java.awt.Font;
+import java.awt.Color;
+import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class PauseMenu extends GameScreen {
     /* Initialize variables *****************/
     //region<Variable Declarations>
-    private Player.PlayerState previousPlayerState;
     private CopyOnWriteArrayList<Item> playerInventory;
     private CopyOnWriteArrayList<ItemButton> playerButtons;
     private CopyOnWriteArrayList<ItemButton> equipButtons;
@@ -40,7 +40,6 @@ public class PauseMenu extends GameScreen {
     private Item currentItem = null;
     private ButtonText useButton;
     private RenderableGridContainer playerGrid;
-    Player player;
     private PlayerData playerData = gameData.getPlayerData();
     public enum Equipments{
         Helmet,
@@ -53,9 +52,8 @@ public class PauseMenu extends GameScreen {
 
     //endregion
 
-    public PauseMenu(ScreenManager screenManager, Player p1) {
+    public PauseMenu(ScreenManager screenManager) {
         super(screenManager, "PauseMenu", true, 450, 180);
-        player = p1;
     }
 
     /**
@@ -63,8 +61,6 @@ public class PauseMenu extends GameScreen {
      */
     @Override
     protected void initializeScreen() {
-        previousPlayerState = player.getState();
-        player.setState(Player.PlayerState.asleep);
         playerInventory = playerData.getInventory();
         currentEquipment = playerData.getPlayerEquipment();
         playerButtons = new CopyOnWriteArrayList<>();
@@ -79,6 +75,7 @@ public class PauseMenu extends GameScreen {
         for (RenderableObject renderable: currentEquipment){
             if(renderable!=null)renderable.addToScreen(this, false);
         }
+
         //Create Labels
         initLabels();
         //Create Menu Buttons
@@ -122,8 +119,11 @@ public class PauseMenu extends GameScreen {
 
                         if(currentItem instanceof Weapon)
                             playerData.equipItem(currentItem, 3);//3 is weapon slot
-                        if(currentItem instanceof Armor)
-                            playerData.equipItem(currentItem, currentItem.getType());
+                        if(currentItem instanceof Armor) {
+                            if (currentItem.getType() >= 3)
+                                playerData.equipItem(currentItem, currentItem.getType() + 1);
+                            else playerData.equipItem(currentItem, currentItem.getType());
+                        }
                         clearFields();
 
                     });
@@ -212,13 +212,15 @@ public class PauseMenu extends GameScreen {
         selectedItem.addToScreen(this,true);
 
         //Teddy
-        ImageContainer teddy = new ImageContainer(295,370, "/assets/player/sidescrolling/Teddy.png", DrawLayer.Entity);
+        ImageContainer teddy = new ImageContainer(295,370,
+                "/assets/player/color/"+playerData.getImageDirectory()+"/Teddy.png", DrawLayer.Entity);
         teddy.setWidth(70);
         teddy.setHeight(150);
         teddy.addToScreen(this,true);
     }
 
     private void initButtons() {
+        ArrayList<Clickable> butts = new ArrayList<>();
         //Main Menu Button
         Button mainMenuButton = new gameobject.renderable.button.Button(765,30,
                 "/assets/buttons/Button-MainMenu.png",
@@ -265,12 +267,18 @@ public class PauseMenu extends GameScreen {
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Back");
-                    player.setState(previousPlayerState);
                     currentState = ScreenState.TransitionOff;
                 });
         backButton.setWidth(192);
         backButton.setHeight(72);
         backButton.addToScreen(this,true);
+
+        butts.add(mainMenuButton);
+        butts.add(saveButton);
+        butts.add(optionsButton);
+        butts.add(backButton);
+
+        setKeyHandler(new ClickableKeyHandler(butts));
     }
 
     private void initItemButtons() {

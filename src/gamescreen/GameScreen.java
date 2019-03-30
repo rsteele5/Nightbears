@@ -448,23 +448,23 @@ public abstract class GameScreen {
      */
     final void drawScreen(Graphics2D graphics) {
         if(!isLoading) {
-            if(camera != null){
-                camera.track(graphics);
-            } else {
-                for(RenderableObject renderable : renderables)
-                    renderable.draw(graphics);
-            }
-
-            if(!overlayScreens.isEmpty()) {
-                for (GameScreen overlay : overlayScreens) {
-                    if(!overlay.isLoading)
-                        overlay.drawScreen(graphics);
-                }
-            }
             if(childScreen != null) {
                 childScreen.drawScreen(graphics);
-            }
+            }else {
+                if (camera != null) {
+                    camera.track(graphics);
+                } else {
+                    for (RenderableObject renderable : renderables)
+                        renderable.draw(graphics);
+                }
 
+                if (!overlayScreens.isEmpty()) {
+                    for (GameScreen overlay : overlayScreens) {
+                        if (!overlay.isLoading)
+                            overlay.drawScreen(graphics);
+                    }
+                }
+            }
         } else {
             if(childScreen != null) {
                 childScreen.drawScreen(graphics);

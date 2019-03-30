@@ -1,6 +1,7 @@
 package gameobject.renderable.vendor;
 
 import gameengine.MyTimerTask;
+import gameengine.gamedata.GameData;
 import gameengine.gamedata.VendorData;
 import gameengine.physics.Interactable;
 import gameengine.physics.Kinematic;
@@ -37,9 +38,6 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
     private VendorState vendorState;
     private int endCrawl;
     private Action playerInteractionOW;
-    public String firstNotice = "I created lots of goodies that might help you defeat those monsters. Come see what I have!";
-    public String subsequentNotices = "I have all NEW items that are even more powerful than before! Come see what I have!";
-    public String firstLevel = "Whew! That was a super scary monster!";
 
 
     int isSet = 0;
@@ -68,6 +66,7 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
         //startRestockTimer();
 
         animator = new Animator(this);
+        animator.addAnimation("Wait", new VendorUnderAnimation());
         animator.addAnimation("Crawling", new VendorCrawlingAnimation());
         animator.addAnimation("SittingUp", new VendorSittingUpAnimation());
         animator.addAnimation("Idle", new VendorIdleAnimation());
@@ -84,7 +83,9 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
         }
 
         if (vendorState == VendorState.crawling) {
-            if (getX() <= endCrawl)
+            if (animator.getCurrentAnimationName().equals("Wait") && animator.getCurrentAnimation().getFrameToDisplay() > 0)
+                animator.setAnimation("Crawling");
+            else if (getX() <= endCrawl)
                 this.translate(5, 0);
             else this.setState(VendorState.sittingup);
         }
@@ -135,7 +136,7 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
                 width = 200;
                 height = 200;
 
-                endCrawl = getX() + OverworldMeta.TileSize;
+                endCrawl = getX() + OverworldMeta.TileSize*3;
                 animator.setAnimation("Crawling");
                 vendorState = vs;
                 return true;
@@ -143,9 +144,6 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
                 Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: sitting up");
                 animator.setAnimation("SittingUp");
                 vendorState = vs;
-//                DialogBox diagBox = new DialogBox(1318, 485, 355, 160, firstLevel,
-//                        new Font("NoScary", Font.PLAIN, 40), Color.WHITE, false);
-//                diagBox.addToScreen(, true);
                 return true;
             case idle:
                 Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: idle");

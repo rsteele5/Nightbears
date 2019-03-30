@@ -3,7 +3,6 @@ package gamescreen.gameplay;
 import gameengine.gamedata.PlayerData;
 import gameengine.gamedata.VendorData;
 import gameobject.renderable.item.ItemComparator;
-import gameobject.renderable.player.Player;
 import gameobject.renderable.*;
 import gameobject.renderable.ImageContainer;
 import gameobject.renderable.text.TextBox;
@@ -32,15 +31,12 @@ public class VendorScreen extends GameScreen {
     private CopyOnWriteArrayList<Item> vendorInventory;
     private CopyOnWriteArrayList<ItemButton> playerButtons;
     private CopyOnWriteArrayList<ItemButton> vendorButtons;
-    private Player player;
     private PlayerData playerData;
-    private Player.PlayerState previousPlayerState;
     private VendorData vendorData;
     //endregion
 
-    public VendorScreen(ScreenManager screenManager, Player p1) {
-        super(screenManager, "VendorScreen", true, 150, 80);
-        player = p1;
+    public VendorScreen(ScreenManager screenManager) {
+        super(screenManager, "VendorScreen", true, 150, 80, 1f);
     }
 
     @Override
@@ -71,8 +67,6 @@ public class VendorScreen extends GameScreen {
         vendorData = gameData.getVendorData();
 
         playerData = gameData.getPlayerData();
-        previousPlayerState = player.getState();
-        player.setState(Player.PlayerState.asleep);
         vendorInventory = vendorData.getInventory();
         playerInventory = playerData.getInventory();
         playerButtons = new CopyOnWriteArrayList<>();
@@ -101,7 +95,7 @@ public class VendorScreen extends GameScreen {
         imageContainer.addToScreen(this, true);
 
         imageContainer = new ImageContainer(playerLocation.x, playerLocation.y,
-                "/assets/player/sidescrolling/Teddy.png", player.getDrawLayer());
+                "/assets/player/color/"+playerData.getImageDirectory()+"/Teddy.png", DrawLayer.Entity);
         imageContainer.setSize(playerSize.x, playerSize.y);
         imageContainer.addToScreen(this, true);
         //endregion
@@ -115,7 +109,6 @@ public class VendorScreen extends GameScreen {
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Exit Vendor");
-                    player.setState(previousPlayerState);
                     this.setScreenState(ScreenState.TransitionOff);
                 });
         button.setSize(buttonSize.x, buttonSize.y);

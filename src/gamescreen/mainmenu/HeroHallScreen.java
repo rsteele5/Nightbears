@@ -159,36 +159,36 @@ public class HeroHallScreen extends GameScreen {
                 heroes.get(i).changeGold(i * 5);
                 switch(i) {
                     case 0:
-                        heroes.get(i).setImagePath("/assets/player/images/Teddy.png");
-                        heroes.get(i).setPressedImagePath("/assets/player/images/Teddy.png");
+                        heroes.get(i).setImagePath("/assets/player/color/none/Teddy.png");
+                        heroes.get(i).setPressedImagePath("/assets/player/color/none/Teddy.png");
                         heroes.get(i).setName("Captain Snuggles");
                         heroes.get(i).setCreationDate(LocalDate.of(2019, Month.MARCH, 25));
                         heroes.get(i).setVictoryDate(LocalDate.of(2019, Month.APRIL, 1));
                         break;
                     case 1:
-                        heroes.get(i).setImagePath("/assets/player/images/TeddyRed.png");
-                        heroes.get(i).setPressedImagePath("/assets/player/images/TeddyRed.png");
+                        heroes.get(i).setImagePath("/assets/player/color/red/Teddy.png");
+                        heroes.get(i).setPressedImagePath("/assets/player/color/red/Teddy.png");
                         heroes.get(i).setName("Mr. Fuzzy");
                         heroes.get(i).setCreationDate(LocalDate.of(2019, Month.MARCH, 26));
                         heroes.get(i).setVictoryDate(LocalDate.of(2019, Month.APRIL, 2));
                         break;
                     case 2:
-                        heroes.get(i).setImagePath("/assets/player/images/TeddyOrange.png");
-                        heroes.get(i).setPressedImagePath("/assets/player/images/TeddyOrange.png");
+                        heroes.get(i).setImagePath("/assets/player/color/orange/Teddy.png");
+                        heroes.get(i).setPressedImagePath("/assets/player/color/orange/Teddy.png");
                         heroes.get(i).setName("Ms. Fudge");
                         heroes.get(i).setCreationDate(LocalDate.of(2019, Month.MARCH, 27));
                         heroes.get(i).setVictoryDate(LocalDate.of(2019, Month.APRIL, 3));
                         break;
                     case 3:
-                        heroes.get(i).setImagePath("/assets/player/images/TeddyYellow.png");
-                        heroes.get(i).setPressedImagePath("/assets/player/images/TeddyYellow.png");
+                        heroes.get(i).setImagePath("/assets/player/color/yellow/Teddy.png");
+                        heroes.get(i).setPressedImagePath("/assets/player/color/yellow/Teddy.png");
                         heroes.get(i).setName("Sir Wally");
                         heroes.get(i).setCreationDate(LocalDate.of(2019, Month.MARCH, 28));
                         heroes.get(i).setVictoryDate(LocalDate.of(2019, Month.APRIL, 4));
                         break;
                     case 4:
-                        heroes.get(i).setImagePath("/assets/player/images/TeddyBlue.png");
-                        heroes.get(i).setPressedImagePath("/assets/player/images/TeddyBlue.png");
+                        heroes.get(i).setImagePath("/assets/player/color/blue/Teddy.png");
+                        heroes.get(i).setPressedImagePath("/assets/player/color/blue/Teddy.png");
                         heroes.get(i).setName("Dr. Honey");
                         heroes.get(i).setCreationDate(LocalDate.of(2019, Month.MARCH, 29));
                         heroes.get(i).setVictoryDate(LocalDate.of(2019, Month.APRIL, 5));
