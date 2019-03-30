@@ -4,7 +4,7 @@ public enum OverworldMeta {;
     public static final int TileSize = 100;     // Width and Height of each tile
     public static final int ChunkSize = 5;      // # of tiles that makeup the width and height of a chunk
     public static final int BorderBuffer = 2;   // Grass border that surrounds the map
-    public static final int WallThickness = 20; // Thickness of walls in the Overworld
+    public static final int WallThickness = 34; // Thickness of walls in the Overworld
 
     //region<Tiles>
     public enum Tiles {;
@@ -12,26 +12,32 @@ public enum OverworldMeta {;
         //House tiles
         public enum House {;
             public static final int CARPET  =   1;
+            //North
             public static final int WALLN   =   2;
-            public static final int WALLNE  =   3;
-            public static final int WALLE   =   4;
-            public static final int WALLSE  =   5;
-            public static final int WALLS   =   6;
-            public static final int WALLSW  =   7;
-            public static final int WALLW   =   8;
-            public static final int WALLNW  =   9;
-            public static final int WALLNWC =  10;
-            public static final int WALLNEC =  11;
-            public static final int WALLSWC =  12;
-            public static final int WALLSEC =  13;
-            public static final int WALLNCW =  14;
-            public static final int WALLECN =  15;
-            public static final int WALLSCW =  16;
-            public static final int WALLWCN =  17;
-            public static final int WALLNCE =  18;
-            public static final int WALLECS =  19;
-            public static final int WALLSCE =  20;
-            public static final int WALLWCS =  21;
+            public static final int WALLNCE =   3;
+            public static final int WALLNCW =   4;
+            //East
+            public static final int WALLE   =   5;
+            public static final int WALLECN =   6;
+            public static final int WALLECS =   7;
+            //South
+            public static final int WALLS   =   8;
+            public static final int WALLSCE =   9;
+            public static final int WALLSCW =  10;
+            //West
+            public static final int WALLW   =  11;
+            public static final int WALLWCN =  12;
+            public static final int WALLWCS =  13;
+            //Corners
+            public static final int WALLNW  =  14;
+            public static final int WALLNE  =  15;
+            public static final int WALLSE  =  16;
+            public static final int WALLSW  =  17;
+            //EndCaps
+            public static final int WALLNWC =  18;
+            public static final int WALLNEC =  19;
+            public static final int WALLSWC =  20;
+            public static final int WALLSEC =  21;
 
 
         }

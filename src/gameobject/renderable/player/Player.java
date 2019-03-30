@@ -73,7 +73,7 @@ public class Player extends RenderableObject implements Kinematic {
     public Player(int x, int y, DrawLayer drawLayer, PlayerData playerData) {
         //TODO: Set to the random bear selection.
         super(x, y, "/assets/player/TeddySilhouette.png", drawLayer);
-        playerState = PlayerState.asleep;
+        //playerState = PlayerState.asleep;
         //TODO:Review
         this.playerData = playerData;
         items = new CopyOnWriteArrayList<>();
@@ -235,7 +235,7 @@ public class Player extends RenderableObject implements Kinematic {
     @Override
     public void addToScreen(GameScreen screen, boolean isActive) {
         super.addToScreen(screen, isActive);
-        if (isActive) screen.kinematics.add(this);
+        //if (isActive) screen.kinematics.add(this);
     }
 
     /**

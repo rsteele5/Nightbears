@@ -31,6 +31,7 @@ public class ArmorBuilder {
     private String [] offhandImg = {"/assets/Items/cape1.png", "/assets/Items/cape2.png", "/assets/Items/cape3.png",
             "/assets/Items/cape4.png"};
 
+
     //Armor Requirements
     /** Random allows the builder to assign random attributes to each item **/
     private Random rand = new Random();
@@ -118,15 +119,16 @@ public class ArmorBuilder {
                 case Chest:
                     this._imagePath = chestImg[rand.nextInt(chestImg.length)];
                     break;
-                case Leg:
+                case Legs:
                     this._imagePath = pantImg[rand.nextInt(pantImg.length)];
                     break;
-                case Foot:
+                case Feet:
                     this._imagePath = feetImg[rand.nextInt(feetImg.length)];
                     break;
-                default:
+                case OffHand:
                     this._imagePath = offhandImg[rand.nextInt(offhandImg.length)];
                     break;
+                default: break;
             }
         } else {
             this._imagePath = _imagePath;

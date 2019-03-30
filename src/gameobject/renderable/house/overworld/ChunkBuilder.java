@@ -29,7 +29,8 @@ public class ChunkBuilder {
     public void fillWithGrass(){
         for(int row = 0; row < OverworldMeta.ChunkSize; row++){
             for(int col = 0; col < OverworldMeta.ChunkSize; col++){
-                addGrassTileAt(row, col);
+                if(chunk.getContentAt(row,col) == null)
+                    addGrassTileAt(row, col);
             }
         }
     }

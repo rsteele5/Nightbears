@@ -5,17 +5,19 @@ import main.utilities.Clickable;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
+import static input.listeners.Key.KeyCodeMeta.*;
+
 public class OverworldKeyHandler implements KeyHandler {
 
     private Player player;
-    private final int CYCLE = KeyEvent.VK_TAB;
-    private final int SELECT = KeyEvent.VK_ENTER;
     private ArrayList<Clickable> clickables;
     private Clickable target;
+    private Clickable pause;
 
-    public OverworldKeyHandler(Player p1, ArrayList<Clickable> clickables){
+    public OverworldKeyHandler(Player p1, ArrayList<Clickable> clickables, Clickable pauseBtn){
         player = p1;
         this.clickables = clickables;
+        pause = pauseBtn;
     }
 
     @Override
@@ -26,16 +28,18 @@ public class OverworldKeyHandler implements KeyHandler {
     @Override
     public void keyPressed(KeyEvent e) {
         player.move(e);
-        if(e.getKeyCode() == CYCLE){
+        if(e.getKeyCode() == NEXT)
             nextClickable();
-        }else if(e.getKeyCode() == SELECT){
-            target.onClick();
-        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         player.moveRelease(e);
+        if(e.getKeyCode() == SELECT){
+            target.onClick();
+        }else if(e.getKeyCode() == PAUSE){
+            pause.onClick();
+        }
     }
 
     private void nextClickable(){

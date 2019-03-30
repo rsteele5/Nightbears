@@ -12,6 +12,7 @@ import gamescreen.gameplay.level.LevelFactory;
 import gamescreen.gameplay.PauseMenu;
 import gamescreen.gameplay.VendorScreen;
 import gamescreen.gameplay.level.SideScroll;
+import input.listeners.Key.ClickableKeyHandler;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -51,7 +52,7 @@ public class DevScreen extends GameScreen {
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - level");
-                    screenManager.addScreen(LevelFactory.create(screenManager, new BedroomLevel()));
+                    screenManager.addScreen(new BedroomLevel(screenManager));
                 });
         button.addToScreen(this, true);
 
@@ -107,7 +108,7 @@ public class DevScreen extends GameScreen {
                 });
         button.addToScreen(this, true);
 
-        // Initialize vendor
+        setKeyHandler(new ClickableKeyHandler(this.clickables));
 
     }
 

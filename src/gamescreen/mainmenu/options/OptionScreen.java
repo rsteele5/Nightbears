@@ -5,6 +5,7 @@ import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gameobject.renderable.ImageContainer;
 import gameobject.renderable.button.Button;
+import input.listeners.Key.ClickableKeyHandler;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -71,6 +72,8 @@ public class OptionScreen extends GameScreen {
                     this.setScreenState(ScreenState.TransitionOff);
                 });
         button.addToScreen(this,true);
+
+        setKeyHandler(new ClickableKeyHandler(this.clickables));
 
 
     }

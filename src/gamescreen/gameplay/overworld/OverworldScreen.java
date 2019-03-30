@@ -11,7 +11,6 @@ import gameobject.renderable.text.DialogBox;
 import gamescreen.gameplay.VendorDialogBox;
 import gameengine.rendering.Camera;
 import gameobject.renderable.player.Player;
-import gameobject.renderable.vendor.Vendor;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import input.listeners.Key.OverworldKeyHandler;
@@ -25,7 +24,6 @@ public class OverworldScreen extends GameScreen {
 
     //region <Variable Declaration>
     private OverworldUI UI;
-    //private VendorDialogBox vendorDialogBox;
     private Map overworldMap;
     private VendorData vendorData = gameData.getVendorData();
     private Vendor vendor = new Vendor(0, 0, vendorData);
@@ -36,18 +34,21 @@ public class OverworldScreen extends GameScreen {
         super(screenManager, "Overworld", 0f);
     }
 
-    /**
-     * Initializes all of the stuff you want on your splashscreen
-     */
+
     @Override
     protected void initializeScreen() {
         //House generation
         MapBuilder mapBuilder = new MapBuilder();
         mapBuilder.createMap();
         mapBuilder.addRoomAtCell(0, 0, new Bedroom());
-
+        mapBuilder.addRoomAtCell(8,0, new LivingRoom());
+        mapBuilder.addRoomAtCell(0,8, new Bathroom());
         overworldMap = mapBuilder.buildMap();
         overworldMap.addToScreen(this, true);
+        for(Room room : overworldMap.getRooms()){
+            room.setInactive(this);
+        }
+        overworldMap.getRooms().get(0).setActive(this);
 
         //Player
         SpawnPoint playerSpawn = overworldMap.getPlayerSpawn();
@@ -62,8 +63,7 @@ public class OverworldScreen extends GameScreen {
         addOverlay(UI);
 
         //KeyListener
-        setKeyHandler(new OverworldKeyHandler(playerOW, UI.clickables));
-
+        setKeyHandler(new OverworldKeyHandler(playerOW, UI.clickables, UI.getPauseBtn()));
     }
 
     @Override
