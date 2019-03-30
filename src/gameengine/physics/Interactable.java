@@ -6,6 +6,7 @@ import java.awt.*;
 
 public interface Interactable {
     Rectangle getRequestArea();
-    //boolean requ
+    void setRequesting(boolean isRequesting);
+    boolean isRequesting();
     boolean action(GameObject g);
 }

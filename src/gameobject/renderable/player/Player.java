@@ -3,10 +3,12 @@ package gameobject.renderable.player;
 import gameengine.GameEngine;
 import gameengine.gamedata.GameData;
 import gameengine.gamedata.PlayerData;
+import gameengine.physics.Interactable;
 import gameengine.physics.Kinematic;
 import gameengine.physics.PhysicsMeta;
 import gameengine.physics.PhysicsVector;
 import gameengine.rendering.animation.Animator;
+import gameobject.GameObject;
 import gameobject.renderable.RenderableObject;
 import gameobject.renderable.item.ItemComparator;
 import gameobject.renderable.item.*;
@@ -27,10 +29,12 @@ import main.utilities.DebugEnabler;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Rectangle2D;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Player extends RenderableObject implements Kinematic {
+public class Player extends RenderableObject implements Kinematic, Interactable {
 
+    //region <Variables>
     private int speed = 1;
     private PlayerData playerData;
     private CopyOnWriteArrayList<Item> items;
@@ -52,23 +56,14 @@ public class Player extends RenderableObject implements Kinematic {
      */
     public boolean grounded;
     private PlayerState playerState;
+    private boolean requesting;     //Use for requesting interactions
 
     public enum PlayerState {
         sideScroll,
         asleep,
         overWorld
     }
-
-    public void draw(Graphics2D graphics2D) {
-        if(animator != null){
-            animator.animate();
-        }
-
-        Graphics2D g2 = (Graphics2D) graphics2D.create();
-        g2.rotate(rotation, x + (width / 2.0), y + (height / 2.0));
-        g2.drawImage(image, x, y, null);
-        g2.dispose();
-    }
+    //endregion
 
     public Player(int x, int y, DrawLayer drawLayer, PlayerData playerData) {
         //TODO: Set to the random bear selection.
@@ -85,9 +80,49 @@ public class Player extends RenderableObject implements Kinematic {
         animator.addAnimation("Idle", new PlayerIdleAnimation());
         animator.addAnimation("SS_Idle", new PlayerSSIdleAnimation());
         animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation());
+
+        requesting = false;
     }
 
+    //region <Getters and Setters>
+    public PlayerState getState() {
+        return playerState;
+    }
 
+    /**
+     * Returns true or false depending on the acceptance of the state transition.
+     */
+    public void setState(PlayerState ps) {
+        //TODO: Implement error checking
+        switch (ps) {
+            case overWorld:
+                Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: overWorld");
+                speed = 3;
+                width = 100;
+                height = 100;
+                animator.setAnimation("Idle");
+                playerState = ps;
+                break;
+            case asleep:
+                Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: asleep");
+                playerState = ps;
+                break;
+            case sideScroll:
+                Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: sideScroll");
+                speed = 1;
+                rotation = 0;
+                animator.setAnimation("SS_Idle");
+                playerState = ps;
+                break;
+        }
+    }
+
+    public void setImage(String imagePath) {
+        this.imagePath = imagePath;
+    }
+    //endregion
+
+    //region <Update and Draw>
     @Override
     public void update() {
         if(interaction) Debug.log(DebugEnabler.PLAYER_STATUS,"Interaction Available! Act now!");
@@ -118,7 +153,22 @@ public class Player extends RenderableObject implements Kinematic {
         }
     }
 
-    //region <Physics functions>
+    public void draw(Graphics2D graphics2D) {
+        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+        graphics2D.setComposite(alphaComposite);
+        if(animator != null){
+            animator.animate();
+        }
+        Debug.drawRect(DebugEnabler.RENDERABLE_LOG,graphics2D, new Rectangle2D.Double(x,y,width, height));
+
+        Graphics2D g2 = (Graphics2D) graphics2D.create();
+        g2.rotate(rotation, x + (width / 2.0), y + (height / 2.0));
+        g2.drawImage(image, x, y, null);
+        g2.dispose();
+    }
+    //endregion
+
+    //region <Support functions>
     private void setVelocity(int flags) {
         int x1 = 0b1 & flags;
         x1 += (((0b10 & flags) / 0b10) * -1);
@@ -191,7 +241,9 @@ public class Player extends RenderableObject implements Kinematic {
         }
 
     }
+    //endregion
 
+    //region <Kinematics>
     @Override
     public boolean isStatic() {
         return false;
@@ -209,11 +261,11 @@ public class Player extends RenderableObject implements Kinematic {
 
     @Override
     public void setVelocity(PhysicsVector pv) {
-        if(pv.x != 0 && pv.y != 0){
-            //TODO: this is broken. Needs to make speed constant in all directions
+//        if(pv.x != 0 && pv.y != 0){
+//            //TODO: this is broken. Needs to make speed constant in all directions
 //            pv.x = (pv.x / Math.sqrt(2));
 //            pv.y = (pv.y / Math.sqrt(2));
-        }
+//        }
         magnitude = pv.mult(speed);
     }
 
@@ -231,57 +283,52 @@ public class Player extends RenderableObject implements Kinematic {
     public Rectangle getHitbox() {
         return new Rectangle(x, y, image.getWidth(), image.getHeight());
     }
+    //endregion
+
+    //region <Interactable>
+    @Override
+    public Rectangle getRequestArea() {
+        return new Rectangle(x, y, image.getWidth(), image.getHeight());
+    }
 
     @Override
-    public void addToScreen(GameScreen screen, boolean isActive) {
-        super.addToScreen(screen, isActive);
-        if (isActive) screen.kinematics.add(this);
+    public void setRequesting(boolean isRequesting) {
+        requesting = isRequesting;
     }
 
-    /**
-     * Reset player coordinates and acceleration.
-     */
-    public void reset() {
-        x = 50;
-        y = 50;
-        moveState = new PhysicsVector(1, 1);
+    @Override
+    public boolean isRequesting() {
+        return requesting;
     }
 
-    public PlayerState getState() {
-        return playerState;
-    }
-
-    /**
-     * Returns true or false depending on the acceptance of the state transition.
-     */
-    public boolean setState(PlayerState ps) {
-        //TODO: Implement error checking
-        switch (ps) {
-            case overWorld:
-                Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: overWorld");
-                speed = 3;
-                width = 100;
-                height = 100;
-                animator.setAnimation("Idle");
-                playerState = ps;
-                return true;
-            case asleep:
-                Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: asleep");
-                playerState = ps;
-                return true;
-            case sideScroll:
-                Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: sideScroll");
-                speed = 1;
-                rotation = 0;
-                animator.setAnimation("SS_Idle");
-                playerState = ps;
-                return true;
-        }
+    @Override
+    public boolean action(GameObject g) {
         return false;
     }
     //endregion
 
-    public void setImage(String imagePath) {
-        this.imagePath = imagePath;
+    //region <GameObject Overrides>
+    @Override
+    public boolean setActive(GameScreen screen){
+        if(super.setActive(screen)){
+            screen.kinematics.add(this);
+            return true;
+        }return false;
     }
+
+    @Override
+    public boolean setInactive(GameScreen screen){
+        if(super.setInactive(screen)){
+            screen.kinematics.remove(this);
+            return true;
+        }return false;
+    }
+
+    @Override
+    public void addToScreen(GameScreen screen, boolean isActive){
+        super.addToScreen(screen, isActive);
+        screen.kinematics.remove(this);
+        if(isActive) screen.kinematics.add(this);
+    }
+    //endregion
 }

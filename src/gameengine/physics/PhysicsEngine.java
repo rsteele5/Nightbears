@@ -72,11 +72,18 @@ public class PhysicsEngine {
             for (int i2 = 0; i2 < indices; i2++) {
                 if (i2 == i1) continue;
                 GameObject obj2 = (GameObject) objects.get(i2);
-                if(obj2 instanceof Interactable){
-                    if(((Kinematic) obj1).getHitbox().intersects(((Interactable) obj2).getRequestArea())){
-                        ((Interactable) obj2).action(obj1);
+
+                //Interactable
+                if(obj1 instanceof Interactable) {
+                    if (obj2 instanceof Interactable) {
+                        Interactable iObj1 = (Interactable) obj1;
+                        Interactable iObj2 = (Interactable) obj2;
+                        if (iObj1.getRequestArea().intersects(iObj2.getRequestArea()) && iObj1.isRequesting()) {
+                            if(iObj2.action(obj1)) iObj1.setRequesting(false);
+                        }
                     }
                 }
+
                 if (((Kinematic) obj1).getHitbox().intersects(((Kinematic) obj2).getHitbox())) {
                     if (obj1 instanceof Weapon && obj2 instanceof Player) {
                         //GameEngine.players.get(0).addItem((Weapon) obj1);

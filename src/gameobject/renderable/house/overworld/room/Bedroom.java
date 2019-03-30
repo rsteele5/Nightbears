@@ -28,8 +28,8 @@ public class Bedroom extends Room {
         createSpawnPoint(1,1, SpawnType.Player);
         createSpawnPoint(2,1, SpawnType.Vendor);
 
-        //createDoor(3, 7, Compass.East);
-        //createDoor(7, 4, Compass.South);
+        createDoor(3, 7, Compass.East);
+        createDoor(7, 4, Compass.South);
     }
 
     @Override

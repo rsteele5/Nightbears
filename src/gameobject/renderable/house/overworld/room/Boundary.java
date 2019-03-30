@@ -36,8 +36,7 @@ public class Boundary extends GameObject implements Kinematic {
         if(super.setActive(screen)){
             screen.kinematics.add(this);
             return true;
-        }
-        return false;
+        }return false;
     }
 
     @Override
@@ -45,17 +44,14 @@ public class Boundary extends GameObject implements Kinematic {
         if(super.setInactive(screen)){
             screen.kinematics.remove(this);
             return true;
-        }
-        return false;
+        }return false;
     }
 
     @Override
     public void addToScreen(GameScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
         screen.kinematics.remove(this);
-        if(isActive) {
-            screen.kinematics.add(this);
-        }
+        if(isActive) screen.kinematics.add(this);
     }
     @Override
     public void update() {}
