@@ -39,10 +39,6 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
     private int endCrawl;
     private Action playerInteractionOW;
 
-
-    int isSet = 0;
-    Player p = null;
-
     //endregion
 
     /**
@@ -75,22 +71,16 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
 
     @Override
     public void update() {
-        isSet++;
-        isSet %= 5;
-        if(isSet == 4 && p != null){
-            p.interaction = false;
-            p = null;
-        }
-
         if (vendorState == VendorState.crawling) {
             if (animator.getCurrentAnimationName().equals("Wait") && animator.getCurrentAnimation().getFrameToDisplay() > 0)
                 animator.setAnimation("Crawling");
-            else if (getX() <= endCrawl)
-                this.translate(5, 0);
-            else this.setState(VendorState.sittingup);
+            else if (animator.getCurrentAnimationName().equals("Crawling")) {
+                if(getX() <= endCrawl) this.translate(2, 0);
+                else this.setState(VendorState.sittingup);
+            }
         }
         else if (vendorState == VendorState.sittingup){
-            if (this.animator.getCurrentAnimation().getFrameToDisplay() == 7){
+            if (this.animator.getCurrentAnimation().getFrameToDisplay() >= 7){
                 this.setState(VendorState.idle);
             }
         }
@@ -135,9 +125,8 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
                 Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: crawling");
                 width = 200;
                 height = 200;
-
-                endCrawl = getX() + OverworldMeta.TileSize*3;
-                animator.setAnimation("Crawling");
+                endCrawl = getX() + OverworldMeta.TileSize*2;
+                animator.setAnimation("Wait");
                 vendorState = vs;
                 return true;
             case sittingup:

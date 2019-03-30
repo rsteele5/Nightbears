@@ -7,7 +7,7 @@ public class VendorCrawlingAnimation extends Animation {
 
     public VendorCrawlingAnimation() {
         String path = "/assets/vendor/vendorcrawlinganimation/";
-        AnimationImage crawl1 = new AnimationImage(path + "VendorCrawling1.png", 120);
+        AnimationImage crawl1 = new AnimationImage(path + "VendorCrawling1.png", 5);
         AnimationImage crawl2 = new AnimationImage(path + "VendorCrawling2.png", 5);
         AnimationImage crawl3 = new AnimationImage(path + "VendorCrawling3.png", 5);
         AnimationImage crawl4 = new AnimationImage(path + "VendorCrawling4.png", 5);
