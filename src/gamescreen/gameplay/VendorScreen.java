@@ -9,18 +9,22 @@ import gameobject.renderable.text.TextBox;
 import gameobject.renderable.button.ItemButton;
 import gameobject.renderable.DrawLayer;
 import gamescreen.GameScreen;
+import gamescreen.Overlay;
 import gamescreen.ScreenManager;
 import gameobject.renderable.item.Item;
 import gameobject.renderable.button.Button;
 import gameobject.container.RenderableGridContainer;
 import gamescreen.popup.ConfirmationPopup;
+import input.listeners.Key.ClickableKeyHandler;
+import main.utilities.Clickable;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
-public class VendorScreen extends GameScreen {
+public class VendorScreen extends Overlay {
     //region <Variables>
     private ItemButton currentItemButton = null;
     private Item currentItem = null;
@@ -35,8 +39,9 @@ public class VendorScreen extends GameScreen {
     private VendorData vendorData;
     //endregion
 
-    public VendorScreen(ScreenManager screenManager) {
-        super(screenManager, "VendorScreen", true, 150, 80, 1f);
+    public VendorScreen(ScreenManager screenManager, GameScreen parentScreen) {
+        super(screenManager, parentScreen, "VendorScreen", 150, 80, 0f);
+        isExclusive = true;
     }
 
     @Override
@@ -101,6 +106,7 @@ public class VendorScreen extends GameScreen {
         //endregion
 
         //region <Add buttons to screen>
+        ArrayList<Clickable> butts = new ArrayList<>();
         Button button;
 
         button = new Button(exitButtonLocation.x, exitButtonLocation.y,
@@ -113,6 +119,7 @@ public class VendorScreen extends GameScreen {
                 });
         button.setSize(buttonSize.x, buttonSize.y);
         button.addToScreen(this, true);
+        butts.add(button);
 
         button = new Button(buyButtonLocation.x, buyButtonLocation.y,
                 "/assets/buttons/Button-Vendor-Buy.png",
@@ -160,6 +167,7 @@ public class VendorScreen extends GameScreen {
                 });
         button.setSize(buttonSize.x, buttonSize.y);
         button.addToScreen(this, true);
+        butts.add(button);
 
         button = new Button(sellButtonLocation.x, sellButtonLocation.y,
                 "/assets/buttons/Button-Vendor-Sell.png",
@@ -196,6 +204,9 @@ public class VendorScreen extends GameScreen {
                 });
         button.setSize(buttonSize.x, buttonSize.y);
         button.addToScreen(this, true);
+        butts.add(button);
+
+        setKeyHandler(new ClickableKeyHandler(butts));
         //endregion
 
         //region <Add text boxes to screen>

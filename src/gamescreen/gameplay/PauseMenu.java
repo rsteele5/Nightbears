@@ -12,6 +12,7 @@ import gameobject.renderable.button.ItemButton;
 import gameobject.renderable.item.*;
 import gameobject.renderable.DrawLayer;
 import gamescreen.GameScreen;
+import gamescreen.Overlay;
 import gamescreen.ScreenManager;
 import gameobject.container.RenderableGridContainer;
 import gamescreen.mainmenu.MainMenuScreen;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
-public class PauseMenu extends GameScreen {
+public class PauseMenu extends Overlay {
     /* Initialize variables *****************/
     //region<Variable Declarations>
     private CopyOnWriteArrayList<Item> playerInventory;
@@ -52,12 +53,13 @@ public class PauseMenu extends GameScreen {
 
     //endregion
 
-    public PauseMenu(ScreenManager screenManager) {
-        super(screenManager, "PauseMenu", true, 450, 180);
+    public PauseMenu(ScreenManager screenManager, GameScreen parentScreen) {
+        super(screenManager, parentScreen, "PauseMenu", 450, 180, 0f);
+        isExclusive = true;
     }
 
     /**
-     * Initializes all of the stuff you want on your splashscreen
+     * Initializes all of the stuff you want on your GameScreen
      */
     @Override
     protected void initializeScreen() {
@@ -67,7 +69,7 @@ public class PauseMenu extends GameScreen {
         equipButtons = new CopyOnWriteArrayList<>();
 
 
-        //Add all the item in the dev splashscreen player to the splashscreen
+        //Add all the item in the dev GameScreen player to the GameScreen
         for (RenderableObject renderable: playerInventory){
             renderable.addToScreen(this, false);
         }

@@ -41,7 +41,7 @@ public class VendorDialogBox extends Overlay {
             yes = () ->{
                 Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - VendorDialog Yes");
                 this.exiting = true;
-                screenManager.addScreen(new VendorScreen(screenManager));
+                parentScreen.addOverlay(new VendorScreen(screenManager, parentScreen));
             };
         } else message = firstLevel;
     }

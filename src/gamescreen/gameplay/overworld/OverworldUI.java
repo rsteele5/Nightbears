@@ -37,7 +37,7 @@ public class OverworldUI extends Overlay {
                 new Font("NoScary", Font.PLAIN, 72), Color.WHITE, "Pause",
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Inventory");
-                    screenManager.addScreen(new PauseMenu(screenManager));
+                    parentScreen.addOverlay(new PauseMenu(screenManager, parentScreen));
                 });
         buttonLayout.addAt(pauseButton, 0, 0);
 

@@ -61,7 +61,7 @@ public class DevScreen extends GameScreen {
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Vendor");
-                    screenManager.addScreen(new VendorScreen(screenManager));
+                    this.addOverlay(new VendorScreen(screenManager, this));
                 });
         button.addToScreen(this, true);
 
@@ -81,7 +81,7 @@ public class DevScreen extends GameScreen {
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Inventory");
-                    screenManager.addScreen(new PauseMenu(screenManager));
+                    this.addOverlay(new PauseMenu(screenManager, this));
                 });
         button.addToScreen(this, true);
 
