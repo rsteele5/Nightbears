@@ -65,19 +65,19 @@ public class OverworldScreen extends GameScreen {
 //        SpawnPoint TRC = objectSpawns.get(1);
 //        SpawnPoint BLC = objectSpawns.get(2);
 
-//        Floor northWall = new Floor(TLC.getTileX()-50,TLC.getTileY()-50,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
+//        PhysicsObjectStatic northWall = new PhysicsObjectStatic(TLC.getTileX()-50,TLC.getTileY()-50,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
 //        northWall.setHeight(25);
 //        northWall.setWidth(500);
 //        northWall.addToScreen(this,true);
-//        Floor westWall = new Floor(TLC.getTileX()-50,TLC.getTileY()-50,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
+//        PhysicsObjectStatic westWall = new PhysicsObjectStatic(TLC.getTileX()-50,TLC.getTileY()-50,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
 //        westWall.setHeight(500);
 //        westWall.setWidth(25);
 //        westWall.addToScreen(this,true);
-//        Floor eastWall = new Floor(BLC.getTileX()+25,BLC.getTileY()-450,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
+//        PhysicsObjectStatic eastWall = new PhysicsObjectStatic(BLC.getTileX()+25,BLC.getTileY()-450,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
 //        eastWall.setHeight(500);
 //        eastWall.setWidth(25);
 //        eastWall.addToScreen(this,true);
-//        Floor southWall = new Floor(BLC.getTileX()-450,BLC.getTileY()+25,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
+//        PhysicsObjectStatic southWall = new PhysicsObjectStatic(BLC.getTileX()-450,BLC.getTileY()+25,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
 //        southWall.setHeight(25);
 //        southWall.setWidth(500);
 //        southWall.addToScreen(this,true);

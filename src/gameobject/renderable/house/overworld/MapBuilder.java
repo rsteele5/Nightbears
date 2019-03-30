@@ -2,13 +2,9 @@ package gameobject.renderable.house.overworld;
 
 import gameobject.renderable.house.overworld.room.Boundary;
 import gameobject.renderable.house.overworld.room.Room;
-import gameobject.renderable.house.sidescrolling.Floor;
-import gamescreen.GameScreen;
 import gameobject.container.TileGridContainer;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
-
-import javax.swing.plaf.basic.BasicOptionPaneUI;
 
 import static gameobject.renderable.house.overworld.OverworldMeta.*;
 import static gameobject.renderable.house.overworld.OverworldMeta.Tiles.House.*;

@@ -1,20 +1,18 @@
-package _test;
+package gameengine.physics;
 
-import gameengine.physics.Kinematic;
-import gameengine.physics.PhysicsMeta;
-import gameengine.physics.PhysicsVector;
-import gameobject.renderable.RenderableObject;
 import gameobject.renderable.DrawLayer;
+import gameobject.renderable.RenderableObject;
 import gamescreen.GameScreen;
 
 import java.awt.*;
 
-public class Square extends RenderableObject implements Kinematic {
+public class PhysicsObject extends RenderableObject implements Kinematic {
     private PhysicsVector accel = new PhysicsVector(0,1);
-    public Square(int x, int y, String path, DrawLayer drawLayer){
+    public PhysicsObject(int x, int y, String path, DrawLayer drawLayer){
         super(x,y,path,drawLayer);
     }
     PhysicsVector movement = new PhysicsVector(0,0);
+    public String name = "square";
     @Override
     public void update() {
 

@@ -7,6 +7,7 @@ import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.overworld.OverworldUI;
+import input.listeners.Key.SideScrollKeyHandler;
 
 public class LevelFactory extends GameScreen {
     private static Level lBuild;
@@ -38,5 +39,6 @@ public class LevelFactory extends GameScreen {
         lBuild.buildTerrain(this);
         lBuild.buildEnemies(this);
         setCamera(new Camera(screenManager, this, player));
+        setKeyHandler(new SideScrollKeyHandler(player));
     }
 }
