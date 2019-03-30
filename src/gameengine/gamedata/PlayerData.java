@@ -16,12 +16,22 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class PlayerData implements Serializable {
 
     private CopyOnWriteArrayList<Item> playerInventory = new CopyOnWriteArrayList<>();
+    private String imageDirectory;
     private int gold;
 
     public PlayerData(){
         initializeInventory();
         gold = 10;
     }
+
+    public String getImageDirectory() {
+        return imageDirectory;
+    }
+
+    public void setImageDirectory(String imageDirectory) {
+        this.imageDirectory = imageDirectory;
+    }
+
 
     public CopyOnWriteArrayList<Item> getInventory(){
         return playerInventory;

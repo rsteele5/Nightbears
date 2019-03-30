@@ -1,29 +1,16 @@
 package gameobject.renderable.enemy;
 
-import _test.Square;
 import gameengine.physics.Kinematic;
 import gameengine.physics.PhysicsMeta;
 import gameengine.physics.PhysicsVector;
-import gameengine.rendering.animation.Animator;
 import gameobject.renderable.DrawLayer;
-import gameobject.renderable.RenderableObject;
-import gameobject.renderable.player.Player;
-import gameobject.renderable.player.overworld.PlayerIdleAnimation;
-import gameobject.renderable.player.overworld.PlayerWalkingAnimation;
-import gameobject.renderable.player.sidescrolling.PlayerSSIdleAnimation;
 import gamescreen.GameScreen;
-import main.utilities.AssetLoader;
-import main.utilities.Debug;
-import main.utilities.DebugEnabler;
+
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.File;
-
-import javax.imageio.ImageIO;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public abstract class Minion extends Enemy implements Kinematic {
 

@@ -83,8 +83,10 @@ public abstract class RenderableObject extends GameObject implements Loadable, S
 
     public void setCurrentImage(BufferedImage currentImage) {
         this.image = currentImage;
-//        width = currentImage.getWidth();
-//        height = currentImage.getHeight();
+        if(currentImage != null){
+            width = currentImage.getWidth();
+            height = currentImage.getHeight();
+        }
     }
 
     public DrawLayer getDrawLayer() {

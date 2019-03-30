@@ -18,12 +18,14 @@ public class BedroomLevel extends GameScreen {
     private BedroomBackgroundLayout background;
 
     public BedroomLevel(ScreenManager screenManager) {
-        super(screenManager, "BedroomLevel");
+        super(screenManager, "BedroomLevel", true);
     }
 
     @Override
     protected void initializeScreen() {
-        Door finishDoor = new Door(200, 300, "/assets/sidescroll/SideScrollDoor.png");
+        Door finishDoor = new Door(800, 300, "/assets/sidescroll/SideScrollDoor.png",
+                () -> setScreenState(ScreenState.TransitionOff));
+
         finishDoor.addToScreen(this, true);
         Player player = new Player(30, 276, DrawLayer.Entity, gameData.getPlayerData());
         player.addToScreen(this, true);

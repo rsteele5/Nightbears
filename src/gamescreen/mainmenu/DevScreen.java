@@ -2,13 +2,11 @@ package gamescreen.mainmenu;
 
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.player.Player;
-import gameobject.renderable.vendor.Vendor;
 import gamescreen.GameScreen;
 import gameobject.renderable.ImageContainer;
 import gameobject.renderable.button.Button;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.level.BedroomLevel;
-import gamescreen.gameplay.level.LevelDecorator;
 import gamescreen.gameplay.PauseMenu;
 import gamescreen.gameplay.VendorScreen;
 import gamescreen.gameplay.level.SideScroll;

@@ -1,7 +1,5 @@
 package gameobject.renderable.player;
 
-import gameengine.GameEngine;
-import gameengine.gamedata.GameData;
 import gameengine.gamedata.PlayerData;
 import gameengine.physics.Interactable;
 import gameengine.physics.Kinematic;
@@ -10,20 +8,12 @@ import gameengine.physics.PhysicsVector;
 import gameengine.rendering.animation.Animator;
 import gameobject.GameObject;
 import gameobject.renderable.RenderableObject;
-import gameobject.renderable.item.ItemComparator;
 import gameobject.renderable.item.*;
 import gameobject.renderable.DrawLayer;
-import gameobject.renderable.item.armor.ArmorBuilder;
-import gameobject.renderable.item.armor.ArmorType;
-import gameobject.renderable.item.weapon.WeaponBuilder;
-import gameobject.renderable.item.weapon.WeaponType;
 import gameobject.renderable.player.overworld.PlayerIdleAnimation;
 import gameobject.renderable.player.overworld.PlayerWalkingAnimation;
-import gameobject.renderable.player.sidescrolling.PlayerSSCrouchingAnimation;
-import gameobject.renderable.player.sidescrolling.PlayerSSIdleAnimation;
+import gameobject.renderable.player.sidescrolling.*;
 import gamescreen.GameScreen;
-import main.Game;
-import main.utilities.AssetLoader;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -76,12 +66,15 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
         //initializeItems()
 
         animator = new Animator(this);
-        animator.addAnimation("Walking", new PlayerWalkingAnimation());
-        animator.addAnimation("Idle", new PlayerIdleAnimation());
-        animator.addAnimation("SS_Idle", new PlayerSSIdleAnimation());
-        animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation());
+        animator.addAnimation("Walking", new PlayerWalkingAnimation(playerData.getImageDirectory()));
+        animator.addAnimation("Idle", new PlayerIdleAnimation(playerData.getImageDirectory()));
+        animator.addAnimation("SS_Idle_Left", new PlayerSSIdleAnimationLeft(playerData.getImageDirectory()));
+        animator.addAnimation("SS_Idle_Right", new PlayerSSIdleAnimationRight(playerData.getImageDirectory()));
+        animator.addAnimation("SS_Running_Left", new PlayerSSRunningAnimationLeft(playerData.getImageDirectory()));
+        animator.addAnimation("SS_Running_Right", new PlayerSSRunningAnimationRight(playerData.getImageDirectory()));
+        animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation(playerData.getImageDirectory()));
 
-        requesting = false;
+        requesting = true;
     }
 
     //region <Getters and Setters>
@@ -109,17 +102,14 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
                 break;
             case sideScroll:
                 Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: sideScroll");
-                speed = 1;
+                speed = 4;
                 rotation = 0;
-                animator.setAnimation("SS_Idle");
+                animator.setAnimation("SS_Idle_Right");
                 playerState = ps;
                 break;
         }
     }
 
-    public void setImage(String imagePath) {
-        this.imagePath = imagePath;
-    }
     //endregion
 
     //region <Update and Draw>
@@ -193,22 +183,24 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
         switch (getState()) {
 
             case sideScroll:
-                if (e.getKeyCode() == 32 && grounded) {
+                if (e.getKeyCode() == 32 && grounded) { // JUMP
                     int sign = PhysicsMeta.AntiGravity ? -1 : 1;
                     setAcceleration(getAcceleration().add(new PhysicsVector(0, -7 * sign)));
                     grounded = false;
                 }
-                if(e.getKeyCode() == 83 && !crouch){
+                if(e.getKeyCode() == 83 && !crouch){ // CROUCH
                     Debug.log(DebugEnabler.PLAYER_STATUS,"CROUCHING");
                     crouch = true;
                     crouchSet = false;
                 }
-                if(e.getKeyCode() == 16) {
+                if(e.getKeyCode() == 16) { // SPRINT
                     moveFactor = 2.5;
                 }
                 if (PhysicsMeta.Gravity == 0) calculateMove(e, owKeys);
                 else calculateMove(e, ssKeys);
-
+                if(animator.getCurrentAnimation().getName() != "SS_Running_Right" && grounded){
+                    animator.setAnimation("SS_Running_Right");
+                }
                 break;
 
             case overWorld:
@@ -232,7 +224,9 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
                 }
                 if (PhysicsMeta.Gravity == 0) calculateRelease(e, owKeys);
                 else calculateRelease(e, ssKeys);
-
+                if(animator.getCurrentAnimation().getName() == "SS_Running"){
+                    animator.setAnimation("SS_Idle");
+                }
                 break;
 
             case overWorld:

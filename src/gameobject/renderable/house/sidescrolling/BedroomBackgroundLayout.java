@@ -156,9 +156,8 @@ public class BedroomBackgroundLayout extends BackgroundLayout {
         int x = startTile.getX();
         int width = 0;
         boolean done = false;
-        Debug.log(true, "Creating North Wall at: (" + iRow + ", " + iCol + ")");
+
         for (int col = iCol; col < row.length; col++){
-            Debug.log(true, "   Row: " + iRow + " Col: " + col);
             if(!done) {
                 switch (row[col]) {
                     case WALL_NW:
@@ -192,10 +191,7 @@ public class BedroomBackgroundLayout extends BackgroundLayout {
         int width = 0;
         boolean done = false;
 
-        Debug.log(true, "Creating South Wall at: (" + iRow + ", " + iCol + ")");
-
         for (int col = iCol; col < layout[iRow].length - 1; col++){
-            Debug.log(true, "   Row: " + iRow + " Col: " + col);
             switch(row[col]){
                 case WALL_SW:
                     width += TileSize;
@@ -226,10 +222,7 @@ public class BedroomBackgroundLayout extends BackgroundLayout {
         int height = 0;
         boolean done = false;
 
-        Debug.log(true, "Creating East Wall at: (" + iRow + ", " + iCol + ")");
-        Debug.log(true, "Layout length: (" + layout[iRow].length + ")");
         for (int row = iRow; row < layout.length; row++){
-            Debug.log(true, "   Row: " + row + " Col: " + iCol);
             switch(layout[row][iCol]){
                 case WALL_NE:
                     height += TileSize;
@@ -261,10 +254,7 @@ public class BedroomBackgroundLayout extends BackgroundLayout {
         int height = 0;
         boolean done = false;
 
-        Debug.log(true, "Creating West Wall at: (" + iRow + ", " + iCol + ")");
-        Debug.log(true, "Layout length: (" + layout[iRow].length + ")");
         for (int row = iRow; row < layout.length; row++){
-            Debug.log(true, "   Row: " + row + " Col: " + iCol);
             switch(layout[row][iCol]){
                 case WALL_NW:
                     height += TileSize;
