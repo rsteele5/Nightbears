@@ -238,11 +238,10 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
     @Override
     public boolean action(GameObject g) {
         if(g instanceof Player) {
-            ((Player) g).interaction = true;
-            p = (Player)g;
-        }
-        isSet = 0;
-        return true;
+
+            return true;
+        }return false;
+
     }
 
     //endregion

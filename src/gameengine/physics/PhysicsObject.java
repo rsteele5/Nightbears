@@ -1,20 +1,19 @@
-package _test;
+package gameengine.physics;
 
-import gameengine.physics.Kinematic;
-import gameengine.physics.PhysicsMeta;
-import gameengine.physics.PhysicsVector;
-import gameobject.renderable.RenderableObject;
+import gameobject.GameObject;
 import gameobject.renderable.DrawLayer;
+import gameobject.renderable.RenderableObject;
 import gamescreen.GameScreen;
 
 import java.awt.*;
 
-public class Square extends RenderableObject implements Kinematic {
+public class PhysicsObject extends RenderableObject implements Kinematic, Interactable {
     private PhysicsVector accel = new PhysicsVector(0,1);
-    public Square(int x, int y, String path, DrawLayer drawLayer){
+    public PhysicsObject(int x, int y, String path, DrawLayer drawLayer){
         super(x,y,path,drawLayer);
     }
     PhysicsVector movement = new PhysicsVector(0,0);
+    public String name = "square";
     @Override
     public void update() {
 
@@ -84,5 +83,26 @@ public class Square extends RenderableObject implements Kinematic {
         if(isActive) {
            screen.kinematics.add(this);
         }
+    }
+
+    //Interactable
+    @Override
+    public Rectangle getRequestArea() {
+        return new Rectangle(x, y, width, height);
+    }
+
+    @Override
+    public void setRequesting(boolean isRequesting) {
+
+    }
+
+    @Override
+    public boolean isRequesting() {
+        return false;
+    }
+
+    @Override
+    public boolean action(GameObject g) {
+        return false;
     }
 }

@@ -39,6 +39,8 @@ public class OverworldKeyHandler implements KeyHandler {
             target.onClick();
         }else if(e.getKeyCode() == PAUSE){
             pause.onClick();
+        }else if(e.getKeyCode() == INTERACT){
+            player.setRequesting(true);
         }
     }
 

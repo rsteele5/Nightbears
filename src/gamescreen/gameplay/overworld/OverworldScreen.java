@@ -43,7 +43,8 @@ public class OverworldScreen extends GameScreen {
         setCamera(new Camera(screenManager, this, playerOW));
 
         //Overlays
-        UI = new OverworldUI(screenManager, this, playerOW, overworldMap.getVendorSpawn());
+        UI = new OverworldUI(screenManager, this, playerOW, overworldMap.getVendorSpawn(),
+                             overworldMap.getRooms().get(0).getDoors());
         addOverlay(UI);
 
         //KeyListener

@@ -149,7 +149,7 @@ public class SoundScreen extends GameScreen {
                                 switch(localSettings[2].getCurrentVolume()) {
                                     case Low: BackgroundAudio.changeVolume(-10.0f); break;
                                     case Medium: BackgroundAudio.changeVolume(-0.0f); break;
-                                    case High: BackgroundAudio.changeVolume(1.0f); break;
+                                    case High: BackgroundAudio.changeVolume(5.0f); break;
                                 }
                                 break;
                             default: Debug.error(DebugEnabler.GAME_DATA, "Unsupported Sound Option Selected");
