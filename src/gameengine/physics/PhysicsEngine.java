@@ -6,6 +6,7 @@ import gameengine.gamedata.PlayerData;
 import gameobject.renderable.enemy.Enemy;
 import gameobject.renderable.enemy.Minion;
 import gameobject.renderable.enemy.Walker;
+import gameobject.renderable.house.sidescrolling.Door;
 import gameobject.renderable.house.sidescrolling.Floor;
 import gameengine.gamedata.GameData;
 import gameobject.renderable.player.Player;
@@ -94,6 +95,9 @@ public class PhysicsEngine {
                             e.changeState();
                         }
 
+                    }
+                    if (obj1 instanceof Player && obj2 instanceof Door) {
+                        Debug.success(true,"PLAYER->DOOR");
                     }
                     if (obj1 instanceof Minion && obj2 instanceof Player) {
                         Debug.success(true,"ENEMY->Player");

@@ -2,8 +2,15 @@ package gameobject.renderable.house.sidescrolling;
 
 import gameobject.container.TileGridContainer;
 import gameobject.renderable.house.overworld.Tile;
+import gameobject.renderable.house.overworld.room.Boundary;
+import main.utilities.Debug;
+
+import java.util.ArrayList;
 
 public class BedroomBackgroundLayout extends BackgroundLayout {
+
+    public static final int TileSize = 100;
+    public static final int WallThickness = 35;
 
     private final int EMPTY = 0;
     private final int START = 1;
@@ -65,61 +72,221 @@ public class BedroomBackgroundLayout extends BackgroundLayout {
     private final String IMAGEPATH_WINDOW = "/assets/sidescroll/bedroom/SideScroll-Bedroom-Window.png";
     private final String IMAGEPATH_END = "";
 
+    private ArrayList<Boundary> boundaries;
+
     @Override
-    protected Integer[][] constructLayout() {
-        return  new Integer[][]{
-                new Integer[]{12,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                new Integer[]{14,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,15,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                new Integer[]{14,18,18,19,20,21,18,18,18,18,18,18,18,18,19,20,20,20,21,18,18,18,18,18,18,18,18,19,20,21,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,15,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                new Integer[]{14,18,18,22,27,23,18,18,18,18,18,18,18,18,24,25,25,25,26,18,18,18,18,18,18,18,18,22,27,23,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,15,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                new Integer[]{14,18,18,24,25,26,18,17,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,17,18,18,24,25,26,18,18,18,18,18,18,18,18,18,18,18,18,18,17,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,17,18,18,18,18,18,18,15,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                new Integer[]{14,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,15,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                new Integer[]{8,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                new Integer[]{6,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                new Integer[]{6,11,11,11,11,10,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,10,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,10,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,10,11,11,11,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                new Integer[]{2,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    protected void constructLayout() {
+        layout = new Integer[][]{
+                new Integer[]{12, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                new Integer[]{14, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                new Integer[]{14, 18, 18, 19, 20, 21, 18, 18, 18, 18, 18, 18, 18, 18, 19, 20, 20, 20, 21, 18, 18, 18, 18, 18, 18, 18, 18, 19, 20, 21, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                new Integer[]{14, 18, 18, 22, 27, 23, 18, 18, 18, 18, 18, 18, 18, 18, 24, 25, 25, 25, 26, 18, 18, 18, 18, 18, 18, 18, 18, 22, 27, 23, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                new Integer[]{14, 18, 18, 24, 25, 26, 18, 17, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 17, 18, 18, 24, 25, 26, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 17, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 17, 18, 18, 18, 18, 18, 18, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                new Integer[]{14, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                new Integer[]{8, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                new Integer[]{6, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                new Integer[]{6, 11, 11, 11, 11, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 10, 11, 11, 11, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                new Integer[]{2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         };
     }
 
     @Override
     public TileGridContainer getBackground() {
-        TileGridContainer gridContainer = new TileGridContainer(layout.length + 1, layout[0].length, 100,100,0,0);
+        return background;
+    }
+
+    @Override
+    public void constructBackground() {
+        background = new TileGridContainer(layout.length + 1, layout[0].length, 100,100,0,0);
         for(int row = 0; row < layout.length; row++){
             for(int col = 0; col < layout[row].length; col++){
                 switch(layout[row][col]){
                     case EMPTY: break;
                     case START: break;
-                    case WALL_SW: gridContainer.addAt(new Tile(IMAGEPATH_WALL_SW), row, col); break;
-                    case WALL_SE: gridContainer.addAt(new Tile(IMAGEPATH_WALL_SE), row, col); break;
-                    case WALL_S: gridContainer.addAt(new Tile(IMAGEPATH_WALL_S), row, col); break;
-                    case WALL_P_E: gridContainer.addAt(new Tile(IMAGEPATH_WALL_P_E), row, col); break;
-                    case WALL_P_W: gridContainer.addAt(new Tile(IMAGEPATH_WALL_P_W), row, col); break;
-                    case WALL_TRIM: gridContainer.addAt(new Tile(IMAGEPATH_WALL_TRIM), row, col); break;
-                    case WALL_W_TRIM: gridContainer.addAt(new Tile(IMAGEPATH_WALL_W_TRIM), row, col); break;
-                    case WALL_E_TRIM: gridContainer.addAt(new Tile(IMAGEPATH_WALL_E_TRIM), row, col); break;
-                    case WALL_SOCKET: gridContainer.addAt(new Tile(IMAGEPATH_WALL_SOCKET), row, col); break;
-                    case WALL_P: gridContainer.addAt(new Tile(IMAGEPATH_WALL_P), row, col); break;
-                    case WALL_NW: gridContainer.addAt(new Tile(IMAGEPATH_WALL_NW), row, col); break;
-                    case WALL_NE: gridContainer.addAt(new Tile(IMAGEPATH_WALL_NE), row, col); break;
-                    case WALL_W: gridContainer.addAt(new Tile(IMAGEPATH_WALL_W), row, col); break;
-                    case WALL_E: gridContainer.addAt(new Tile(IMAGEPATH_WALL_E), row, col); break;
-                    case WALL_N: gridContainer.addAt(new Tile(IMAGEPATH_WALL_N), row, col); break;
-                    case WALL_SWITCH: gridContainer.addAt(new Tile(IMAGEPATH_WALL_SWITCH), row, col); break;
-                    case WALL: gridContainer.addAt(new Tile(IMAGEPATH_WALL), row, col); break;
-                    case WINDOW_NW: gridContainer.addAt(new Tile(IMAGEPATH_WINDOW_NW), row, col); break;
-                    case WINDOW_N: gridContainer.addAt(new Tile(IMAGEPATH_WINDOW_N), row, col); break;
-                    case WINDOW_NE: gridContainer.addAt(new Tile(IMAGEPATH_WINDOW_NE), row, col); break;
-                    case WINDOW_W: gridContainer.addAt(new Tile(IMAGEPATH_WINDOW_W), row, col); break;
-                    case WINDOW_E: gridContainer.addAt(new Tile(IMAGEPATH_WINDOW_E), row, col); break;
-                    case WINDOW_SW: gridContainer.addAt(new Tile(IMAGEPATH_WINDOW_SW), row, col); break;
-                    case WINDOW_S: gridContainer.addAt(new Tile(IMAGEPATH_WINDOW_S), row, col); break;
-                    case WINDOW_SE: gridContainer.addAt(new Tile(IMAGEPATH_WINDOW_SE), row, col); break;
-                    case WINDOW: gridContainer.addAt(new Tile(IMAGEPATH_WINDOW), row, col); break;
+                    case WALL_SW: background.addAt(new Tile(IMAGEPATH_WALL_SW), row, col); break;
+                    case WALL_SE: background.addAt(new Tile(IMAGEPATH_WALL_SE), row, col); break;
+                    case WALL_S: background.addAt(new Tile(IMAGEPATH_WALL_S), row, col); break;
+                    case WALL_P_E: background.addAt(new Tile(IMAGEPATH_WALL_P_E), row, col); break;
+                    case WALL_P_W: background.addAt(new Tile(IMAGEPATH_WALL_P_W), row, col); break;
+                    case WALL_TRIM: background.addAt(new Tile(IMAGEPATH_WALL_TRIM), row, col); break;
+                    case WALL_W_TRIM: background.addAt(new Tile(IMAGEPATH_WALL_W_TRIM), row, col); break;
+                    case WALL_E_TRIM: background.addAt(new Tile(IMAGEPATH_WALL_E_TRIM), row, col); break;
+                    case WALL_SOCKET: background.addAt(new Tile(IMAGEPATH_WALL_SOCKET), row, col); break;
+                    case WALL_P: background.addAt(new Tile(IMAGEPATH_WALL_P), row, col); break;
+                    case WALL_NW: background.addAt(new Tile(IMAGEPATH_WALL_NW), row, col); break;
+                    case WALL_NE: background.addAt(new Tile(IMAGEPATH_WALL_NE), row, col); break;
+                    case WALL_W: background.addAt(new Tile(IMAGEPATH_WALL_W), row, col); break;
+                    case WALL_E: background.addAt(new Tile(IMAGEPATH_WALL_E), row, col); break;
+                    case WALL_N: background.addAt(new Tile(IMAGEPATH_WALL_N), row, col); break;
+                    case WALL_SWITCH: background.addAt(new Tile(IMAGEPATH_WALL_SWITCH), row, col); break;
+                    case WALL: background.addAt(new Tile(IMAGEPATH_WALL), row, col); break;
+                    case WINDOW_NW: background.addAt(new Tile(IMAGEPATH_WINDOW_NW), row, col); break;
+                    case WINDOW_N: background.addAt(new Tile(IMAGEPATH_WINDOW_N), row, col); break;
+                    case WINDOW_NE: background.addAt(new Tile(IMAGEPATH_WINDOW_NE), row, col); break;
+                    case WINDOW_W: background.addAt(new Tile(IMAGEPATH_WINDOW_W), row, col); break;
+                    case WINDOW_E: background.addAt(new Tile(IMAGEPATH_WINDOW_E), row, col); break;
+                    case WINDOW_SW: background.addAt(new Tile(IMAGEPATH_WINDOW_SW), row, col); break;
+                    case WINDOW_S: background.addAt(new Tile(IMAGEPATH_WINDOW_S), row, col); break;
+                    case WINDOW_SE: background.addAt(new Tile(IMAGEPATH_WINDOW_SE), row, col); break;
+                    case WINDOW: background.addAt(new Tile(IMAGEPATH_WINDOW), row, col); break;
                     case END: break;
                 }
             }
         }
+    }
 
-        return gridContainer;
+    @Override
+    protected void constructBoundaries() {
+        boundaries = new ArrayList<>();
+        createNorthWall(0,0);
+        createSouthWall(layout.length - 1, 0);
+    }
+
+    public void addBoundary(Boundary boundary){
+        boundaries.add(boundary);
+    }
+
+    public ArrayList<Boundary> getBoundaries(){
+        return boundaries;
+    }
+
+    private void createNorthWall(int iRow, int iCol) {
+        final Integer[] row = layout[iRow];
+        final Tile startTile = getBackground().getContentAt(iRow, iCol);
+        int x = startTile.getX();
+        int width = 0;
+        boolean done = false;
+        Debug.log(true, "Creating North Wall at: (" + iRow + ", " + iCol + ")");
+        for (int col = iCol; col < row.length; col++){
+            Debug.log(true, "   Row: " + iRow + " Col: " + col);
+            if(!done) {
+                switch (row[col]) {
+                    case WALL_NW:
+                        width += TileSize;
+                        row[col] = WALL_W;
+                        createWestWall(iRow, col);
+                        break;
+                    case WALL_NE:
+                        width += TileSize;
+                        row[col] = WALL_E;
+                        //createEastWall(iRow, col);
+                        done = true;
+                        break;
+                    case WALL_N:
+                        width += TileSize;
+                        row[col] = -WALL_N;
+                        break;
+                    default:
+                        done = true;
+                        break;
+                }
+            }else break;
+        }
+        addBoundary(new Boundary(x, startTile.getY(), width, WallThickness));
+    }
+
+    private void createSouthWall(int iRow, int iCol) {
+        final Integer[] row = layout[iRow];
+        final Tile startTile = getBackground().getContentAt(iRow, iCol);
+        int x = startTile.getX();
+        int width = 0;
+        boolean done = false;
+
+        Debug.log(true, "Creating South Wall at: (" + iRow + ", " + iCol + ")");
+
+        for (int col = iCol; col < layout[iRow].length - 1; col++){
+            Debug.log(true, "   Row: " + iRow + " Col: " + col);
+            switch(row[col]){
+                case WALL_SW:
+                    width += TileSize;
+                    row[col] = WALL_W;
+                    createWestWall(iRow, col);
+                    break;
+                case WALL_SE:
+                    width += TileSize;
+                    row[col] = WALL_E;
+                    createEastWall(iRow, col);
+                    break;
+                case WALL_S:
+                    width += TileSize;
+                    row[col] = -WALL_S;
+                    break;
+                default: done = true;
+                    break;
+            }
+            if(done) break;
+        }
+        addBoundary(new Boundary(x, startTile.getY() + TileSize - WallThickness,
+                width, WallThickness));
+    }
+
+    private void createEastWall(int iRow, int iCol) {
+        final Tile startTile = getBackground().getContentAt(iRow, iCol);
+        int y = startTile.getY();
+        int height = 0;
+        boolean done = false;
+
+        Debug.log(true, "Creating East Wall at: (" + iRow + ", " + iCol + ")");
+        Debug.log(true, "Layout length: (" + layout[iRow].length + ")");
+        for (int row = iRow; row < layout.length; row++){
+            Debug.log(true, "   Row: " + row + " Col: " + iCol);
+            switch(layout[row][iCol]){
+                case WALL_NE:
+                    height += TileSize;
+                    layout[row][iCol] = WALL_N;
+                    createNorthWall(row, iCol);
+                    break;
+                case WALL_SE:
+                    height += TileSize;
+                    layout[row][iCol] = WALL_S;
+                    createSouthWall(row, iCol);
+                    break;
+                case WALL_E:
+                case WALL_E_TRIM:
+                case WALL_P_E:
+                    height += TileSize;
+                    layout[row][iCol] = -WALL_E;
+                    break;
+                default: done = true;
+                    break;
+            }
+            if(done) break;
+        }
+        addBoundary(new Boundary(startTile.getX() + TileSize - WallThickness, y, WallThickness, height));
+    }
+
+    private void createWestWall(int iRow, int iCol) {
+        final Tile startTile = getBackground().getContentAt(iRow, iCol);
+        int y = startTile.getY();
+        int height = 0;
+        boolean done = false;
+
+        Debug.log(true, "Creating West Wall at: (" + iRow + ", " + iCol + ")");
+        Debug.log(true, "Layout length: (" + layout[iRow].length + ")");
+        for (int row = iRow; row < layout.length; row++){
+            Debug.log(true, "   Row: " + row + " Col: " + iCol);
+            switch(layout[row][iCol]){
+                case WALL_NW:
+                    height += TileSize;
+                    layout[row][iCol] = WALL_N;
+                    createNorthWall(row, iCol);
+                    break;
+                case WALL_SW:
+                    height += TileSize;
+                    layout[row][iCol] = WALL_S;
+                    createSouthWall(row, iCol);
+                    break;
+                case WALL_W:
+                case WALL_W_TRIM:
+                case WALL_P_W:
+                    height += TileSize;
+                    layout[row][iCol] = -WALL_W;
+                    break;
+                default: done = true;
+                    break;
+            }
+            if(done) break;
+        }
+        addBoundary(new Boundary(startTile.getX(), y, WallThickness, height));
     }
 }

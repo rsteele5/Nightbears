@@ -64,6 +64,8 @@ public class Player extends RenderableObject implements Kinematic {
             animator.animate();
         }
 
+        Debug.drawRect(true, graphics2D, getHitbox());
+
         Graphics2D g2 = (Graphics2D) graphics2D.create();
         g2.rotate(rotation, x + (width / 2.0), y + (height / 2.0));
         g2.drawImage(image, x, y, null);
