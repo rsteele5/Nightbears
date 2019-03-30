@@ -12,7 +12,10 @@ import gameobject.renderable.DrawLayer;
 import gameobject.renderable.RenderableObject;
 import gameobject.renderable.house.overworld.OverworldMeta;
 import gameobject.renderable.player.Player;
+import gameobject.renderable.text.DialogBox;
 import gamescreen.GameScreen;
+import gamescreen.ScreenManager;
+import gamescreen.gameplay.overworld.OverworldScreen;
 import main.utilities.AssetLoader;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
@@ -38,10 +41,9 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
     private boolean isIdle = false;
     private int speed = 1;
     private int endCrawl;
-
-    private static String firstNotice = "I created lots of goodies that might help you defeat those monsters. Come see what I have!";
-    private static String subsequentNotices = "I have all NEW items that are even more powerful than before! Come see what I have!";
-    private static String firstLevel = "Whew! That was a super scary monster!";
+    public String firstNotice = "I created lots of goodies that might help you defeat those monsters. Come see what I have!";
+    public String subsequentNotices = "I have all NEW items that are even more powerful than before! Come see what I have!";
+    public String firstLevel = "Whew! That was a super scary monster!";
 
 
     int isSet = 0;
@@ -155,6 +157,9 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
                 Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: sitting up");
                 animator.setAnimation("SittingUp");
                 vendorState = vs;
+//                DialogBox diagBox = new DialogBox(1318, 485, 355, 160, firstLevel,
+//                        new Font("NoScary", Font.PLAIN, 40), Color.WHITE, false);
+//                diagBox.addToScreen(, true);
                 return true;
             case idle:
                 Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: idle");
@@ -163,6 +168,7 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
                 animator.setAnimation("Idle");
                 isIdle = true;
                 vendorState = vs;
+
                 return true;
         }
         return false;

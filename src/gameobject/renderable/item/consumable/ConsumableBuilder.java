@@ -16,8 +16,8 @@ public class ConsumableBuilder {
      * Static global variables store and manipulate the min and max consumable points throughout the game
      */
     //TODO: Might not need to be static once the player and vendor classes are fixed
-    private static int maxConsumable = (int)(ItemMeta.maxConsumable * ItemMeta.amplifier);
-    private static int minConsumable = (int)(ItemMeta.minConsumable * ItemMeta.amplifier);
+    private int maxConsumable = (int)(ItemMeta.maxConsumable * ItemMeta.amplifier);
+    private int minConsumable = (int)(ItemMeta.minConsumable * ItemMeta.amplifier);
 
     // Renderable requirements
     private int _x = 0;
@@ -172,8 +172,6 @@ public class ConsumableBuilder {
             if (_maxAffect <= (minConsumable + partition)) this._quality = "good";
             else if (_maxAffect > (maxConsumable - partition)) this._quality =  "best";
             else this._quality =  "better";
-            Debug.log(DebugEnabler.LOGGING_ACTIVE, "Consumable max: " + _maxAffect +
-                    " partition: " + partition + " quality: " + this._quality);
         } else {
             this._quality = _quality;
         }

@@ -9,11 +9,13 @@ import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.overworld.room.SpawnPoint;
 import gameobject.renderable.item.ItemMeta;
 import gameobject.renderable.player.Player;
+import gameobject.renderable.text.DialogBox;
 import gameobject.renderable.vendor.Vendor;
 import gamescreen.GameScreen;
 import gamescreen.Overlay;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.PauseMenu;
+import gamescreen.gameplay.VendorDialogBox;
 import gamescreen.gameplay.VendorScreen;
 import gamescreen.gameplay.level.BedroomLevel;
 import gamescreen.gameplay.level.LevelDecorator;
@@ -34,6 +36,7 @@ public class OverworldUI extends Overlay {
     private static String fightBtnPath = "/assets/buttons/Button-Fight.png";
     private static String vendorBtnPath = "/assets/buttons/Button-Vendor.png";
     private SpawnPoint vendorSpawn;
+    private int vendorWait = 0;
 
 
     public OverworldUI(ScreenManager screenManager, GameScreen parentScreen, Player player, SpawnPoint vendorSpawn) {
@@ -117,12 +120,23 @@ public class OverworldUI extends Overlay {
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Vendor");
                     if (vendor.getState() != Vendor.VendorState.idle) {
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         vendor.setState(Vendor.VendorState.crawling);
+
                         //TODO: make vendor trigger box
                         vendor.addToScreen(parentScreen, true);
                     }
+                    if (){
+                        DialogBox diagBox = new DialogBox(1318, 485, 355, 160, vendor.firstLevel,
+                        new Font("NoScary", Font.PLAIN, 40), Color.WHITE, false);
+                        diagBox.addToScreen(, true);
+                    }
                     else {
-                        ItemMeta.attributeAmplifier();
+                        vendorWait = 0;
                         vendor.getVendorData().restockItems();
                     }
                 });
