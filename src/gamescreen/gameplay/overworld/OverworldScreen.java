@@ -49,4 +49,10 @@ public class OverworldScreen extends GameScreen {
         //KeyListener
         setKeyHandler(new OverworldKeyHandler(playerOW, UI.clickables, UI.getPauseBtn()));
     }
+
+    @Override
+    protected void activeUpdate() {
+        super.activeUpdate();
+
+    }
 }

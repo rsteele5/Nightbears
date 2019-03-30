@@ -23,10 +23,18 @@ public class Door extends RenderableObject implements Kinematic, Interactable {
         openable = false;
     }
 
-
+    //Interactable
     @Override
     public Rectangle getRequestArea() {
         return interactionBox;
+    }
+
+    @Override
+    public void setRequesting(boolean isRequesting) { }
+
+    @Override
+    public boolean isRequesting() {
+        return false;
     }
 
     @Override

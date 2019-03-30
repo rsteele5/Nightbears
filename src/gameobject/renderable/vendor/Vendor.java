@@ -223,6 +223,14 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
     }
 
     @Override
+    public void setRequesting(boolean isRequesting) { }
+
+    @Override
+    public boolean isRequesting() {
+        return false;
+    }
+
+    @Override
     public boolean isStatic(){
         return  true;
     }
