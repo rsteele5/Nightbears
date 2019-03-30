@@ -83,7 +83,7 @@ public class OverworldUI extends Overlay {
                         vendor.setState(Vendor.VendorState.crawling);
                         vendor.addToScreen(parentScreen, true);
                         vendor.setPlayerInteractionOW(() -> {
-                            addOverlay(new VendorDialogBox(screenManager, this, 1000, 700, player));
+                            addOverlay(new VendorDialogBox(screenManager, this, 0, 0, player));
                         });
                         doors.forEach(door -> door.setOpenable(true));
                     }

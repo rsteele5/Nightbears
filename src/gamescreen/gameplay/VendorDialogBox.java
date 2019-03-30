@@ -38,16 +38,15 @@ public class VendorDialogBox extends Overlay {
     @Override
     protected void initializeScreen() {
 
-        ImageContainer cover = new ImageContainer(0,0, "/assets/backgrounds/BG-VendorDialog.png", DrawLayer.Background);
-        cover.setSize(375, 180);
-        cover.setAlpha(1f);
+        ImageContainer cover = new ImageContainer(300,730, "/assets/backgrounds/BG-DialogBox.png", DrawLayer.Background);
+        cover.setSize(1400, 300);
         cover.addToScreen(this, true);
 
-        DialogBox diagBox = new DialogBox(10, 10, 355, 160, welcome,
-                new Font("NoScary", Font.PLAIN, 40), Color.WHITE, false);
+        DialogBox diagBox = new DialogBox(320, 750, 1360, 260, welcome,
+                new Font("NoScary", Font.PLAIN, 72), Color.WHITE, false);
         diagBox.addToScreen(this, true);
 
-        Button button = new gameobject.renderable.button.Button(100,140,
+        Button button = new gameobject.renderable.button.Button(760,880,
                 "/assets/buttons/Button-Yes.png",
                 "/assets/buttons/Button-YesPressed.png",
                 DrawLayer.Entity,
@@ -56,10 +55,9 @@ public class VendorDialogBox extends Overlay {
                     this.exiting = true;
                     screenManager.addScreen(new VendorScreen(screenManager, player));
                 });
-        button.setSize(75,30);
         button.addToScreen(this,true);
 
-        button = new Button(225,140,
+        button = new Button(1160,880,
                 "/assets/buttons/Button-No.png",
                 "/assets/buttons/Button-NoPressed.png",
                 DrawLayer.Entity,
@@ -67,7 +65,6 @@ public class VendorDialogBox extends Overlay {
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - VendorDialog No");
                     this.setScreenState(ScreenState.TransitionOff);
                 });
-        button.setSize(75,30);
         button.addToScreen(this,true);
     }
 }
