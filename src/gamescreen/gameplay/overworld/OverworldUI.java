@@ -16,6 +16,7 @@ import gamescreen.GameScreen;
 import gamescreen.Overlay;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.PauseMenu;
+import gamescreen.gameplay.VendorDialogBox;
 import gamescreen.gameplay.VendorScreen;
 import gamescreen.gameplay.level.BedroomLevel;
 import gamescreen.gameplay.level.LevelFactory;
@@ -80,8 +81,10 @@ public class OverworldUI extends Overlay {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Vendor");
                     if (vendor.getState() != Vendor.VendorState.idle) {
                         vendor.setState(Vendor.VendorState.crawling);
-                        //TODO: make vendor trigger box
                         vendor.addToScreen(parentScreen, true);
+                        vendor.setPlayerInteractionOW(() -> {
+                            addOverlay(new VendorDialogBox(screenManager, this, 1000, 700, player));
+                        });
                         doors.forEach(door -> door.setOpenable(true));
                     }
                     else {
