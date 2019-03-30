@@ -73,7 +73,22 @@ public abstract class GridContainer<T> extends GameObject {
     }
 
     public T getContentAt(int row, int col) {
-        return contents.get(row).get(col);
+        if((row >= 0 && col >= 0) && (row < rows && col < cols)) {
+            if (contents.get(row).get(col) != null) {
+                return contents.get(row).get(col);
+            } else Debug.error(DebugEnabler.GRID_CONTAINER,
+                        name+" - getContentAt(row: "+row+", col: "+col+") is null");
+        } else Debug.error(DebugEnabler.GRID_CONTAINER,
+                name+" - getContentAt(row: "+row+", col: "+col+") is out of bounds");
+        return null;
+    }
+
+    public GridIndex getGridIndexOf(T content){
+        for(int r = 0; r < rows; r++){
+            for(int c = 0; c < cols; c++)
+                if(content == getContentAt(r,c)) return new GridIndex(r,c);
+        } return null;
+
     }
 
     public ArrayList<T> getAllContent(){
@@ -158,7 +173,7 @@ public abstract class GridContainer<T> extends GameObject {
     public boolean addAt(T content, int row, int col){
         if((row >= 0 && col >= 0) && (row < rows && col < cols)) {
             if(content != null) {
-                Debug.warning(DebugEnabler.GRID_CONTAINER, name+": AddAt("+row+", "+col+") - "
+                Debug.log(DebugEnabler.GRID_CONTAINER, name+": AddAt("+row+", "+col+") - "
                         + "x: " + (x + ((itemWidth + padding) * col))
                         + ", y: " + (y + (itemHeight + padding) * row));
                 //Set the position of the renderable

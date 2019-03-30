@@ -7,6 +7,7 @@ import gameobject.container.ButtonGridContainer;
 import gameobject.renderable.button.Button;
 import gameobject.renderable.button.ButtonText;
 import gameobject.renderable.DrawLayer;
+import gameobject.renderable.house.overworld.room.Door;
 import gameobject.renderable.house.overworld.room.SpawnPoint;
 import gameobject.renderable.item.ItemMeta;
 import gameobject.renderable.player.Player;
@@ -26,23 +27,27 @@ import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class OverworldUI extends Overlay {
+
 
     private Player player;
     private Button pauseButton;
     private static String emptyBtnPath = "/assets/buttons/Button-Empty.png";
     private static String vendorBtnPath = "/assets/buttons/Button-Vendor.png";
     private SpawnPoint vendorSpawn;
+    private final ArrayList<Door> doors;
     private VendorDialogBox vendorDialog1;
     private VendorDialogBox vendorDialog2;
     private VendorDialogBox vendorDialog3;
 
 
-    public OverworldUI(ScreenManager screenManager, GameScreen parentScreen, Player player, SpawnPoint vendorSpawn) {
+    public OverworldUI(ScreenManager screenManager, GameScreen parentScreen, Player player, SpawnPoint vendorSpawn, ArrayList<Door> doors) {
         super(screenManager, parentScreen,"OverworldUI", 0,0, 1f);
         this.player = player;
         this.vendorSpawn = vendorSpawn;
+        this.doors = doors;
 
     }
 
@@ -66,8 +71,8 @@ public class OverworldUI extends Overlay {
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - level");
                     //TODO save players location
-                    parentScreen.setCamera(null);
-                    screenManager.addScreen(LevelFactory.create(screenManager, new BedroomLevel()));
+                    //parentScreen.setCamera(null);
+                    screenManager.addScreen(new BedroomLevel(screenManager));
 
         });
         buttonLayout.addAt(actionButton, 0, 1);
@@ -85,9 +90,11 @@ public class OverworldUI extends Overlay {
                             e.printStackTrace();
                         }
                         vendor.setState(Vendor.VendorState.crawling);
-
-                        //TODO: make vendor trigger box
                         vendor.addToScreen(parentScreen, true);
+                        vendor.setPlayerInteractionOW(() -> {
+                            addOverlay(new VendorDialogBox(screenManager, this, 0, 0, player));
+                        });
+                        doors.forEach(door -> door.setOpenable(true));
                     }
                     else if (vendor.getState() == Vendor.VendorState.idle && vendorDialog1 == null){
                         Debug.log(DebugEnabler.TEST_LOG, "Vendor dialog box created");

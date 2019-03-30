@@ -1,9 +1,11 @@
 package gameobject.renderable.house.overworld;
 
-import gameobject.renderable.house.overworld.room.Bedroom;
+import gameobject.container.GridIndex;
 import gameobject.renderable.house.overworld.room.Boundary;
+import gameobject.renderable.house.overworld.room.Door;
 import gameobject.renderable.house.overworld.room.Room;
 import gameobject.container.TileGridContainer;
+import gamescreen.GameScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -15,15 +17,16 @@ import static gameobject.renderable.house.overworld.OverworldMeta.Tiles.House.*;
 import java.util.ArrayList;
 
 public class MapBuilder {
-
+    private GameScreen parentScreen;
     private ChunkBuilder chunkBuilder;
     private ArrayList<ArrayList<TileGridContainer>> chunks;
     private ArrayList<Room> rooms;
 
 
 
-    public void createMap(){
-        Debug.log(DebugEnabler.OVERWORLD, "BackgroundBuilder - Start creating Map");
+    public void createMap(GameScreen parentScreen){
+        Debug.log(DebugEnabler.OVERWORLD, "MapBuilder - Start creating Map");
+        this.parentScreen = parentScreen;
         rooms = new ArrayList<>();
         chunks = new ArrayList<>();
         chunkBuilder = new ChunkBuilder();
@@ -69,18 +72,18 @@ public class MapBuilder {
         int chunkCols = roundUpToChunk(maxCellY) / ChunkSize;
 
         // Build Chunks and put them into the chunks array list
-        ArrayList<ArrayList<TileGridContainer>> noBorderMap = new ArrayList<>();
+        ArrayList<ArrayList<TileGridContainer>> noBorderChunks = new ArrayList<>();
         for(int row = 0; row < chunkRows+BorderBuffer*2; row++) {
             chunks.add(new ArrayList<>());
             if(row >= BorderBuffer && row < chunkRows+BorderBuffer)
-                noBorderMap.add(new ArrayList<>());
+                noBorderChunks.add(new ArrayList<>());
             for(int col = 0; col < chunkCols+BorderBuffer*2; col++) {
                 if(row >= BorderBuffer && row < chunkRows+BorderBuffer
                         && col >= BorderBuffer && col < chunkCols+BorderBuffer){
                     // Create an empty chunk
                     chunkBuilder.createChunk();
                     chunks.get(row).add(chunkBuilder.getChunk());
-                    noBorderMap.get(row-BorderBuffer).add(chunks.get(row).get(col));
+                    noBorderChunks.get(row-BorderBuffer).add(chunks.get(row).get(col));
                 } else {
                     chunkBuilder.createChunk();
                     chunkBuilder.fillWithGrass();
@@ -88,7 +91,7 @@ public class MapBuilder {
                 }
             }
         }
-        return noBorderMap;
+        return noBorderChunks;
     }
 
     private int roundUpToChunk(int num){
@@ -220,6 +223,7 @@ public class MapBuilder {
     private void generateRoomObjects() {
         for(Room room : rooms){
             room.initializeRoom();
+            connectRoomsByDoors(room, room.getDoors());
             for(int row = 0; row < room.getHeight(); row++) {
                 for (int col = 0; col < room.getWidth(); col++) {
                     switch (room.getLayout()[row][col]) {
@@ -252,6 +256,69 @@ public class MapBuilder {
                 }
             }
         }
+    }
+
+    private void connectRoomsByDoors(Room room, ArrayList<Door> doors) {
+        doors.forEach(door -> {
+            Tile otherRoomTile = null;
+            GridIndex chunkIndex = getChunkIndexOf(door.getReferenceTile());
+            if(chunkIndex != null) {
+                GridIndex relativeIndex = chunks.get(chunkIndex.row).get(chunkIndex.col)
+                                                .getGridIndexOf(door.getReferenceTile());
+                switch (door.getAttachedDirection()) {
+                    case North:
+                        if (relativeIndex.row - 1 < 0 && chunkIndex.row - 1 >= BorderBuffer) {
+                            otherRoomTile = chunks.get(chunkIndex.row - 1).get(chunkIndex.col)
+                                    .getContentAt(ChunkSize - 1, relativeIndex.col);
+                        } else {
+                            otherRoomTile = chunks.get(chunkIndex.row).get(chunkIndex.col)
+                                    .getContentAt(relativeIndex.row - 1, relativeIndex.col);
+                        } break;
+                    case South:
+                        if (relativeIndex.row + 1 >= ChunkSize && chunkIndex.row + 1 < chunks.size()-BorderBuffer) {
+                            otherRoomTile = chunks.get(chunkIndex.row + 1).get(chunkIndex.col)
+                                    .getContentAt(0, relativeIndex.col);
+                        } else {
+                            otherRoomTile = chunks.get(chunkIndex.row).get(chunkIndex.col)
+                                    .getContentAt(relativeIndex.row + 1, relativeIndex.col);
+                        } break;
+                    case East:
+                        if (relativeIndex.col + 1 >= ChunkSize
+                                && chunkIndex.col + 1 < chunks.get(chunkIndex.row).size()-BorderBuffer) {
+                            otherRoomTile = chunks.get(chunkIndex.row).get(chunkIndex.col + 1)
+                                    .getContentAt(relativeIndex.row, 0);
+                        } else {
+                            otherRoomTile = chunks.get(chunkIndex.row).get(chunkIndex.col)
+                                    .getContentAt(relativeIndex.row, relativeIndex.col + 1);
+                        } break;
+                    case West:
+                        if (relativeIndex.col - 1 < 0 && chunkIndex.col - 1 >= BorderBuffer) {
+                            otherRoomTile = chunks.get(chunkIndex.row).get(chunkIndex.col - 1)
+                                    .getContentAt(relativeIndex.row, ChunkSize - 1);
+                        } else {
+                            otherRoomTile = chunks.get(chunkIndex.row).get(chunkIndex.col)
+                                    .getContentAt(relativeIndex.row, relativeIndex.col - 1);
+                        } break;
+                }
+            }
+
+            if(otherRoomTile != null)
+                for(Room otherRoom : rooms)
+                    if (otherRoom != room)
+                        if (otherRoom.containsTile(otherRoomTile))
+                            door.setOpenOperation(() -> {
+                                otherRoom.setActive(parentScreen);
+                                door.setInactive(parentScreen);
+                            });
+        });
+    }
+
+    private GridIndex getChunkIndexOf(Tile referenceTile) {
+        for(int row = 0; row < chunks.size(); row++)
+            for(int col = 0; col < chunks.get(row).size(); col++)
+                if(chunks.get(row).get(col).getGridIndexOf(referenceTile) != null) return new GridIndex(row,col);
+        return null;
+
     }
 
     private void createNorthWall(Room room, int iRow, int iCol) {

@@ -9,7 +9,6 @@ import gameobject.renderable.ImageContainer;
 import gameobject.renderable.text.TextBox;
 import gameobject.renderable.button.ItemButton;
 import gameobject.renderable.DrawLayer;
-import gameobject.renderable.vendor.Vendor;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gameobject.renderable.item.Item;
@@ -339,8 +338,6 @@ public class VendorScreen extends GameScreen {
 
     @Override
     protected void transitionOff() {
-        // Change player's image back to overworld image
-        player.setImage("/assets/player/overworld/Overworld-Teddy.png");
         gameData.save();
         exiting = true;
     }

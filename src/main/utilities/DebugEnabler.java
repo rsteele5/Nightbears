@@ -20,7 +20,7 @@ public class DebugEnabler {
      * Controls Debug functions that draw to the screen.
      * @see Debug
      */
-    public static boolean DRAWING_ACTIVE =        false;
+    public static boolean DRAWING_ACTIVE =        true;
     /**
      * ONLY FOR USE ON NON-CONCRETE TESTING CODE.<br>
      * Please remove once testing is complete.
@@ -95,5 +95,5 @@ public class DebugEnabler {
      * Controls debugging Key Events
      * @see KeyHandler
      */
-    public static boolean KEY_EVENTS =            true;
+    public static boolean KEY_EVENTS =            false;
 }

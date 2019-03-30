@@ -39,15 +39,13 @@ public class OverworldScreen extends GameScreen {
     protected void initializeScreen() {
         //House generation
         MapBuilder mapBuilder = new MapBuilder();
-        mapBuilder.createMap();
+        mapBuilder.createMap(this);
         mapBuilder.addRoomAtCell(0, 0, new Bedroom());
         mapBuilder.addRoomAtCell(8,0, new LivingRoom());
         mapBuilder.addRoomAtCell(0,8, new Bathroom());
         overworldMap = mapBuilder.buildMap();
         overworldMap.addToScreen(this, true);
-        for(Room room : overworldMap.getRooms()){
-            room.setInactive(this);
-        }
+        overworldMap.getRooms().forEach(room -> room.setInactive(this));
         overworldMap.getRooms().get(0).setActive(this);
 
         //Player
@@ -57,9 +55,9 @@ public class OverworldScreen extends GameScreen {
         playerOW.addToScreen(this,true);
         setCamera(new Camera(screenManager, this, playerOW));
 
-        //Overlay TODO: Fix layering
-        UI = new OverworldUI(screenManager, this, playerOW, overworldMap.getVendorSpawn());
-
+        //Overlays
+        UI = new OverworldUI(screenManager, this, playerOW, overworldMap.getVendorSpawn(),
+                             overworldMap.getRooms().get(0).getDoors());
         addOverlay(UI);
 
         //KeyListener
@@ -68,32 +66,7 @@ public class OverworldScreen extends GameScreen {
 
     @Override
     protected void activeUpdate() {
-        for(GameObject activeObject: activeObjects){
-            activeObject.update();
-        }
-//        if (vendor.getState() == Vendor.VendorState.sittingup && diagBox == null){
-//            Debug.log(DebugEnabler.TEST_LOG, "Vendor is sitting up and dialog box is null");
-//            diagBox = new DialogBox(1318, 485, 355, 160, vendor.firstLevel,
-//                    new Font("NoScary", Font.PLAIN, 40), Color.WHITE, false);
-//            diagBox.addToScreen(this, true);
-//        }
-    }
+        super.activeUpdate();
 
-//    @Override
-//    protected void loadContent() {
-//
-//        if (loadingScreenRequired) {
-//            loadingScreen = screenManager.getLoadingScreen();
-//            loadingScreen.initializeLoadingScreen(loadables.size());
-//            coverWith(loadingScreen);
-//            for (int i = 0; i < loadables.size(); i++) {
-//                loadables.get(i).load();
-//                loadingScreen.dataLoaded(i);
-//            }
-//            isLoading = false;
-//            childScreen = null;
-//            loadingScreen.reset();
-//
-//        }
-//    }
+    }
 }

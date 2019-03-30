@@ -107,6 +107,17 @@ public abstract class Room extends GameObject {
         return height;
     }
 
+    public ArrayList<Door> getDoors() {
+        return doors;
+    }
+
+    public boolean containsTile(Tile tile){
+        for(int r = 0; r < height; r++) {
+            for (int c = 0; c < width; c++)
+                if(tile == roomTiles[r][c]) return true;
+        } return false;
+    }
+
     public Rectangle2D getBoundingBox() {
         return new Rectangle2D.Double(cellCol *TileSize, cellRow *TileSize, width, height);
     }
@@ -150,37 +161,34 @@ public abstract class Room extends GameObject {
     }
 
     protected void createDoor(int row, int col, Compass attachedDirection) {
-        Tile refernceTile = roomTiles[row][col];
-        int doorX = refernceTile.getX();
-        int doorY = refernceTile.getY();
+        Tile referenceTile = roomTiles[row][col];
+        int doorX = referenceTile.getX();
+        int doorY = referenceTile.getY();
         int interactX = doorX;
         int interactY = doorY;
         int interactW = TileSize;
         int interactH = TileSize;
-        boolean orientation = true;
 
         switch(attachedDirection){
             case South:
-                //doorY += TileSize - WallThickness;
-                //interactH += TileSize;
+                doorY += TileSize - WallThickness;
+                interactH += TileSize;
                 break;
             case North:
-                //interactY -= TileSize;
-                //interactH += TileSize;
+                interactY -= TileSize;
+                interactH += TileSize;
                 break;
             case East:
-                //doorX += TileSize - WallThickness;
-                //interactW += TileSize;
-                orientation = false;
+                doorX += TileSize - WallThickness;
+                interactW += TileSize;
                 break;
             case West:
-                //interactX -= TileSize;
-                //interactW += TileSize;
-                orientation = false;
+                interactX -= TileSize;
+                interactW += TileSize;
                 break;
         }
 
-        doors.add(new Door(doorX,doorY,orientation, new Rectangle(interactX, interactY, interactW, interactH)));
+        doors.add(new Door(referenceTile, attachedDirection));
     }
     //endregion
 
@@ -190,11 +198,9 @@ public abstract class Room extends GameObject {
     @Override
     public boolean setActive(GameScreen screen){
         if(super.setActive(screen)){
-            for (Boundary boundary : boundaries) {
-                boundary.setActive(screen);
-            }for (Door door : doors) {
-                door.setActive(screen);
-            }for(Tile[] row : roomTiles){
+            boundaries.forEach(boundary -> boundary.setActive(screen));
+            doors.forEach(door -> door.setActive(screen));
+            for(Tile[] row : roomTiles){
                 for(Tile tile : row)
                     if(tile != null) tile.setActive(screen);
             }return true;
@@ -204,11 +210,8 @@ public abstract class Room extends GameObject {
     @Override
     public boolean setInactive(GameScreen screen){
         if(super.setInactive(screen)){
-            for (Boundary boundary : boundaries) {
-                boundary.setInactive(screen);
-            }for (Door door : doors) {
-                door.setInactive(screen);
-            }
+            boundaries.forEach(boundary -> boundary.setInactive(screen));
+            doors.forEach(door -> door.setInactive(screen));
             for(Tile[] row : roomTiles){
                 for(Tile tile : row)
                     if(tile != null) tile.setInactive(screen);
@@ -219,11 +222,8 @@ public abstract class Room extends GameObject {
     @Override
     public void addToScreen(GameScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
-        for (Boundary boundary : boundaries) {
-            boundary.addToScreen(screen, isActive);
-        }for (Door door : doors) {
-            door.addToScreen(screen, isActive);
-        }
+        boundaries.forEach(boundary -> boundary.addToScreen(screen, isActive));
+        doors.forEach(door -> door.addToScreen(screen, isActive));
     }
     //endregion
 }

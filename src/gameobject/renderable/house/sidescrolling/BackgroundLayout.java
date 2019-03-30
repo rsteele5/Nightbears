@@ -4,12 +4,23 @@ import gameobject.container.TileGridContainer;
 
 public abstract class BackgroundLayout {
     protected Integer[][] layout;
+    protected TileGridContainer background;
 
     public BackgroundLayout() {
-        layout = constructLayout();
+        constructLayout();
+        constructBackground();
+        constructBoundaries();
     }
 
-    protected abstract Integer[][] constructLayout();
+    protected abstract void constructLayout();
+    protected abstract void constructBackground();
+    protected abstract void constructBoundaries();
 
     public abstract TileGridContainer getBackground();
+
+
+
+    public Integer[][] getBackgroundArray() {
+        return layout;
+    }
 }

@@ -6,33 +6,85 @@ import gameengine.physics.PhysicsVector;
 import gameobject.GameObject;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.RenderableObject;
+import gameobject.renderable.house.overworld.Compass;
+import gameobject.renderable.house.overworld.Tile;
 import gamescreen.GameScreen;
+import main.utilities.Action;
 
 import java.awt.*;
 
-public class Door extends RenderableObject implements Kinematic, Interactable {
-    private final String BASEPATH = "/assets/overworld/room/Overworld-RedCarpet-Door-";
-    Rectangle interactionBox;
-    boolean openable;
+import static gameobject.renderable.house.overworld.OverworldMeta.TileSize;
+import static gameobject.renderable.house.overworld.OverworldMeta.WallThickness;
 
-    public Door(int x, int y, boolean orientation, Rectangle interactionBox){
-        super(x,y,DrawLayer.Entity);
-        imagePath = BASEPATH;
-        imagePath += orientation ? "Vert.png" : "Hori.png";
-        this.interactionBox = interactionBox;
+public class Door extends RenderableObject implements Kinematic, Interactable {
+    private Rectangle interactionBox;
+    private Tile referenceTile;
+    private Compass attachedDirection;
+    private boolean openable;
+    private Action open;
+
+    public Door(Tile referenceTile, Compass attachedDirection){
+        super(0,0,DrawLayer.Entity);
+        imagePath = "/assets/overworld/room/Overworld-RedCarpet-Door-";
         openable = false;
+        this.referenceTile = referenceTile;
+        this.attachedDirection = attachedDirection;
+        x = referenceTile.getX();
+        y = referenceTile.getY();
+        int interactX = x;
+        int interactY = y;
+        int interactW = TileSize;
+        int interactH = TileSize;
+        //Adjust Position and Interaction box
+        switch (attachedDirection){
+            case North:
+                interactY -= TileSize;
+                interactH += TileSize;
+                imagePath += "Hori.png";
+                break;
+            case South:
+                y += TileSize - WallThickness;
+                interactH += TileSize;
+                imagePath += "Hori.png";
+                break;
+            case East:
+                x += TileSize - WallThickness;
+                interactW += TileSize;
+                imagePath += "Vert.png";
+                break;
+            case West:
+                interactX -= TileSize;
+                interactW += TileSize;
+                imagePath += "Vert.png";
+                break;
+        }
+        interactionBox = new Rectangle(interactX, interactY, interactW, interactH);
     }
 
+    //Getters and Setters
+    public Tile getReferenceTile(){ return referenceTile; }
+    public Compass getAttachedDirection(){ return attachedDirection; }
+    public void setOpenable(boolean isOpenable){ openable = isOpenable; }
+    public void setOpenOperation(Action operation){ open = operation; }
+
+    //Interactable
+    @Override
+    public Rectangle getRequestArea() {
+        return interactionBox;
+    }
 
     @Override
-    public Rectangle hitbox() {
-        return interactionBox;
+    public void setRequesting(boolean isRequesting) { }
+
+    @Override
+    public boolean isRequesting() {
+        return false;
     }
 
     @Override
     public boolean action(GameObject g) {
         if(openable){
-
+            open.doIt();
         }
         return false;
     }

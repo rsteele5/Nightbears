@@ -19,6 +19,7 @@ public class PlayerData implements Serializable {
 
     private CopyOnWriteArrayList<Item> playerInventory = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<Item> playerEquipment = new CopyOnWriteArrayList<>();
+    private String imageDirectory;
     private int gold;
 
     public PlayerData(){
@@ -26,6 +27,15 @@ public class PlayerData implements Serializable {
         initializeEquipment();
         gold = 100;
     }
+
+    public String getImageDirectory() {
+        return imageDirectory;
+    }
+
+    public void setImageDirectory(String imageDirectory) {
+        this.imageDirectory = imageDirectory;
+    }
+
 
     public CopyOnWriteArrayList<Item> getInventory(){
         return playerInventory;
