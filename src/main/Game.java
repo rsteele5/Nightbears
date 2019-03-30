@@ -4,7 +4,7 @@ import gameengine.GameEngine;
 import gameengine.gamedata.GameData;
 import main.utilities.Debug;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 import java.awt.*;
 
 /**

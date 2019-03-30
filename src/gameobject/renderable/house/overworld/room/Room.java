@@ -107,6 +107,17 @@ public abstract class Room extends GameObject {
         return height;
     }
 
+    public ArrayList<Door> getDoors() {
+        return doors;
+    }
+
+    public boolean containsTile(Tile tile){
+        for(int r = 0; r < height; r++) {
+            for (int c = 0; c < width; c++)
+                if(tile == roomTiles[r][c]) return true;
+        } return false;
+    }
+
     public Rectangle2D getBoundingBox() {
         return new Rectangle2D.Double(cellCol *TileSize, cellRow *TileSize, width, height);
     }
@@ -150,14 +161,13 @@ public abstract class Room extends GameObject {
     }
 
     protected void createDoor(int row, int col, Compass attachedDirection) {
-        Tile refernceTile = roomTiles[row][col];
-        int doorX = refernceTile.getX();
-        int doorY = refernceTile.getY();
+        Tile referenceTile = roomTiles[row][col];
+        int doorX = referenceTile.getX();
+        int doorY = referenceTile.getY();
         int interactX = doorX;
         int interactY = doorY;
         int interactW = TileSize;
         int interactH = TileSize;
-        boolean orientation = true;
 
         switch(attachedDirection){
             case South:
@@ -171,16 +181,14 @@ public abstract class Room extends GameObject {
             case East:
                 doorX += TileSize - WallThickness;
                 interactW += TileSize;
-                orientation = false;
                 break;
             case West:
                 interactX -= TileSize;
                 interactW += TileSize;
-                orientation = false;
                 break;
         }
 
-        doors.add(new Door(doorX,doorY,orientation, new Rectangle(interactX, interactY, interactW, interactH)));
+        doors.add(new Door(referenceTile, attachedDirection));
     }
     //endregion
 

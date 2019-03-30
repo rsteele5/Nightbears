@@ -7,7 +7,7 @@ import gameobject.renderable.player.Player;
 import gameobject.renderable.item.weapon.Weapon;
 import gameobject.renderable.item.weapon.WeaponBuilder;
 import gameobject.renderable.item.weapon.WeaponType;
-import gameobject.renderable.DrawLayer;
+import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import input.listeners.Key.SideScrollKeyHandler;
