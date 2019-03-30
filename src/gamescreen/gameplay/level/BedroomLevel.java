@@ -13,10 +13,13 @@ import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import input.listeners.Key.SideScrollKeyHandler;
 
+import java.awt.event.KeyEvent;
+
 
 public class BedroomLevel extends GameScreen {
 
     private BedroomBackgroundLayout background;
+    private Player player;
 
     public BedroomLevel(ScreenManager screenManager) {
         super(screenManager, "BedroomLevel", true);
@@ -24,11 +27,15 @@ public class BedroomLevel extends GameScreen {
 
     @Override
     protected void initializeScreen() {
-        Door finishDoor = new Door(800, 300, "/assets/sidescroll/SideScrollDoor.png",
-                () -> setScreenState(ScreenState.TransitionOff));
+        Door finishDoor = new Door(800, 300,
+                "/assets/sidescroll/SideScrollDoor.png",
+                () -> {
+                    setScreenState(ScreenState.TransitionOff);
+                    screenManager.addScreen(new EndLevelScreen(screenManager,  true));
+                });
 
         finishDoor.addToScreen(this, true);
-        Player player = new Player(30, 276, DrawLayer.Entity, gameData.getPlayerData());
+        player = new Player(30, 276, DrawLayer.Entity, gameData.getPlayerData());
         player.addToScreen(this, true);
         player.setState(Player.PlayerState.sideScroll);
         setKeyHandler(new SideScrollKeyHandler(player));
@@ -49,6 +56,11 @@ public class BedroomLevel extends GameScreen {
         myWeap.addToScreen(this, true);
 
 
+    }
+
+    @Override
+    public void transitionOff(){
+        exiting = true;
     }
 }
 

@@ -152,7 +152,7 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
     //endregion
 
     //region <Support functions>
-    
+
     /*
     0b1     =   right
     0b10    =   left
@@ -165,15 +165,18 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
         int y1 = ((0b100 & flags) / 0b100);
         y1 += (((0b1000 & flags) / 0b1000) * -1);
 
-        if(x1 == 1 && grounded && animator.getCurrentAnimation().getName() != "SS_Running_Right") {
-            animator.setAnimation("SS_Running_Right");
-        } else if (x1 == -1 && grounded && animator.getCurrentAnimation().getName() != "SS_Running_Left" ) {
-            animator.setAnimation("SS_Running_Left");
-        } else if(x1 == 0 && grounded && animator.getCurrentAnimation().getName() == "SS_Running_Left" && animator.getCurrentAnimation().getName() != "SS_Idle_Left") {
-            animator.setAnimation("SS_Idle_Left");
-        } else if (x1 == 0 && grounded && animator.getCurrentAnimation().getName() == "SS_Running_Right" && animator.getCurrentAnimation().getName() != "SS_Idle_Right") {
-            animator.setAnimation("SS_Idle_Right");
+        if(playerState == PlayerState.sideScroll) {
+            if(x1 == 1 && grounded && animator.getCurrentAnimation().getName() != "SS_Running_Right") {
+                animator.setAnimation("SS_Running_Right");
+            } else if (x1 == -1 && grounded && animator.getCurrentAnimation().getName() != "SS_Running_Left" ) {
+                animator.setAnimation("SS_Running_Left");
+            } else if(x1 == 0 && grounded && animator.getCurrentAnimation().getName() == "SS_Running_Left" && animator.getCurrentAnimation().getName() != "SS_Idle_Left") {
+                animator.setAnimation("SS_Idle_Left");
+            } else if (x1 == 0 && grounded && animator.getCurrentAnimation().getName() == "SS_Running_Right" && animator.getCurrentAnimation().getName() != "SS_Idle_Right") {
+                animator.setAnimation("SS_Idle_Right");
+            }
         }
+
 
         setVelocity(new PhysicsVector(x1, y1));
     }
