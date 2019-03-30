@@ -1,33 +1,25 @@
 package gamescreen.gameplay.overworld;
 
 import gameengine.gamedata.VendorData;
-import gameobject.GameObject;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.overworld.Map;
 import gameobject.renderable.house.overworld.MapBuilder;
+import gameobject.renderable.house.overworld.room.Bathroom;
 import gameobject.renderable.house.overworld.room.Bedroom;
+import gameobject.renderable.house.overworld.room.LivingRoom;
 import gameobject.renderable.house.overworld.room.SpawnPoint;
 import gameobject.renderable.text.DialogBox;
-import gamescreen.gameplay.VendorDialogBox;
 import gameengine.rendering.Camera;
 import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import input.listeners.Key.OverworldKeyHandler;
-import main.utilities.Debug;
-import main.utilities.DebugEnabler;
-
-import java.awt.*;
-import java.util.ArrayList;
 
 public class OverworldScreen extends GameScreen {
 
     //region <Variable Declaration>
     private OverworldUI UI;
     private Map overworldMap;
-    private VendorData vendorData = gameData.getVendorData();
-    private Vendor vendor = new Vendor(0, 0, vendorData);
-    private DialogBox diagBox;
     //endregion
 
     public OverworldScreen(ScreenManager screenManager) {

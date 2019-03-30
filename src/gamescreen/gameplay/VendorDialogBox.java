@@ -49,7 +49,6 @@ public class VendorDialogBox extends Overlay {
                 new Font("NoScary", Font.PLAIN, 72), Color.WHITE, false);
         diagBox.addToScreen(this, true);
         Debug.log(DebugEnabler.TEST_LOG, "Vendor dialog box added");
-    }
 
         Button button = new gameobject.renderable.button.Button(760,880,
                 "/assets/buttons/Button-Yes.png",
@@ -60,6 +59,7 @@ public class VendorDialogBox extends Overlay {
                     this.exiting = true;
                     screenManager.addScreen(new VendorScreen(screenManager, player));
                 });
+
         button.addToScreen(this,true);
 
         button = new Button(1160,880,
