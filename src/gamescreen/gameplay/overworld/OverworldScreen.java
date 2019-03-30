@@ -26,13 +26,13 @@ public class OverworldScreen extends GameScreen {
     protected void initializeScreen() {
         //House generation
         MapBuilder mapBuilder = new MapBuilder();
-        mapBuilder.createMap();
+        mapBuilder.createMap(this);
         mapBuilder.addRoomAtCell(0, 0, new Bedroom());
         mapBuilder.addRoomAtCell(8,0, new LivingRoom());
         mapBuilder.addRoomAtCell(0,8, new Bathroom());
         overworldMap = mapBuilder.buildMap();
         overworldMap.addToScreen(this, true);
-        //overworldMap.getRooms().forEach(room -> room.setInactive(this));
+        overworldMap.getRooms().forEach(room -> room.setInactive(this));
         overworldMap.getRooms().get(0).setActive(this);
 
         //Player
