@@ -67,11 +67,7 @@ public class Map extends GameObject {
     public SpawnPoint getPlayerSpawn(){
         for(Room room : rooms){
             if(room.getPlayerSpawnOptions() != null){
-                SpawnPoint tempSpawn = room.getPlayerSpawnOptions().get(0);
-                SpawnPoint playerSpawn = new SpawnPoint(
-                        tempSpawn.getTileX()*TileSize + room.getCellX()*TileSize + (ChunkSize*TileSize*BorderBuffer),
-                        tempSpawn.getTileY()*TileSize + room.getCellY()*TileSize + (ChunkSize*TileSize*BorderBuffer),
-                        SpawnType.Player,room);
+                SpawnPoint playerSpawn = room.getPlayerSpawnOptions().get(0);
                 return playerSpawn;
             }
         }
@@ -81,14 +77,14 @@ public class Map extends GameObject {
     public SpawnPoint getVendorSpawn(){
         for(Room room : rooms){
             if(room.getVendorSpawnOptions() != null){
-                SpawnPoint tempSpawn = room.getVendorSpawnOptions().get(0);
-                SpawnPoint vendorSpawn = new SpawnPoint(
-                        tempSpawn.getTileX()*TileSize+TileSize/2 + room.getCellX()*TileSize + (ChunkSize*TileSize*BorderBuffer),
-                        tempSpawn.getTileY()*TileSize+TileSize/2 + room.getCellY()*TileSize + (ChunkSize*TileSize*BorderBuffer),
-                        SpawnType.Vendor,room);
+                SpawnPoint vendorSpawn = room.getVendorSpawnOptions().get(0);
                 return vendorSpawn;
             }
         }
         return null;
+    }
+
+    public ArrayList<Room> getRooms() {
+        return rooms;
     }
 }
