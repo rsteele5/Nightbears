@@ -71,13 +71,12 @@ public class OverworldScreen extends GameScreen {
         for(GameObject activeObject: activeObjects){
             activeObject.update();
         }
-        if (vendor.getState() == Vendor.VendorState.sittingup && diagBox == null){
-            Debug.log(DebugEnabler.TEST_LOG, "Vendor is sitting up and dialog box is null");
-            diagBox = new DialogBox(1318, 485, 355, 160, vendor.firstLevel,
-                    new Font("NoScary", Font.PLAIN, 40), Color.WHITE, false);
-            diagBox.addToScreen(this, true);
-            //VendorDialogBox vendorDialogBox = new VendorDialogBox(screenManager, this, 200, 200, player, vendor.firstLevel);
-        }
+//        if (vendor.getState() == Vendor.VendorState.sittingup && diagBox == null){
+//            Debug.log(DebugEnabler.TEST_LOG, "Vendor is sitting up and dialog box is null");
+//            diagBox = new DialogBox(1318, 485, 355, 160, vendor.firstLevel,
+//                    new Font("NoScary", Font.PLAIN, 40), Color.WHITE, false);
+//            diagBox.addToScreen(this, true);
+//        }
     }
 
 //    @Override

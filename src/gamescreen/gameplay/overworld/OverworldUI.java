@@ -36,7 +36,9 @@ public class OverworldUI extends Overlay {
     private static String fightBtnPath = "/assets/buttons/Button-Fight.png";
     private static String vendorBtnPath = "/assets/buttons/Button-Vendor.png";
     private SpawnPoint vendorSpawn;
-    private int vendorWait = 0;
+    private VendorDialogBox vendorDialog1;
+    private VendorDialogBox vendorDialog2;
+    private VendorDialogBox vendorDialog3;
 
 
     public OverworldUI(ScreenManager screenManager, GameScreen parentScreen, Player player, SpawnPoint vendorSpawn) {
@@ -130,13 +132,20 @@ public class OverworldUI extends Overlay {
                         //TODO: make vendor trigger box
                         vendor.addToScreen(parentScreen, true);
                     }
-                    if (){
-                        DialogBox diagBox = new DialogBox(1318, 485, 355, 160, vendor.firstLevel,
-                        new Font("NoScary", Font.PLAIN, 40), Color.WHITE, false);
-                        diagBox.addToScreen(, true);
+                    else if (vendor.getState() == Vendor.VendorState.idle && vendorDialog1 == null){
+                        Debug.log(DebugEnabler.TEST_LOG, "Vendor dialog box created");
+                        vendorDialog1 = new VendorDialogBox(screenManager, parentScreen, 1000, 400, player, vendor.firstLevel);
+                        this.addOverlay(vendorDialog1);
+                    }
+                    else if (vendor.getState() == Vendor.VendorState.idle && vendorDialog2 == null){
+                        Debug.log(DebugEnabler.TEST_LOG, "Vendor dialog box created");
+                        vendorDialog2 = new VendorDialogBox(screenManager, parentScreen, 1000, 400, player, vendor.firstNotice);
+                        this.addOverlay(vendorDialog2);
                     }
                     else {
-                        vendorWait = 0;
+                        Debug.log(DebugEnabler.TEST_LOG, "Vendor dialog box created");
+                        vendorDialog3 = new VendorDialogBox(screenManager, parentScreen, 1000, 400, player, vendor.subsequentNotices);
+                        this.addOverlay(vendorDialog3);
                         vendor.getVendorData().restockItems();
                     }
                 });
