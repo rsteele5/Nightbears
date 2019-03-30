@@ -1,11 +1,13 @@
 package gamescreen.gameplay.overworld;
 
 import gameengine.gamedata.VendorData;
+import gameobject.GameObject;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.overworld.Map;
 import gameobject.renderable.house.overworld.MapBuilder;
 import gameobject.renderable.house.overworld.room.Bedroom;
 import gameobject.renderable.house.overworld.room.SpawnPoint;
+import gameobject.renderable.text.DialogBox;
 import gamescreen.gameplay.VendorDialogBox;
 import gameengine.rendering.Camera;
 import gameobject.renderable.player.Player;
@@ -13,7 +15,10 @@ import gameobject.renderable.vendor.Vendor;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import input.listeners.Key.OverworldKeyHandler;
+import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class OverworldScreen extends GameScreen {
@@ -22,7 +27,9 @@ public class OverworldScreen extends GameScreen {
     private OverworldUI UI;
     //private VendorDialogBox vendorDialogBox;
     private Map overworldMap;
-    private VendorData vendorData;
+    private VendorData vendorData = gameData.getVendorData();
+    private Vendor vendor = new Vendor(0, 0, vendorData);
+    private DialogBox diagBox;
     //endregion
 
     public OverworldScreen(ScreenManager screenManager) {
@@ -49,48 +56,27 @@ public class OverworldScreen extends GameScreen {
         playerOW.addToScreen(this,true);
         setCamera(new Camera(screenManager, this, playerOW));
 
-        //TODO: Generate vendor after a level has been completed by player
-/*        vendorData = gameData.getVendorData();
-        Vendor vendor = new Vendor(0, 0, vendorData);
-        SpawnPoint vendorSpawn = overworldMap.getVendorSpawn();
-        Vendor vendor = new Vendor(vendorSpawn.getTileX(), vendorSpawn.getTileY(), gameData.getVendorData());
-        vendor.setImage("/assets/vendor/vendoridleanimation/VendorOverworldForward.png");
-        //TODO: make vendor trigger box
-        vendor.addToScreen(this, true);*/
-
-
-        //Walls
-//        ArrayList<SpawnPoint> objectSpawns = overworldMap.getObjectSpawns();
-//        SpawnPoint TLC = objectSpawns.get(0);
-//        SpawnPoint TRC = objectSpawns.get(1);
-//        SpawnPoint BLC = objectSpawns.get(2);
-
-//        Floor northWall = new Floor(TLC.getTileX()-50,TLC.getTileY()-50,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
-//        northWall.setHeight(25);
-//        northWall.setWidth(500);
-//        northWall.addToScreen(this,true);
-//        Floor westWall = new Floor(TLC.getTileX()-50,TLC.getTileY()-50,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
-//        westWall.setHeight(500);
-//        westWall.setWidth(25);
-//        westWall.addToScreen(this,true);
-//        Floor eastWall = new Floor(BLC.getTileX()+25,BLC.getTileY()-450,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
-//        eastWall.setHeight(500);
-//        eastWall.setWidth(25);
-//        eastWall.addToScreen(this,true);
-//        Floor southWall = new Floor(BLC.getTileX()-450,BLC.getTileY()+25,"/assets/testAssets/alpha0.png", DrawLayer.Entity);
-//        southWall.setHeight(25);
-//        southWall.setWidth(500);
-//        southWall.addToScreen(this,true);
-
         //Overlay TODO: Fix layering
-        UI = new OverworldUI(screenManager, this, playerOW);
-        ///vendorDialogBox = new VendorDialogBox(screenManager,this, 460,100);
+        UI = new OverworldUI(screenManager, this, playerOW, overworldMap.getVendorSpawn());
+
         addOverlay(UI);
-        //addOverlay(vendorDialogBox);
 
         //KeyListener
         setKeyHandler(new OverworldKeyHandler(playerOW, UI.clickables));
 
+    }
+
+    @Override
+    protected void activeUpdate() {
+        for(GameObject activeObject: activeObjects){
+            activeObject.update();
+        }
+//        if (vendor.getState() == Vendor.VendorState.sittingup && diagBox == null){
+//            Debug.log(DebugEnabler.TEST_LOG, "Vendor is sitting up and dialog box is null");
+//            diagBox = new DialogBox(1318, 485, 355, 160, vendor.firstLevel,
+//                    new Font("NoScary", Font.PLAIN, 40), Color.WHITE, false);
+//            diagBox.addToScreen(this, true);
+//        }
     }
 
 //    @Override

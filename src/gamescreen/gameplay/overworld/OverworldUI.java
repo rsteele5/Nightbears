@@ -1,15 +1,22 @@
 package gamescreen.gameplay.overworld;
 
 import gameengine.GameEngine;
+import gameengine.gamedata.VendorData;
 import gameengine.rendering.Camera;
 import gameobject.renderable.button.Button;
 import gameobject.renderable.button.ButtonText;
 import gameobject.renderable.DrawLayer;
+import gameobject.renderable.house.overworld.room.SpawnPoint;
+import gameobject.renderable.item.ItemMeta;
 import gameobject.renderable.player.Player;
+import gameobject.renderable.text.DialogBox;
+import gameobject.renderable.vendor.Vendor;
 import gamescreen.GameScreen;
 import gamescreen.Overlay;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.PauseMenu;
+import gamescreen.gameplay.VendorDialogBox;
+import gamescreen.gameplay.VendorScreen;
 import gamescreen.gameplay.level.BedroomLevel;
 import gamescreen.gameplay.level.LevelFactory;
 import gamescreen.mainmenu.MainMenuScreen;
@@ -28,11 +35,17 @@ public class OverworldUI extends Overlay {
     private static String inventoryBtnPressedPath = "/assets/buttons/Button-InventoryPressed.png";
     private static String fightBtnPath = "/assets/buttons/Button-Fight.png";
     private static String vendorBtnPath = "/assets/buttons/Button-Vendor.png";
+    private SpawnPoint vendorSpawn;
+    private VendorDialogBox vendorDialog1;
+    private VendorDialogBox vendorDialog2;
+    private VendorDialogBox vendorDialog3;
 
 
-    public OverworldUI(ScreenManager screenManager, GameScreen parentScreen, Player player) {
+    public OverworldUI(ScreenManager screenManager, GameScreen parentScreen, Player player, SpawnPoint vendorSpawn) {
         super(screenManager, parentScreen,"OverworldUI", 0,0, 1f);
         this.player = player;
+        this.vendorSpawn = vendorSpawn;
+
     }
 
     /**
@@ -81,7 +94,7 @@ public class OverworldUI extends Overlay {
                 new Font("NoScary", Font.PLAIN, 58),
                 Color.WHITE, "Camera Off!",
                 () ->{
-                    Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Vendor");
+                    Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Camera off");
                     parentScreen.setCamera(null);
                 });
         cameraOnButton.addToScreen(this, true);
@@ -93,11 +106,61 @@ public class OverworldUI extends Overlay {
                 new Font("NoScary", Font.PLAIN, 58),
                 Color.WHITE, "Camera On!",
                 () ->{
-                    Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Vendor");
+                    Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Camera On");
                     parentScreen.setCamera(new Camera(screenManager, parentScreen, player));
                 });
         cameraOffButton.addToScreen(this, true);
 
+        Vendor vendor = new Vendor(vendorSpawn.getTileX(), vendorSpawn.getTileY(), gameData.getVendorData());
+        vendor.addToScreen(this, false);
+        Button showVendor = new ButtonText(1250, 20,
+                "/assets/buttons/Button-Empty.png",
+                "/assets/buttons/Button-Empty.png",
+                DrawLayer.Entity,
+                new Font("NoScary", Font.PLAIN, 58),
+                Color.WHITE, "Vendor",
+                () ->{
+                    Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Vendor");
+                    if (vendor.getState() != Vendor.VendorState.idle) {
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        vendor.setState(Vendor.VendorState.crawling);
 
+                        //TODO: make vendor trigger box
+                        vendor.addToScreen(parentScreen, true);
+                    }
+                    else if (vendor.getState() == Vendor.VendorState.idle && vendorDialog1 == null){
+                        Debug.log(DebugEnabler.TEST_LOG, "Vendor dialog box created");
+                        vendorDialog1 = new VendorDialogBox(screenManager, parentScreen, 1000, 400, player, vendor.firstLevel);
+                        this.addOverlay(vendorDialog1);
+                    }
+                    else if (vendor.getState() == Vendor.VendorState.idle && vendorDialog2 == null){
+                        Debug.log(DebugEnabler.TEST_LOG, "Vendor dialog box created");
+                        vendorDialog2 = new VendorDialogBox(screenManager, parentScreen, 1000, 400, player, vendor.firstNotice);
+                        this.addOverlay(vendorDialog2);
+                    }
+                    else {
+                        Debug.log(DebugEnabler.TEST_LOG, "Vendor dialog box created");
+                        vendorDialog3 = new VendorDialogBox(screenManager, parentScreen, 1000, 400, player, vendor.subsequentNotices);
+                        this.addOverlay(vendorDialog3);
+                        vendor.getVendorData().restockItems();
+                    }
+                });
+        showVendor.addToScreen(this, true);
+
+        Button warebearWares = new ButtonText(1500, 20,
+                "/assets/buttons/Button-Empty.png",
+                "/assets/buttons/Button-Empty.png",
+                DrawLayer.Entity,
+                new Font("NoScary", Font.PLAIN, 38),
+                Color.WHITE, "Wearbear's\nWares",
+                () ->{
+                    Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Warebear's Wares");
+                    screenManager.addScreen(new VendorScreen(screenManager, player));
+                });
+        warebearWares.addToScreen(this, true);
     }
 }

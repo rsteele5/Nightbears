@@ -17,9 +17,8 @@ public class MyTimerTask extends TimerTask {
 
     @Override
     public void run() {
-        System.out.println("Restock Timer started at:"+new Date());
-        completeTask();
         System.out.println("Time to restock:"+new Date());
+        completeTask();
     }
 
     private void completeTask() {
@@ -39,7 +38,8 @@ public class MyTimerTask extends TimerTask {
         Timer timer = new Timer(true);
         timer.scheduleAtFixedRate(timerTask, 0, 10*1000);
         System.out.println("TimerTask started");
-        //cancel after sometime
+
+        //cancel after some time
         /*try {
             Thread.sleep(120000);
         } catch (InterruptedException e) {

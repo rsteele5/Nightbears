@@ -3,6 +3,8 @@ package gameobject.renderable.item.weapon;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.item.DescriptionAssistant;
 import gameobject.renderable.item.ItemMeta;
+import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 
 import java.util.Random;
 
@@ -13,8 +15,8 @@ public class WeaponBuilder {
      * Static global variables store and manipulate the min and max  points throughout the game
      */
     //TODO: Might not need to be static once the player and vendor classes are fixed
-    private static int maxWeapon = (int)(ItemMeta.maxWeapon * ItemMeta.amplifier);
-    private static int minWeapon = (int)(ItemMeta.minWeapon * ItemMeta.amplifier);
+    private int maxWeapon = (int)(ItemMeta.maxWeapon * ItemMeta.amplifier);
+    private int minWeapon = (int)(ItemMeta.minWeapon * ItemMeta.amplifier);
 
     //Renderable requirements
     private int _x = 0;

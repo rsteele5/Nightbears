@@ -113,7 +113,7 @@ public abstract class Room extends GameObject {
         if(cellX >= 0 && cellY >= 0){
             if(newRoom.cellX >= 0 && newRoom.cellY >= 0){
                 if((newRoom.cellX >= cellX && newRoom.cellY >= cellY)
-                        && (newRoom.cellY < cellY + layout.length && newRoom.cellX < cellX + layout[0].length)) {
+                        && (newRoom.cellY < cellY + width && newRoom.cellX < cellX + height)) {
                     //TODO: Check if the conflicting sections have irrelevant differences
                     return true;
                 }
@@ -130,6 +130,11 @@ public abstract class Room extends GameObject {
 
     public void addBoundary(Boundary boundary){
         boundaries.add(boundary);
+    }
+
+    protected void createSpawnPoint(int row, int col, SpawnType type){
+        Tile spawnTile = roomTiles[row][col];
+        spawnPoints.add(new SpawnPoint(spawnTile.getX(), spawnTile.getY(), type));
     }
     //endregion
 
