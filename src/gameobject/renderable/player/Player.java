@@ -152,7 +152,8 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
     //endregion
 
     //region <Support functions>
-        /*
+    
+    /*
     0b1     =   right
     0b10    =   left
     0b100   =   down
@@ -164,11 +165,14 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
         int y1 = ((0b100 & flags) / 0b100);
         y1 += (((0b1000 & flags) / 0b1000) * -1);
 
-        Debug.warning(true, "x1 is: " + x1);
         if(x1 == 1 && grounded && animator.getCurrentAnimation().getName() != "SS_Running_Right") {
             animator.setAnimation("SS_Running_Right");
-        } else if (x1 == -1 && grounded && animator.getCurrentAnimation().getName() != "SS_Running_Left") {
+        } else if (x1 == -1 && grounded && animator.getCurrentAnimation().getName() != "SS_Running_Left" ) {
             animator.setAnimation("SS_Running_Left");
+        } else if(x1 == 0 && grounded && animator.getCurrentAnimation().getName() == "SS_Running_Left" && animator.getCurrentAnimation().getName() != "SS_Idle_Left") {
+            animator.setAnimation("SS_Idle_Left");
+        } else if (x1 == 0 && grounded && animator.getCurrentAnimation().getName() == "SS_Running_Right" && animator.getCurrentAnimation().getName() != "SS_Idle_Right") {
+            animator.setAnimation("SS_Idle_Right");
         }
 
         setVelocity(new PhysicsVector(x1, y1));
@@ -184,6 +188,7 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
         for (int i = 0; i < keys.length; i++)
             movFlag -= e.getKeyCode() == keys[i] && ((movFlag & (int) Math.pow(2, i)) == Math.pow(2, i)) ? (int) Math.pow(2, i) : 0;
         setMovementState(movFlag);
+
     }
 
     public void move(KeyEvent e) {
@@ -226,11 +231,6 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
 
                 if (PhysicsMeta.Gravity == 0) calculateRelease(e, owKeys);
                 else calculateRelease(e, ssKeys);
-                if(animator.getCurrentAnimation().getName() == "SS_Running_Left") {
-                    animator.setAnimation("SS_Idle_Left");
-                } else if (animator.getCurrentAnimation().getName() == "SS_Running_Right") {
-                    animator.setAnimation("SS_Idle_Right");
-                }
 
                 break;
 
