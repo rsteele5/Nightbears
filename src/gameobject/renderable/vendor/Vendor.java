@@ -37,8 +37,8 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
     private VendorData vendorData;
     private VendorState vendorState;
     private int endCrawl;
+    private Action intro;
     private Action playerInteractionOW;
-
     //endregion
 
     /**
@@ -82,11 +82,18 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
         else if (vendorState == VendorState.sittingup){
             if (this.animator.getCurrentAnimation().getFrameToDisplay() >= 7){
                 this.setState(VendorState.idle);
+                intro.doIt();
             }
         }
     }
 
     public void setImage(String imagePath){ this.imagePath = imagePath; }
+
+    public void setIntroduction(Action intro) { this.intro = intro; }
+
+    public VendorState getVendorState() { return vendorState; }
+
+    public Animator getAnimator() { return animator; }
 
     public VendorData getVendorData(){
         return vendorData;
