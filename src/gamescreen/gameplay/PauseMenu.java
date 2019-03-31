@@ -132,11 +132,15 @@ public class PauseMenu extends Overlay {
                 } else if((currentItem.getCategory().toString() == "Armor" || currentItem.getCategory().toString() == "Weapon") && equipButtons.contains(itemContainerButton)){
                     useButton.setText("Unequip");
                     useButton.setOnClick(() -> {
-                        if (currentItem instanceof Weapon)
-                            playerData.unequipItem(currentItem,3);
-                        else
-                            playerData.unequipItem(currentItem,currentItem.getType());
-                        clearFields();
+                        if(currentItem != null) {
+                            if (currentItem instanceof Weapon)
+                                playerData.unequipItem(currentItem, 3);
+                            else if (currentItem.getType() > 2)
+                                playerData.unequipItem(currentItem, currentItem.getType() + 1);
+                            else
+                                playerData.unequipItem(currentItem, currentItem.getType());
+                            clearFields();
+                        }
                     });
                 }
             } else {
