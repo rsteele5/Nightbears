@@ -71,7 +71,7 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
         animator.addAnimation("SS_Running_Right", new PlayerSSRunningAnimationRight(playerData.getImageDirectory()));
         animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation(playerData.getImageDirectory()));
 
-        requesting = true;
+        requesting = false;
     }
 
     //region <Getters and Setters>

@@ -16,6 +16,7 @@ import gameobject.renderable.vendor.Vendor;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.VendorDialogBox;
+import gamescreen.gameplay.VendorScreen;
 import input.listeners.Key.OverworldKeyHandler;
 
 public class OverworldScreen extends GameScreen {
@@ -75,18 +76,21 @@ public class OverworldScreen extends GameScreen {
     @Override
     protected void activeUpdate() {
         super.activeUpdate();
-
     }
 
     public void onLevelComplete(){
         //Vendor
+        //TODO: Edit this later
+        if(vendorVisits == 0) vendorVisits++;
         vendorVisits++;
         SpawnPoint vSpawn = overworldMap.getVendorSpawn();
         vendor.setPosition(vSpawn.getTileX(), vSpawn.getTileY());
         vendor.setState(Vendor.VendorState.crawling);
         vendor.setActive(this);
-        vendor.setPlayerInteractionOW(() ->
-            addOverlay(new VendorDialogBox(screenManager,this, 0, 0, vendorVisits)));
+        vendor.setPlayerInteractionOW(() -> addOverlay(new VendorScreen(screenManager,this)));
+        vendor.setIntroduction(() ->
+                addOverlay(new VendorDialogBox(screenManager,this, 0, 0, vendorVisits))
+        );
         //Doors
         overworldMap.getRooms().get(0).getDoors().forEach(door -> door.setOpenable(true));
     }

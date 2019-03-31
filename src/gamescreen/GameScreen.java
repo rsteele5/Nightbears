@@ -249,6 +249,10 @@ public abstract class GameScreen {
         currentState = state;
     }
 
+    public ScreenManager getScreenManager() {
+        return screenManager;
+    }
+
     /**
      * Sets a GameScreen in front of this GameScreen.
      * @param screen    GameScreen that will be this GameScreen's child.
@@ -433,7 +437,10 @@ public abstract class GameScreen {
                             overlayScreens.remove(overlay);
                             enableScreens = overlay.isExclusive();
                         }
-                    }else overlay.update();
+                    }else {
+                        if(overlay.isExclusive) enableScreens = false;
+                        overlay.update();
+                    }
                 } if(enableScreens) {
                     overlayScreens.forEach(overlay -> {
                         if(overlay.isHidden())overlay.setScreenState(ScreenState.Active);

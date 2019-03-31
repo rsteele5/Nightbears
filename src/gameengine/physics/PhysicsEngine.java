@@ -1,7 +1,6 @@
 package gameengine.physics;
 
 import gameengine.gamedata.GameData;
-import gameengine.gamedata.PlayerData;
 import gameobject.GameObject;
 import gameobject.renderable.player.Player;
 import gamescreen.ScreenManager;
@@ -11,8 +10,6 @@ import java.util.ArrayList;
 
 public class PhysicsEngine {
 
-    private GameData gameData;
-    private PlayerData playerData;
     private ScreenManager screenManager;
     public PhysicsEngine(GameData gameData, ScreenManager myScreenManager) {
         screenManager = myScreenManager;
@@ -38,6 +35,8 @@ public class PhysicsEngine {
             if(objects.get(i1).isStatic())
                 continue;
             GameObject obj1 = (GameObject) objects.get(i1);
+            Interactable iObj1 = null;
+            if(obj1 instanceof Interactable) iObj1 = (Interactable) obj1;
 
             Kinematic kObj1 = objects.get(i1);
             if(playerState == Player.PlayerState.sideScroll)
@@ -51,9 +50,8 @@ public class PhysicsEngine {
                 Kinematic kObj2 = objects.get(i2);
 
                 //Interactable
-                if(obj1 instanceof Interactable) {
+                if(iObj1 != null) {
                     if (obj2 instanceof Interactable) {
-                        Interactable iObj1 = (Interactable) obj1;
                         Interactable iObj2 = (Interactable) obj2;
                         if (iObj1.getRequestArea().intersects(iObj2.getRequestArea()) && iObj1.isRequesting()) {
                             iObj2.action(obj1);
@@ -121,7 +119,7 @@ public class PhysicsEngine {
                 }
 
             }
+            if(iObj1 != null) iObj1.setRequesting(false);
         }
-
     }
 }
