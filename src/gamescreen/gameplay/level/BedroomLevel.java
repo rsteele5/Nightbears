@@ -1,10 +1,10 @@
 package gamescreen.gameplay.level;
 
+import gameengine.physics.Platform;
 import gameengine.rendering.Camera;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.sidescrolling.BedroomBackgroundLayout;
 import gameobject.renderable.house.sidescrolling.Door;
-import gameobject.renderable.player.Player;
 import gameobject.renderable.item.weapon.Weapon;
 import gameobject.renderable.item.weapon.WeaponBuilder;
 import gameobject.renderable.item.weapon.WeaponType;
@@ -13,8 +13,6 @@ import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.overworld.OverworldScreen;
 import input.listeners.Key.SideScrollKeyHandler;
-
-import java.awt.event.KeyEvent;
 
 
 public class BedroomLevel extends GameScreen {
@@ -47,6 +45,10 @@ public class BedroomLevel extends GameScreen {
         background = new BedroomBackgroundLayout();
         background.getBackground().addToScreen(this, true);
         background.getBoundaries().forEach(boundary -> boundary.addToScreen(this, true));
+        Platform p = new Platform(150,800,"/assets/testAssets/brick.jpg",DrawLayer.Props);
+        p.setWidth(200);
+        p.setHeight(20);
+        p.addToScreen(this,true);
 
         Weapon myWeap = new WeaponBuilder()
                 .position(800, 476)
