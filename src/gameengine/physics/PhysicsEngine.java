@@ -62,6 +62,25 @@ public class PhysicsEngine {
                     }
                 }
 
+                //Trigger Interaction
+                if(kObj2 instanceof Trigger && (kObj1.getHitbox().intersects(((Trigger) kObj2).triggerArea()))) {
+                    if(((Trigger) kObj2).effect((GameObject) kObj1)) {
+                        objects.remove(kObj2);
+                        indices = objects.size();
+                        continue;
+                    }
+                }
+                if(kObj1 instanceof Trigger && (kObj2.getHitbox().intersects(((Trigger) obj1).triggerArea()))){
+                    if(((Trigger) kObj1).effect((GameObject) kObj2)) {
+                        objects.remove(kObj1);
+                        indices = objects.size();
+                        continue;
+                    }
+                }
+
+                if(!kObj2.isCollidable())
+                    continue;
+
                 if (kObj1.getHitbox().intersects(kObj2.getHitbox())) {
 
                     kObj1.setAcceleration(new PhysicsVector(1, 1));

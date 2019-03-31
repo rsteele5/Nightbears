@@ -13,6 +13,7 @@ public interface Kinematic {
    PhysicsVector getVelocity();
    void setVelocity(PhysicsVector pv);
    PhysicsVector getAcceleration();
+   default boolean isCollidable(){return true;}
    void setAcceleration(PhysicsVector pv);
    Rectangle getHitbox();
    default void move(PhysicsVector move){

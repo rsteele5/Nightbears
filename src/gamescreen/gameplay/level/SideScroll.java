@@ -1,7 +1,7 @@
 package gamescreen.gameplay.level;
 
-import gameengine.physics.PhysicsObject;
 import gameengine.physics.Kinematic;
+import gameengine.physics.PhysicsObject;
 import gameengine.physics.PhysicsObjectStatic;
 import gameengine.rendering.Camera;
 import gameobject.GameObject;
@@ -33,7 +33,7 @@ public class SideScroll extends GameScreen {
     @Override
     protected void initializeScreen() {
 
-        String bg = "/assets/backgrounds/mountains.jpg";
+        String bg = "assets/backgrounds/mountains.jpg";
         String path = "/assets/testAssets/square.png";
         ImageContainer background;
         background = (new ImageContainer(0,0, bg, DrawLayer.Background));
