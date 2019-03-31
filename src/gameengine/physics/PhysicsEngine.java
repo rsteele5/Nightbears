@@ -78,6 +78,8 @@ public class PhysicsEngine {
                     }
                 }
 
+                if(!kObj2.isCollidable())
+                    continue;
 
                 if (kObj1.getHitbox().intersects(kObj2.getHitbox())) {
 

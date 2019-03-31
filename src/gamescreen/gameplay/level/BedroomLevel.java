@@ -28,6 +28,10 @@ public class BedroomLevel extends GameScreen {
 
     @Override
     protected void initializeScreen() {
+        Platform p = new Platform(350,900,"/assets/testAssets/brick.jpg",DrawLayer.Props);
+        p.setWidth(100);
+        p.setHeight(20);
+        p.addToScreen(this,true);
         Door finishDoor = new Door(800, 300,
                 "/assets/sidescroll/SideScrollDoor.png",
                 () -> {
@@ -45,10 +49,7 @@ public class BedroomLevel extends GameScreen {
         background = new BedroomBackgroundLayout();
         background.getBackground().addToScreen(this, true);
         background.getBoundaries().forEach(boundary -> boundary.addToScreen(this, true));
-        Platform p = new Platform(150,800,"/assets/testAssets/brick.jpg",DrawLayer.Props);
-        p.setWidth(200);
-        p.setHeight(20);
-        p.addToScreen(this,true);
+
 
         Weapon myWeap = new WeaponBuilder()
                 .position(800, 476)
