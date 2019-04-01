@@ -1,6 +1,7 @@
 package gameobject.renderable.vendor;
 
 import gameengine.MyTimerTask;
+import gameengine.gamedata.GameData;
 import gameengine.gamedata.VendorData;
 import gameengine.physics.Interactable;
 import gameengine.physics.Kinematic;
@@ -12,7 +13,9 @@ import gameobject.renderable.DrawLayer;
 import gameobject.renderable.RenderableObject;
 import gameobject.renderable.house.overworld.OverworldMeta;
 import gameobject.renderable.player.Player;
+import gameobject.renderable.text.DialogBox;
 import gamescreen.GameScreen;
+import main.utilities.Action;
 import main.utilities.AssetLoader;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
@@ -33,19 +36,9 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
     public static TimerTask restockTimer;
     private VendorData vendorData;
     private VendorState vendorState;
-    private int moveFactor = 1;
-    private double rotation = 0;
-    private boolean isIdle = false;
-    private int speed = 1;
     private int endCrawl;
-
-    private static String firstNotice = "I created lots of goodies that might help you defeat those monsters. Come see what I have!";
-    private static String subsequentNotices = "I have all NEW items that are even more powerful than before! Come see what I have!";
-    private static String firstLevel = "Whew! That was a super scary monster!";
-
-
-    int isSet = 0;
-    Player p = null;
+    private Action intro;
+    private Action playerInteractionOW;
     //endregion
 
     /**
@@ -69,45 +62,38 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
         //startRestockTimer();
 
         animator = new Animator(this);
+        animator.addAnimation("Wait", new VendorUnderAnimation());
         animator.addAnimation("Crawling", new VendorCrawlingAnimation());
         animator.addAnimation("SittingUp", new VendorSittingUpAnimation());
         animator.addAnimation("Idle", new VendorIdleAnimation());
     }
     //endregion
 
-    public void draw(Graphics2D graphics2D) {
-        if(animator != null){
-            animator.animate();
-        }
-
-        Graphics2D g2 = (Graphics2D) graphics2D.create();
-        g2.rotate(rotation, x + (width / 2.0), y + (height / 2.0));
-        g2.drawImage(image, x, y, null);
-        g2.dispose();
-    }
-
     @Override
     public void update() {
-        isSet++;
-        isSet %= 5;
-        if(isSet == 4 && p != null){
-            p.interaction = false;
-            p = null;
-        }
-
         if (vendorState == VendorState.crawling) {
-            if (getX() <= endCrawl)
-                this.translate(5, 0);
-            else this.setState(VendorState.sittingup);
+            if (animator.getCurrentAnimationName().equals("Wait") && animator.getCurrentAnimation().getFrameToDisplay() > 0)
+                animator.setAnimation("Crawling");
+            else if (animator.getCurrentAnimationName().equals("Crawling")) {
+                if(getX() <= endCrawl) this.translate(2, 0);
+                else this.setState(VendorState.sittingup);
+            }
         }
         else if (vendorState == VendorState.sittingup){
-            if (this.animator.getCurrentAnimation().getFrameToDisplay() == 7){
+            if (this.animator.getCurrentAnimation().getFrameToDisplay() >= 7){
                 this.setState(VendorState.idle);
+                intro.doIt();
             }
         }
     }
 
     public void setImage(String imagePath){ this.imagePath = imagePath; }
+
+    public void setIntroduction(Action intro) { this.intro = intro; }
+
+    public VendorState getVendorState() { return vendorState; }
+
+    public Animator getAnimator() { return animator; }
 
     public VendorData getVendorData(){
         return vendorData;
@@ -146,9 +132,8 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
                 Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: crawling");
                 width = 200;
                 height = 200;
-
-                endCrawl = getX() + OverworldMeta.TileSize;
-                animator.setAnimation("Crawling");
+                endCrawl = getX() + OverworldMeta.TileSize*2;
+                animator.setAnimation("Wait");
                 vendorState = vs;
                 return true;
             case sittingup:
@@ -161,8 +146,8 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
                 width = 200;
                 height = 200;
                 animator.setAnimation("Idle");
-                isIdle = true;
                 vendorState = vs;
+
                 return true;
         }
         return false;
@@ -189,22 +174,27 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
         }*/
     }
 
-    //region <Physics methods>
+    public void setPlayerInteractionOW(Action playerInteractionOW) {
+        this.playerInteractionOW = playerInteractionOW;
+    }
 
-    PhysicsVector zerovector = new PhysicsVector(0,0);
-
+    //region <Kinematic>
     @Override
     public PhysicsVector getVelocity() {
-        return zerovector;
+        return PhysicsVector.ZERO;
     }
 
     @Override
-    public void setVelocity(PhysicsVector pv) {
-    }
+    public void setVelocity(PhysicsVector pv) { }
 
     @Override
     public PhysicsVector getAcceleration() {
-        return zerovector;
+        return PhysicsVector.ZERO;
+    }
+
+    @Override
+    public boolean isStatic(){
+        return  true;
     }
 
     @Override
@@ -216,34 +206,29 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
         return new Rectangle(x + (int)(image.getWidth()*.25), y + (int)(image.getHeight()*.25),
                 (int) (image.getWidth()*.5), (int)(image.getHeight()*.5));
     }
+    //endregion
 
+    //region <Interactable>
     @Override
     public Rectangle getRequestArea() {
-        return new Rectangle(x,y,image.getWidth(),image.getHeight());
+        return new Rectangle(x-20,y-20,image.getWidth()+20,image.getHeight()+20);
     }
 
     @Override
     public void setRequesting(boolean isRequesting) { }
 
     @Override
-    public boolean isRequesting() {
-        return false;
-    }
-
-    @Override
-    public boolean isStatic(){
-        return  true;
-    }
+    public boolean isRequesting() { return false; }
 
     @Override
     public boolean action(GameObject g) {
         if(g instanceof Player) {
-
+            if(((Player)g).getState() == Player.PlayerState.overWorld && playerInteractionOW != null)
+            playerInteractionOW.doIt();
             return true;
         }return false;
 
     }
-
     //endregion
 
     //region <GameScreen Methods>

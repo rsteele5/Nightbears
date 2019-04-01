@@ -1,51 +1,55 @@
 package gamescreen.gameplay.level;
 
-import gameengine.physics.PhysicsObject;
-import gameengine.gamedata.PlayerData;
+import gameengine.physics.Platform;
+import gameengine.rendering.Camera;
 import gameobject.renderable.DrawLayer;
-import gameobject.renderable.ImageContainer;
-import gameobject.renderable.enemy.Minion;
-import gameobject.renderable.enemy.WalkLeftMS;
-import gameobject.renderable.enemy.Walker;
-import gameengine.physics.PhysicsObjectStatic;
+import gameobject.renderable.house.sidescrolling.BedroomBackgroundLayout;
+import gameobject.renderable.house.sidescrolling.Door;
 import gameobject.renderable.item.weapon.Weapon;
 import gameobject.renderable.item.weapon.WeaponBuilder;
 import gameobject.renderable.item.weapon.WeaponType;
 import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
+import gamescreen.ScreenManager;
+import gamescreen.gameplay.overworld.OverworldScreen;
+import input.listeners.Key.SideScrollKeyHandler;
 
-public class BedroomLevel implements Level {
 
-    @Override
-    public void buildBackground(GameScreen gameScreen) {
-        ImageContainer background = new ImageContainer(0, 0, "/assets/backgrounds/BG-Level.png", DrawLayer.Background);
-        background.addToScreen(gameScreen, true);
+public class BedroomLevel extends GameScreen {
 
+    private BedroomBackgroundLayout background;
+    private Player player;
+    private OverworldScreen parentScreen;
+
+    public BedroomLevel(ScreenManager screenManager, OverworldScreen parentScreen) {
+        super(screenManager, "BedroomLevel", true);
+        this.parentScreen= parentScreen;
     }
 
     @Override
-    public void buildTerrain(GameScreen gameScreen) {
-        //This is where the instruction for how to procedurally generate a level would go
-        PhysicsObjectStatic physicsObjectStaticTile = new PhysicsObjectStatic(10, 576, "/assets/levelObjects/WoodTile1.png",DrawLayer.Entity);
-        PhysicsObjectStatic physicsObjectStaticTile2 = new PhysicsObjectStatic(10, 576, "/assets/levelObjects/WoodTile1.png",DrawLayer.Entity);
-        physicsObjectStaticTile.setWidth(1260);
-        physicsObjectStaticTile.setHeight(50);
-        physicsObjectStaticTile2.setWidth(50);
-        physicsObjectStaticTile2.setHeight(96);
-        gameScreen.kinematics.add(physicsObjectStaticTile);
-        gameScreen.kinematics.add(physicsObjectStaticTile2);
-        physicsObjectStaticTile.addToScreen(gameScreen, true);
+    protected void initializeScreen() {
+        Platform p = new Platform(350,900,"/assets/testAssets/brick.jpg",DrawLayer.Props);
+        p.setWidth(100);
+        p.setHeight(20);
+        p.addToScreen(this,true);
+        Door finishDoor = new Door(800, 300,
+                "/assets/sidescroll/SideScrollDoor.png",
+                () -> {
+                    setScreenState(ScreenState.TransitionOff);
+                    screenManager.addScreen(new EndLevelScreen(screenManager,  true));
+                    parentScreen.onLevelComplete();
+                });
 
-        PhysicsObject physicsObject;
-        for(int x1 = 0; x1 < 5; x1++){
-            for(int y1 = 0; y1 < x1; y1++){
-                physicsObject = new PhysicsObject(x1 * 75 + 100,y1 * 75,"/assets/testAssets/square.png",DrawLayer.Entity);
-                physicsObject.addToScreen(gameScreen, true);
-            }
-        }
+        finishDoor.addToScreen(this, true);
+        player = new Player(30, 276, DrawLayer.Entity, gameData.getPlayerData());
+        player.addToScreen(this, true);
+        player.setState(Player.PlayerState.sideScroll);
+        setKeyHandler(new SideScrollKeyHandler(player));
+        setCamera(new Camera(screenManager, this, player));
+        background = new BedroomBackgroundLayout();
+        background.getBackground().addToScreen(this, true);
+        background.getBoundaries().forEach(boundary -> boundary.addToScreen(this, true));
 
-        physicsObject = new PhysicsObject(800,75,"/assets/testAssets/square.png",DrawLayer.Entity);
-        physicsObject.addToScreen(gameScreen, true);
 
         Weapon myWeap = new WeaponBuilder()
                 .position(800, 476)
@@ -56,27 +60,15 @@ public class BedroomLevel implements Level {
                 .buildWeapon();
         myWeap.setWidth(50);
         myWeap.setHeight(50);
-        gameScreen.kinematics.add(myWeap);
-        myWeap.addToScreen(gameScreen, true);
+        myWeap.addToScreen(this, true);
+
+
     }
 
     @Override
-    public Player buildPlayer(GameScreen gameScreen, PlayerData playerData) {
-        Player player = new Player(10, 476, DrawLayer.Entity, playerData);
-        player.setState(Player.PlayerState.sideScroll);
-        player.addToScreen(gameScreen, true);
-
-        return player;
-
+    public void transitionOff(){
+        exiting = true;
     }
-
-
-    @Override
-    public void buildEnemies(GameScreen gameScreen) {
-        Minion guy1 = new Walker(600,0, "/assets/enemies/minions/walker/walker.png", DrawLayer.Entity);
-        guy1.setState(new WalkLeftMS());
-        guy1.addToScreen(gameScreen,true);
-
-    }
-
 }
+
+

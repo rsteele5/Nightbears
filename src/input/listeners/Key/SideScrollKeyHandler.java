@@ -4,23 +4,31 @@ import gameobject.renderable.player.Player;
 
 import java.awt.event.KeyEvent;
 
+import static input.listeners.Key.KeyCodeMeta.INTERACT;
+
 public class SideScrollKeyHandler implements KeyHandler {
-    Player p;
-    public SideScrollKeyHandler(Player p){this.p = p;}
+
+    private Player player;
+
+    public SideScrollKeyHandler(Player player){
+        this.player = player;
+    }
 
     @Override
     public void keyTyped(KeyEvent e) {
-
 
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        p.move(e);
+        player.move(e);
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        p.moveRelease(e);
+        player.moveRelease(e);
+        if(e.getKeyCode() == INTERACT){
+            player.setRequesting(true);
+        }
     }
 }

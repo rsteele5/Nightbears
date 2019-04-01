@@ -5,8 +5,8 @@ import gameengine.rendering.animation.AnimationImage;
 
 public class PlayerIdleAnimation extends Animation {
 
-    public PlayerIdleAnimation() {
-        String path = "/assets/player/overworld/teddyidleanimation/";
+    public PlayerIdleAnimation(String imageDirectory) {
+        String path = "/assets/player/color/" + imageDirectory + "/overworld/idle/";
         AnimationImage lookCenter = new AnimationImage(path + "Overworld-Teddy-Center.png", 60);
         AnimationImage lookLeft1 = new AnimationImage(path + "Overworld-Teddy-Left1.png", 5);
         AnimationImage lookLeft2 = new AnimationImage(path + "Overworld-Teddy-Left2.png", 5);

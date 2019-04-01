@@ -119,12 +119,12 @@ public class ScreenManager extends JPanel {
     }
 
     public void handleKeyPressed(KeyEvent e) {
-        Debug.success(true, "Key controller handle this press " + e.getKeyCode());
+        Debug.success(DebugEnabler.KEY_EVENTS, "Key controller handle this press " + e.getKeyCode());
         rootScreen.handleKeyPressed(e);
     }
 
     public void handleKeyReleased(KeyEvent e) {
-        Debug.success(true, "Key controller handle this release " + e.getKeyCode());
+        Debug.success(DebugEnabler.KEY_EVENTS, "Key controller handle this release " + e.getKeyCode());
         rootScreen.handleKeyReleased(e);
     }
 }

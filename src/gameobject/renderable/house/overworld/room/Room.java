@@ -10,6 +10,7 @@ import main.utilities.DebugEnabler;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.List;
 
 import static gameobject.renderable.house.overworld.OverworldMeta.TileSize;
 import static gameobject.renderable.house.overworld.OverworldMeta.WallThickness;
@@ -49,7 +50,7 @@ public abstract class Room extends GameObject {
 
     /**
      * Creates all of the spawn points in this room. This is called when you add this room to a Map using the
-     * MapBuilder.
+     * BackgroundBuilder.
      * @see gameobject.renderable.house.overworld.Map
      * @see gameobject.renderable.house.overworld.MapBuilder
      */
@@ -89,6 +90,17 @@ public abstract class Room extends GameObject {
         if(vendorSpawnOptions.isEmpty())
             return null;
         return vendorSpawnOptions;
+    }
+
+    public ArrayList<SpawnPoint> getSpawnETCOptions() {
+        ArrayList<SpawnPoint> etcSpawnOptions = new ArrayList<>();
+        for(SpawnPoint spawn : spawnPoints){
+            if(spawn.getSpawnType() == SpawnType.ETC)
+                etcSpawnOptions.add(spawn);
+        }
+        if(etcSpawnOptions.isEmpty())
+            return null;
+        return etcSpawnOptions;
     }
 
     public Integer[][] getLayout() {
@@ -162,32 +174,6 @@ public abstract class Room extends GameObject {
 
     protected void createDoor(int row, int col, Compass attachedDirection) {
         Tile referenceTile = roomTiles[row][col];
-        int doorX = referenceTile.getX();
-        int doorY = referenceTile.getY();
-        int interactX = doorX;
-        int interactY = doorY;
-        int interactW = TileSize;
-        int interactH = TileSize;
-
-        switch(attachedDirection){
-            case South:
-                doorY += TileSize - WallThickness;
-                interactH += TileSize;
-                break;
-            case North:
-                interactY -= TileSize;
-                interactH += TileSize;
-                break;
-            case East:
-                doorX += TileSize - WallThickness;
-                interactW += TileSize;
-                break;
-            case West:
-                interactX -= TileSize;
-                interactW += TileSize;
-                break;
-        }
-
         doors.add(new Door(referenceTile, attachedDirection));
     }
     //endregion

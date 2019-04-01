@@ -22,4 +22,8 @@ public abstract class Overlay extends GameScreen{
         super(screenManager, "Overlay-" + name, false, xPos, yPos, screenAlpha);
         this.parentScreen = parentScreen;
     }
+
+    public GameScreen getParentScreen() {
+        return parentScreen;
+    }
 }

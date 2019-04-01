@@ -101,7 +101,7 @@ public class Armor extends Item implements Serializable {
 
     /**
      * Getter
-     * @return item type (head, chest, leg, foot, or magic)
+     * @return item type (head, offhand, chest, space, legs, or foot)
      */
     @Override
     public int getType() {

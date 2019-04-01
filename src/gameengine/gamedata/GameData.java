@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.io.IOException;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class GameData implements Serializable {
@@ -27,6 +28,7 @@ public class GameData implements Serializable {
     private SoundSetting[] currentSoundSetting = new SoundSetting[3];
     private PlayerData currentPlayerData;
     private VendorData currentVendorData;
+    private CopyOnWriteArrayList<EndGamePlayerData> previousPlayerData;
 
     public GameData(){
         try {
@@ -46,6 +48,7 @@ public class GameData implements Serializable {
                 }
                 currentPlayerData = new PlayerData();
                 currentVendorData = new VendorData();
+                previousPlayerData = new CopyOnWriteArrayList<>();
                 save();
             } else {
                 FileInputStream file = new FileInputStream(dataFile);
@@ -63,6 +66,7 @@ public class GameData implements Serializable {
                 }
                 this.currentPlayerData = gameDataInput.getPlayerData();
                 this.currentVendorData = gameDataInput.getVendorData();
+                this.previousPlayerData = gameDataInput.getPreviousPlayerData();
                 Debug.log(true, "Do I have shit?: " + currentPlayerData.getInventory().get(0).getImagePath());
 
                 in.close();
@@ -87,6 +91,10 @@ public class GameData implements Serializable {
     }
 
     public PlayerData getPlayerData() { return currentPlayerData; }
+
+    public CopyOnWriteArrayList<EndGamePlayerData> getPreviousPlayerData() {
+        return previousPlayerData;
+    }
 
     public GraphicsSetting getGraphicsSettings() {
         return currentGraphicsSetting;

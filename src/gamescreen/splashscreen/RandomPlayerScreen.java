@@ -18,8 +18,6 @@ public class RandomPlayerScreen extends GameScreen {
     private ImageContainer teddyImage;
     private boolean clicked;
 
-    public ArrayList<ImageContainer> characterImages;
-
     public RandomPlayerScreen(ScreenManager screenManager) {
         super(screenManager, "RandomPlayerScreen", 1f);
     }
@@ -43,17 +41,19 @@ public class RandomPlayerScreen extends GameScreen {
     private ImageContainer getRandomImage(){
         ArrayList<ImageContainer> images = new ArrayList<>();
 
-        File file =  new File("src/assets/player/images");
+        File file =  new File("src/assets/player/color");
         String[] directories = file.list();
         for(String filePath: directories) {
             ImageContainer image = new ImageContainer(912,723,
-                    "/assets/player/images/" + filePath,
+                    "/assets/player/color/" + filePath + "/Teddy.png",
                     DrawLayer.Entity);
             images.add(image);
+            Debug.log(true, filePath);
         }
 
-        int totalImages = images.size() - 1;
+        int totalImages = images.size();
         int randomIndex = (int)(Math.random() * (totalImages));
+        gameData.getPlayerData().setImageDirectory(directories[randomIndex]);
         return images.get(randomIndex);
     }
 

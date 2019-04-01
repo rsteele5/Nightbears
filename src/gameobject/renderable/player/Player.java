@@ -8,15 +8,13 @@ import gameengine.physics.PhysicsVector;
 import gameengine.rendering.animation.Animator;
 import gameobject.GameObject;
 import gameobject.renderable.RenderableObject;
-import gameobject.renderable.item.ItemComparator;
 import gameobject.renderable.item.*;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.RenderableObject;
 import gameobject.renderable.item.Item;
 import gameobject.renderable.player.overworld.PlayerIdleAnimation;
 import gameobject.renderable.player.overworld.PlayerWalkingAnimation;
-import gameobject.renderable.player.sidescrolling.PlayerSSCrouchingAnimation;
-import gameobject.renderable.player.sidescrolling.PlayerSSIdleAnimation;
+import gameobject.renderable.player.sidescrolling.*;
 import gamescreen.GameScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
@@ -39,12 +37,6 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
     private boolean crouch = false;
     private boolean crouchSet = true;
     public boolean interaction = false;
-    /*
-    0b1     =   right
-    0b10    =   left
-    0b100   =   down
-    0b1000  =   up
-     */
     private int movFlag = 0;
     private int gold;
     private double moveFactor = 1;
@@ -63,7 +55,7 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
     public Player(int x, int y, DrawLayer drawLayer, PlayerData playerData) {
         //TODO: Set to the random bear selection.
         super(x, y, "/assets/player/TeddySilhouette.png", drawLayer);
-        playerState = PlayerState.asleep;
+        //playerState = PlayerState.asleep;
         //TODO:Review
         this.playerData = playerData;
         items = new CopyOnWriteArrayList<>();
@@ -71,10 +63,13 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
         //initializeItems()
 
         animator = new Animator(this);
-        animator.addAnimation("Walking", new PlayerWalkingAnimation());
-        animator.addAnimation("Idle", new PlayerIdleAnimation());
-        animator.addAnimation("SS_Idle", new PlayerSSIdleAnimation());
-        animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation());
+        animator.addAnimation("Walking", new PlayerWalkingAnimation(playerData.getImageDirectory()));
+        animator.addAnimation("Idle", new PlayerIdleAnimation(playerData.getImageDirectory()));
+        animator.addAnimation("SS_Idle_Left", new PlayerSSIdleAnimationLeft(playerData.getImageDirectory()));
+        animator.addAnimation("SS_Idle_Right", new PlayerSSIdleAnimationRight(playerData.getImageDirectory()));
+        animator.addAnimation("SS_Running_Left", new PlayerSSRunningAnimationLeft(playerData.getImageDirectory()));
+        animator.addAnimation("SS_Running_Right", new PlayerSSRunningAnimationRight(playerData.getImageDirectory()));
+        animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation(playerData.getImageDirectory()));
 
         requesting = false;
     }
@@ -104,17 +99,14 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
                 break;
             case sideScroll:
                 Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: sideScroll");
-                speed = 1;
+                speed = 4;
                 rotation = 0;
-                animator.setAnimation("SS_Idle");
+                animator.setAnimation("SS_Idle_Right");
                 playerState = ps;
                 break;
         }
     }
 
-    public void setImage(String imagePath) {
-        this.imagePath = imagePath;
-    }
     //endregion
 
     //region <Update and Draw>
@@ -160,11 +152,32 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
     //endregion
 
     //region <Support functions>
+
+    /*
+    0b1     =   right
+    0b10    =   left
+    0b100   =   down
+    0b1000  =   up
+     */
     private void setMovementState(int flags) {
         int x1 = 0b1 & flags;
         x1 += (((0b10 & flags) / 0b10) * -1);
         int y1 = ((0b100 & flags) / 0b100);
         y1 += (((0b1000 & flags) / 0b1000) * -1);
+
+        if(playerState == PlayerState.sideScroll) {
+            if(x1 == 1 && grounded && animator.getCurrentAnimation().getName() != "SS_Running_Right") {
+                animator.setAnimation("SS_Running_Right");
+            } else if (x1 == -1 && grounded && animator.getCurrentAnimation().getName() != "SS_Running_Left" ) {
+                animator.setAnimation("SS_Running_Left");
+            } else if(x1 == 0 && grounded && animator.getCurrentAnimation().getName() == "SS_Running_Left" && animator.getCurrentAnimation().getName() != "SS_Idle_Left") {
+                animator.setAnimation("SS_Idle_Left");
+            } else if (x1 == 0 && grounded && animator.getCurrentAnimation().getName() == "SS_Running_Right" && animator.getCurrentAnimation().getName() != "SS_Idle_Right") {
+                animator.setAnimation("SS_Idle_Right");
+            }
+        }
+
+
         setVelocity(new PhysicsVector(x1, y1));
     }
 
@@ -178,21 +191,22 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
         for (int i = 0; i < keys.length; i++)
             movFlag -= e.getKeyCode() == keys[i] && ((movFlag & (int) Math.pow(2, i)) == Math.pow(2, i)) ? (int) Math.pow(2, i) : 0;
         setMovementState(movFlag);
+
     }
 
     public void move(KeyEvent e) {
         switch (getState()) {
             case sideScroll:
-                if (e.getKeyCode() == 32 && grounded) {
+                if (e.getKeyCode() == 32 && grounded) { // JUMP
                     int sign = PhysicsMeta.AntiGravity ? -1 : 1;
                     setAcceleration(getAcceleration().add(new PhysicsVector(0, -7 * sign)));
                     grounded = false;
                 }
-                if(e.getKeyCode() == 83 && !crouch){
+                if(e.getKeyCode() == 83 && !crouch){ // CROUCH
                     crouch = true;
                     crouchSet = false;
                 }
-                if(e.getKeyCode() == 16) {
+                if(e.getKeyCode() == 16) { // SPRINT
                     moveFactor = 2.5;
                 }
                 if (PhysicsMeta.Gravity == 0) calculateMove(e, owKeys);
@@ -217,6 +231,7 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
                 if(e.getKeyCode() == 16) {
                     moveFactor = 1;
                 }
+
                 if (PhysicsMeta.Gravity == 0) calculateRelease(e, owKeys);
                 else calculateRelease(e, ssKeys);
 
