@@ -17,12 +17,7 @@ public interface Collidable {
      */
     default boolean isTrigger(){ return false; }
 
-    /**
-     * Executes on a collision with a {@link GameObject} that is collidable
-     * @param g The {@link GameObject} that is colliding
-     * @return  whether the collision was successfully handled or not.
-     */
-    default boolean collide(GameObject g) { return true; }
+    default boolean collide(Collidable c2){ return true;}
 
-    void triggered(GameObject gameObject);
+    default boolean triggered(GameObject gameObject){ return false;}
 }

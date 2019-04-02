@@ -28,7 +28,7 @@ public class BedroomLevel extends GameScreen {
 
     @Override
     protected void initializeScreen() {
-        Platform p = new Platform(350,900,"/assets/testAssets/brick.jpg",DrawLayer.Props);
+        Platform p = new Platform(350,900,"/assets/testAssets/brick.jpg",DrawLayer.Prop);
         p.setWidth(100);
         p.setHeight(20);
         p.addToScreen(this,true);

@@ -181,10 +181,6 @@ public abstract class RenderableObject extends GameObject implements Loadable, S
         if(animator != null){
             screen.loadables.add(animator);
         }
-
-        if(this instanceof Kinematic){
-            screen.kinematics.add((Kinematic)this);
-        }
     }
 
     public void addAnimator(Animator animator){

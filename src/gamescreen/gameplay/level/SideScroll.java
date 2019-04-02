@@ -2,7 +2,6 @@ package gamescreen.gameplay.level;
 
 import gameengine.physics.Kinematic;
 import gameengine.physics.PhysicsObject;
-import gameengine.physics.PhysicsObjectStatic;
 import gameengine.rendering.Camera;
 import gameobject.GameObject;
 import gameobject.renderable.DrawLayer;
@@ -57,28 +56,28 @@ public class SideScroll extends GameScreen {
             }
         }
 
-        PhysicsObjectStatic physicsObjectStatic = new PhysicsObjectStatic(xOFF - 300,yOFF + 300, "/assets/testAssets/obsidian.jpg", DrawLayer.Entity);
-        PhysicsObjectStatic physicsObjectStatic2 = new PhysicsObjectStatic(xOFF - 300,yOFF - 800, "/assets/testAssets/obsidian.jpg", DrawLayer.Entity);
-        PhysicsObjectStatic physicsObjectStatic1 = new PhysicsObjectStatic(xOFF +450,yOFF - 300, "/assets/testAssets/obsidian.jpg", DrawLayer.Entity);
-        PhysicsObjectStatic f;
-        for(int i = 0; i < 19; i++){
-            int offset = (i % 2 == 0) ? 50 : -50;
-            f = new PhysicsObjectStatic(xOFF - 425 + offset, yOFF + 200 - 50 * i,"/assets/testAssets/obsidian.jpg", DrawLayer.Entity);
-            f.setWidth(40);
-            f.setHeight(20);
-            f.addToScreen(this, true);
-        }
-        physicsObjectStatic.setWidth(2000);
-        //physicsObjectStatic.setHeight(200);
-        physicsObjectStatic.setHeight(500);
-        //physicsObjectStatic1.setWidth(50);
-        physicsObjectStatic1.setWidth(1000);
-        physicsObjectStatic1.setHeight(600);
-        physicsObjectStatic2.setWidth(1000);
-        physicsObjectStatic2.setHeight(600);
-        physicsObjectStatic.addToScreen(this, true);
-        physicsObjectStatic1.addToScreen(this, true);
-        physicsObjectStatic2.addToScreen(this, true);
+//        PhysicsObjectStatic physicsObjectStatic = new PhysicsObjectStatic(xOFF - 300,yOFF + 300, "/assets/testAssets/obsidian.jpg", DrawLayer.Entity);
+//        PhysicsObjectStatic physicsObjectStatic2 = new PhysicsObjectStatic(xOFF - 300,yOFF - 800, "/assets/testAssets/obsidian.jpg", DrawLayer.Entity);
+//        PhysicsObjectStatic physicsObjectStatic1 = new PhysicsObjectStatic(xOFF +450,yOFF - 300, "/assets/testAssets/obsidian.jpg", DrawLayer.Entity);
+//        PhysicsObjectStatic f;
+//        for(int i = 0; i < 19; i++){
+//            int offset = (i % 2 == 0) ? 50 : -50;
+//            f = new PhysicsObjectStatic(xOFF - 425 + offset, yOFF + 200 - 50 * i,"/assets/testAssets/obsidian.jpg", DrawLayer.Entity);
+//            f.setWidth(40);
+//            f.setHeight(20);
+//            f.addToScreen(this, true);
+//        }
+//        physicsObjectStatic.setWidth(2000);
+//        //physicsObjectStatic.setHeight(200);
+//        physicsObjectStatic.setHeight(500);
+//        //physicsObjectStatic1.setWidth(50);
+//        physicsObjectStatic1.setWidth(1000);
+//        physicsObjectStatic1.setHeight(600);
+//        physicsObjectStatic2.setWidth(1000);
+//        physicsObjectStatic2.setHeight(600);
+//        physicsObjectStatic.addToScreen(this, true);
+//        physicsObjectStatic1.addToScreen(this, true);
+//        physicsObjectStatic2.addToScreen(this, true);
         Player player = new Player(xOFF,yOFF,DrawLayer.Entity, gameData.getPlayerData());
         player.setState(Player.PlayerState.sideScroll);
         player.addToScreen(this,true);

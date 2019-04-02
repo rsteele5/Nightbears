@@ -1,23 +1,20 @@
 package gamescreen.gameplay.overworld;
 
-import gameengine.physics.PhysicsObjectStatic;
+import gameengine.physics.PhysicsEngine;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.overworld.Map;
 import gameobject.renderable.house.overworld.MapBuilder;
-import gameobject.renderable.house.overworld.room.Bathroom;
-import gameobject.renderable.house.overworld.room.Bedroom;
-import gameobject.renderable.house.overworld.room.LivingRoom;
-import gameobject.renderable.house.overworld.room.SpawnPoint;
+import gameobject.renderable.house.overworld.room.*;
 import gameengine.rendering.Camera;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.vendor.Vendor;
-import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
+import gamescreen.gameplay.GamePlayScreen;
 import gamescreen.gameplay.VendorDialogBox;
 import gamescreen.gameplay.VendorScreen;
 import input.listeners.Key.OverworldKeyHandler;
 
-public class OverworldScreen extends GameScreen {
+public class OverworldScreen extends GamePlayScreen {
 
     //region <Variable Declaration>
     private OverworldUI UI;
@@ -47,8 +44,8 @@ public class OverworldScreen extends GameScreen {
 
         //Bed
         SpawnPoint bedSpawn = overworldMap.getRooms().get(0).getSpawnETCOptions().get(0);
-        PhysicsObjectStatic bed = new PhysicsObjectStatic(bedSpawn.getTileX(),bedSpawn.getTileY(),
-                "/assets/overworld/bedroom/Overworld-Bed2.png", DrawLayer.Props);
+        Prop bed = new Prop(bedSpawn.getTileX(),bedSpawn.getTileY(),
+                "/assets/overworld/bedroom/Overworld-Bed2.png");
         bed.addToScreen(this, true);
 
         //Player
@@ -66,9 +63,10 @@ public class OverworldScreen extends GameScreen {
         //Overlays
         UI = new OverworldUI(screenManager, this);
         addOverlay(UI);
-
         //KeyListener
         setKeyHandler(new OverworldKeyHandler(player, UI.clickables, UI.getPauseBtn()));
+        //Physics Engine
+        setPhysicsEngine(new PhysicsEngine(player, PhysicsEngine.PhysicState.TopDown));
     }
 
     @Override

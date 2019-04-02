@@ -1,14 +1,13 @@
 package gameobject.renderable.house.overworld.room;
 
+import gameengine.physics.Collidable;
 import gameengine.physics.Interactable;
-import gameengine.physics.Kinematic;
-import gameengine.physics.PhysicsVector;
 import gameobject.GameObject;
+import gameobject.renderable.CollidableRenderable;
 import gameobject.renderable.DrawLayer;
-import gameobject.renderable.RenderableObject;
 import gameobject.renderable.house.overworld.Compass;
 import gameobject.renderable.house.overworld.Tile;
-import gamescreen.GameScreen;
+import gamescreen.gameplay.GamePlayScreen;
 import main.utilities.Action;
 
 import java.awt.*;
@@ -16,7 +15,7 @@ import java.awt.*;
 import static gameobject.renderable.house.overworld.OverworldMeta.TileSize;
 import static gameobject.renderable.house.overworld.OverworldMeta.WallThickness;
 
-public class Door extends RenderableObject implements Kinematic, Interactable {
+public class Door extends CollidableRenderable implements Interactable {
     private Rectangle interactionBox;
     private Tile referenceTile;
     private Compass attachedDirection;
@@ -24,8 +23,7 @@ public class Door extends RenderableObject implements Kinematic, Interactable {
     private Action open;
 
     public Door(Tile referenceTile, Compass attachedDirection){
-        super(0,0,DrawLayer.Entity);
-        imagePath = "/assets/overworld/room/Overworld-RedCarpet-Door-";
+        super(0,0, "/assets/overworld/room/Overworld-RedCarpet-Door-", DrawLayer.Entity, 1f);
         openable = false;
         this.referenceTile = referenceTile;
         this.attachedDirection = attachedDirection;
@@ -89,49 +87,43 @@ public class Door extends RenderableObject implements Kinematic, Interactable {
         return false;
     }
 
-    //Kinematic
+    //Collidable
+    /**
+     * @return the collision box of the Collidable
+     */
     @Override
-    public boolean isStatic() { return true; }
-    @Override
-    public PhysicsVector getVelocity() { return PhysicsVector.ZERO; }
-    @Override
-    public void setVelocity(PhysicsVector pv) {}
-    @Override
-    public PhysicsVector getAcceleration() { return PhysicsVector.ZERO; }
-    @Override
-    public void setAcceleration(PhysicsVector pv) {}
-    @Override
-    public Rectangle getHitbox() { return new Rectangle(x, y, width, height); }
+    public Rectangle getCollisionBox() {
+        return new Rectangle(x, y, width, height);
+    }
 
     //Game Object
     @Override
-    public boolean setActive(GameScreen screen){
+    public boolean setActive(GamePlayScreen screen){
         if(super.setActive(screen)){
-            screen.kinematics.add(this);
+            screen.interactables.add(this);
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean setInactive(GameScreen screen){
+    public boolean setInactive(GamePlayScreen screen){
         if(super.setInactive(screen)){
-            screen.kinematics.remove(this);
+            screen.interactables.remove(this);
             return true;
         }
         return false;
     }
 
     @Override
-    public void addToScreen(GameScreen screen, boolean isActive){
+    public void addToScreen(GamePlayScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
-        screen.kinematics.remove(this);
+        screen.interactables.remove(this);
         if(isActive) {
-            screen.kinematics.add(this);
+            screen.interactables.add(this);
         }
     }
-    @Override
-    public void update() {
 
-    }
+    @Override
+    public void update() { }
 }

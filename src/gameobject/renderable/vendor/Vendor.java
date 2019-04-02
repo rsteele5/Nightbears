@@ -3,18 +3,17 @@ package gameobject.renderable.vendor;
 import gameengine.MyTimerTask;
 import gameengine.gamedata.GameData;
 import gameengine.gamedata.VendorData;
-import gameengine.physics.Interactable;
-import gameengine.physics.Kinematic;
-import gameengine.physics.PhysicsMeta;
-import gameengine.physics.PhysicsVector;
+import gameengine.physics.*;
 import gameengine.rendering.animation.Animator;
 import gameobject.GameObject;
+import gameobject.renderable.CollidableRenderable;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.RenderableObject;
 import gameobject.renderable.house.overworld.OverworldMeta;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.text.DialogBox;
 import gamescreen.GameScreen;
+import gamescreen.gameplay.GamePlayScreen;
 import main.utilities.Action;
 import main.utilities.AssetLoader;
 import main.utilities.Debug;
@@ -26,7 +25,7 @@ import java.io.Serializable;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Vendor extends RenderableObject implements Kinematic, Interactable, Serializable {
+public class Vendor extends CollidableRenderable implements Interactable, Serializable {
 
     //region <Variables>
     private BufferedImage vendorOverworldImage;
@@ -53,10 +52,9 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
 
     // Default constructor
     public Vendor(int x, int y, VendorData vendorData){
-        super(x, y);
+        super(x, y, "",DrawLayer.Entity, 1f);
         vendorState = VendorState.hiding;
         this.imagePath = vendorLevelPath;
-        this.drawLayer = DrawLayer.Entity;
         this.vendorData = vendorData;
         restockTimer = new MyTimerTask(vendorData);
         //startRestockTimer();
@@ -178,31 +176,12 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
         this.playerInteractionOW = playerInteractionOW;
     }
 
-    //region <Kinematic>
+    //Collidable
+    /**
+     * @return the collision box of the Collidable
+     */
     @Override
-    public PhysicsVector getVelocity() {
-        return PhysicsVector.ZERO;
-    }
-
-    @Override
-    public void setVelocity(PhysicsVector pv) { }
-
-    @Override
-    public PhysicsVector getAcceleration() {
-        return PhysicsVector.ZERO;
-    }
-
-    @Override
-    public boolean isStatic(){
-        return  true;
-    }
-
-    @Override
-    public void setAcceleration(PhysicsVector pv) {
-    }
-
-    @Override
-    public Rectangle getHitbox() {
+    public Rectangle getCollisionBox() {
         return new Rectangle(x + (int)(image.getWidth()*.25), y + (int)(image.getHeight()*.25),
                 (int) (image.getWidth()*.5), (int)(image.getHeight()*.5));
     }
@@ -233,29 +212,27 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
 
     //region <GameScreen Methods>
     @Override
-    public boolean setActive(GameScreen screen){
+    public boolean setActive(GamePlayScreen screen){
         if(super.setActive(screen)){
-            screen.kinematics.add(this);
+            screen.interactables.add(this);
             return true;
-        }
-        return false;
+        }return false;
     }
 
     @Override
-    public boolean setInactive(GameScreen screen){
+    public boolean setInactive(GamePlayScreen screen){
         if(super.setInactive(screen)){
-            screen.kinematics.remove(this);
+            screen.interactables.remove(this);
             return true;
-        }
-        return false;
+        }return false;
     }
 
     @Override
-    public void addToScreen(GameScreen screen, boolean isActive){
+    public void addToScreen(GamePlayScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
-        screen.kinematics.remove(this);
-        if(isActive) {
-            screen.kinematics.add(this);
+        screen.interactables.remove(this);
+        if(isActive){
+            screen.interactables.add(this);
         }
     }
     //endregion

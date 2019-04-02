@@ -1,12 +1,10 @@
 package gameobject.renderable.player;
 
 import gameengine.gamedata.PlayerData;
-import gameengine.physics.Interactable;
-import gameengine.physics.Kinematic;
-import gameengine.physics.PhysicsMeta;
-import gameengine.physics.PhysicsVector;
+import gameengine.physics.*;
 import gameengine.rendering.animation.Animator;
 import gameobject.GameObject;
+import gameobject.renderable.CollidableRenderable;
 import gameobject.renderable.RenderableObject;
 import gameobject.renderable.item.*;
 import gameobject.renderable.DrawLayer;
@@ -16,6 +14,7 @@ import gameobject.renderable.player.overworld.PlayerIdleAnimation;
 import gameobject.renderable.player.overworld.PlayerWalkingAnimation;
 import gameobject.renderable.player.sidescrolling.*;
 import gamescreen.GameScreen;
+import gamescreen.gameplay.GamePlayScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -24,7 +23,7 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Player extends RenderableObject implements Kinematic, Interactable {
+public class Player extends CollidableRenderable implements Kinematic, Interactable {
 
     //region <Variables>
     private int speed = 1;
@@ -54,7 +53,7 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
 
     public Player(int x, int y, DrawLayer drawLayer, PlayerData playerData) {
         //TODO: Set to the random bear selection.
-        super(x, y, "/assets/player/TeddySilhouette.png", drawLayer);
+        super(x, y, "/assets/player/TeddySilhouette.png", drawLayer, 1f);
         //playerState = PlayerState.asleep;
         //TODO:Review
         this.playerData = playerData;
@@ -249,12 +248,23 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
     }
     //endregion
 
-    //region <Kinematics>
+    //region <Collidable>
+    /**
+     * @return the collision box of the Collidable
+     */
     @Override
-    public boolean isStatic() {
+    public Rectangle getCollisionBox() {
+        return new Rectangle(x, y, image.getWidth(), image.getHeight());
+    }
+
+    @Override
+    public boolean collide(Collidable c2) {
         return false;
     }
 
+    //endregion
+
+    //region <Kinematics>
     @Override
     public PhysicsVector getVelocity() {
         int gravSign = PhysicsMeta.Gravity != 0 && playerState == PlayerState.sideScroll ? 1 : 0;
@@ -266,14 +276,7 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
     }
 
     @Override
-    public void setVelocity(PhysicsVector pv) {
-//        if(pv.x != 0 && pv.y != 0){
-//            //TODO: this is broken. Needs to make speed constant in all directions
-//            pv.x = (pv.x / Math.sqrt(2));
-//            pv.y = (pv.y / Math.sqrt(2));
-//        }
-        magnitude = pv.mult(speed);
-    }
+    public void setVelocity(PhysicsVector pv) { magnitude = pv.mult(speed); }
 
     @Override
     public PhysicsVector getAcceleration() {
@@ -283,11 +286,6 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
     @Override
     public void setAcceleration(PhysicsVector pv) {
         moveState = pv;
-    }
-
-    @Override
-    public Rectangle getHitbox() {
-        return new Rectangle(x, y, image.getWidth(), image.getHeight());
     }
     //endregion
 
@@ -315,26 +313,32 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
 
     //region <GameObject Overrides>
     @Override
-    public boolean setActive(GameScreen screen){
+    public boolean setActive(GamePlayScreen screen){
         if(super.setActive(screen)){
             screen.kinematics.add(this);
+            screen.interactables.add(this);
             return true;
         }return false;
     }
 
     @Override
-    public boolean setInactive(GameScreen screen){
+    public boolean setInactive(GamePlayScreen screen){
         if(super.setInactive(screen)){
             screen.kinematics.remove(this);
+            screen.interactables.remove(this);
             return true;
         }return false;
     }
 
     @Override
-    public void addToScreen(GameScreen screen, boolean isActive){
+    public void addToScreen(GamePlayScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
         screen.kinematics.remove(this);
-        if(isActive) screen.kinematics.add(this);
+        screen.interactables.remove(this);
+        if(isActive){
+            screen.kinematics.add(this);
+            screen.interactables.add(this);
+        }
     }
     //endregion
 }

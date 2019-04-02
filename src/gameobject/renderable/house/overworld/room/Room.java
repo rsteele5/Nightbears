@@ -1,19 +1,17 @@
 package gameobject.renderable.house.overworld.room;
 
+import gameobject.Boundary;
 import gameobject.GameObject;
 import gameobject.renderable.house.overworld.Compass;
 import gameobject.renderable.house.overworld.Tile;
-import gamescreen.GameScreen;
+import gamescreen.gameplay.GamePlayScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
-import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.List;
 
 import static gameobject.renderable.house.overworld.OverworldMeta.TileSize;
-import static gameobject.renderable.house.overworld.OverworldMeta.WallThickness;
 
 public abstract class Room extends GameObject {
 
@@ -181,8 +179,7 @@ public abstract class Room extends GameObject {
 
 
     //region <GameObject Overrides>
-    @Override
-    public boolean setActive(GameScreen screen){
+    public boolean setActive(GamePlayScreen screen){
         if(super.setActive(screen)){
             boundaries.forEach(boundary -> boundary.setActive(screen));
             doors.forEach(door -> door.setActive(screen));
@@ -193,8 +190,7 @@ public abstract class Room extends GameObject {
         }return false;
     }
 
-    @Override
-    public boolean setInactive(GameScreen screen){
+    public boolean setInactive(GamePlayScreen screen){
         if(super.setInactive(screen)){
             boundaries.forEach(boundary -> boundary.setInactive(screen));
             doors.forEach(door -> door.setInactive(screen));
@@ -205,8 +201,7 @@ public abstract class Room extends GameObject {
         }return false;
     }
 
-    @Override
-    public void addToScreen(GameScreen screen, boolean isActive){
+    public void addToScreen(GamePlayScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
         boundaries.forEach(boundary -> boundary.addToScreen(screen, isActive));
         doors.forEach(door -> door.addToScreen(screen, isActive));

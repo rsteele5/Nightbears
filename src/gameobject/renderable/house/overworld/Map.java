@@ -3,13 +3,11 @@ package gameobject.renderable.house.overworld;
 import gameobject.GameObject;
 import gameobject.renderable.house.overworld.room.Room;
 import gameobject.renderable.house.overworld.room.SpawnPoint;
-import gameobject.renderable.house.overworld.room.SpawnType;
 import gamescreen.GameScreen;
 import gameobject.container.TileGridContainer;
+import gamescreen.gameplay.GamePlayScreen;
 
 import java.util.ArrayList;
-
-import static gameobject.renderable.house.overworld.OverworldMeta.*;
 
 public class Map extends GameObject {
 
@@ -29,8 +27,7 @@ public class Map extends GameObject {
     }
 
     //region <GameObject Overrides>
-    @Override
-    public boolean setActive(GameScreen screen){
+    public boolean setActive(GamePlayScreen screen){
         if(super.setActive(screen)){
             for (Room room : rooms) room.setActive(screen);
             for(TileGridContainer[] row : chunkMap){
@@ -39,8 +36,7 @@ public class Map extends GameObject {
         }return false;
     }
 
-    @Override
-    public boolean setInactive(GameScreen screen){
+    public boolean setInactive(GamePlayScreen screen){
         if(super.setInactive(screen)){
             for (Room room : rooms) room.setInactive(screen);
             for(TileGridContainer[] row : chunkMap){
@@ -49,8 +45,7 @@ public class Map extends GameObject {
         }return false;
     }
 
-    @Override
-    public void addToScreen(GameScreen screen, boolean isActive){
+    public void addToScreen(GamePlayScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
         for (Room room : rooms) room.addToScreen(screen, isActive);
         for(TileGridContainer[] row : chunkMap){

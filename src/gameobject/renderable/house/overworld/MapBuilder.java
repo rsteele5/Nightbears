@@ -1,11 +1,11 @@
 package gameobject.renderable.house.overworld;
 
 import gameobject.container.GridIndex;
-import gameobject.renderable.house.overworld.room.Boundary;
 import gameobject.renderable.house.overworld.room.Door;
+import gameobject.Boundary;
 import gameobject.renderable.house.overworld.room.Room;
 import gameobject.container.TileGridContainer;
-import gamescreen.GameScreen;
+import gamescreen.gameplay.GamePlayScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -17,14 +17,14 @@ import static gameobject.renderable.house.overworld.OverworldMeta.Tiles.House.*;
 import java.util.ArrayList;
 
 public class MapBuilder {
-    private GameScreen parentScreen;
+    private GamePlayScreen parentScreen;
     private ChunkBuilder chunkBuilder;
     private ArrayList<ArrayList<TileGridContainer>> chunks;
     private ArrayList<Room> rooms;
 
 
 
-    public void createMap(GameScreen parentScreen){
+    public void createMap(GamePlayScreen parentScreen){
         Debug.log(DebugEnabler.OVERWORLD, "MapBuilder - Start creating Map");
         this.parentScreen = parentScreen;
         rooms = new ArrayList<>();

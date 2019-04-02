@@ -1,16 +1,15 @@
 package gameengine.physics;
 
-import gameobject.GameObject;
+import gameobject.renderable.CollidableRenderable;
 import gameobject.renderable.DrawLayer;
-import gameobject.renderable.RenderableObject;
-import gamescreen.GameScreen;
+import gamescreen.gameplay.GamePlayScreen;
 
 import java.awt.*;
 
-public class PhysicsObject extends RenderableObject implements Kinematic, Interactable {
+public class PhysicsObject extends CollidableRenderable implements Kinematic {
     private PhysicsVector accel = new PhysicsVector(0,1);
     public PhysicsObject(int x, int y, String path, DrawLayer drawLayer){
-        super(x,y,path,drawLayer);
+        super(x,y,path,drawLayer, 1f);
     }
     PhysicsVector movement = new PhysicsVector(0,0);
     public String name = "square";
@@ -18,12 +17,6 @@ public class PhysicsObject extends RenderableObject implements Kinematic, Intera
     public void update() {
 
     }
-
-    @Override
-    public boolean isStatic() {
-        return false;
-    }
-
     @Override
     public PhysicsVector getVelocity() {
         int gravSign = PhysicsMeta.Gravity != 0 ? 1 : 0;
@@ -49,17 +42,16 @@ public class PhysicsObject extends RenderableObject implements Kinematic, Intera
         accel = pv;
     }
 
+    /**
+     * @return the collision box of the Collidable
+     */
     @Override
-    public Rectangle getHitbox() {
+    public Rectangle getCollisionBox() {
         return new Rectangle(x, y, width, height);
     }
 
-    public String description(){
-        return "\nX:\t\t" + x + "\nY:\t\t" + y + "\nWidth:\t" + width + "\nHeight:\t" + height;
-    }
-
     @Override
-    public boolean setActive(GameScreen screen){
+    public boolean setActive(GamePlayScreen screen){
         if(super.setActive(screen)){
             screen.kinematics.add(this);
             return true;
@@ -68,7 +60,7 @@ public class PhysicsObject extends RenderableObject implements Kinematic, Intera
     }
 
     @Override
-    public boolean setInactive(GameScreen screen){
+    public boolean setInactive(GamePlayScreen screen){
         if(super.setInactive(screen)){
             screen.kinematics.remove(this);
             return true;
@@ -77,32 +69,11 @@ public class PhysicsObject extends RenderableObject implements Kinematic, Intera
     }
 
     @Override
-    public void addToScreen(GameScreen screen, boolean isActive){
+    public void addToScreen(GamePlayScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
-
+        screen.kinematics.remove(this);
         if(isActive) {
            screen.kinematics.add(this);
         }
-    }
-
-    //Interactable
-    @Override
-    public Rectangle getRequestArea() {
-        return new Rectangle(x, y, width, height);
-    }
-
-    @Override
-    public void setRequesting(boolean isRequesting) {
-
-    }
-
-    @Override
-    public boolean isRequesting() {
-        return false;
-    }
-
-    @Override
-    public boolean action(GameObject g) {
-        return false;
     }
 }

@@ -1,5 +1,6 @@
 package gameobject.renderable.item.weapon;
 
+import gameengine.physics.Collidable;
 import gameengine.physics.Interactable;
 import gameengine.physics.Kinematic;
 import gameengine.physics.PhysicsVector;
@@ -15,34 +16,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
-public class Weapon extends Item implements Kinematic, Serializable, Interactable {
+public class Weapon extends Item implements Collidable, Serializable {
     //region <Variables>
-
-    @Override
-    public Rectangle getRequestArea(){
-        return new Rectangle(x,y,image.getWidth(),image.getHeight());
-    }
-
-    @Override
-    public void setRequesting(boolean isRequesting) {
-    }
-
-    @Override
-    public boolean isRequesting() {
-        return false;
-    }
-
-    @Override
-    public boolean action(GameObject g){
-        if(g instanceof Player){
-            ((Player)g).addItem(this);
-            //TODO: Fix temp solution for removing image from screen.
-            image = null;
-            return true;
-        }
-        else return false;
-
-    }
     /** General item variables **/
     private transient BufferedImage icon;
     protected String name;
@@ -209,39 +184,34 @@ public class Weapon extends Item implements Kinematic, Serializable, Interactabl
         icon = AssetLoader.resizeImage(image, image.getWidth()/2, image.getHeight()/2);
     }
 
-    //region <Physics Methods>
+
+    /**
+     * @return the collision box of the Collidable
+     */
     @Override
-    public boolean isStatic() {
-        return false;
-    }
-
-    @Override
-    public PhysicsVector getVelocity() {
-        return new PhysicsVector(0,0);
-    }
-
-    @Override
-    public void setVelocity(PhysicsVector pv) {
-
-    }
-
-    @Override
-    public PhysicsVector getAcceleration() {
-        return new PhysicsVector(0,0);
-    }
-
-    @Override
-    public void setAcceleration(PhysicsVector pv) {
-
-    }
-
-    @Override
-    public Rectangle getHitbox() {
+    public Rectangle getCollisionBox() {
         return new Rectangle(x, y, width, height);
     }
 
+    /**
+     * @return True: Collidable is a trigger <br>
+     * False: Collidable is not a trigger
+     */
+    @Override
+    public boolean isTrigger() {
+        return true;
+    }
 
-    //endregion
+    @Override
+    public boolean triggered(GameObject g) {
+        if(g instanceof Player){
+            ((Player)g).addItem(this);
+            image = null;
+            return true;
+        }
+        else return false;
+    }
+
 }
 
 
