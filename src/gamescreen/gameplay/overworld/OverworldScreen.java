@@ -1,6 +1,5 @@
 package gamescreen.gameplay.overworld;
 
-import gameengine.gamedata.VendorData;
 import gameengine.physics.PhysicsObjectStatic;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.overworld.Map;
@@ -9,7 +8,6 @@ import gameobject.renderable.house.overworld.room.Bathroom;
 import gameobject.renderable.house.overworld.room.Bedroom;
 import gameobject.renderable.house.overworld.room.LivingRoom;
 import gameobject.renderable.house.overworld.room.SpawnPoint;
-import gameobject.renderable.text.DialogBox;
 import gameengine.rendering.Camera;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.vendor.Vendor;

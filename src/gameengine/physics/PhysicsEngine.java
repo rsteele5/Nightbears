@@ -11,115 +11,33 @@ import java.util.ArrayList;
 public class PhysicsEngine {
 
     private ScreenManager screenManager;
-    public PhysicsEngine(GameData gameData, ScreenManager myScreenManager) {
-        screenManager = myScreenManager;
+    private PhysicState physicState;
+    public enum PhysicState{
+        TopDown,
+        SideScroll
+    }
 
+    public PhysicsEngine(ScreenManager myScreenManager) {
+        screenManager = myScreenManager;
+        physicState = PhysicState.TopDown;
     }
 
     public void update() {
-        ArrayList<Kinematic> objects;
-        objects = screenManager.getPhysicsObjects();
-        if (objects == null)
-            return;
-
-        Player.PlayerState playerState = null;
-        for (Kinematic k : objects)
-            if(k instanceof Player)
-                playerState = ((Player) k).getState();
-
-        if(playerState == null)
-            return;
-
-        int indices = objects.size();
-        for (int i1 = 0; i1 < indices; i1++) {
-            if(objects.get(i1).isStatic())
-                continue;
-            GameObject obj1 = (GameObject) objects.get(i1);
-            Interactable iObj1 = null;
-            if(obj1 instanceof Interactable) iObj1 = (Interactable) obj1;
-
-            Kinematic kObj1 = objects.get(i1);
-            if(playerState == Player.PlayerState.sideScroll)
-                if ((kObj1.getAcceleration().y + PhysicsMeta.Gravity) < PhysicsMeta.terminalVelocity)
-                    kObj1.setAcceleration(kObj1.getAcceleration().add(new PhysicsVector(0, PhysicsMeta.Gravity)));
-
-            kObj1.move();
-            for (int i2 = 0; i2 < indices; i2++) {
-                if (i2 == i1) continue;
-                GameObject obj2 = (GameObject) objects.get(i2);
-                Kinematic kObj2 = objects.get(i2);
-
-                //Interactable
-                if(iObj1 != null) {
-                    if (obj2 instanceof Interactable) {
-                        Interactable iObj2 = (Interactable) obj2;
-                        if (iObj1.getRequestArea().intersects(iObj2.getRequestArea()) && iObj1.isRequesting()) {
-                            iObj2.action(obj1);
-                            iObj1.setRequesting(false);
-                        }
-                    }
-                }
-
-                //Trigger Interaction
-                if(kObj2 instanceof Trigger && (kObj1.getHitbox().intersects(((Trigger) kObj2).triggerArea()))) {
-                    if(((Trigger) kObj2).effect((GameObject) kObj1)) {
-                        objects.remove(kObj2);
-                        indices = objects.size();
-                        continue;
-                    }
-                }
-                if(kObj1 instanceof Trigger && (kObj2.getHitbox().intersects(((Trigger) obj1).triggerArea()))){
-                    if(((Trigger) kObj1).effect((GameObject) kObj2)) {
-                        objects.remove(kObj1);
-                        indices = objects.size();
-                        continue;
-                    }
-                }
-
-                if(!kObj2.isCollidable())
-                    continue;
-
-                if (kObj1.getHitbox().intersects(kObj2.getHitbox())) {
-
-                    kObj1.setAcceleration(new PhysicsVector(1, 1));
-                    if (!kObj2.isStatic())
-                        kObj2.setAcceleration(new PhysicsVector(1, 1));
-
-                    Rectangle intersect = kObj1.getHitbox().intersection(kObj2.getHitbox());
-                    int signX = kObj1.getX() < obj2.getX() + kObj2.getHitbox().width / 2 ? -1 : 1;
-                    int signY = kObj1.getY() < obj2.getY() + kObj2.getHitbox().height / 2 ? -1 : 1;
-
-                    if (intersect.height > .5 && intersect.width > .5) {
-                        if (kObj2.isStatic()) {
-                            if(intersect.width > intersect.height)
-                                if(signY == -1 && obj1 instanceof Player)
-                                    ((Player) obj1).grounded = true;
-
-                            if (intersect.height < intersect.width)
-                                obj1.setY(obj1.getY() + intersect.height * signY);
-
-                            else
-                                obj1.setX(obj1.getX() + intersect.width * signX);
-
-                        } else {
-                            if(intersect.width > intersect.height)
-                                if(signY == -1 && obj1 instanceof Player) ((Player) obj1).grounded = true;
-
-                            if (intersect.height < intersect.width) {
-                                obj1.setY(obj1.getY() + (intersect.height / 2 + 1) * signY);
-                                obj2.setY(obj2.getY() - (intersect.height / 2 + 1) * signY);
-
-                            } else {
-                                obj1.setX(obj1.getX() + (intersect.width / 2 + 1) * signX);
-                                obj2.setX(obj2.getX() - (intersect.width / 2 + 1) * signX);
-
-                            }
-                        }
-                    }
-                }
-
+        if(physicState == null) return;
+        ArrayList<Kinematic> kinematics = screenManager.getPhysicsObjects();
+        if(kinematics == null) return;
+        //Update physics
+        kinematics.forEach(k -> {
+            if(!k.isStatic()){
+                if(physicState == PhysicState.SideScroll)
+                    if ((k.getAcceleration().y + PhysicsMeta.Gravity) < PhysicsMeta.terminalVelocity)
+                        k.setAcceleration(k.getAcceleration().add(new PhysicsVector(0, PhysicsMeta.Gravity)));
+                k.move();
             }
-            if(iObj1 != null) iObj1.setRequesting(false);
-        }
+        });
+
+        //detect collisions
+
+        //resolveCollisions
     }
 }
