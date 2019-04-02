@@ -1,7 +1,7 @@
 package gamescreen.gameplay.level;
 
 import gameengine.physics.Kinematic;
-import gameengine.physics.PhysicsObject;
+import gameengine.physics.RenderablePhysicsObject;
 import gameengine.rendering.Camera;
 import gameobject.GameObject;
 import gameobject.renderable.DrawLayer;
@@ -39,11 +39,11 @@ public class SideScroll extends GameScreen {
         background.addToScreen(this,true);
 
 
-        PhysicsObject physicsObject;
+        RenderablePhysicsObject physicsObject;
 
         for(int x1 = 0; x1 < 5; x1++){
             for(int y1 = 0; y1 < x1; y1++){
-                physicsObject = new PhysicsObject(xOFF + x1 * 75 + 100,yOFF + y1*75,path,DrawLayer.Entity);
+                physicsObject = new RenderablePhysicsObject(xOFF + x1 * 75 + 100,yOFF + y1*75,path,DrawLayer.Entity);
                 physicsObject.addToScreen(this, true);
             }
         }
@@ -51,7 +51,7 @@ public class SideScroll extends GameScreen {
 
         for(int x1 = 4; x1 > 0; x1--){
             for(int y1 = 0; y1 < x1; y1++){
-                physicsObject = new PhysicsObject(xOFF - x1 * 75,yOFF + y1*75,path,DrawLayer.Entity);
+                physicsObject = new RenderablePhysicsObject(xOFF - x1 * 75,yOFF + y1*75,path,DrawLayer.Entity);
                 physicsObject.addToScreen(this, true);
             }
         }

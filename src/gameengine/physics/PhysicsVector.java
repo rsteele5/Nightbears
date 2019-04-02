@@ -2,17 +2,14 @@ package gameengine.physics;
 
 public class PhysicsVector{
     public static final PhysicsVector ZERO = new PhysicsVector(0,0);
-    public  double x, y, magnitude;
+    public  double x, y;
 
     public PhysicsVector(double x, double y) {
         this.x = x;
         this.y = y;
-        this.magnitude = Math.sqrt( x*x + y*y );
     }
 
-//    public double getX(){ return x; }
-//    public double getY(){ return y; }
-//    public double getMag(){ return magnitude; }
+    public double magnitude(){ return Math.sqrt( x*x + y*y ); }
 
     public double direction(){
         double direction;
@@ -26,6 +23,7 @@ public class PhysicsVector{
 
     public PhysicsVector normalize(){
         PhysicsVector newVector = new PhysicsVector(0,0);
+        double magnitude = magnitude();
         if (magnitude != 0) {
             newVector.x = x/magnitude;
             newVector.y = y/magnitude;

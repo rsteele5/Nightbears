@@ -6,9 +6,9 @@ import gamescreen.gameplay.GamePlayScreen;
 
 import java.awt.*;
 
-public class PhysicsObject extends CollidableRenderable implements Kinematic {
+public class RenderablePhysicsObject extends CollidableRenderable implements Kinematic {
     private PhysicsVector accel = new PhysicsVector(0,1);
-    public PhysicsObject(int x, int y, String path, DrawLayer drawLayer){
+    public RenderablePhysicsObject(int x, int y, String path, DrawLayer drawLayer){
         super(x,y,path,drawLayer, 1f);
     }
     PhysicsVector movement = new PhysicsVector(0,0);

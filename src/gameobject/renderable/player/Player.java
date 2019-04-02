@@ -5,15 +5,11 @@ import gameengine.physics.*;
 import gameengine.rendering.animation.Animator;
 import gameobject.GameObject;
 import gameobject.renderable.CollidableRenderable;
-import gameobject.renderable.RenderableObject;
-import gameobject.renderable.item.*;
 import gameobject.renderable.DrawLayer;
-import gameobject.renderable.RenderableObject;
 import gameobject.renderable.item.Item;
 import gameobject.renderable.player.overworld.PlayerIdleAnimation;
 import gameobject.renderable.player.overworld.PlayerWalkingAnimation;
 import gameobject.renderable.player.sidescrolling.*;
-import gamescreen.GameScreen;
 import gamescreen.gameplay.GamePlayScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
@@ -23,25 +19,32 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import static input.listeners.Key.KeyCodeMeta.*;
+
 public class Player extends CollidableRenderable implements Kinematic, Interactable {
 
     //region <Variables>
     private int speed = 1;
     private PlayerData playerData;
+    private PlayerState playerState;
     private CopyOnWriteArrayList<Item> items;
-    private PhysicsVector moveState = new PhysicsVector(1, 1);
-    private PhysicsVector magnitude = new PhysicsVector(0, 0);
-    private final int[] ssKeys = new int[]{68, 65};
-    private final int[] owKeys = new int[]{68, 65, 83, 87};
-    private boolean crouch = false;
-    private boolean crouchSet = true;
-    public boolean interaction = false;
-    private int movFlag = 0;
-    private int gold;
+    private PhysicsVector motion = new PhysicsVector(1, 1);
+    //private PhysicsVector magnitude = new PhysicsVector(0, 0);
     private double moveFactor = 1;
     private double rotation = 0;
+    /*
+    * Key codes in relation to x and y:
+    * 0 = -x
+    * 1 =  x
+    * 2 = -y
+    * 3 =  y
+    */
+    private final int[] keys = new int[]{LEFT, RIGHT, UP, DOWN};
+    private boolean[] keyFlag = new boolean[]{false,false,false,false};
+    private int dimension; // 2 = x movement; 4 = x,y movement
+    private boolean crouch = false;
+    private boolean crouchSet = true;
     public boolean grounded;
-    private PlayerState playerState;
     private boolean requesting;     //Use for requesting interactions
 
     public enum PlayerState {
@@ -52,15 +55,12 @@ public class Player extends CollidableRenderable implements Kinematic, Interacta
     //endregion
 
     public Player(int x, int y, DrawLayer drawLayer, PlayerData playerData) {
-        //TODO: Set to the random bear selection.
         super(x, y, "/assets/player/TeddySilhouette.png", drawLayer, 1f);
-        //playerState = PlayerState.asleep;
-        //TODO:Review
+        //PlayerData
         this.playerData = playerData;
         items = new CopyOnWriteArrayList<>();
         items = playerData.getInventory();
-        //initializeItems()
-
+        //Animator
         animator = new Animator(this);
         animator.addAnimation("Walking", new PlayerWalkingAnimation(playerData.getImageDirectory()));
         animator.addAnimation("Idle", new PlayerIdleAnimation(playerData.getImageDirectory()));
@@ -68,8 +68,8 @@ public class Player extends CollidableRenderable implements Kinematic, Interacta
         animator.addAnimation("SS_Idle_Right", new PlayerSSIdleAnimationRight(playerData.getImageDirectory()));
         animator.addAnimation("SS_Running_Left", new PlayerSSRunningAnimationLeft(playerData.getImageDirectory()));
         animator.addAnimation("SS_Running_Right", new PlayerSSRunningAnimationRight(playerData.getImageDirectory()));
-        animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation(playerData.getImageDirectory()));
-
+        //animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation(playerData.getImageDirectory()));
+        //Interactable
         requesting = false;
     }
 
@@ -78,9 +78,6 @@ public class Player extends CollidableRenderable implements Kinematic, Interacta
         return playerState;
     }
 
-    /**
-     * Returns true or false depending on the acceptance of the state transition.
-     */
     public void setState(PlayerState ps) {
         //TODO: Implement error checking
         switch (ps) {
@@ -91,10 +88,12 @@ public class Player extends CollidableRenderable implements Kinematic, Interacta
                 height = 100;
                 animator.setAnimation("Idle");
                 playerState = ps;
+                dimension = 4;
                 break;
             case asleep:
                 Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: asleep");
                 playerState = ps;
+                dimension = 0;
                 break;
             case sideScroll:
                 Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: sideScroll");
@@ -102,21 +101,20 @@ public class Player extends CollidableRenderable implements Kinematic, Interacta
                 rotation = 0;
                 animator.setAnimation("SS_Idle_Right");
                 playerState = ps;
+                dimension = 2;
                 break;
         }
     }
-
     //endregion
 
     //region <Update and Draw>
     @Override
     public void update() {
-        if(interaction) Debug.log(DebugEnabler.PLAYER_STATUS,"Interaction Available! Act now!");
         if(playerState == PlayerState.sideScroll && !crouchSet  ){
             crouchSet = true;
             if(crouch) {
                 y = y + image.getHeight()/2;
-                animator.setAnimation("SS_Crouch");
+                //animator.setAnimation("SS_Crouch");
             }
             else {
                 animator.setAnimation("SS_Idle");
@@ -124,7 +122,7 @@ public class Player extends CollidableRenderable implements Kinematic, Interacta
             }
         }
         if (playerState == PlayerState.overWorld) {
-            if (magnitude.x != 0.0 || magnitude.y != 0.0) {
+            if (motion.x != 0.0 || motion.y != 0.0) {
                 rotation = getVelocity().direction();
                 if(!animator.getCurrentAnimationName().equals("Walking"))
                     animator.setAnimation("Walking");
@@ -180,25 +178,41 @@ public class Player extends CollidableRenderable implements Kinematic, Interacta
         setVelocity(new PhysicsVector(x1, y1));
     }
 
-    private void calculateMove(KeyEvent e, int[] keys) {
-        for (int i = 0; i < keys.length; i++)
-            movFlag += e.getKeyCode() == keys[i] && ((movFlag & (int) Math.pow(2, i)) == 0) ? (int) Math.pow(2, i) : 0;
-        setMovementState(movFlag);
+    private void calculateMove(KeyEvent e) {
+        if(modifyKeyFlag(e, true)){
+            if(playerState == PlayerState.sideScroll)
+                //TODO: Start Here ***************************************************************
+            setMovementState(movFlag);
+        }
+
+//        for (int i = 0; i < keys.length; i++)
+//            movFlag += e.getKeyCode() == keys[i] && ((movFlag & (int) Math.pow(2, i)) == 0) ? (int) Math.pow(2, i) : 0;
+//        setMovementState(movFlag);
     }
 
-    private void calculateRelease(KeyEvent e, int[] keys) {
-        for (int i = 0; i < keys.length; i++)
-            movFlag -= e.getKeyCode() == keys[i] && ((movFlag & (int) Math.pow(2, i)) == Math.pow(2, i)) ? (int) Math.pow(2, i) : 0;
-        setMovementState(movFlag);
+    private void calculateRelease(KeyEvent e) {
+        if(modifyKeyFlag(e, false)){
 
+        }
+//        for (int i = 0; i < keys.length; i++)
+//            movFlag -= e.getKeyCode() == keys[i] && ((movFlag & (int) Math.pow(2, i)) == Math.pow(2, i)) ? (int) Math.pow(2, i) : 0;
+//        setMovementState(movFlag);
+    }
+
+    private boolean modifyKeyFlag(KeyEvent e, boolean state){
+        for (int i = 0; i < dimension; i++){
+            if(e.getKeyCode() == keys[i]){
+                keyFlag[i] = state;
+                return true;
+            }
+        } return false;
     }
 
     public void move(KeyEvent e) {
         switch (getState()) {
             case sideScroll:
                 if (e.getKeyCode() == 32 && grounded) { // JUMP
-                    int sign = PhysicsMeta.AntiGravity ? -1 : 1;
-                    setAcceleration(getAcceleration().add(new PhysicsVector(0, -7 * sign)));
+                    setAcceleration(getAcceleration().add(new PhysicsVector(0, -7)));
                     grounded = false;
                 }
                 if(e.getKeyCode() == 83 && !crouch){ // CROUCH
@@ -208,11 +222,10 @@ public class Player extends CollidableRenderable implements Kinematic, Interacta
                 if(e.getKeyCode() == 16) { // SPRINT
                     moveFactor = 2.5;
                 }
-                if (PhysicsMeta.Gravity == 0) calculateMove(e, owKeys);
-                else calculateMove(e, ssKeys);
+                else calculateMove(e);
                 break;
             case overWorld:
-                calculateMove(e, owKeys);
+                calculateMove(e);
                 break;
         }
 
@@ -221,23 +234,21 @@ public class Player extends CollidableRenderable implements Kinematic, Interacta
     public void moveRelease(KeyEvent e) {
         switch (getState()) {
             case sideScroll:
-                if(e.getKeyCode() == 83 && crouch){
+                if(e.getKeyCode() == DOWN && crouch){
                     Debug.log(DebugEnabler.PLAYER_STATUS,"CROUCHING RELEASE");
                     crouch = false;
                     crouchSet = false;
 
                 }
-                if(e.getKeyCode() == 16) {
+                if(e.getKeyCode() == SPRINT) {
                     moveFactor = 1;
                 }
-
-                if (PhysicsMeta.Gravity == 0) calculateRelease(e, owKeys);
-                else calculateRelease(e, ssKeys);
+                else calculateRelease(e);
 
                 break;
 
             case overWorld:
-                calculateRelease(e, owKeys);
+                calculateRelease(e);
                 break;
         }
 

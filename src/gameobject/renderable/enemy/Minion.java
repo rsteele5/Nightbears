@@ -19,7 +19,7 @@ public abstract class Minion extends Enemy /*implements Collidable, Kinematic, I
 //    @Override
 //    public boolean action(GameObject g){
 //
-//        if(g instanceof PhysicsObject && !(g instanceof PhysicsObjectStatic)) {
+//        if(g instanceof RenderablePhysicsObject && !(g instanceof PhysicsObjectStatic)) {
 //            changeState();
 //        }
 //
