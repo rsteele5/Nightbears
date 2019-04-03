@@ -1,6 +1,5 @@
 package gameobject.renderable.house.overworld.room;
 
-import gameengine.physics.Collidable;
 import gameengine.physics.Interactable;
 import gameobject.GameObject;
 import gameobject.renderable.CollidableRenderable;
@@ -27,10 +26,10 @@ public class Door extends CollidableRenderable implements Interactable {
         openable = false;
         this.referenceTile = referenceTile;
         this.attachedDirection = attachedDirection;
-        x = referenceTile.getX();
-        y = referenceTile.getY();
-        int interactX = x;
-        int interactY = y;
+        position.x = referenceTile.getX();
+        position.y = referenceTile.getY();
+        int interactX = position.x;
+        int interactY = position.y;
         int interactW = TileSize;
         int interactH = TileSize;
         //Adjust Position and Interaction box
@@ -41,12 +40,12 @@ public class Door extends CollidableRenderable implements Interactable {
                 imagePath += "Hori.png";
                 break;
             case South:
-                y += TileSize - WallThickness;
+                position.y += TileSize - WallThickness;
                 interactH += TileSize;
                 imagePath += "Hori.png";
                 break;
             case East:
-                x += TileSize - WallThickness;
+                position.x += TileSize - WallThickness;
                 interactW += TileSize;
                 imagePath += "Vert.png";
                 break;
@@ -85,15 +84,6 @@ public class Door extends CollidableRenderable implements Interactable {
             open.doIt();
         }
         return false;
-    }
-
-    //Collidable
-    /**
-     * @return the collision box of the Collidable
-     */
-    @Override
-    public Rectangle getCollisionBox() {
-        return new Rectangle(x, y, width, height);
     }
 
     //Game Object

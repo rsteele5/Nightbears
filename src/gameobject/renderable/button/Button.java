@@ -99,11 +99,12 @@ public class Button extends RenderableObject implements Clickable{
         if(animator != null){
             animator.animate();
         }
-        Debug.drawRect(DebugEnabler.RENDERABLE_LOG,graphics, new Rectangle2D.Double(x,y,width, height));
+        Debug.drawRect(DebugEnabler.RENDERABLE_LOG,graphics,
+                new Rectangle2D.Double(position.x, position.y, width, height));
         if(isPressed) {
-            graphics.drawImage(pressedImage, x - 10  , y - 10, width + 20, height + 20, null);
+            graphics.drawImage(pressedImage, position.x - 10  , position.y - 10, width + 20, height + 20, null);
         } else {
-            graphics.drawImage(image, x , y, width, height, null);
+            graphics.drawImage(image, position.x , position.y, width, height, null);
         }
     }
 

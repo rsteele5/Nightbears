@@ -47,7 +47,7 @@ public class TextBox extends RenderableObject {
 
     @Override
     public void draw(Graphics2D graphics) {
-        Debug.drawRect(true, graphics, new Rectangle2D.Float(x,y,width,height));
+        Debug.drawRect(true, graphics, new Rectangle2D.Float(position.x, position.y, width, height));
         if(displayText.equals("")) parseString(graphics);
         graphics.setFont(font);
         graphics.setColor(color);
@@ -60,12 +60,12 @@ public class TextBox extends RenderableObject {
                 if(centered == true){
                     int stringWidth = graphics.getFontMetrics().stringWidth(line);
                     //Debug.drawRect(true, graphics, new Rectangle2D.Float(x + ((width-stringWidth)/2),y,stringWidth,height));
-                    int xPos = x + ((width-stringWidth)/2);
+                    int xPos = position.x + ((width-stringWidth)/2);
                     //Debug.log(true, "Position - " + xPos);
-                    graphics.drawString(line, xPos, y + row + fontAscent);
+                    graphics.drawString(line, xPos, position.y + row + fontAscent);
                     row += fontHeight;
                 } else {
-                    graphics.drawString(line, x, y + row + fontAscent);
+                    graphics.drawString(line, position.x, position.y + row + fontAscent);
                     row += fontHeight;
                 }
             }

@@ -1,10 +1,6 @@
 package gameobject;
 
 import gameengine.physics.Collidable;
-import gameengine.physics.Kinematic;
-import gameengine.physics.PhysicsVector;
-import gameobject.GameObject;
-import gamescreen.GameScreen;
 import gamescreen.gameplay.GamePlayScreen;
 
 import java.awt.Rectangle;
@@ -25,7 +21,7 @@ public abstract class CollidableObject extends GameObject implements Collidable 
      */
     @Override
     public Rectangle getCollisionBox() {
-        return new Rectangle(x, y, width, height);
+        return new Rectangle(position.x, position.y, width, height);
     }
 
     public boolean setActive(GamePlayScreen screen){

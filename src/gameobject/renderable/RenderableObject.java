@@ -106,7 +106,7 @@ public abstract class RenderableObject extends GameObject implements Loadable, S
     }
 
     public Rectangle2D getBoundingBox() {
-        return new Rectangle2D.Double(x, y, width, height);
+        return new Rectangle2D.Double(position.x, position.y, width, height);
     }
 
     public void setWidth(int w){
@@ -136,8 +136,9 @@ public abstract class RenderableObject extends GameObject implements Loadable, S
         if(animator != null){
             animator.animate();
         }
-        Debug.drawRect(DebugEnabler.RENDERABLE_LOG,graphics, new Rectangle2D.Double(x,y,width, height));
-        graphics.drawImage(image, x , y, width, height, null);
+        Debug.drawRect(DebugEnabler.RENDERABLE_LOG,graphics,
+                new Rectangle2D.Double(position.x,position.y,width, height));
+        graphics.drawImage(image, position.x , position.y, width, height, null);
     }
 
     public void load() {

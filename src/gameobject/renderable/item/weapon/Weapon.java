@@ -1,9 +1,6 @@
 package gameobject.renderable.item.weapon;
 
 import gameengine.physics.Collidable;
-import gameengine.physics.Interactable;
-import gameengine.physics.Kinematic;
-import gameengine.physics.PhysicsVector;
 import gameobject.GameObject;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.item.Item;
@@ -16,7 +13,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
-public class Weapon extends Item implements Collidable, Serializable {
+public class Weapon extends Item implements Serializable {
     //region <Variables>
     /** General item variables **/
     private transient BufferedImage icon;
@@ -190,7 +187,7 @@ public class Weapon extends Item implements Collidable, Serializable {
      */
     @Override
     public Rectangle getCollisionBox() {
-        return new Rectangle(x, y, width, height);
+        return new Rectangle(position.x, position.y, width, height);
     }
 
     /**

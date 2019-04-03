@@ -113,12 +113,12 @@ public class Player extends CollidableRenderable implements Kinematic, Interacta
         if(playerState == PlayerState.sideScroll && !crouchSet  ){
             crouchSet = true;
             if(crouch) {
-                y = y + image.getHeight()/2;
+                position.y += image.getHeight()/2;
                 //animator.setAnimation("SS_Crouch");
             }
             else {
                 animator.setAnimation("SS_Idle");
-                y = y - image.getHeight()/2;
+                position.y -= image.getHeight()/2;
             }
         }
         if (playerState == PlayerState.overWorld) {
@@ -139,11 +139,12 @@ public class Player extends CollidableRenderable implements Kinematic, Interacta
         if(animator != null){
             animator.animate();
         }
-        Debug.drawRect(DebugEnabler.RENDERABLE_LOG,graphics2D, new Rectangle2D.Double(x,y,width, height));
+        Debug.drawRect(DebugEnabler.RENDERABLE_LOG,graphics2D,
+                new Rectangle2D.Double(position.x, position.y, width, height));
 
         Graphics2D g2 = (Graphics2D) graphics2D.create();
-        g2.rotate(rotation, x + (width / 2.0), y + (height / 2.0));
-        g2.drawImage(image, x, y, null);
+        g2.rotate(rotation, position.x + (width / 2.0), position.y + (height / 2.0));
+        g2.drawImage(image, position.x, position.y, null);
         g2.dispose();
     }
     //endregion
@@ -260,19 +261,10 @@ public class Player extends CollidableRenderable implements Kinematic, Interacta
     //endregion
 
     //region <Collidable>
-    /**
-     * @return the collision box of the Collidable
-     */
-    @Override
-    public Rectangle getCollisionBox() {
-        return new Rectangle(x, y, image.getWidth(), image.getHeight());
-    }
-
     @Override
     public boolean collide(Collidable c2) {
         return false;
     }
-
     //endregion
 
     //region <Kinematics>

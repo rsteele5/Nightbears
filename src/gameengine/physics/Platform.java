@@ -1,16 +1,14 @@
 package gameengine.physics;
 
+import gameobject.renderable.CollidableRenderable;
 import gameobject.renderable.DrawLayer;
-import gameobject.renderable.RenderableObject;
 import gameobject.renderable.player.Player;
 
-import java.awt.*;
-
-public class Platform extends RenderableObject implements Collidable {
+public class Platform extends CollidableRenderable{
 
     private int counter = 0;
     public Platform(int x, int y, String path, DrawLayer drawLayer) {
-        super(x, y, path, drawLayer);
+        super(x, y, path, drawLayer, 1f);
     }
 
     @Override
@@ -21,14 +19,6 @@ public class Platform extends RenderableObject implements Collidable {
             if (alpha < .9f) setAlpha(alpha + .03f);
             else setAlpha(1);
         }
-    }
-
-    /**
-     * @return the collision box of the Collidable
-     */
-    @Override
-    public Rectangle getCollisionBox() {
-        return new Rectangle(x,y,width,height);
     }
 
     @Override

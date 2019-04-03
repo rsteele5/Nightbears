@@ -182,7 +182,7 @@ public class Vendor extends CollidableRenderable implements Interactable, Serial
      */
     @Override
     public Rectangle getCollisionBox() {
-        return new Rectangle(x + (int)(image.getWidth()*.25), y + (int)(image.getHeight()*.25),
+        return new Rectangle(position.x + (int)(image.getWidth()*.25), position.y + (int)(image.getHeight()*.25),
                 (int) (image.getWidth()*.5), (int)(image.getHeight()*.5));
     }
     //endregion
@@ -190,7 +190,7 @@ public class Vendor extends CollidableRenderable implements Interactable, Serial
     //region <Interactable>
     @Override
     public Rectangle getRequestArea() {
-        return new Rectangle(x-20,y-20,image.getWidth()+20,image.getHeight()+20);
+        return new Rectangle(position.x-20,position.y-20,image.getWidth()+20,image.getHeight()+20);
     }
 
     @Override

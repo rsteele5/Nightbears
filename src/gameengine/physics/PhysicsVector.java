@@ -1,6 +1,6 @@
 package gameengine.physics;
 
-public class PhysicsVector{
+public class PhysicsVector {
     public static final PhysicsVector ZERO = new PhysicsVector(0,0);
     public  double x, y;
 

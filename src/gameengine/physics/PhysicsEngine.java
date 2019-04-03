@@ -37,8 +37,8 @@ public class PhysicsEngine {
         if(!kinematics.isEmpty()) {
             kinematics.forEach(k -> {
                 if (physicState == PhysicState.SideScroll)
-                    if ((k.getAcceleration().y + PhysicsMeta.Gravity) < PhysicsMeta.terminalVelocity)
-                        k.setAcceleration(k.getAcceleration().add(new PhysicsVector(0, PhysicsMeta.Gravity)));
+                    if ((k.getAcceleration().y + PhysicsMeta.Gravity.y) < PhysicsMeta.terminalVelocity)
+                        k.setAcceleration(k.getAcceleration().add(PhysicsMeta.Gravity));
                 k.move();
             });
         }

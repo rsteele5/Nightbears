@@ -56,15 +56,16 @@ public class ButtonText extends Button{
         if(animator != null){
             animator.animate();
         }
-        Debug.drawRect(DebugEnabler.RENDERABLE_LOG,graphics, new Rectangle2D.Double(x,y,width, height));
+        Debug.drawRect(DebugEnabler.RENDERABLE_LOG,graphics,
+                new Rectangle2D.Double(position.x, position.y, width, height));
         if(isPressed) {
-            graphics.drawImage(pressedImage, x - 10  , y - 10, width + 20, height + 20, null);
+            graphics.drawImage(pressedImage, position.x - 10  , position.y - 10, width + 20, height + 20, null);
             graphics.setColor(Color.YELLOW);
-            graphics.drawString(text, x+(image.getWidth()/2)-(textWidth/2), y+fontHeight);
+            graphics.drawString(text, position.x+(image.getWidth()/2)-(textWidth/2), position.y+fontHeight);
             graphics.setColor(Color.WHITE);
         } else {
-            graphics.drawImage(image, x , y, width, height, null);
-            graphics.drawString(text, x+(image.getWidth()/2)-(textWidth/2), y+fontHeight);
+            graphics.drawImage(image, position.x , position.y, width, height, null);
+            graphics.drawString(text, position.x+(image.getWidth()/2)-(textWidth/2), position.y+fontHeight);
         }
 
         //graphics.setColor(color);

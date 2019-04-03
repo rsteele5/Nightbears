@@ -1,48 +1,62 @@
 package gameobject;
 
+import gameengine.physics.PhysicsVector;
 import gamescreen.GameScreen;
 
 public abstract class GameObject {
 
-    protected int x;
-    protected int y;
+    protected PositionVector position;
 
     boolean isActive = true;
 
     public GameObject() {
-        x = 0;
-        y = 0;
+        position = PositionVector.ORIGIN;
     }
 
     public GameObject(int x, int y) {
-        this.x = x;
-        this.y = y;
+        position = new PositionVector(x,y);
+    }
+
+    public PositionVector getPosition() {
+        return position;
     }
 
     public int getX() {
-        return x;
+        return position.x;
     }
 
     public int getY() {
-        return y;
+        return position.y;
     }
 
     public void setX(int x) {
-        this.x = x;
+        position.x = x;
     }
 
     public void setY(int y) {
-        this.y = y;
+        position.y = y;
+    }
+
+    public void setPosition(PositionVector position) {
+        this.position = position;
     }
 
     public void setPosition(int x, int y) {
-        this.x = x;
-        this.y = y;
+        position.x = x;
+        position.y = y;
+    }
+
+    public void translate(PositionVector vector){
+        position = position.add(vector);
+    }
+
+    public void translate(PhysicsVector vector){
+        position = position.add(vector);
     }
 
     public void translate(int x, int y){
-        this.x += x;
-        this.y += y;
+        position.x += x;
+        position.y += y;
     }
 
     public boolean setActive(GameScreen screen){
@@ -68,8 +82,8 @@ public abstract class GameObject {
     public void addToScreen(GameScreen screen, boolean isActive){
 
         this.isActive = isActive;
-        x += screen.getX();
-        y += screen.getY();
+        position.x += screen.getX();
+        position.y += screen.getY();
 
         //Remove if the object is already in the list.
         screen.activeObjects.remove(this);
@@ -83,8 +97,8 @@ public abstract class GameObject {
     }
 
     public void scale(float scaleFactor) {
-        x *= scaleFactor;
-        y *= scaleFactor;
+        position.x *= scaleFactor;
+        position.y *= scaleFactor;
     }
 
     public abstract void update();

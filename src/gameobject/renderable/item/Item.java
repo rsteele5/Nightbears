@@ -1,5 +1,6 @@
 package gameobject.renderable.item;
 
+import gameobject.renderable.CollidableRenderable;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.RenderableObject;
 import gameobject.renderable.item.armor.ArmorBuilder;
@@ -9,10 +10,10 @@ import java.io.Serializable;
 
 import static java.lang.Math.round;
 
-public abstract class Item extends RenderableObject implements Serializable {
+public abstract class Item extends CollidableRenderable implements Serializable {
 
     public Item(int x, int y, String imagePath, DrawLayer layer) {
-        super(x,y,imagePath,layer);
+        super(x,y,imagePath,layer, 1f);
     }
     public abstract BufferedImage getIcon();
     public abstract String getItemName();

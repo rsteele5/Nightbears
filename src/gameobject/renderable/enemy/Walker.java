@@ -1,11 +1,5 @@
 package gameobject.renderable.enemy;
 
-import gameengine.physics.PhysicsVector;
-import gameobject.renderable.DrawLayer;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-
 public class Walker /*extends Minion*/ {
 
 //    public Walker() {

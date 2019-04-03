@@ -1,6 +1,7 @@
 package gameobject.renderable.text;
 
 import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -54,7 +55,8 @@ public class DialogBox extends TextBox {
 
     @Override
     public void draw(Graphics2D graphics) {
-        Debug.drawRect(true, graphics, new Rectangle2D.Double(x,y,(double)width, (double) height));
+        Debug.drawRect(DebugEnabler.DRAWING_ACTIVE, graphics,
+                new Rectangle2D.Double(position.x, position.y,(double)width, (double) height));
         if(displayText.equals("")){
             parseString(graphics);
             setUpStringQueue();
@@ -71,12 +73,12 @@ public class DialogBox extends TextBox {
                 if(centered == true){
                     int stringWidth = graphics.getFontMetrics().stringWidth(line);
                     //Debug.drawRect(true, graphics, new Rectangle2D.Float(x + ((width-stringWidth)/2),y,stringWidth,height));
-                    int xPos = x + ((width-stringWidth)/2);
+                    int xPos = position.x + ((width-stringWidth)/2);
                     //Debug.log(true, "Position - " + xPos);
-                    graphics.drawString(line, xPos, y + row + fontAscent);
+                    graphics.drawString(line, xPos, position.y + row + fontAscent);
                     row += fontHeight;
                 } else {
-                    graphics.drawString(line, x, y + row + fontAscent);
+                    graphics.drawString(line, position.x, position.y + row + fontAscent);
                     row += fontHeight;
                 }
             }
