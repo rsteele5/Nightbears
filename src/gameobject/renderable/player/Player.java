@@ -104,26 +104,23 @@ public class Player extends RenderablePhysicsObject implements Interactable {
     //region <Update and Draw>
     @Override
     public void update() {
-        if(playerState == PlayerState.sideScroll && !crouchSet  ){
-            crouchSet = true;
-            if(crouch) {
-                position.y += image.getHeight()/2;
-                //animator.setAnimation("SS_Crouch");
-            }
-            else {
-                animator.setAnimation("SS_Idle");
-                position.y -= image.getHeight()/2;
-            }
-        }
-        if (playerState == PlayerState.overWorld) {
-            if (motion.x != 0.0 || motion.y != 0.0) {
-                rotation = getVelocity().direction();
-                if(!animator.getCurrentAnimationName().equals("Walking"))
-                    animator.setAnimation("Walking");
-            } else {
-                if(!animator.getCurrentAnimationName().equals("Idle"))
-                    animator.setAnimation("Idle");
-            }
+        //calculateMove();
+        setMovementAnimation();
+    }
+
+    private void calculateMove() {
+        switch(playerState) {
+            case sideScroll: // x movement
+                if(keyFlag[0] && !keyFlag[1])
+                     motion = motion.add(-speed,0);
+                if(!keyFlag[0] && keyFlag[1])
+                    motion = motion.add(speed,0);
+            case overWorld: // y movement
+                if(keyFlag[2] && !keyFlag[3])
+                    motion = motion.add(-speed,0);
+                if(!keyFlag[2] && keyFlag[3])
+                    motion = motion.add(speed,0);
+                break;
         }
     }
 
@@ -148,17 +145,43 @@ public class Player extends RenderablePhysicsObject implements Interactable {
     private void setMovementAnimation() {
         switch(playerState){
             case sideScroll:
-                if(motion.x > 0.05 && grounded && animator.getCurrentAnimation().getName() != "SS_Running_Right") {
-                    animator.setAnimation("SS_Running_Right");
-                } else if (motion.x < -0.05 && grounded && !animator.getCurrentAnimation().getName().equals("SS_Running_Left") ) {
-                    animator.setAnimation("SS_Running_Left");
-                } else if(x1 == 0 && grounded && animator.getCurrentAnimation().getName().equals("SS_Running_Left") && animator.getCurrentAnimation().getName() != "SS_Idle_Left") {
-                    animator.setAnimation("SS_Idle_Left");
-                } else if (x1 == 0 && grounded && animator.getCurrentAnimation().getName() == "SS_Running_Right" && animator.getCurrentAnimation().getName() != "SS_Idle_Right") {
-                    animator.setAnimation("SS_Idle_Right");
+                switch(animator.getCurrentAnimation().getName()){
+                    case "SS_Running_Right":
+                        if(grounded) {
+                            if (motion.x < 0.05) {
+                                if (motion.x > -0.05) animator.setAnimation("SS_Idle_Right");
+                                else animator.setAnimation("SS_Running_Left");
+                            }
+                        } else { /* Jumping or falling animation */}
+                        break;
+                    case "SS_Running_Left":
+                        if(grounded) {
+                            if (motion.x > -0.05) {
+                                if (motion.x < 0.05) animator.setAnimation("SS_Idle_Left");
+                                else animator.setAnimation("SS_Running_Right");
+                            }
+                        } else { /* Jumping or falling animation */}
+                        break;
+                    case "SS_Idle_Right":
+                    case "SS_Idle_Left":
+                        if(grounded) {
+                            if (motion.x < -0.05)
+                                animator.setAnimation("SS_Running_Left");
+                            else if (motion.x > 0.05)
+                                animator.setAnimation("SS_Running_Right");
+                        } else { /* Jumping or falling animation */}
+                        break;
                 }
                 break;
             case overWorld:
+                if (motion.x != 0.0 || motion.y != 0.0) {
+                    rotation = getVelocity().direction();
+                    if(!animator.getCurrentAnimationName().equals("Walking"))
+                        animator.setAnimation("Walking");
+                } else {
+                    if(!animator.getCurrentAnimationName().equals("Idle"))
+                        animator.setAnimation("Idle");
+                }
                 break;
         }
 

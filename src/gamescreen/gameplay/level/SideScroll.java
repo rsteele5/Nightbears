@@ -41,20 +41,20 @@ public class SideScroll extends GameScreen {
 
         RenderablePhysicsObject physicsObject;
 
-        for(int x1 = 0; x1 < 5; x1++){
-            for(int y1 = 0; y1 < x1; y1++){
-                physicsObject = new RenderablePhysicsObject(xOFF + x1 * 75 + 100,yOFF + y1*75,path,DrawLayer.Entity);
-                physicsObject.addToScreen(this, true);
-            }
-        }
-
-
-        for(int x1 = 4; x1 > 0; x1--){
-            for(int y1 = 0; y1 < x1; y1++){
-                physicsObject = new RenderablePhysicsObject(xOFF - x1 * 75,yOFF + y1*75,path,DrawLayer.Entity);
-                physicsObject.addToScreen(this, true);
-            }
-        }
+//        for(int x1 = 0; x1 < 5; x1++){
+//            for(int y1 = 0; y1 < x1; y1++){
+//                physicsObject = new RenderablePhysicsObject(xOFF + x1 * 75 + 100,yOFF + y1*75,path,DrawLayer.Entity);
+//                physicsObject.addToScreen(this, true);
+//            }
+//        }
+//
+//
+//        for(int x1 = 4; x1 > 0; x1--){
+//            for(int y1 = 0; y1 < x1; y1++){
+//                physicsObject = new RenderablePhysicsObject(xOFF - x1 * 75,yOFF + y1*75,path,DrawLayer.Entity);
+//                physicsObject.addToScreen(this, true);
+//            }
+//        }
 
 //        PhysicsObjectStatic physicsObjectStatic = new PhysicsObjectStatic(xOFF - 300,yOFF + 300, "/assets/testAssets/obsidian.jpg", DrawLayer.Entity);
 //        PhysicsObjectStatic physicsObjectStatic2 = new PhysicsObjectStatic(xOFF - 300,yOFF - 800, "/assets/testAssets/obsidian.jpg", DrawLayer.Entity);

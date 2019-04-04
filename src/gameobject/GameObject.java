@@ -55,8 +55,7 @@ public abstract class GameObject {
     }
 
     public void translate(int x, int y){
-        position.x += x;
-        position.y += y;
+        position = position.add(x,y);
     }
 
     public boolean setActive(GameScreen screen){
