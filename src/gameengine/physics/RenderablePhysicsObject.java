@@ -32,12 +32,12 @@ public abstract class RenderablePhysicsObject extends CollidableRenderable imple
 
     @Override
     public void move() {
-        position = position.add(motion);
+        translate(motion);
     }
 
     @Override
     public void move(PhysicsVector pV) {
-        position = position.add(pV);
+        translate(pV);
     }
 
     @Override

@@ -187,7 +187,7 @@ public class Weapon extends Item implements Serializable {
      */
     @Override
     public Rectangle getCollisionBox() {
-        return new Rectangle(position.x, position.y, width, height);
+        return new Rectangle(x, y, width, height);
     }
 
     /**

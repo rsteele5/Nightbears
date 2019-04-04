@@ -96,11 +96,11 @@ public class ItemButton extends Button{
         AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
         graphics.setComposite(alphaComposite);
         Debug.drawRect(DebugEnabler.RENDERABLE_LOG,graphics,
-                new Rectangle2D.Double(position.x, position.y, width, height));
-        graphics.drawImage(image, position.x , position.y, width, height, null);
+                new Rectangle2D.Double(x, y, width, height));
+        graphics.drawImage(image, x , y, width, height, null);
         //If the image is not null draw it offset in the center of the button
         if(item != null)
-            graphics.drawImage(item.getIcon(), position.x +7, position.y + 7, width -14, height -14, null);
+            graphics.drawImage(item.getIcon(), x +7, y + 7, width -14, height -14, null);
     }
 
     @Override

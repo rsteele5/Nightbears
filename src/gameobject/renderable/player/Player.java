@@ -104,22 +104,23 @@ public class Player extends RenderablePhysicsObject implements Interactable {
     //region <Update and Draw>
     @Override
     public void update() {
-        //calculateMove();
+        calculateMove();
         setMovementAnimation();
     }
 
     private void calculateMove() {
         switch(playerState) {
-            case sideScroll: // x movement
-                if(keyFlag[0] && !keyFlag[1])
-                     motion = motion.add(-speed,0);
-                if(!keyFlag[0] && keyFlag[1])
-                    motion = motion.add(speed,0);
             case overWorld: // y movement
                 if(keyFlag[2] && !keyFlag[3])
-                    motion = motion.add(-speed,0);
+                    motion.y = -speed;
                 if(!keyFlag[2] && keyFlag[3])
-                    motion = motion.add(speed,0);
+                    motion.y = speed;
+
+            case sideScroll: // x movement
+                if(keyFlag[0] && !keyFlag[1])
+                     motion.x = -speed;
+                if(!keyFlag[0] && keyFlag[1])
+                    motion.x = speed;
                 break;
         }
     }
@@ -131,11 +132,11 @@ public class Player extends RenderablePhysicsObject implements Interactable {
             animator.animate();
         }
         Debug.drawRect(DebugEnabler.RENDERABLE_LOG,graphics2D,
-                new Rectangle2D.Double(position.x, position.y, width, height));
+                new Rectangle2D.Double(x, y, width, height));
 
         Graphics2D g2 = (Graphics2D) graphics2D.create();
-        g2.rotate(rotation, position.x + (width / 2.0), position.y + (height / 2.0));
-        g2.drawImage(image, position.x, position.y, null);
+        g2.rotate(rotation, x + (width / 2.0), y + (height / 2.0));
+        g2.drawImage(image, x, y, null);
         g2.dispose();
     }
     //endregion
@@ -244,7 +245,7 @@ public class Player extends RenderablePhysicsObject implements Interactable {
     //region <Interactable>
     @Override
     public Rectangle getRequestArea() {
-        return new Rectangle(position.x, position.y, width, height);
+        return new Rectangle(x, y, width, height);
     }
 
     @Override

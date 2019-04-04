@@ -16,7 +16,7 @@ public abstract class CollidableRenderable extends RenderableObject implements C
      */
     @Override
     public Rectangle getCollisionBox() {
-        return new Rectangle(position.x, position.y, width, height);
+        return new Rectangle(x, y, width, height);
     }
 
     //Game Object

@@ -26,10 +26,10 @@ public class Door extends CollidableRenderable implements Interactable {
         openable = false;
         this.referenceTile = referenceTile;
         this.attachedDirection = attachedDirection;
-        position.x = referenceTile.getX();
-        position.y = referenceTile.getY();
-        int interactX = position.x;
-        int interactY = position.y;
+        x = referenceTile.getX();
+        y = referenceTile.getY();
+        int interactX = x;
+        int interactY = y;
         int interactW = TileSize;
         int interactH = TileSize;
         //Adjust Position and Interaction box
@@ -40,12 +40,12 @@ public class Door extends CollidableRenderable implements Interactable {
                 imagePath += "Hori.png";
                 break;
             case South:
-                position.y += TileSize - WallThickness;
+                y += TileSize - WallThickness;
                 interactH += TileSize;
                 imagePath += "Hori.png";
                 break;
             case East:
-                position.x += TileSize - WallThickness;
+                x += TileSize - WallThickness;
                 interactW += TileSize;
                 imagePath += "Vert.png";
                 break;

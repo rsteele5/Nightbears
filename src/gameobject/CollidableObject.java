@@ -21,7 +21,7 @@ public abstract class CollidableObject extends GameObject implements Collidable 
      */
     @Override
     public Rectangle getCollisionBox() {
-        return new Rectangle(position.x, position.y, width, height);
+        return new Rectangle(x, y, width, height);
     }
 
     public boolean setActive(GamePlayScreen screen){

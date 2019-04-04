@@ -33,8 +33,8 @@ public abstract class GridContainer<T> extends GameObject {
         this.itemHeight = itemHeight;
         width = (itemWidth + padding) * cols + padding;
         height =(itemHeight + padding) * rows + padding;
-        position.x = xPos;
-        position.y = yPos;
+        x = xPos;
+        y = yPos;
         this.padding = padding;
 
         contents = new ArrayList<>();
@@ -55,7 +55,7 @@ public abstract class GridContainer<T> extends GameObject {
      * @see     Rectangle2D
      */
     public Rectangle2D getBoundingBox() {
-        return new Rectangle2D.Double(position.x, position.y, width, height);
+        return new Rectangle2D.Double(x, y, width, height);
     }
 
     /**
@@ -107,14 +107,14 @@ public abstract class GridContainer<T> extends GameObject {
      */
     @Override
     public void setPosition(int xPos, int yPos){
-        position.x = xPos;
-        position.y = yPos;
+        x = xPos;
+        y = yPos;
         for(int row = 0; row < contents.size(); row++){
             for(int col = 0; col < contents.get(row).size(); col++){
                 if(contents.get(row).get(col) != null){
                     this.setContentPosition(contents.get(row).get(col),
-                            position.x + (itemWidth + padding) * col,
-                            position.y + (itemHeight + padding) * row);
+                            x + (itemWidth + padding) * col,
+                            y + (itemHeight + padding) * row);
                 }
             }
         }
@@ -174,12 +174,12 @@ public abstract class GridContainer<T> extends GameObject {
         if((row >= 0 && col >= 0) && (row < rows && col < cols)) {
             if(content != null) {
                 Debug.log(DebugEnabler.GRID_CONTAINER, name+": AddAt("+row+", "+col+") - "
-                        + "x: " + (position.x + ((itemWidth + padding) * col))
-                        + ", y: " + (position.y + (itemHeight + padding) * row));
+                        + "x: " + (x + ((itemWidth + padding) * col))
+                        + ", y: " + (y + (itemHeight + padding) * row));
                 //Set the position of the renderable
                 this.setContentPosition(content,
-                        position.x + (itemWidth + padding) * col,
-                        position.y + (itemHeight + padding) * row);
+                        x + (itemWidth + padding) * col,
+                        y + (itemHeight + padding) * row);
                 contents.get(row).set(col, content);
                 return true;
             }else {
