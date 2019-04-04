@@ -45,7 +45,9 @@ public class OverworldUI extends Overlay {
                 new Font("NoScary", Font.PLAIN, 72), Color.WHITE, "Fight!",
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - level");
-                    screenManager.addScreen(new BedroomLevel(screenManager, (OverworldScreen)parentScreen));
+                    if(!((OverworldScreen)parentScreen).getCurrentRoom().isComplete()){
+                        screenManager.addScreen(new BedroomLevel(screenManager, (OverworldScreen)parentScreen));
+                    }
                 });
         buttonLayout.addAt(actionButton, 0, 1);
 

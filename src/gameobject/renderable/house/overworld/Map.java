@@ -56,7 +56,7 @@ public class Map extends GameObject implements Serializable {
         for(TileGridContainer[] row : chunkMap){
             for(TileGridContainer chunk : row) chunk.addToScreen(screen, isActive);
         }
-        for (Room room : rooms) room.addToScreen(screen, room.isComplete);
+        for (Room room : rooms) room.addToScreen(screen, isActive); //ADD complete stuff
     }
 
     @Override

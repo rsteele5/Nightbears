@@ -5,10 +5,7 @@ import gameengine.physics.PhysicsObjectStatic;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.overworld.Map;
 import gameobject.renderable.house.overworld.MapBuilder;
-import gameobject.renderable.house.overworld.room.Bathroom;
-import gameobject.renderable.house.overworld.room.Bedroom;
-import gameobject.renderable.house.overworld.room.LivingRoom;
-import gameobject.renderable.house.overworld.room.SpawnPoint;
+import gameobject.renderable.house.overworld.room.*;
 import gameobject.renderable.text.DialogBox;
 import gameengine.rendering.Camera;
 import gameobject.renderable.player.Player;
@@ -27,6 +24,7 @@ public class OverworldScreen extends GameScreen {
     private Player player;
     private Vendor vendor;
     private int vendorVisits = -1;
+    private Room currentRoom;
     //endregion
 
     public OverworldScreen(ScreenManager screenManager) {
@@ -43,14 +41,16 @@ public class OverworldScreen extends GameScreen {
             mapBuilder.addRoomAtCell(0, 0, new Bedroom());
             mapBuilder.addRoomAtCell(8,0, new LivingRoom());
             mapBuilder.addRoomAtCell(0,8, new Bathroom());
-            overworldMap = mapBuilder.buildMap();
-            overworldMap.getRooms().forEach(room -> room.setInactive(this));
-            overworldMap.getRooms().get(0).setActive(this);
+            Map map = mapBuilder.buildMap();
+            overworldMap = map;
+//            overworldMap.getRooms().forEach(room -> room.setInactive(this));
+//            overworldMap.getRooms().get(0).setActive(this);
             gameData.getLevelData().setCurrentMap(overworldMap);
+        } else {
+            overworldMap = gameData.getLevelData().getCurrentMap();
         }
         overworldMap.addToScreen(this, true);
-
-
+        gameData.save();
         //Bed
         SpawnPoint bedSpawn = overworldMap.getRooms().get(0).getSpawnETCOptions().get(0);
         PhysicsObjectStatic bed = new PhysicsObjectStatic(bedSpawn.getTileX(),bedSpawn.getTileY(),
@@ -63,6 +63,8 @@ public class OverworldScreen extends GameScreen {
         player.setState(Player.PlayerState.overWorld);
         player.addToScreen(this,true);
         setCamera(new Camera(screenManager, this, player));
+
+        currentRoom = getCurrentRoom();
 
         //Vendor
         SpawnPoint vSpawn = overworldMap.getVendorSpawn();
@@ -80,9 +82,13 @@ public class OverworldScreen extends GameScreen {
     @Override
     protected void activeUpdate() {
         super.activeUpdate();
+
+        this.overworldMap.getRooms().forEach(room -> room.contains(player.getX(), player.getY()));
     }
 
     public void onLevelComplete(){
+        getCurrentRoom().setComplete(true);
+
         //Vendor
         //TODO: Edit this later
         if(vendorVisits == 0) vendorVisits++;
@@ -97,5 +103,14 @@ public class OverworldScreen extends GameScreen {
         );
         //Doors
         overworldMap.getRooms().get(0).getDoors().forEach(door -> door.setOpenable(true));
+    }
+
+    public Room getCurrentRoom(){
+        overworldMap.getRooms().forEach(room -> {
+            if(room.contains(player.getX(), player.getY())){
+                currentRoom = room;
+            }
+        });
+        return currentRoom;
     }
 }

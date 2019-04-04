@@ -6,6 +6,7 @@ import gameobject.renderable.house.overworld.room.Door;
 import gameobject.renderable.house.overworld.room.Room;
 import gameobject.container.TileGridContainer;
 import gamescreen.GameScreen;
+import main.utilities.Action;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -14,9 +15,10 @@ import static gameobject.renderable.house.overworld.OverworldMeta.*;
 import static gameobject.renderable.house.overworld.OverworldMeta.Tiles.EMPTY;
 import static gameobject.renderable.house.overworld.OverworldMeta.Tiles.House.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class MapBuilder {
+public class MapBuilder implements Serializable {
     private GameScreen parentScreen;
     private ChunkBuilder chunkBuilder;
     private ArrayList<ArrayList<TileGridContainer>> chunks;
@@ -305,11 +307,12 @@ public class MapBuilder {
             if(otherRoomTile != null)
                 for(Room otherRoom : rooms)
                     if (otherRoom != room)
-                        if (otherRoom.containsTile(otherRoomTile))
-                            door.setOpenOperation(() -> {
-                                otherRoom.setActive(parentScreen);
-                                door.setInactive(parentScreen);
-                            });
+                        if (otherRoom.containsTile(otherRoomTile)){}
+//                            Action action =
+//                            door.setOpenOperation(() -> {
+//                                otherRoom.setActive(parentScreen);
+//                                door.setInactive(parentScreen);
+//                            });
         });
     }
 

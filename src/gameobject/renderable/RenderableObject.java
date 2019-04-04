@@ -136,7 +136,7 @@ public abstract class RenderableObject extends GameObject implements Loadable, S
         if(animator != null){
             animator.animate();
         }
-        Debug.drawRect(DebugEnabler.RENDERABLE_LOG,graphics, new Rectangle2D.Double(x,y,width, height));
+        //Debug.drawRect(DebugEnabler.RENDERABLE_LOG,graphics, new Rectangle2D.Double(x,y,width, height));
         graphics.drawImage(image, x , y, width, height, null);
     }
 

@@ -130,7 +130,10 @@ public class GameData implements Serializable {
 
             Debug.success(DebugEnabler.GAME_DATA,"Saved GameData to file");
 
-        } catch(IOException ex) { System.out.println("IOException is caught"); }
+        } catch(IOException ex) {
+            Debug.criticalError("Exception is caught - " + ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 
     private void initializeSound() {
