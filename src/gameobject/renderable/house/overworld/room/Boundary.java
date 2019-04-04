@@ -6,8 +6,9 @@ import gameobject.GameObject;
 import gamescreen.GameScreen;
 
 import java.awt.Rectangle;
+import java.io.Serializable;
 
-public class Boundary extends GameObject implements Kinematic {
+public class Boundary extends GameObject implements Kinematic, Serializable {
     protected int width;
     protected int height;
 

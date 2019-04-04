@@ -37,15 +37,19 @@ public class OverworldScreen extends GameScreen {
     @Override
     protected void initializeScreen() {
         //House generation
-        MapBuilder mapBuilder = new MapBuilder();
-        mapBuilder.createMap(this);
-        mapBuilder.addRoomAtCell(0, 0, new Bedroom());
-        mapBuilder.addRoomAtCell(8,0, new LivingRoom());
-        mapBuilder.addRoomAtCell(0,8, new Bathroom());
-        overworldMap = mapBuilder.buildMap();
+        if(gameData.getLevelData().getCurrentMap() == null) {
+            MapBuilder mapBuilder = new MapBuilder();
+            mapBuilder.createMap(this);
+            mapBuilder.addRoomAtCell(0, 0, new Bedroom());
+            mapBuilder.addRoomAtCell(8,0, new LivingRoom());
+            mapBuilder.addRoomAtCell(0,8, new Bathroom());
+            overworldMap = mapBuilder.buildMap();
+            overworldMap.getRooms().forEach(room -> room.setInactive(this));
+            overworldMap.getRooms().get(0).setActive(this);
+            gameData.getLevelData().setCurrentMap(overworldMap);
+        }
         overworldMap.addToScreen(this, true);
-        overworldMap.getRooms().forEach(room -> room.setInactive(this));
-        overworldMap.getRooms().get(0).setActive(this);
+
 
         //Bed
         SpawnPoint bedSpawn = overworldMap.getRooms().get(0).getSpawnETCOptions().get(0);

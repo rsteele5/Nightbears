@@ -9,13 +9,14 @@ import main.utilities.DebugEnabler;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import static gameobject.renderable.house.overworld.OverworldMeta.TileSize;
 import static gameobject.renderable.house.overworld.OverworldMeta.WallThickness;
 
-public abstract class Room extends GameObject {
+public abstract class Room extends GameObject implements Serializable {
 
     //region <Variables>
     protected String name;
@@ -208,6 +209,9 @@ public abstract class Room extends GameObject {
     @Override
     public void addToScreen(GameScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
+        for(Tile[] row : roomTiles){
+            for(Tile tile : row)
+                if(tile != null) tile.addToScreen(screen, isActive);
         boundaries.forEach(boundary -> boundary.addToScreen(screen, isActive));
         doors.forEach(door -> door.addToScreen(screen, isActive));
     }

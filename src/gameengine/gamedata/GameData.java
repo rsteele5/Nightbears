@@ -29,6 +29,7 @@ public class GameData implements Serializable {
     private PlayerData currentPlayerData;
     private VendorData currentVendorData;
     private CopyOnWriteArrayList<EndGamePlayerData> previousPlayerData;
+    private LevelData currentLevelData;
 
     public GameData(){
         try {
@@ -49,6 +50,7 @@ public class GameData implements Serializable {
                 currentPlayerData = new PlayerData();
                 currentVendorData = new VendorData();
                 previousPlayerData = new CopyOnWriteArrayList<>();
+                currentLevelData = new LevelData();
                 save();
             } else {
                 FileInputStream file = new FileInputStream(dataFile);
@@ -64,9 +66,10 @@ public class GameData implements Serializable {
                         currentSoundSetting[i] = new SoundSetting(SoundSetting.SoundVolume.Medium);
                     }
                 }
-                this.currentPlayerData = gameDataInput.getPlayerData();
-                this.currentVendorData = gameDataInput.getVendorData();
-                this.previousPlayerData = gameDataInput.getPreviousPlayerData();
+                this.currentPlayerData = gameDataInput.currentPlayerData;
+                this.currentVendorData = gameDataInput.currentVendorData;
+                this.previousPlayerData = gameDataInput.previousPlayerData;
+                this.currentLevelData = gameDataInput.currentLevelData;
                 Debug.log(true, "Do I have shit?: " + currentPlayerData.getInventory().get(0).getImagePath());
 
                 in.close();
@@ -111,6 +114,8 @@ public class GameData implements Serializable {
     public SoundSetting getSoundSetting(int index) {
         return currentSoundSetting[index];
     }
+
+    public LevelData getLevelData() { return currentLevelData; }
 
     public void save() {
         try {

@@ -7,11 +7,12 @@ import gameobject.renderable.house.overworld.room.SpawnType;
 import gamescreen.GameScreen;
 import gameobject.container.TileGridContainer;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import static gameobject.renderable.house.overworld.OverworldMeta.*;
 
-public class Map extends GameObject {
+public class Map extends GameObject implements Serializable {
 
     private TileGridContainer[][] chunkMap;
     private ArrayList<Room> rooms;
@@ -52,10 +53,10 @@ public class Map extends GameObject {
     @Override
     public void addToScreen(GameScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
-        for (Room room : rooms) room.addToScreen(screen, isActive);
         for(TileGridContainer[] row : chunkMap){
             for(TileGridContainer chunk : row) chunk.addToScreen(screen, isActive);
         }
+        for (Room room : rooms) room.addToScreen(screen, room.isComplete);
     }
 
     @Override

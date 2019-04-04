@@ -12,11 +12,12 @@ import gamescreen.GameScreen;
 import main.utilities.Action;
 
 import java.awt.*;
+import java.io.Serializable;
 
 import static gameobject.renderable.house.overworld.OverworldMeta.TileSize;
 import static gameobject.renderable.house.overworld.OverworldMeta.WallThickness;
 
-public class Door extends RenderableObject implements Kinematic, Interactable {
+public class Door extends RenderableObject implements Kinematic, Interactable, Serializable {
     private Rectangle interactionBox;
     private Tile referenceTile;
     private Compass attachedDirection;
