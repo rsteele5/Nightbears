@@ -128,6 +128,10 @@ public abstract class RenderableObject extends GameObject implements Loadable, S
         width = w;
         height = h;
     }
+
+    public void addAnimator(Animator animator){
+        this.animator = animator;
+    }
     //endregion
 
     public void draw(Graphics2D graphics) {
@@ -177,15 +181,12 @@ public abstract class RenderableObject extends GameObject implements Loadable, S
     public void addToScreen(GameScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
         screen.renderables.remove(this);    //Remove if the renderable is already in the list.
+        screen.loadables.remove(this);
         if(isActive) addToRenderables(screen);
         screen.loadables.add(this);
         if(animator != null){
             screen.loadables.add(animator);
         }
-    }
-
-    public void addAnimator(Animator animator){
-        this.animator = animator;
     }
 
     private void addToRenderables(GameScreen screen){
@@ -197,13 +198,13 @@ public abstract class RenderableObject extends GameObject implements Loadable, S
         screen.renderables.add(i, this);
     }
 
-    public abstract void update();
-
     @Override
     public void scale(float scaleFactor) {
         super.scale(scaleFactor);
         width *= scaleFactor;
         height *= scaleFactor;
     }
+
+    public abstract void update();
 }
 

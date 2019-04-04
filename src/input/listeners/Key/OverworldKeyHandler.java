@@ -27,14 +27,14 @@ public class OverworldKeyHandler implements KeyHandler {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        player.move(e);
+        player.handleKeyPress(e);
         if(e.getKeyCode() == NEXT)
             nextClickable();
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        player.moveRelease(e);
+        player.handleKeyReleased(e);
         if(e.getKeyCode() == SELECT){
             target.onClick();
         }else if(e.getKeyCode() == PAUSE){

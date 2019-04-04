@@ -1,39 +1,43 @@
+//TODO: add to GameObject Package
 package gameengine.physics;
 
 import gameobject.renderable.CollidableRenderable;
 import gameobject.renderable.DrawLayer;
 import gamescreen.gameplay.GamePlayScreen;
 
-public class RenderablePhysicsObject extends CollidableRenderable implements Kinematic {
-    private PhysicsVector accel = new PhysicsVector(0,1);
-    public RenderablePhysicsObject(int x, int y, String path, DrawLayer drawLayer){
-        super(x,y,path,drawLayer, 1f);
-    }
-    PhysicsVector movement = new PhysicsVector(0,0);
-    public String name = "square";
-    @Override
-    public void update() {
+public abstract class RenderablePhysicsObject extends CollidableRenderable implements Kinematic {
+    protected PhysicsVector motion;
+    protected double speed;
 
+    public RenderablePhysicsObject(int x, int y, String path, DrawLayer drawLayer, double speed){
+        super(x,y,path,drawLayer, 1f);
+        motion = PhysicsVector.ZERO;
+        this.speed = speed;
     }
+
     @Override
     public PhysicsVector getVelocity() {
-        //TODO: Get this working
-        return PhysicsVector.ZERO;
+        return motion;
     }
 
     @Override
     public void setVelocity(PhysicsVector pv) {
-        movement = pv;
+        motion = pv;
     }
 
     @Override
-    public PhysicsVector getAcceleration() {
-        return accel;
+    public double getSpeed() {
+        return speed;
     }
 
     @Override
-    public void setAcceleration(PhysicsVector pv) {
-        accel = pv;
+    public void move() {
+        position = position.add(motion);
+    }
+
+    @Override
+    public void move(PhysicsVector pV) {
+        position = position.add(pV);
     }
 
     @Override

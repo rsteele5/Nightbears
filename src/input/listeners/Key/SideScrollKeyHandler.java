@@ -21,12 +21,12 @@ public class SideScrollKeyHandler implements KeyHandler {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        player.move(e);
+        player.handleKeyPress(e);
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        player.moveRelease(e);
+        player.handleKeyReleased(e);
         if(e.getKeyCode() == INTERACT){
             player.setRequesting(true);
         }

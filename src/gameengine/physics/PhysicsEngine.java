@@ -2,7 +2,7 @@ package gameengine.physics;
 
 import gameobject.renderable.player.Player;
 
-import java.awt.*;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 
 public class PhysicsEngine {
@@ -16,13 +16,13 @@ public class PhysicsEngine {
     }
 
     public PhysicsEngine(Player player, PhysicState state) {
-        physicState = state;
-        collisionManager = new CollisionManager();
         this.player = player;
-    }
-
-    public void setPhysicState(PhysicState ps){
-        physicState = ps;
+        collisionManager = new CollisionManager();
+        physicState = state;
+        switch (state){
+            case TopDown:    player.setState(Player.PlayerState.overWorld); break;
+            case SideScroll: player.setState(Player.PlayerState.sideScroll); break;
+        }
     }
 
     public void update(ArrayList<Collidable> collidables, ArrayList<Kinematic> kinematics,
@@ -36,10 +36,12 @@ public class PhysicsEngine {
     private void applyPhysics(ArrayList<Kinematic> kinematics){
         if(!kinematics.isEmpty()) {
             kinematics.forEach(k -> {
-                if (physicState == PhysicState.SideScroll)
-                    if ((k.getAcceleration().y + PhysicsMeta.Gravity.y) < PhysicsMeta.terminalVelocity)
-                        k.setAcceleration(k.getAcceleration().add(PhysicsMeta.Gravity));
-                k.move();
+                if (physicState == PhysicState.SideScroll) {
+                    if (k.getVelocity().y + PhysicsMeta.Gravity.y < PhysicsMeta.terminalVelocity)
+                        k.setVelocity(k.getVelocity().add(PhysicsMeta.Gravity));
+                    if (k.getVelocity().x > k.getSpeed())
+                        k.setVelocity(new PhysicsVector(k.getSpeed(), k.getVelocity().y));
+                } k.move();
             });
         }
     }

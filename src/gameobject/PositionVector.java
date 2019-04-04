@@ -34,7 +34,7 @@ public class PositionVector {
     }
 
     public PositionVector add(PhysicsVector pVector) {
-        return new PositionVector((int)(x+pVector.x),(int)(y+pVector.y));
+        return new PositionVector((int)(x+Math.round(pVector.x)),(int)(y+Math.round(pVector.y)));
     }
 
     public PositionVector add(int x, int y) {

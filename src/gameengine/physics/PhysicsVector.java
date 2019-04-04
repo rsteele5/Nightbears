@@ -34,6 +34,10 @@ public class PhysicsVector {
         return new PhysicsVector(x+vector.x,y+vector.y);
     }
 
+    public PhysicsVector add(double x, double y) {
+        return new PhysicsVector(this.x+x,this.y+y);
+    }
+
     public PhysicsVector mult(double scalar) {
         return new PhysicsVector(this.x * scalar, this.y * scalar);
     }
