@@ -50,7 +50,7 @@ public abstract class GamePlayScreen extends GameScreen {
 
     @Override
     protected void activeUpdate() {
-        super.activeUpdate();
         if(physicsEngine != null) physicsEngine.update(collidables, kinematics, interactables);
+        super.activeUpdate();
     }
 }

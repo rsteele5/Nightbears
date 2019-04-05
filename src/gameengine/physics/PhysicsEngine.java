@@ -48,33 +48,42 @@ public class PhysicsEngine {
 
     private void resolveCollisions(ArrayList<CollisionEvent> events) {
         events.forEach(event -> {
-            if(event.collider instanceof Kinematic){
-                Kinematic ckinematic = (Kinematic)event.collider;
-                double x = 0, y = 0;
-                for(int i = 0; i < event.collidedWith.size(); i++){
-                    Rectangle intersection = event.intersections.get(i);
-                    //Direction
-                    double angleDeg = Math.atan2(
-                            intersection.getY() - event.collider.getCollisionBox().getY(),
-                            intersection.getX() - event.collider.getCollisionBox().getX());
-                    //Get The X and Y components
-                    if(intersection.width > intersection.height){
-                        if(Math.abs(y) < intersection.height){
-                            y = intersection.height;
-                            double yComp = Math.round(Math.sin(angleDeg));
-                            if (Double.isNaN(yComp)) yComp = 0;
-                            y *= yComp;
-                        }
-                    } else if(Math.abs(x) < intersection.width) {
-                        x = intersection.width;
-                        double xComp = Math.round(Math.cos(angleDeg));
-                        if (Double.isNaN(xComp)) xComp = 0;
-                        x *= xComp;
-                    }
-                }
-                ckinematic.move(new PhysicsVector(x,y));
-            }
+            if(event.collider instanceof Kinematic)
+                for(int i = 0; i < event.collidedWith.size(); i++)
+                    collisionReslover(event.collider, event.collidedWith.get(i));
+
+            event.collidedWith.forEach(collidable -> {
+                if(collidable instanceof Kinematic)
+                    collisionReslover(collidable, event.collider);
+            });
             event.sendCollision();
         });
+    }
+
+    private void collisionReslover(Collidable c1, Collidable c2){
+        if(c1 instanceof Kinematic) {
+            Kinematic c1K = (Kinematic) c1;
+            double x = 0, y = 0;
+            Rectangle intersection = c1.getCollisionBox().intersection(c2.getCollisionBox());
+            //Direction
+            double angleDeg = Math.atan2(
+                    intersection.getY() - c1.getCollisionBox().getY(),
+                    intersection.getX() - c1.getCollisionBox().getX());
+            //Get The X and Y components
+            if (intersection.width > intersection.height) {
+                if (Math.abs(y) < intersection.height) {
+                    y = intersection.height;
+                    double yComp = Math.round(Math.sin(angleDeg));
+                    if (Double.isNaN(yComp)) yComp = 0;
+                    y *= yComp;
+                }
+            } else if (Math.abs(x) < intersection.width) {
+                x = intersection.width;
+                double xComp = Math.round(Math.cos(angleDeg));
+                if (Double.isNaN(xComp)) xComp = 0;
+                x *= xComp;
+            }
+            c1K.move(new PhysicsVector(x, y));
+        }
     }
 }

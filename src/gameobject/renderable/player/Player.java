@@ -36,6 +36,7 @@ public class Player extends RenderablePhysicsObject implements Interactable {
     private final int[] keys = new int[]{LEFT, RIGHT, UP, DOWN};
     private boolean[] keyFlag = new boolean[]{false,false,false,false};
     private int dimension;          // 2 = x movement; 4 = x,y movement
+    private PhysicsVector movement;
     private boolean crouch = false;
     private boolean crouchSet = true;
     public boolean grounded;
@@ -65,6 +66,7 @@ public class Player extends RenderablePhysicsObject implements Interactable {
         //animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation(playerData.getImageDirectory()));
         //Interactable
         requesting = false;
+        movement = new PhysicsVector(0,0);
     }
 
     //region <Getters and Setters>
@@ -105,6 +107,7 @@ public class Player extends RenderablePhysicsObject implements Interactable {
     @Override
     public void update() {
         calculateMove();
+        motion = movement;
         setMovementAnimation();
     }
 
@@ -112,15 +115,17 @@ public class Player extends RenderablePhysicsObject implements Interactable {
         switch(playerState) {
             case overWorld: // y movement
                 if(keyFlag[2] && !keyFlag[3])
-                    motion.y = -speed;
-                if(!keyFlag[2] && keyFlag[3])
-                    motion.y = speed;
+                    movement.y = -speed;
+                else if(!keyFlag[2] && keyFlag[3])
+                    movement.y = speed;
+                else movement.y = 0;
 
             case sideScroll: // x movement
                 if(keyFlag[0] && !keyFlag[1])
-                     motion.x = -speed;
-                if(!keyFlag[0] && keyFlag[1])
-                    motion.x = speed;
+                    movement.x = -speed;
+                else if(!keyFlag[0] && keyFlag[1])
+                    movement.x = speed;
+                else movement.x = 0;
                 break;
         }
     }

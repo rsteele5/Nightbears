@@ -1,5 +1,6 @@
 package gamescreen.gameplay.level;
 
+import gameengine.physics.PhysicsEngine;
 import gameengine.physics.Platform;
 import gameengine.rendering.Camera;
 import gameobject.renderable.DrawLayer;
@@ -11,18 +12,19 @@ import gameobject.renderable.item.weapon.WeaponType;
 import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
+import gamescreen.gameplay.GamePlayScreen;
 import gamescreen.gameplay.overworld.OverworldScreen;
 import input.listeners.Key.SideScrollKeyHandler;
 
 
-public class BedroomLevel extends GameScreen {
+public class BedroomLevel extends GamePlayScreen {
 
     private BedroomBackgroundLayout background;
     private Player player;
     private OverworldScreen parentScreen;
 
     public BedroomLevel(ScreenManager screenManager, OverworldScreen parentScreen) {
-        super(screenManager, "BedroomLevel", true);
+        super(screenManager, "BedroomLevel", 1f);
         this.parentScreen= parentScreen;
     }
 
@@ -62,6 +64,7 @@ public class BedroomLevel extends GameScreen {
         myWeap.setHeight(50);
         myWeap.addToScreen(this, true);
 
+        setPhysicsEngine(new PhysicsEngine(player, PhysicsEngine.PhysicState.SideScroll));
 
     }
 

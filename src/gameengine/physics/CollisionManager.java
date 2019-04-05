@@ -26,7 +26,6 @@ public class CollisionManager {
         for(int i = 0; i < collidables.size(); i++){
             Collidable collider = collidables.get(i);
             ArrayList<Collidable> collidedWith = new ArrayList<>();
-            ArrayList<Rectangle> intersections = new ArrayList<>();
             for(int j = i+1; j < collidables.size(); j++){
                 Collidable c2 = collidables.get(j);
                 Rectangle intersection = collider.getCollisionBox().intersection(c2.getCollisionBox());
@@ -38,12 +37,11 @@ public class CollisionManager {
                         c2.triggered((GameObject) collider);
                     else {
                         collidedWith.add(c2);
-                        intersections. add(intersection);
                     }
                 }
             }
             if(!collidedWith.isEmpty())
-                collisionEvents.add(new CollisionEvent(collider,collidedWith,intersections));
+                collisionEvents.add(new CollisionEvent(collider,collidedWith));
         }
         return collisionEvents;
     }
