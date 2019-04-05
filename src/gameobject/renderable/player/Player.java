@@ -20,7 +20,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import static input.listeners.Key.KeyCodeMeta.*;
 
-public class Player extends RenderablePhysicsObject implements Interactable {
+public class Player extends RenderablePhysicsObject {
     //region <Variables>
     private PlayerData playerData;
     private PlayerState playerState;
@@ -39,7 +39,8 @@ public class Player extends RenderablePhysicsObject implements Interactable {
     private PhysicsVector movement;
     private boolean crouch = false;
     private boolean crouchSet = true;
-    public boolean grounded;
+    private boolean grounded = false;
+    private boolean considerArc = false;
     private boolean requesting;     //Use for requesting interactions
 
     public enum PlayerState {
@@ -106,8 +107,11 @@ public class Player extends RenderablePhysicsObject implements Interactable {
     //region <Update and Draw>
     @Override
     public void update() {
+        if(!grounded && motion.y < 1  && motion.y >= 0){
+            if(considerArc) considerArc = false;
+            else grounded = true;
+        }
         calculateMove();
-        motion = movement;
         setMovementAnimation();
     }
 
@@ -115,17 +119,17 @@ public class Player extends RenderablePhysicsObject implements Interactable {
         switch(playerState) {
             case overWorld: // y movement
                 if(keyFlag[2] && !keyFlag[3])
-                    movement.y = -speed;
+                    motion.y = -speed;
                 else if(!keyFlag[2] && keyFlag[3])
-                    movement.y = speed;
-                else movement.y = 0;
+                    motion.y = speed;
+                else motion.y = 0;
 
             case sideScroll: // x movement
                 if(keyFlag[0] && !keyFlag[1])
-                    movement.x = -speed;
+                    motion.x = -speed;
                 else if(!keyFlag[0] && keyFlag[1])
-                    movement.x = speed;
-                else movement.x = 0;
+                    motion.x = speed;
+                else motion.x = 0;
                 break;
         }
     }
@@ -197,8 +201,9 @@ public class Player extends RenderablePhysicsObject implements Interactable {
         switch (playerState) {
             case sideScroll:
                 if (e.getKeyCode() == JUMP && grounded) { // JUMP
-                    motion.add(0, -7);
+                    motion = motion.add(0, -20);
                     grounded = false;
+                    considerArc = true;
                 } else if(e.getKeyCode() == DOWN && !crouch){ // CROUCH
                     crouch = true;
                     crouchSet = false;
@@ -248,24 +253,17 @@ public class Player extends RenderablePhysicsObject implements Interactable {
     //endregion
 
     //region <Interactable>
-    @Override
+
     public Rectangle getRequestArea() {
         return new Rectangle(x, y, width, height);
     }
 
-    @Override
     public void setRequesting(boolean isRequesting) {
         requesting = isRequesting;
     }
 
-    @Override
     public boolean isRequesting() {
         return requesting;
-    }
-
-    @Override
-    public boolean action(GameObject g) {
-        return false;
     }
     //endregion
 
@@ -273,7 +271,7 @@ public class Player extends RenderablePhysicsObject implements Interactable {
     @Override
     public boolean setActive(GamePlayScreen screen){
         if(super.setActive(screen)){
-            screen.interactables.add(this);
+            // set active stuff here
             return true;
         }return false;
     }
@@ -281,7 +279,7 @@ public class Player extends RenderablePhysicsObject implements Interactable {
     @Override
     public boolean setInactive(GamePlayScreen screen){
         if(super.setInactive(screen)){
-            screen.interactables.remove(this);
+            // set inactive stuff here
             return true;
         }return false;
     }
@@ -289,8 +287,7 @@ public class Player extends RenderablePhysicsObject implements Interactable {
     @Override
     public void addToScreen(GamePlayScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
-        screen.interactables.remove(this);
-        if(isActive) screen.interactables.add(this);
+        // add stuff to Screen here
     }
     //endregion
 }

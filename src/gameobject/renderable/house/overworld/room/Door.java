@@ -71,14 +71,6 @@ public class Door extends CollidableRenderable implements Interactable {
     }
 
     @Override
-    public void setRequesting(boolean isRequesting) { }
-
-    @Override
-    public boolean isRequesting() {
-        return false;
-    }
-
-    @Override
     public boolean action(GameObject g) {
         if(openable){
             open.doIt();

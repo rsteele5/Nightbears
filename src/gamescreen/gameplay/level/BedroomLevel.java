@@ -24,7 +24,7 @@ public class BedroomLevel extends GamePlayScreen {
     private OverworldScreen parentScreen;
 
     public BedroomLevel(ScreenManager screenManager, OverworldScreen parentScreen) {
-        super(screenManager, "BedroomLevel", 1f);
+        super(screenManager, "BedroomLevel", true, 1f);
         this.parentScreen= parentScreen;
     }
 
@@ -43,7 +43,7 @@ public class BedroomLevel extends GamePlayScreen {
                 });
 
         finishDoor.addToScreen(this, true);
-        player = new Player(30, 276, DrawLayer.Entity, gameData.getPlayerData());
+        player = new Player(50, 276, DrawLayer.Entity, gameData.getPlayerData());
         player.addToScreen(this, true);
         player.setState(Player.PlayerState.sideScroll);
         setKeyHandler(new SideScrollKeyHandler(player));

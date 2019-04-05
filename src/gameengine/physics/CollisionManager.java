@@ -5,6 +5,7 @@ import gameobject.renderable.player.Player;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class CollisionManager {
 

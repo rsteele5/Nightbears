@@ -10,6 +10,7 @@ import gamescreen.ScreenManager;
 import main.utilities.Debug;
 
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class GamePlayScreen extends GameScreen {
 
@@ -39,6 +40,13 @@ public abstract class GamePlayScreen extends GameScreen {
      */
     public GamePlayScreen(ScreenManager screenManager, String name, float screenAlpha) {
         super(screenManager, name, screenAlpha);
+        collidables = new ArrayList<>();
+        kinematics = new ArrayList<>();
+        interactables = new ArrayList<>();
+    }
+
+    public GamePlayScreen(ScreenManager screenManager, String name, boolean isExclusive, float screenAlpha){
+        super(screenManager,name,isExclusive,screenAlpha);
         collidables = new ArrayList<>();
         kinematics = new ArrayList<>();
         interactables = new ArrayList<>();

@@ -30,6 +30,10 @@ public class PhysicsVector {
         } return newVector;
     }
 
+    public PhysicsVector reverse(){
+        return new PhysicsVector(-x,-y);
+    }
+
     public PhysicsVector add(PhysicsVector vector) {
         return new PhysicsVector(x+vector.x,y+vector.y);
     }

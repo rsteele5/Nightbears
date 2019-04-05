@@ -194,12 +194,6 @@ public class Vendor extends CollidableRenderable implements Interactable, Serial
     }
 
     @Override
-    public void setRequesting(boolean isRequesting) { }
-
-    @Override
-    public boolean isRequesting() { return false; }
-
-    @Override
     public boolean action(GameObject g) {
         if(g instanceof Player) {
             if(((Player)g).getState() == Player.PlayerState.overWorld && playerInteractionOW != null)

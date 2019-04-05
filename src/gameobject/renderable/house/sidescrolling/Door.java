@@ -31,15 +31,6 @@ public class Door extends RenderableObject implements Interactable {
     }
 
     @Override
-    public void setRequesting(boolean isRequesting) {
-    }
-
-    @Override
-    public boolean isRequesting() {
-        return false;
-    }
-
-    @Override
     public boolean action(GameObject g) {
         if(g instanceof Player){
             exit.doIt();

@@ -23,7 +23,7 @@ public class Platform extends CollidableRenderable{
 
     @Override
     public boolean isTrigger(){
-        return alpha != 0;
+        return alpha == 0;
     }
 
     @Override
@@ -33,6 +33,7 @@ public class Platform extends CollidableRenderable{
             counter = counter > 10 ? 10 : counter;
             if (alpha > .035f) setAlpha(alpha - .03f);
             else setAlpha(0);
+            return true;
         }
         return false;
     }
