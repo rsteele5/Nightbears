@@ -1,125 +1,85 @@
 package gameengine.physics;
 
-import gameengine.gamedata.GameData;
-import gameobject.GameObject;
 import gameobject.renderable.player.Player;
-import gamescreen.ScreenManager;
 
-import java.awt.*;
+import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class PhysicsEngine {
 
-    private ScreenManager screenManager;
-    public PhysicsEngine(GameData gameData, ScreenManager myScreenManager) {
-        screenManager = myScreenManager;
-
+    private PhysicState physicState;
+    private CollisionManager collisionManager;
+    private Player player;
+    public enum PhysicState{
+        TopDown,
+        SideScroll
     }
 
-    public void update() {
-        ArrayList<Kinematic> objects;
-        objects = screenManager.getPhysicsObjects();
-        if (objects == null)
-            return;
-
-        Player.PlayerState playerState = null;
-        for (Kinematic k : objects)
-            if(k instanceof Player)
-                playerState = ((Player) k).getState();
-
-        if(playerState == null)
-            return;
-
-        int indices = objects.size();
-        for (int i1 = 0; i1 < indices; i1++) {
-            if(objects.get(i1).isStatic())
-                continue;
-            GameObject obj1 = (GameObject) objects.get(i1);
-            Interactable iObj1 = null;
-            if(obj1 instanceof Interactable) iObj1 = (Interactable) obj1;
-
-            Kinematic kObj1 = objects.get(i1);
-            if(playerState == Player.PlayerState.sideScroll)
-                if ((kObj1.getAcceleration().y + PhysicsMeta.Gravity) < PhysicsMeta.terminalVelocity)
-                    kObj1.setAcceleration(kObj1.getAcceleration().add(new PhysicsVector(0, PhysicsMeta.Gravity)));
-
-            kObj1.move();
-            for (int i2 = 0; i2 < indices; i2++) {
-                if (i2 == i1) continue;
-                GameObject obj2 = (GameObject) objects.get(i2);
-                Kinematic kObj2 = objects.get(i2);
-
-                //Interactable
-                if(iObj1 != null) {
-                    if (obj2 instanceof Interactable) {
-                        Interactable iObj2 = (Interactable) obj2;
-                        if (iObj1.getRequestArea().intersects(iObj2.getRequestArea()) && iObj1.isRequesting()) {
-                            iObj2.action(obj1);
-                            iObj1.setRequesting(false);
-                        }
-                    }
-                }
-
-                //Trigger Interaction
-                if(kObj2 instanceof Trigger && (kObj1.getHitbox().intersects(((Trigger) kObj2).triggerArea()))) {
-                    if(((Trigger) kObj2).effect((GameObject) kObj1)) {
-                        objects.remove(kObj2);
-                        indices = objects.size();
-                        continue;
-                    }
-                }
-                if(kObj1 instanceof Trigger && (kObj2.getHitbox().intersects(((Trigger) obj1).triggerArea()))){
-                    if(((Trigger) kObj1).effect((GameObject) kObj2)) {
-                        objects.remove(kObj1);
-                        indices = objects.size();
-                        continue;
-                    }
-                }
-
-                if(!kObj2.isCollidable())
-                    continue;
-
-                if (kObj1.getHitbox().intersects(kObj2.getHitbox())) {
-
-                    kObj1.setAcceleration(new PhysicsVector(1, 1));
-                    if (!kObj2.isStatic())
-                        kObj2.setAcceleration(new PhysicsVector(1, 1));
-
-                    Rectangle intersect = kObj1.getHitbox().intersection(kObj2.getHitbox());
-                    int signX = kObj1.getX() < obj2.getX() + kObj2.getHitbox().width / 2 ? -1 : 1;
-                    int signY = kObj1.getY() < obj2.getY() + kObj2.getHitbox().height / 2 ? -1 : 1;
-
-                    if (intersect.height > .5 && intersect.width > .5) {
-                        if (kObj2.isStatic()) {
-                            if(intersect.width > intersect.height)
-                                if(signY == -1 && obj1 instanceof Player)
-                                    ((Player) obj1).grounded = true;
-
-                            if (intersect.height < intersect.width)
-                                obj1.setY(obj1.getY() + intersect.height * signY);
-
-                            else
-                                obj1.setX(obj1.getX() + intersect.width * signX);
-
-                        } else {
-                            if(intersect.width > intersect.height)
-                                if(signY == -1 && obj1 instanceof Player) ((Player) obj1).grounded = true;
-
-                            if (intersect.height < intersect.width) {
-                                obj1.setY(obj1.getY() + (intersect.height / 2 + 1) * signY);
-                                obj2.setY(obj2.getY() - (intersect.height / 2 + 1) * signY);
-
-                            } else {
-                                obj1.setX(obj1.getX() + (intersect.width / 2 + 1) * signX);
-                                obj2.setX(obj2.getX() - (intersect.width / 2 + 1) * signX);
-
-                            }
-                        }
-                    }
-                }
-
-            }
-            if(iObj1 != null) iObj1.setRequesting(false);
+    public PhysicsEngine(Player player, PhysicState state) {
+        this.player = player;
+        collisionManager = new CollisionManager();
+        physicState = state;
+        switch (state){
+            case TopDown:    player.setState(Player.PlayerState.overWorld); break;
+            case SideScroll: player.setState(Player.PlayerState.sideScroll); break;
         }
+    }
+
+    public void update(ArrayList<Collidable> collidables, ArrayList<Kinematic> kinematics,
+                       ArrayList<Interactable> interactables) {
+
+        this.applyPhysics(kinematics);
+        this.resolveCollisions(collisionManager.detectCollisions(collidables));
+        collisionManager.procressInteractions(player, interactables);
+    }
+
+    private void applyPhysics(ArrayList<Kinematic> kinematics){
+        if(!kinematics.isEmpty()) {
+            kinematics.forEach(k -> {
+                if (physicState == PhysicState.SideScroll) {
+                    if (k.getVelocity().y + PhysicsMeta.Gravity.y < PhysicsMeta.terminalVelocity)
+                        k.setVelocity(k.getVelocity().add(PhysicsMeta.Gravity));
+                } k.move();
+            });
+        }
+    }
+
+    private void resolveCollisions(ArrayList<CollisionEvent> events) {
+        events.forEach(event -> {
+            if(event.collider instanceof Kinematic){
+                PhysicsVector getOut = new PhysicsVector(0,0);
+                for(int i = 0; i < event.collidedWith.size(); i++)
+                    getOut = getOut.add(collisionReslover(event.collider, event.collidedWith.get(i)));
+                ((Kinematic)event.collider).move(getOut);
+            }
+
+            event.collidedWith.forEach(collidable -> {
+                if(collidable instanceof Kinematic) {
+                    ((Kinematic) collidable).move(collisionReslover(collidable, event.collider));
+                }
+            });
+            event.sendCollision();
+        });
+    }
+
+    private PhysicsVector collisionReslover(Collidable c1, Collidable c2){
+        if(c1 instanceof Kinematic) {
+            Rectangle intersection = c1.getCollisionBox().intersection(c2.getCollisionBox());
+            //Direction
+            double angleDeg = Math.atan2(
+                    intersection.getCenterY() - c1.getCollisionBox().getCenterY(),
+                    intersection.getCenterX() - c1.getCollisionBox().getCenterX());
+            //X and Y directions
+            double yComp, xComp;
+            if (intersection.width > intersection.height) {
+                yComp = -Math.round(Math.sin(angleDeg));
+                return new PhysicsVector(0, intersection.height*yComp);
+            } else {
+                xComp = -Math.round(Math.cos(angleDeg));
+                return new PhysicsVector(intersection.width*xComp, 0);
+            }
+        }
+        return PhysicsVector.ZERO;
     }
 }

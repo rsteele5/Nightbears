@@ -2,11 +2,9 @@ package gameengine.physics;
 
 import gameobject.GameObject;
 
-import java.awt.*;
+import java.awt.Rectangle;
 
 public interface Interactable {
     Rectangle getRequestArea();
-    void setRequesting(boolean isRequesting);
-    boolean isRequesting();
     boolean action(GameObject g);
 }

@@ -1,22 +1,15 @@
 package gameobject.renderable.player;
 
 import gameengine.gamedata.PlayerData;
-import gameengine.physics.Interactable;
-import gameengine.physics.Kinematic;
-import gameengine.physics.PhysicsMeta;
-import gameengine.physics.PhysicsVector;
+import gameengine.physics.*;
 import gameengine.rendering.animation.Animator;
 import gameobject.GameObject;
-import gameobject.renderable.ImageContainer;
-import gameobject.renderable.RenderableObject;
-import gameobject.renderable.item.*;
 import gameobject.renderable.DrawLayer;
-import gameobject.renderable.RenderableObject;
 import gameobject.renderable.item.Item;
 import gameobject.renderable.player.overworld.PlayerIdleAnimation;
 import gameobject.renderable.player.overworld.PlayerWalkingAnimation;
 import gameobject.renderable.player.sidescrolling.*;
-import gamescreen.GameScreen;
+import gamescreen.gameplay.GamePlayScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -25,27 +18,30 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Player extends RenderableObject implements Kinematic, Interactable {
+import static input.listeners.Key.KeyCodeMeta.*;
 
+public class Player extends RenderablePhysicsObject {
     //region <Variables>
-    private int speed = 1;
     private PlayerData playerData;
+    private PlayerState playerState;
     private CopyOnWriteArrayList<Item> items;
-    private PhysicsVector moveState = new PhysicsVector(1, 1);
-    private PhysicsVector magnitude = new PhysicsVector(0, 0);
-    private final int[] ssKeys = new int[]{68, 65};
-    private final int[] owKeys = new int[]{68, 65, 83, 87};
+    private double rotation = 0;
+    /*
+    * Key codes in relation to x and y:
+    * 0 = -x
+    * 1 =  x
+    * 2 = -y
+    * 3 =  y
+    */
+    private final int[] keys = new int[]{LEFT, RIGHT, UP, DOWN};
+    private boolean[] keyFlag = new boolean[]{false,false,false,false};
+    private int dimension;          // 2 = x movement; 4 = x,y movement
+    private PhysicsVector movement;
     private boolean crouch = false;
     private boolean crouchSet = true;
-    public boolean interaction = false;
-    private int movFlag = 0;
-    private int gold;
-    private double moveFactor = 1;
-    private double rotation = 0;
-    public boolean grounded;
-    private PlayerState playerState;
+    private boolean grounded = false;
+    private boolean considerArc = false;
     private boolean requesting;     //Use for requesting interactions
-    private ImageContainer attackArea;
     private boolean facing;//false is right, true is left
 
     public enum PlayerState {
@@ -56,18 +52,12 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
     //endregion
 
     public Player(int x, int y, DrawLayer drawLayer, PlayerData playerData) {
-        //TODO: Set to the random bear selection.
-        super(x, y, "/assets/player/TeddySilhouette.png", drawLayer);
-        //playerState = PlayerState.asleep;
-        //TODO:Review
+        super(x, y, "/assets/player/TeddySilhouette.png", drawLayer, 4);
+        //PlayerData
         this.playerData = playerData;
         items = new CopyOnWriteArrayList<>();
         items = playerData.getInventory();
-
-        attackArea = new ImageContainer(0,0,"/assets/player/sidescrolling/Whack.png",DrawLayer.Entity);
-
-        //initializeItems()
-
+        //Animator
         animator = new Animator(this);
         animator.addAnimation("Walking", new PlayerWalkingAnimation(playerData.getImageDirectory()));
         animator.addAnimation("Idle", new PlayerIdleAnimation(playerData.getImageDirectory()));
@@ -75,9 +65,10 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
         animator.addAnimation("SS_Idle_Right", new PlayerSSIdleAnimationRight(playerData.getImageDirectory()));
         animator.addAnimation("SS_Running_Left", new PlayerSSRunningAnimationLeft(playerData.getImageDirectory()));
         animator.addAnimation("SS_Running_Right", new PlayerSSRunningAnimationRight(playerData.getImageDirectory()));
-        animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation(playerData.getImageDirectory()));
-
+        //animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation(playerData.getImageDirectory()));
+        //Interactable
         requesting = false;
+        movement = new PhysicsVector(0,0);
     }
 
     //region <Getters and Setters>
@@ -85,23 +76,22 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
         return playerState;
     }
 
-    /**
-     * Returns true or false depending on the acceptance of the state transition.
-     */
     public void setState(PlayerState ps) {
         //TODO: Implement error checking
         switch (ps) {
             case overWorld:
                 Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: overWorld");
-                speed = 3;
+                speed = 4;
                 width = 100;
                 height = 100;
                 animator.setAnimation("Idle");
                 playerState = ps;
+                dimension = 4;
                 break;
             case asleep:
                 Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: asleep");
                 playerState = ps;
+                dimension = 0;
                 break;
             case sideScroll:
                 Debug.log(DebugEnabler.PLAYER_STATUS,"Player-State: sideScroll");
@@ -109,36 +99,39 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
                 rotation = 0;
                 animator.setAnimation("SS_Idle_Right");
                 playerState = ps;
+                dimension = 2;
                 break;
         }
     }
-
     //endregion
 
     //region <Update and Draw>
     @Override
     public void update() {
-        if(interaction) Debug.log(DebugEnabler.PLAYER_STATUS,"Interaction Available! Act now!");
-        if(playerState == PlayerState.sideScroll && !crouchSet  ){
-            crouchSet = true;
-            if(crouch) {
-                y = y + image.getHeight()/2;
-                animator.setAnimation("SS_Crouch");
-            }
-            else {
-                animator.setAnimation("SS_Idle");
-                y = y - image.getHeight()/2;
-            }
+        if(!grounded && motion.y < 1  && motion.y >= 0){
+            if(considerArc) considerArc = false;
+            else grounded = true;
         }
-        if (playerState == PlayerState.overWorld) {
-            if (magnitude.x != 0.0 || magnitude.y != 0.0) {
-                rotation = getVelocity().direction();
-                if(!animator.getCurrentAnimationName().equals("Walking"))
-                    animator.setAnimation("Walking");
-            } else {
-                if(!animator.getCurrentAnimationName().equals("Idle"))
-                    animator.setAnimation("Idle");
-            }
+        calculateMove();
+        setMovementAnimation();
+    }
+
+    private void calculateMove() {
+        switch(playerState) {
+            case overWorld: // y movement
+                if(keyFlag[2] && !keyFlag[3])
+                    motion.y = -speed;
+                else if(!keyFlag[2] && keyFlag[3])
+                    motion.y = speed;
+                else motion.y = 0;
+
+            case sideScroll: // x movement
+                if(keyFlag[0] && !keyFlag[1])
+                    motion.x = -speed;
+                else if(!keyFlag[0] && keyFlag[1])
+                    motion.x = speed;
+                else motion.x = 0;
+                break;
         }
     }
 
@@ -148,7 +141,8 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
         if(animator != null){
             animator.animate();
         }
-        Debug.drawRect(DebugEnabler.RENDERABLE_LOG,graphics2D, new Rectangle2D.Double(x,y,width, height));
+        Debug.drawRect(DebugEnabler.RENDERABLE_LOG,graphics2D,
+                new Rectangle2D.Double(x, y, width, height));
 
         Graphics2D g2 = (Graphics2D) graphics2D.create();
         g2.rotate(rotation, x + (width / 2.0), y + (height / 2.0));
@@ -159,108 +153,99 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
 
     //region <Support functions>
 
-    /*
-    0b1     =   right
-    0b10    =   left
-    0b100   =   down
-    0b1000  =   up
-     */
-    private void setMovementState(int flags) {
-        int x1 = 0b1 & flags;
-        x1 += (((0b10 & flags) / 0b10) * -1);
-        int y1 = ((0b100 & flags) / 0b100);
-        y1 += (((0b1000 & flags) / 0b1000) * -1);
-
-        if(playerState == PlayerState.sideScroll) {
-            if(x1 == 1 && grounded && animator.getCurrentAnimation().getName() != "SS_Running_Right") {
-                animator.setAnimation("SS_Running_Right"); facing = false; Debug.log(true,"face right");
-            } else if (x1 == -1 && grounded && animator.getCurrentAnimation().getName() != "SS_Running_Left" ) {
-                animator.setAnimation("SS_Running_Left"); facing = true; Debug.log(true,"face left");
-            } else if(x1 == 0 && grounded && animator.getCurrentAnimation().getName() == "SS_Running_Left" && animator.getCurrentAnimation().getName() != "SS_Idle_Left") {
-                animator.setAnimation("SS_Idle_Left"); facing = true; Debug.log(true,"face left");
-            } else if (x1 == 0 && grounded && animator.getCurrentAnimation().getName() == "SS_Running_Right" && animator.getCurrentAnimation().getName() != "SS_Idle_Right") {
-                animator.setAnimation("SS_Idle_Right"); facing = false; Debug.log(true,"face right");
-            }
+    private void setMovementAnimation() {
+        switch(playerState){
+            case sideScroll:
+                switch(animator.getCurrentAnimation().getName()){
+                    case "SS_Running_Right":
+                        if(grounded) {
+                            if (motion.x < 0.05) {
+                                if (motion.x > -0.05) animator.setAnimation("SS_Idle_Right");
+                                else animator.setAnimation("SS_Running_Left");
+                            }
+                        } else { /* Jumping or falling animation */}
+                        break;
+                    case "SS_Running_Left":
+                        if(grounded) {
+                            if (motion.x > -0.05) {
+                                if (motion.x < 0.05) animator.setAnimation("SS_Idle_Left");
+                                else animator.setAnimation("SS_Running_Right");
+                            }
+                        } else { /* Jumping or falling animation */}
+                        break;
+                    case "SS_Idle_Right":
+                    case "SS_Idle_Left":
+                        if(grounded) {
+                            if (motion.x < -0.05)
+                                animator.setAnimation("SS_Running_Left");
+                            else if (motion.x > 0.05)
+                                animator.setAnimation("SS_Running_Right");
+                        } else { /* Jumping or falling animation */}
+                        break;
+                }
+                break;
+            case overWorld:
+                if (motion.x != 0.0 || motion.y != 0.0) {
+                    rotation = getVelocity().direction();
+                    if(!animator.getCurrentAnimationName().equals("Walking"))
+                        animator.setAnimation("Walking");
+                } else {
+                    if(!animator.getCurrentAnimationName().equals("Idle"))
+                        animator.setAnimation("Idle");
+                }
+                break;
         }
 
-
-        setVelocity(new PhysicsVector(x1, y1));
     }
 
-    private void calculateMove(KeyEvent e, int[] keys) {
-        for (int i = 0; i < keys.length; i++)
-            movFlag += e.getKeyCode() == keys[i] && ((movFlag & (int) Math.pow(2, i)) == 0) ? (int) Math.pow(2, i) : 0;
-        setMovementState(movFlag);
-    }
-
-    private void calculateRelease(KeyEvent e, int[] keys) {
-        for (int i = 0; i < keys.length; i++)
-            movFlag -= e.getKeyCode() == keys[i] && ((movFlag & (int) Math.pow(2, i)) == Math.pow(2, i)) ? (int) Math.pow(2, i) : 0;
-        setMovementState(movFlag);
-
-    }
-
-    public void move(KeyEvent e) {
-        switch (getState()) {
+    public void handleKeyPress(KeyEvent e) {
+        switch (playerState) {
             case sideScroll:
-                if (e.getKeyCode() == 32 && grounded) { // JUMP
-                    int sign = PhysicsMeta.AntiGravity ? -1 : 1;
-                    setAcceleration(getAcceleration().add(new PhysicsVector(0, -7 * sign)));
+                if (e.getKeyCode() == JUMP && grounded) { // JUMP
+                    motion = motion.add(0, -20);
                     grounded = false;
-                }
-                if(e.getKeyCode() == 83 && !crouch){ // CROUCH
+                    considerArc = true;
+                } else if(e.getKeyCode() == DOWN && !crouch){ // CROUCH
                     crouch = true;
                     crouchSet = false;
                 }
-                if(e.getKeyCode() == 16) { // SPRINT
-                    moveFactor = 2.5;
-                }
-                if (PhysicsMeta.Gravity == 0) calculateMove(e, owKeys);
-                else calculateMove(e, ssKeys);
-                break;
             case overWorld:
-                calculateMove(e, owKeys);
+                if(e.getKeyCode() == SPRINT) { // SPRINT
+                    speed = 8;
+                } else if(modifyKeyFlag(e, true)){
+                    //DO stuff on unique movement key press if you want
+                }
                 break;
         }
-
     }
 
-    public void moveRelease(KeyEvent e) {
+    public void handleKeyReleased(KeyEvent e) {
         switch (getState()) {
             case sideScroll:
-                if(e.getKeyCode() == 83 && crouch){
+                if(e.getKeyCode() == DOWN && crouch){
                     Debug.log(DebugEnabler.PLAYER_STATUS,"CROUCHING RELEASE");
                     crouch = false;
                     crouchSet = false;
-
                 }
-                if(e.getKeyCode() == 16) {
-                    moveFactor = 1;
-                }
-
-                if (PhysicsMeta.Gravity == 0) calculateRelease(e, owKeys);
-                else calculateRelease(e, ssKeys);
-
-                break;
-
             case overWorld:
-                calculateRelease(e, owKeys);
+                if(e.getKeyCode() == SPRINT) {
+                    speed = 4;
+                } else if(modifyKeyFlag(e, false)){
+                    //DO stuff on unique movement key release if you want
+                }
                 break;
         }
 
     }
 
-    public void attack(KeyEvent e) {
-        switch (getState()) {
-            case sideScroll:
-                if (e.getKeyCode() == 70) { // Attack
-                    if(facing) attackArea.setPosition(x - 50, y);//50 is length of WHACK img
-                    else attackArea.setPosition(x + 100, y);//100 is length of Bear imgf
-                }
-                break;
-            case overWorld:
-                break;
-        }
+    private boolean modifyKeyFlag(KeyEvent e, boolean state){
+        for (int i = 0; i < dimension; i++){
+            if(e.getKeyCode() == keys[i] && keyFlag[i] != state){
+                keyFlag[i] = state;
+                setMovementAnimation();
+                return true;
+            }
+        } return false;
     }
 
     public void addItem(Item i){
@@ -268,93 +253,42 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
     }
     //endregion
 
-    //region <Kinematics>
-    @Override
-    public boolean isStatic() {
-        return false;
-    }
-
-    @Override
-    public PhysicsVector getVelocity() {
-        int gravSign = PhysicsMeta.Gravity != 0 && playerState == PlayerState.sideScroll ? 1 : 0;
-        PhysicsVector pV = magnitude.add(new PhysicsVector(0, gravSign)).mult(moveState);
-        double y = pV.y;
-        y = y < 1 && y > .5 ? 1 : y;
-        y = y < -.5 && y > -1 ? -1 : y;
-        return new PhysicsVector(pV.x * moveFactor, y);
-    }
-
-    @Override
-    public void setVelocity(PhysicsVector pv) {
-//        if(pv.x != 0 && pv.y != 0){
-//            //TODO: this is broken. Needs to make speed constant in all directions
-//            pv.x = (pv.x / Math.sqrt(2));
-//            pv.y = (pv.y / Math.sqrt(2));
-//        }
-        magnitude = pv.mult(speed);
-    }
-
-    @Override
-    public PhysicsVector getAcceleration() {
-        return moveState;
-    }
-
-    @Override
-    public void setAcceleration(PhysicsVector pv) {
-        moveState = pv;
-    }
-
-    @Override
-    public Rectangle getHitbox() {
-        return new Rectangle(x, y, image.getWidth(), image.getHeight());
-    }
-    //endregion
-
     //region <Interactable>
-    @Override
+
     public Rectangle getRequestArea() {
-        return new Rectangle(x, y, image.getWidth(), image.getHeight());
+        return new Rectangle(x, y, width, height);
     }
 
-    @Override
     public void setRequesting(boolean isRequesting) {
         requesting = isRequesting;
     }
 
-    @Override
     public boolean isRequesting() {
         return requesting;
-    }
-
-    @Override
-    public boolean action(GameObject g) {
-        return false;
     }
     //endregion
 
     //region <GameObject Overrides>
     @Override
-    public boolean setActive(GameScreen screen){
+    public boolean setActive(GamePlayScreen screen){
         if(super.setActive(screen)){
-            screen.kinematics.add(this);
+            // set active stuff here
             return true;
         }return false;
     }
 
     @Override
-    public boolean setInactive(GameScreen screen){
+    public boolean setInactive(GamePlayScreen screen){
         if(super.setInactive(screen)){
-            screen.kinematics.remove(this);
+            // set inactive stuff here
             return true;
         }return false;
     }
 
     @Override
-    public void addToScreen(GameScreen screen, boolean isActive){
+    public void addToScreen(GamePlayScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
-        screen.kinematics.remove(this);
-        if(isActive) screen.kinematics.add(this);
-        attackArea.addToScreen(screen,true);
+        // add stuff to Screen here
     }
     //endregion
 }

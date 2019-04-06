@@ -6,9 +6,10 @@ import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
 import java.awt.geom.Rectangle2D;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class GridContainer<T> extends GameObject {
+public abstract class GridContainer<T> extends GameObject implements Serializable {
 
     //region <Variables>
     protected String name;

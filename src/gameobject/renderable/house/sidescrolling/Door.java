@@ -1,18 +1,16 @@
 package gameobject.renderable.house.sidescrolling;
 
 import gameengine.physics.Interactable;
-import gameengine.physics.Kinematic;
-import gameengine.physics.PhysicsVector;
 import gameobject.GameObject;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.RenderableObject;
 import gameobject.renderable.player.Player;
+import gamescreen.gameplay.GamePlayScreen;
 import main.utilities.Action;
-import main.utilities.Debug;
 
 import java.awt.*;
 
-public class Door extends RenderableObject implements Kinematic, Interactable {
+public class Door extends RenderableObject implements Interactable {
 
     private Action exit;
 
@@ -33,15 +31,6 @@ public class Door extends RenderableObject implements Kinematic, Interactable {
     }
 
     @Override
-    public void setRequesting(boolean isRequesting) {
-    }
-
-    @Override
-    public boolean isRequesting() {
-        return false;
-    }
-
-    @Override
     public boolean action(GameObject g) {
         if(g instanceof Player){
             exit.doIt();
@@ -50,17 +39,25 @@ public class Door extends RenderableObject implements Kinematic, Interactable {
         return false;
     }
 
-    //Kinematic
-    @Override
-    public boolean isStatic() { return true; }
-    @Override
-    public PhysicsVector getVelocity() { return PhysicsVector.ZERO; }
-    @Override
-    public void setVelocity(PhysicsVector pv) {}
-    @Override
-    public PhysicsVector getAcceleration() { return PhysicsVector.ZERO; }
-    @Override
-    public void setAcceleration(PhysicsVector pv) {}
-    @Override
-    public Rectangle getHitbox() { return new Rectangle(x, y, 0, 0); }
+    public boolean setActive(GamePlayScreen screen){
+        if(super.setActive(screen)){
+            screen.interactables.add(this);
+            return true;
+        }return false;
+    }
+
+    public boolean setInactive(GamePlayScreen screen){
+        if(super.setInactive(screen)){
+            screen.interactables.remove(this);
+            return true;
+        }return false;
+    }
+
+    public void addToScreen(GamePlayScreen screen, boolean isActive){
+        super.addToScreen(screen, isActive);
+        screen.interactables.remove(this);
+        if(isActive){
+            screen.interactables.add(this);
+        }
+    }
 }
