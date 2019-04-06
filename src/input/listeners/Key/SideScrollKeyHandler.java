@@ -1,5 +1,7 @@
 package input.listeners.Key;
 
+import gameobject.renderable.DrawLayer;
+import gameobject.renderable.ImageContainer;
 import gameobject.renderable.player.Player;
 
 import java.awt.event.KeyEvent;

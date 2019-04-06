@@ -42,6 +42,7 @@ public class Player extends RenderablePhysicsObject {
     private boolean grounded = false;
     private boolean considerArc = false;
     private boolean requesting;     //Use for requesting interactions
+    private boolean facing;//false is right, true is left
 
     public enum PlayerState {
         sideScroll,
