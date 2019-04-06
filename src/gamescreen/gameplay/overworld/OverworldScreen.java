@@ -22,26 +22,31 @@ public class OverworldScreen extends GamePlayScreen {
     private Player player;
     private Vendor vendor;
     private int vendorVisits = -1;
+    private Room currentRoom;
     //endregion
 
     public OverworldScreen(ScreenManager screenManager) {
-        super(screenManager, "Overworld", 0f);
+        super(screenManager, "Overworld", 1f);
     }
 
 
     @Override
     protected void initializeScreen() {
         //House generation
-        MapBuilder mapBuilder = new MapBuilder();
-        mapBuilder.createMap(this);
-        mapBuilder.addRoomAtCell(0, 0, new Bedroom());
-        mapBuilder.addRoomAtCell(8,0, new LivingRoom());
-        mapBuilder.addRoomAtCell(0,8, new Bathroom());
-        overworldMap = mapBuilder.buildMap();
+        if(gameData.getLevelData().getCurrentMap() == null) {
+            MapBuilder mapBuilder = new MapBuilder();
+            mapBuilder.createMap();
+            mapBuilder.addRoomAtCell(0, 0, new Bedroom());
+            mapBuilder.addRoomAtCell(8,0, new LivingRoom());
+            mapBuilder.addRoomAtCell(0,8, new Bathroom());
+            overworldMap = mapBuilder.buildMap();
+            overworldMap.getRooms().get(0).discovered();
+            gameData.getLevelData().setCurrentMap(overworldMap);
+        } else {
+            overworldMap = gameData.getLevelData().getCurrentMap();
+        }
         overworldMap.addToScreen(this, true);
-        overworldMap.getRooms().forEach(room -> room.setInactive(this));
-        overworldMap.getRooms().get(0).setActive(this);
-
+        gameData.save();
         //Bed
         SpawnPoint bedSpawn = overworldMap.getRooms().get(0).getSpawnETCOptions().get(0);
         Prop bed = new Prop(bedSpawn.getTileX(),bedSpawn.getTileY(),
@@ -54,6 +59,8 @@ public class OverworldScreen extends GamePlayScreen {
         player.setState(Player.PlayerState.overWorld);
         player.addToScreen(this,true);
         setCamera(new Camera(screenManager, this, player));
+
+        currentRoom = getCurrentRoom();
 
         //Vendor
         SpawnPoint vSpawn = overworldMap.getVendorSpawn();
@@ -70,11 +77,31 @@ public class OverworldScreen extends GamePlayScreen {
     }
 
     @Override
+    protected void transitionOn() {
+        super.transitionOn();
+        if(currentState == ScreenState.Active){
+            overworldMap.getRooms().forEach(room -> {
+                if(room.isDiscovered())
+                    room.discovered();
+                else room.undiscovered();
+            });
+        }
+    }
+
+    @Override
+    protected void transitionOff() {
+        exiting = true;
+    }
+
+    @Override
     protected void activeUpdate() {
         super.activeUpdate();
+        this.overworldMap.getRooms().forEach(room -> room.contains(player.getX(), player.getY()));
     }
 
     public void onLevelComplete(){
+        getCurrentRoom().setComplete(true);
+
         //Vendor
         //TODO: Edit this later
         if(vendorVisits == 0) vendorVisits++;
@@ -89,5 +116,14 @@ public class OverworldScreen extends GamePlayScreen {
         );
         //Doors
         overworldMap.getRooms().get(0).getDoors().forEach(door -> door.setOpenable(true));
+    }
+
+    public Room getCurrentRoom(){
+        overworldMap.getRooms().forEach(room -> {
+            if(room.contains(player.getX(), player.getY())){
+                currentRoom = room;
+            }
+        });
+        return currentRoom;
     }
 }

@@ -1,15 +1,20 @@
 package gameobject.renderable.house.overworld;
 
 import gameobject.GameObject;
+import gameobject.container.GridIndex;
+import gameobject.renderable.house.overworld.room.Door;
 import gameobject.renderable.house.overworld.room.Room;
 import gameobject.renderable.house.overworld.room.SpawnPoint;
 import gamescreen.GameScreen;
 import gameobject.container.TileGridContainer;
 import gamescreen.gameplay.GamePlayScreen;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Map extends GameObject {
+import static gameobject.renderable.house.overworld.OverworldMeta.*;
+
+public class Map extends GameObject implements Serializable {
 
     private TileGridContainer[][] chunkMap;
     private ArrayList<Room> rooms;
@@ -47,10 +52,10 @@ public class Map extends GameObject {
 
     public void addToScreen(GamePlayScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
-        for (Room room : rooms) room.addToScreen(screen, isActive);
         for(TileGridContainer[] row : chunkMap){
             for(TileGridContainer chunk : row) chunk.addToScreen(screen, isActive);
         }
+        for (Room room : rooms) room.addToScreen(screen, isActive); //ADD complete stuff
     }
 
     @Override

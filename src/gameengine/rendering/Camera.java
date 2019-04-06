@@ -18,7 +18,11 @@ public class Camera {
         this.screenManager = screenManager;
         this.screen = gameScreen;
         this.target = target;
-        renderDistance = 1200;
+        renderDistance = 1400;
+    }
+    public Camera(ScreenManager screenManager, GameScreen gameScreen, GameObject target, int renderDistance) {
+        this(screenManager, gameScreen, target);
+        this.renderDistance = renderDistance;
     }
 
     public void track(Graphics2D graphics) {

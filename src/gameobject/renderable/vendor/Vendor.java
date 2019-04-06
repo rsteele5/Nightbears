@@ -52,7 +52,7 @@ public class Vendor extends CollidableRenderable implements Interactable, Serial
 
     // Default constructor
     public Vendor(int x, int y, VendorData vendorData){
-        super(x, y, "",DrawLayer.Entity, 1f);
+        super(x, y, "",DrawLayer.Entity, 1f,false);
         vendorState = VendorState.hiding;
         this.imagePath = vendorLevelPath;
         this.vendorData = vendorData;

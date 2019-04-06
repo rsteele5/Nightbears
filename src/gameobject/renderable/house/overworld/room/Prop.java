@@ -6,7 +6,7 @@ import gameobject.renderable.DrawLayer;
 public class Prop extends CollidableRenderable {
 
     public Prop(int x, int y, String imagePath) {
-        super(x, y, imagePath, DrawLayer.Prop, 1f);
+        super(x, y, imagePath, DrawLayer.Prop, 1f, false);
     }
 
     @Override

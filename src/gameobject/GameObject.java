@@ -3,7 +3,9 @@ package gameobject;
 import gameengine.physics.PhysicsVector;
 import gamescreen.GameScreen;
 
-public abstract class GameObject {
+import java.io.Serializable;
+
+public abstract class GameObject implements Serializable {
 
     protected int x, y;
 

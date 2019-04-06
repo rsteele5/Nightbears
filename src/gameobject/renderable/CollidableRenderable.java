@@ -6,9 +6,10 @@ import gamescreen.gameplay.GamePlayScreen;
 import java.awt.Rectangle;
 
 public abstract class CollidableRenderable extends RenderableObject implements Collidable {
-
-    public CollidableRenderable(int x, int y, String imagePath, DrawLayer layer, float alpha) {
+    protected boolean isTrigger;
+    public CollidableRenderable(int x, int y, String imagePath, DrawLayer layer, float alpha, boolean isTrigger) {
         super(x,y,imagePath,layer,alpha);
+        this.isTrigger = isTrigger;
     }
 
     /**
@@ -17,6 +18,11 @@ public abstract class CollidableRenderable extends RenderableObject implements C
     @Override
     public Rectangle getCollisionBox() {
         return new Rectangle(x, y, width, height);
+    }
+
+    @Override
+    public boolean isTrigger() {
+        return isTrigger;
     }
 
     //Game Object

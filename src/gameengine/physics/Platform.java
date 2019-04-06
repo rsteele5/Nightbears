@@ -8,7 +8,7 @@ public class Platform extends CollidableRenderable{
 
     private int counter = 0;
     public Platform(int x, int y, String path, DrawLayer drawLayer) {
-        super(x, y, path, drawLayer, 1f);
+        super(x, y, path, drawLayer, 1f, false);
     }
 
     @Override

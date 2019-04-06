@@ -10,19 +10,22 @@ import gamescreen.gameplay.GamePlayScreen;
 import main.utilities.Action;
 
 import java.awt.*;
+import java.io.Serializable;
 
 import static gameobject.renderable.house.overworld.OverworldMeta.TileSize;
 import static gameobject.renderable.house.overworld.OverworldMeta.WallThickness;
 
-public class Door extends CollidableRenderable implements Interactable {
+public class Door extends CollidableRenderable implements Interactable, Serializable {
     private Rectangle interactionBox;
     private Tile referenceTile;
     private Compass attachedDirection;
     private boolean openable;
-    private Action open;
+    private boolean open;
+    private Room connectedRoom;
 
     public Door(Tile referenceTile, Compass attachedDirection){
-        super(0,0, "/assets/overworld/room/Overworld-RedCarpet-Door-", DrawLayer.Entity, 1f);
+        super(0,0, "/assets/overworld/room/Overworld-RedCarpet-Door-",
+                DrawLayer.Entity, 1f, false);
         openable = false;
         this.referenceTile = referenceTile;
         this.attachedDirection = attachedDirection;
@@ -61,8 +64,9 @@ public class Door extends CollidableRenderable implements Interactable {
     //Getters and Setters
     public Tile getReferenceTile(){ return referenceTile; }
     public Compass getAttachedDirection(){ return attachedDirection; }
+    public boolean isOpen(){ return open; }
     public void setOpenable(boolean isOpenable){ openable = isOpenable; }
-    public void setOpenOperation(Action operation){ open = operation; }
+    public void setRoomToOpen(Room connectedRoom){ this.connectedRoom = connectedRoom; }
 
     //Interactable
     @Override
@@ -73,10 +77,16 @@ public class Door extends CollidableRenderable implements Interactable {
     @Override
     public boolean action(GameObject g) {
         if(openable){
-            open.doIt();
+            if(connectedRoom != null)
+                connectedRoom.discovered();
+            open = true;
+            openable = false;
+            isTrigger = true;
+            alpha = 0f;
         }
         return false;
     }
+
 
     //Game Object
     @Override

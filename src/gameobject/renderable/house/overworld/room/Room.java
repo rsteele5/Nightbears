@@ -8,12 +8,13 @@ import gamescreen.gameplay.GamePlayScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
-import java.awt.geom.Rectangle2D;
+import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-import static gameobject.renderable.house.overworld.OverworldMeta.TileSize;
+import static gameobject.renderable.house.overworld.OverworldMeta.*;
 
-public abstract class Room extends GameObject {
+public abstract class Room extends GameObject implements Serializable {
 
     //region <Variables>
     protected String name;
@@ -27,6 +28,9 @@ public abstract class Room extends GameObject {
     protected ArrayList<SpawnPoint> spawnPoints;
     protected ArrayList<Boundary> boundaries;
     protected ArrayList<Door> doors;
+
+    protected boolean isComplete;
+    protected boolean discovered;
     //endregion
 
     //region <Construction and Initialization>
@@ -42,6 +46,8 @@ public abstract class Room extends GameObject {
         boundaries = new ArrayList<>();
         doors = new ArrayList<>();
         spawnPoints = new ArrayList<>();
+        isComplete = false;
+        discovered = false;
     }
 
     protected abstract Integer[][] constructLayout();
@@ -105,6 +111,18 @@ public abstract class Room extends GameObject {
         return layout;
     }
 
+    public boolean isComplete() {
+        return isComplete;
+    }
+
+    public void setComplete(boolean complete){
+        this.isComplete = complete;
+    }
+
+    public boolean isDiscovered() {
+        return discovered;
+    }
+
     public Tile getRoomTileAt(int row, int col) {
         return roomTiles[row][col];
     }
@@ -128,8 +146,9 @@ public abstract class Room extends GameObject {
         } return false;
     }
 
-    public Rectangle2D getBoundingBox() {
-        return new Rectangle2D.Double(cellCol *TileSize, cellRow *TileSize, width, height);
+    public Rectangle getBoundingBox() {
+        //return new Rectangle2D.Double(cellCol *TileSize, cellRow *TileSize, width, height);
+        return new Rectangle(cellCol *TileSize + (TileSize * BorderBuffer * ChunkSize), cellRow *TileSize + (TileSize * BorderBuffer * ChunkSize), width* TileSize, height* TileSize);
     }
 
     public void setCell(int x, int y) {
@@ -150,14 +169,10 @@ public abstract class Room extends GameObject {
                     //TODO: Check if the conflicting sections have irrelevant differences
                     return true;
                 }
-            }else{
-                Debug.warning(DebugEnabler.OVERWORLD, newRoom.name
+            } else Debug.warning(DebugEnabler.OVERWORLD, newRoom.name
                         + " - is being compared, but does not have a set cell yet. Returning false. ");
-            }
-        }else{
-            Debug.warning(DebugEnabler.OVERWORLD, name
+        } else Debug.warning(DebugEnabler.OVERWORLD, name
                     + " - is trying to compare layouts, but does not have a set cell yet. Returning false. ");
-        }
         return false;
     }
 
@@ -174,9 +189,43 @@ public abstract class Room extends GameObject {
         Tile referenceTile = roomTiles[row][col];
         doors.add(new Door(referenceTile, attachedDirection));
     }
+
+    public void discovered() {
+        discovered = true;
+        doors.forEach(door -> {
+            if(door.isOpen()) door.setAlpha(0f);
+            else door.setAlpha(1f);
+        });
+        for (Tile[] row : roomTiles) {
+            for (Tile tile : row)
+                if (tile != null) tile.setAlpha(1f);
+        }
+    }
+
+    public void undiscovered() {
+        discovered = false;
+        doors.forEach(door -> door.setAlpha(0f));
+        for (Tile[] row : roomTiles) {
+            for (Tile tile : row)
+                if (tile != null) tile.setAlpha(0f);
+        }
+    }
+
+    public boolean contains(int x, int y) {
+
+        if(getBoundingBox().contains(x,y)) {
+            Debug.log(true, "Checking If player is in room");
+            for(Tile[] row : roomTiles){
+                for(Tile tile : row)
+                    if(tile != null && tile.contains(x,y)) {
+                        Debug.log(true, "Tile " + tile.getX() + ", " + tile.getY() + "Contains the Player");
+                        return true;
+                    }
+            }
+        }
+        return false;
+    }
     //endregion
-
-
 
     //region <GameObject Overrides>
     public boolean setActive(GamePlayScreen screen){
@@ -203,6 +252,10 @@ public abstract class Room extends GameObject {
 
     public void addToScreen(GamePlayScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
+        for(Tile[] row : roomTiles) {
+            for (Tile tile : row)
+                if (tile != null) tile.addToScreen(screen, isActive);
+        }
         boundaries.forEach(boundary -> boundary.addToScreen(screen, isActive));
         doors.forEach(door -> door.addToScreen(screen, isActive));
     }

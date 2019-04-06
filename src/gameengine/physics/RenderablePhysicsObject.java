@@ -10,7 +10,7 @@ public abstract class RenderablePhysicsObject extends CollidableRenderable imple
     protected double speed;
 
     public RenderablePhysicsObject(int x, int y, String path, DrawLayer drawLayer, double speed){
-        super(x,y,path,drawLayer, 1f);
+        super(x,y,path,drawLayer, 1f,false);
         motion = PhysicsVector.ZERO;
         this.speed = speed;
     }

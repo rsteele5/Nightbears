@@ -13,7 +13,7 @@ import static java.lang.Math.round;
 public abstract class Item extends CollidableRenderable implements Serializable {
 
     public Item(int x, int y, String imagePath, DrawLayer layer) {
-        super(x,y,imagePath,layer, 1f);
+        super(x,y,imagePath,layer, 1f, true);
     }
     public abstract BufferedImage getIcon();
     public abstract String getItemName();

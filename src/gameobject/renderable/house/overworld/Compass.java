@@ -1,6 +1,8 @@
 package gameobject.renderable.house.overworld;
 
-public enum Compass {
+import java.io.Serializable;
+
+public enum Compass implements Serializable {
     North,
     East,
     South,
