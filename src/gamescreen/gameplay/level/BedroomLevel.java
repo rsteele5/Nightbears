@@ -53,16 +53,9 @@ public class BedroomLevel extends GamePlayScreen {
         background.getBoundaries().forEach(boundary -> boundary.addToScreen(this, true));
 
 
-        Weapon myWeap = new WeaponBuilder()
-                .position(800, 476)
-                .imagePath("/assets/Items/sword1.png")
-                .name("My Fwirst Sword!")
-                .type(WeaponType.Sword)
-                .value(15)
-                .buildWeapon();
-        myWeap.setWidth(50);
-        myWeap.setHeight(50);
-        myWeap.addToScreen(this, true);
+        //Overlays
+        SideScrollUI UI = new SideScrollUI(screenManager, this, player);
+        addOverlay(UI);
 
         setPhysicsEngine(new PhysicsEngine(player, PhysicsEngine.PhysicState.SideScroll));
 
