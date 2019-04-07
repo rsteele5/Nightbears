@@ -1,6 +1,7 @@
 package gamescreen.gameplay.overworld;
 
 import gameengine.physics.PhysicsEngine;
+import gameengine.rendering.OWCamera;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.overworld.Map;
 import gameobject.renderable.house.overworld.MapBuilder;
@@ -58,7 +59,7 @@ public class OverworldScreen extends GamePlayScreen {
         player = new Player(playerSpawn.getTileX(), playerSpawn.getTileY(), DrawLayer.Entity, gameData.getPlayerData());
         player.setState(Player.PlayerState.overWorld);
         player.addToScreen(this,true);
-        setCamera(new Camera(screenManager, this, player));
+        setCamera(new OWCamera(screenManager, this, player));
 
         currentRoom = getCurrentRoom();
 
