@@ -3,6 +3,7 @@ package gamescreen.gameplay.level;
 import gameengine.physics.PhysicsEngine;
 import gameengine.physics.Platform;
 import gameengine.rendering.SSCamera;
+import gameobject.CameraTarget;
 import gameobject.LockCameraTrigger;
 import gameobject.TriggerableBoundary;
 import gameobject.renderable.DrawLayer;
@@ -55,13 +56,17 @@ public class BedroomLevel extends GamePlayScreen {
         player.setState(Player.PlayerState.sideScroll);
         setKeyHandler(new SideScrollKeyHandler(player));
 
-        SSCamera bedroomCamera = new SSCamera(screenManager, this, player);
+        CameraTarget cameraTarget = new CameraTarget(player);
+        cameraTarget.addToScreen(this, true);
+
+
+        SSCamera bedroomCamera = new SSCamera(screenManager, this, cameraTarget);
         setCamera(bedroomCamera);
         background = new BedroomBackgroundLayout();
         background.getBackground().addToScreen(this, true);
         background.getBoundaries().forEach(boundary -> boundary.addToScreen(this, true));
 
-        TriggerableBoundary bounds = new TriggerableBoundary(1580, 0, 20, 1000);
+        TriggerableBoundary bounds = new TriggerableBoundary(1480, 0, 120, 1000);
         bounds.setTrigger(true);
         bounds.addToScreen(this,true);
         LockCameraTrigger cameraTrigger = new LockCameraTrigger(1600, 0, 1980, 1000, bedroomCamera, bounds);
