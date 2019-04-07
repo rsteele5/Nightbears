@@ -15,4 +15,5 @@ public enum KeyCodeMeta {;
     public static int DOWN          = KeyEvent.VK_S;
     public static int JUMP          = KeyEvent.VK_SPACE;
     public static int SPRINT        = KeyEvent.VK_SHIFT;
+    public static int ATTACK        = KeyEvent.VK_CONTROL;
 }

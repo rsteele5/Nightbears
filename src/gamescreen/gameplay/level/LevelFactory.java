@@ -36,7 +36,7 @@ public class LevelFactory extends GameScreen {
         lBuild.buildBackground(this);
         lBuild.buildTerrain(this);
         lBuild.buildEnemies(this);
-        setCamera(new Camera(screenManager, this, player));
+        //setCamera(new Camera(screenManager, this, player));
         setKeyHandler(new SideScrollKeyHandler(player));
     }
 }

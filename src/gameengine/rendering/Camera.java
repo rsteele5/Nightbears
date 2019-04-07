@@ -1,5 +1,6 @@
 package gameengine.rendering;
 
+import gameobject.Boundary;
 import gameobject.GameObject;
 import gameobject.renderable.RenderableObject;
 import gamescreen.GameScreen;
@@ -7,34 +8,28 @@ import gamescreen.ScreenManager;
 
 import java.awt.*;
 
-public class Camera {
+public abstract class Camera {
 
-    private GameScreen screen;
-    private GameObject target;
-    private ScreenManager screenManager;
-    private int renderDistance;
+    protected GameScreen screen;
+    protected GameObject target;
+    protected int renderDistance;
+    protected int renderWidth;
+    protected int renderHeight;
 
     public Camera(ScreenManager screenManager, GameScreen gameScreen, GameObject target) {
-        this.screenManager = screenManager;
         this.screen = gameScreen;
         this.target = target;
-        renderDistance = 1400;
+        this.renderDistance = 1600;
+        this.renderWidth = screenManager.getGameData().getGraphicsSettings().getRenderWidth() / 2;
+        this.renderHeight = screenManager.getGameData().getGraphicsSettings().getRenderHeight() / 2;
     }
+
     public Camera(ScreenManager screenManager, GameScreen gameScreen, GameObject target, int renderDistance) {
         this(screenManager, gameScreen, target);
         this.renderDistance = renderDistance;
     }
 
-    public void track(Graphics2D graphics) {
-        graphics.translate(-target.getX( ) + screenManager.getGameData().getGraphicsSettings().getRenderWidth()/2,
-                -target.getY() + screenManager.getGameData().getGraphicsSettings().getRenderHeight()/2);
-        for(RenderableObject renderableObject: screen.getRenderables()){
-            if(Math.hypot(target.getX()-renderableObject.getX(), target.getY()-renderableObject.getY()) < renderDistance)
-                renderableObject.draw(graphics);
-        }
-        graphics.translate(target.getX()-screenManager.getGameData().getGraphicsSettings().getRenderWidth()/2,
-                target.getY()-screenManager.getGameData().getGraphicsSettings().getRenderHeight()/2);
-    }
+    public abstract void track(Graphics2D graphics);
 
     public void setTarget(GameObject target){
         this.target = target;
