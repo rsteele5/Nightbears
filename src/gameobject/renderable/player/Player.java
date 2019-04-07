@@ -43,6 +43,9 @@ public class Player extends RenderablePhysicsObject {
     private boolean considerArc = false;
     private boolean requesting;     //Use for requesting interactions
     private boolean facing;//false is right, true is left
+    private int maxHealth;
+    private int currentHealth;
+
 
     public enum PlayerState {
         sideScroll,
@@ -69,6 +72,9 @@ public class Player extends RenderablePhysicsObject {
         //Interactable
         requesting = false;
         movement = new PhysicsVector(0,0);
+
+        maxHealth = 20;
+        currentHealth = 13;
     }
 
     //region <Getters and Setters>
@@ -102,6 +108,20 @@ public class Player extends RenderablePhysicsObject {
                 dimension = 2;
                 break;
         }
+    }
+
+    public int getMaxHealth() {
+        //TODO: Put in PlayerData
+        return maxHealth;
+    }
+    public int getCurrentHealth() {
+        //TODO: Put in PlayerData
+        return currentHealth;
+    }
+
+    public int getCurrentArmor() {
+        //TODO: Base on current Armor Value
+        return 7;
     }
     //endregion
 

@@ -68,7 +68,7 @@ public class OverworldScreen extends GamePlayScreen {
         vendor.addToScreen(this, false);
 
         //Overlays
-        UI = new OverworldUI(screenManager, this);
+        UI = new OverworldUI(screenManager, this, player);
         addOverlay(UI);
         //KeyListener
         setKeyHandler(new OverworldKeyHandler(player, UI.clickables, UI.getPauseBtn()));
