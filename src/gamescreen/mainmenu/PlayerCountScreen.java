@@ -36,13 +36,13 @@ public class PlayerCountScreen extends GameScreen {
         background.addToScreen(this, true);
 
         ImageContainer image;
-        image = (new ImageContainer(X_INIT_BUTTON + 2*QRTR_BUTTON_WIDTH - HALF_TEDDY_WIDTH, Y_INIT_BUTTON- TEDDY_HEIGHT, "/assets/player/sidescrolling/Teddy.png", DrawLayer.Entity));
+        image = (new ImageContainer(X_INIT_BUTTON + 2*QRTR_BUTTON_WIDTH - HALF_TEDDY_WIDTH, Y_INIT_BUTTON- TEDDY_HEIGHT, "/assets/player/color/none/Teddy.png", DrawLayer.Entity));
         image.addToScreen(this,true);
 
-        image = new ImageContainer(X_INIT_BUTTON + QRTR_BUTTON_WIDTH - HALF_TEDDY_WIDTH +2*(X_BUFFER+WIDTH_BUTTON), Y_INIT_BUTTON- TEDDY_HEIGHT, "/assets/player/sidescrolling/Teddy.png", DrawLayer.Entity);
+        image = new ImageContainer(X_INIT_BUTTON + QRTR_BUTTON_WIDTH - HALF_TEDDY_WIDTH +2*(X_BUFFER+WIDTH_BUTTON), Y_INIT_BUTTON- TEDDY_HEIGHT, "/assets/player/color/none/Teddy.png", DrawLayer.Entity);
         image.addToScreen(this,true);
 
-        image = new ImageContainer(X_INIT_BUTTON + 3*QRTR_BUTTON_WIDTH - HALF_TEDDY_WIDTH +2*(X_BUFFER+WIDTH_BUTTON), Y_INIT_BUTTON- TEDDY_HEIGHT, "/assets/player/sidescrolling/Teddy2.png", DrawLayer.Entity);
+        image = new ImageContainer(X_INIT_BUTTON + 3*QRTR_BUTTON_WIDTH - HALF_TEDDY_WIDTH +2*(X_BUFFER+WIDTH_BUTTON), Y_INIT_BUTTON- TEDDY_HEIGHT, "/assets/player/color/yellow/Teddy.png", DrawLayer.Entity);
         image.addToScreen(this,true);
 
         Button button;
