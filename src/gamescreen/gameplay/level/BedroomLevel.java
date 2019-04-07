@@ -51,16 +51,16 @@ public class BedroomLevel extends GameScreen {
         background.getBoundaries().forEach(boundary -> boundary.addToScreen(this, true));
 
 
-        Weapon myWeap = new WeaponBuilder()
-                .position(800, 476)
-                .imagePath("/assets/Items/sword1.png")
-                .name("My Fwirst Sword!")
-                .type(WeaponType.Sword)
-                .value(15)
-                .buildWeapon();
-        myWeap.setWidth(50);
-        myWeap.setHeight(50);
-        myWeap.addToScreen(this, true);
+
+
+        Door secondFinishDoor = new Door(1600, 300,
+                "/assets/sidescroll/SideScrollDoor.png",
+                () -> {
+                    setScreenState(ScreenState.TransitionOff);
+                    screenManager.addScreen(new EndLevelScreen(screenManager,  true));
+                    parentScreen.onLevelComplete();
+                });
+        secondFinishDoor.addToScreen(this, true);
 
 
     }
