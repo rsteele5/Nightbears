@@ -4,5 +4,5 @@ public enum WeaponType {
     Sword,
     Club,
     Spear,
-    Misc
+    Misc //general
 }

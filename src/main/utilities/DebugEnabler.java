@@ -20,7 +20,7 @@ public class DebugEnabler {
      * Controls Debug functions that draw to the screen.
      * @see Debug
      */
-    public static boolean DRAWING_ACTIVE =        true;
+    public static boolean DRAWING_ACTIVE =        false;
     /**
      * ONLY FOR USE ON NON-CONCRETE TESTING CODE.<br>
      * Please remove once testing is complete.

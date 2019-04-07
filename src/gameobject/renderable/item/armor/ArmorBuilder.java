@@ -3,6 +3,8 @@ package gameobject.renderable.item.armor;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.item.DescriptionAssistant;
 import gameobject.renderable.item.ItemMeta;
+import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 
 import java.util.Random;
 import static gameobject.renderable.DrawLayer.Entity;
@@ -14,8 +16,8 @@ public class ArmorBuilder {
      * Static global variables store and manipulate the min and max armor points throughout the game
      */
     //TODO: Might not need to be static once the player and vendor classes are fixed
-    private static int maxArmor = (int)(ItemMeta.maxArmor * ItemMeta.amplifier);
-    private static int minArmor = (int)(ItemMeta.minArmor * ItemMeta.amplifier);
+    private int maxArmor = (int)(ItemMeta.maxArmor * ItemMeta.amplifier);
+    private int minArmor = (int)(ItemMeta.minArmor * ItemMeta.amplifier);
 
     //Renderable requirements (default)
     private int _x = 0;
@@ -28,6 +30,7 @@ public class ArmorBuilder {
     private String [] feetImg = {"/assets/Items/feet1.png", "/assets/Items/feet1.png"};
     private String [] offhandImg = {"/assets/Items/cape1.png", "/assets/Items/cape2.png", "/assets/Items/cape3.png",
             "/assets/Items/cape4.png"};
+
 
     //Armor Requirements
     /** Random allows the builder to assign random attributes to each item **/
@@ -116,15 +119,16 @@ public class ArmorBuilder {
                 case Chest:
                     this._imagePath = chestImg[rand.nextInt(chestImg.length)];
                     break;
-                case Leg:
+                case Legs:
                     this._imagePath = pantImg[rand.nextInt(pantImg.length)];
                     break;
-                case Foot:
+                case Feet:
                     this._imagePath = feetImg[rand.nextInt(feetImg.length)];
                     break;
-                default:
+                case OffHand:
                     this._imagePath = offhandImg[rand.nextInt(offhandImg.length)];
                     break;
+                default: break;
             }
         } else {
             this._imagePath = _imagePath;

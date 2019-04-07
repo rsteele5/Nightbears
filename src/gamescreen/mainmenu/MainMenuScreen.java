@@ -18,7 +18,7 @@ public class MainMenuScreen extends GameScreen {
 
     //region <Variables>
     private final int X_START = -150;
-    private final int Y_START = 400;
+    private final int Y_START = 150;
     private final int BUTTON_HEIGHT = 96;
     private final int Y_BUFFER = 48;
     //endregion
@@ -36,7 +36,7 @@ public class MainMenuScreen extends GameScreen {
         background.addToScreen(this,true);
 
         //Create buttons
-        ButtonGridContainer buttonLayout = new ButtonGridContainer(4,1, 256, 96,
+        ButtonGridContainer buttonLayout = new ButtonGridContainer(6,1, 256, 96,
                                                                     X_START, Y_START, Y_BUFFER);
         Button newGameButton = (new Button(0, 0,
                 "/assets/buttons/Button-NewGame.png",
@@ -68,7 +68,27 @@ public class MainMenuScreen extends GameScreen {
                 }));
         buttonLayout.addAt(devModeButton, 2, 0);
 
-        Button exitButton = (new Button(0,0,
+        Button heroHallButton = (new Button(0, 0,
+                "/assets/buttons/Button-HeroHall.png",
+                "/assets/buttons/Button-HeroHallPressed.png",
+                DrawLayer.Entity,
+                () -> {
+                    Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Hall of Heroes");
+                    screenManager.addScreen(new HeroHallScreen(screenManager));
+                }));
+        buttonLayout.addAt(heroHallButton, 3, 0);
+
+        Button fallenHallButton = (new Button(0, 0,
+                "/assets/buttons/Button-FallenHeroHall.png",
+                "/assets/buttons/Button-FallenHeroHallPressed.png",
+                DrawLayer.Entity,
+                () -> {
+                    Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Hall of Fallen");
+                    screenManager.addScreen(new FallenHeroHallScreen(screenManager));
+                }));
+        buttonLayout.addAt(fallenHallButton, 4, 0);
+
+        Button exitButton = (new Button(0, 0,
                 "/assets/buttons/Button-Quit.png",
                 "/assets/buttons/Button-QuitPressed.png",
                 DrawLayer.Entity,
@@ -78,7 +98,7 @@ public class MainMenuScreen extends GameScreen {
                     System.exit(0);
                     screenManager.addScreen(new DevScreen(screenManager));
                 }));
-        buttonLayout.addAt(exitButton, 3, 0);
+        buttonLayout.addAt(exitButton, 5, 0);
 
         buttonLayout.addToScreen(this, true);
 

@@ -3,25 +3,28 @@ package gamescreen.gameplay;
 import gameengine.gamedata.PlayerData;
 import gameengine.gamedata.VendorData;
 import gameobject.renderable.item.ItemComparator;
-import gameobject.renderable.player.Player;
 import gameobject.renderable.*;
 import gameobject.renderable.ImageContainer;
 import gameobject.renderable.text.TextBox;
 import gameobject.renderable.button.ItemButton;
 import gameobject.renderable.DrawLayer;
 import gamescreen.GameScreen;
+import gamescreen.Overlay;
 import gamescreen.ScreenManager;
 import gameobject.renderable.item.Item;
 import gameobject.renderable.button.Button;
 import gameobject.container.RenderableGridContainer;
 import gamescreen.popup.ConfirmationPopup;
+import input.listeners.Key.ClickableKeyHandler;
+import main.utilities.Clickable;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
-public class VendorScreen extends GameScreen {
+public class VendorScreen extends Overlay {
     //region <Variables>
     private ItemButton currentItemButton = null;
     private Item currentItem = null;
@@ -32,15 +35,13 @@ public class VendorScreen extends GameScreen {
     private CopyOnWriteArrayList<Item> vendorInventory;
     private CopyOnWriteArrayList<ItemButton> playerButtons;
     private CopyOnWriteArrayList<ItemButton> vendorButtons;
-    private Player player;
     private PlayerData playerData;
-    private Player.PlayerState previousPlayerState;
     private VendorData vendorData;
     //endregion
 
-    public VendorScreen(ScreenManager screenManager, Player p1) {
-        super(screenManager, "VendorScreen", true, 150, 80);
-        player = p1;
+    public VendorScreen(ScreenManager screenManager, GameScreen parentScreen) {
+        super(screenManager, parentScreen, "VendorScreen", 150, 80, 0f);
+        isExclusive = true;
     }
 
     @Override
@@ -71,8 +72,6 @@ public class VendorScreen extends GameScreen {
         vendorData = gameData.getVendorData();
 
         playerData = gameData.getPlayerData();
-        previousPlayerState = player.getState();
-        player.setState(Player.PlayerState.asleep);
         vendorInventory = vendorData.getInventory();
         playerInventory = playerData.getInventory();
         playerButtons = new CopyOnWriteArrayList<>();
@@ -101,12 +100,13 @@ public class VendorScreen extends GameScreen {
         imageContainer.addToScreen(this, true);
 
         imageContainer = new ImageContainer(playerLocation.x, playerLocation.y,
-                "/assets/player/sidescrolling/Teddy.png", player.getDrawLayer());
+                "/assets/player/color/"+playerData.getImageDirectory()+"/Teddy.png", DrawLayer.Entity);
         imageContainer.setSize(playerSize.x, playerSize.y);
         imageContainer.addToScreen(this, true);
         //endregion
 
         //region <Add buttons to screen>
+        ArrayList<Clickable> butts = new ArrayList<>();
         Button button;
 
         button = new Button(exitButtonLocation.x, exitButtonLocation.y,
@@ -115,11 +115,11 @@ public class VendorScreen extends GameScreen {
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Exit Vendor");
-                    player.setState(previousPlayerState);
                     this.setScreenState(ScreenState.TransitionOff);
                 });
         button.setSize(buttonSize.x, buttonSize.y);
         button.addToScreen(this, true);
+        butts.add(button);
 
         button = new Button(buyButtonLocation.x, buyButtonLocation.y,
                 "/assets/buttons/Button-Vendor-Buy.png",
@@ -167,6 +167,7 @@ public class VendorScreen extends GameScreen {
                 });
         button.setSize(buttonSize.x, buttonSize.y);
         button.addToScreen(this, true);
+        butts.add(button);
 
         button = new Button(sellButtonLocation.x, sellButtonLocation.y,
                 "/assets/buttons/Button-Vendor-Sell.png",
@@ -203,6 +204,9 @@ public class VendorScreen extends GameScreen {
                 });
         button.setSize(buttonSize.x, buttonSize.y);
         button.addToScreen(this, true);
+        butts.add(button);
+
+        setKeyHandler(new ClickableKeyHandler(butts));
         //endregion
 
         //region <Add text boxes to screen>

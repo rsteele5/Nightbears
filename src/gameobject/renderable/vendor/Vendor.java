@@ -1,6 +1,7 @@
 package gameobject.renderable.vendor;
 
 import gameengine.MyTimerTask;
+import gameengine.gamedata.GameData;
 import gameengine.gamedata.VendorData;
 import gameengine.physics.Interactable;
 import gameengine.physics.Kinematic;
@@ -12,6 +13,7 @@ import gameobject.renderable.DrawLayer;
 import gameobject.renderable.RenderableObject;
 import gameobject.renderable.house.overworld.OverworldMeta;
 import gameobject.renderable.player.Player;
+import gameobject.renderable.text.DialogBox;
 import gamescreen.GameScreen;
 import main.utilities.Action;
 import main.utilities.AssetLoader;
@@ -35,16 +37,8 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
     private VendorData vendorData;
     private VendorState vendorState;
     private int endCrawl;
+    private Action intro;
     private Action playerInteractionOW;
-
-    private static String firstNotice = "I created lots of goodies that might help you defeat those monsters. Come see what I have!";
-    private static String subsequentNotices = "I have all NEW items that are even more powerful than before! Come see what I have!";
-    private static String firstLevel = "Whew! That was a super scary monster!";
-
-
-    int isSet = 0;
-    Player p = null;
-
     //endregion
 
     /**
@@ -68,6 +62,7 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
         //startRestockTimer();
 
         animator = new Animator(this);
+        animator.addAnimation("Wait", new VendorUnderAnimation());
         animator.addAnimation("Crawling", new VendorCrawlingAnimation());
         animator.addAnimation("SittingUp", new VendorSittingUpAnimation());
         animator.addAnimation("Idle", new VendorIdleAnimation());
@@ -76,26 +71,29 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
 
     @Override
     public void update() {
-        isSet++;
-        isSet %= 5;
-        if(isSet == 4 && p != null){
-            p.interaction = false;
-            p = null;
-        }
-
         if (vendorState == VendorState.crawling) {
-            if (getX() <= endCrawl)
-                this.translate(5, 0);
-            else this.setState(VendorState.sittingup);
+            if (animator.getCurrentAnimationName().equals("Wait") && animator.getCurrentAnimation().getFrameToDisplay() > 0)
+                animator.setAnimation("Crawling");
+            else if (animator.getCurrentAnimationName().equals("Crawling")) {
+                if(getX() <= endCrawl) this.translate(2, 0);
+                else this.setState(VendorState.sittingup);
+            }
         }
         else if (vendorState == VendorState.sittingup){
-            if (this.animator.getCurrentAnimation().getFrameToDisplay() == 7){
+            if (this.animator.getCurrentAnimation().getFrameToDisplay() >= 7){
                 this.setState(VendorState.idle);
+                intro.doIt();
             }
         }
     }
 
     public void setImage(String imagePath){ this.imagePath = imagePath; }
+
+    public void setIntroduction(Action intro) { this.intro = intro; }
+
+    public VendorState getVendorState() { return vendorState; }
+
+    public Animator getAnimator() { return animator; }
 
     public VendorData getVendorData(){
         return vendorData;
@@ -134,9 +132,8 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
                 Debug.log(DebugEnabler.PLAYER_STATUS,"Vendor-State: crawling");
                 width = 200;
                 height = 200;
-
-                endCrawl = getX() + OverworldMeta.TileSize;
-                animator.setAnimation("Crawling");
+                endCrawl = getX() + OverworldMeta.TileSize*2;
+                animator.setAnimation("Wait");
                 vendorState = vs;
                 return true;
             case sittingup:
@@ -150,6 +147,7 @@ public class Vendor extends RenderableObject implements Kinematic, Interactable,
                 height = 200;
                 animator.setAnimation("Idle");
                 vendorState = vs;
+
                 return true;
         }
         return false;

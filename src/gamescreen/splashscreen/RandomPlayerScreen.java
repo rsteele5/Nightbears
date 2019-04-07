@@ -51,7 +51,7 @@ public class RandomPlayerScreen extends GameScreen {
             Debug.log(true, filePath);
         }
 
-        int totalImages = images.size() - 1;
+        int totalImages = images.size();
         int randomIndex = (int)(Math.random() * (totalImages));
         gameData.getPlayerData().setImageDirectory(directories[randomIndex]);
         return images.get(randomIndex);

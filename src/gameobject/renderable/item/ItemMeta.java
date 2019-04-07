@@ -1,5 +1,8 @@
 package gameobject.renderable.item;
 
+import main.utilities.Debug;
+import main.utilities.DebugEnabler;
+
 public enum ItemMeta {;
 
     public static int minWeapon = 5;
@@ -13,6 +16,11 @@ public enum ItemMeta {;
 
     public static void attributeAmplifier(){
         amplifier += .25;
+
+    }
+
+    public static void printAmplifier(){
+        Debug.log(DebugEnabler.TEST_LOG, "Amplifier: " + amplifier);
     }
 
 }

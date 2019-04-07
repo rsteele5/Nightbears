@@ -44,16 +44,6 @@ public class DevScreen extends GameScreen {
         //Create button
         Button button;
 
-        button = new Button(X_INIT_BUTTON+(X_BUFFER+WIDTH_BUTTON),Y_INIT_BUTTON - 128,
-                "/assets/buttons/Button-NewGame.png",
-                "/assets/buttons/Button-NewGamePressed.png",
-                DrawLayer.Entity,
-                () ->{
-                    Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - level");
-                    screenManager.addScreen(new BedroomLevel(screenManager));
-                });
-        button.addToScreen(this, true);
-
         //Dev screen debug button
         button = new Button(X_INIT_BUTTON,Y_INIT_BUTTON - 128,
                 "/assets/buttons/Button-Debug.png",
@@ -71,7 +61,7 @@ public class DevScreen extends GameScreen {
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Vendor");
-                    screenManager.addScreen(new VendorScreen(screenManager, player));
+                    this.addOverlay(new VendorScreen(screenManager, this));
                 });
         button.addToScreen(this, true);
 
@@ -91,8 +81,7 @@ public class DevScreen extends GameScreen {
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Inventory");
-                    //TODO: Add Inventory Screen
-                    screenManager.addScreen(new PauseMenu(screenManager, player));
+                    this.addOverlay(new PauseMenu(screenManager, this));
                 });
         button.addToScreen(this, true);
 

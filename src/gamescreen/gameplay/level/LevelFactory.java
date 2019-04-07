@@ -1,6 +1,7 @@
 package gamescreen.gameplay.level;
 
 import gameengine.rendering.Camera;
+import gameobject.renderable.DrawLayer;
 import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;

@@ -34,6 +34,16 @@ public class ButtonText extends Button{
         this(x, y, imagepath, drawLayer,font,color, text);
         onClick = handleOnClick;
     }
+    public ButtonText(int x, int y, String imagePath, String pressedImagePath, DrawLayer drawLayer, Font font, Color color) {
+        this(x, y, imagePath, drawLayer, font,color);
+        this.pressedImagePath = pressedImagePath;
+    }
+
+    public ButtonText(int x, int y, String imagePath, String pressedImagePath, DrawLayer drawLayer, Font font, Color color, int sizeX, int sizeY) {
+        this(x, y, imagePath, drawLayer, font,color);
+        this.pressedImagePath = pressedImagePath;
+        this.setSize(sizeX,sizeY);
+    }
 
     public ButtonText(int x, int y, String imagePath, String pressedImagePath, DrawLayer drawLayer, Font font, Color color, String text, Action handleOnClick) {
         this(x, y, imagePath, drawLayer, font,color, text);
@@ -56,11 +66,11 @@ public class ButtonText extends Button{
         if(isPressed) {
             graphics.drawImage(pressedImage, x - 10  , y - 10, width + 20, height + 20, null);
             graphics.setColor(Color.YELLOW);
-            graphics.drawString(text, x+(image.getWidth()/2)-(textWidth/2), y+fontHeight);
+            graphics.drawString(text, x+(this.getWidth()/2)-(textWidth/2), y+fontHeight);
             graphics.setColor(Color.WHITE);
         } else {
             graphics.drawImage(image, x , y, width, height, null);
-            graphics.drawString(text, x+(image.getWidth()/2)-(textWidth/2), y+fontHeight);
+            graphics.drawString(text, x+(this.getWidth()/2)-(textWidth/2), y+fontHeight);
         }
 
         //graphics.setColor(color);

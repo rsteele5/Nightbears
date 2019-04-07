@@ -5,12 +5,15 @@ import gameobject.container.ButtonGridContainer;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.ImageContainer;
 import gameobject.renderable.button.Button;
+import gameobject.renderable.text.TextBox;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gamescreen.mainmenu.PlayerCountScreen;
 import main.utilities.Clickable;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
+
+import java.awt.*;
 
 public class EndLevelScreen extends GameScreen {
 
@@ -30,10 +33,22 @@ public class EndLevelScreen extends GameScreen {
         imageContainer = new ImageContainer(0,0, "/assets/backgrounds/BG-LevelComplete.png", DrawLayer.Background);
         imageContainer.addToScreen(this, true);
 
+        TextBox enemiesSlain = new TextBox(50, 50, 800, 800, "Enemies Slain: 0",
+                new Font("NoScary", Font.PLAIN, 76), Color.WHITE);
+        enemiesSlain.addToScreen(this, true);
+
+        TextBox goldCollected = new TextBox(50, 125, 800, 800, "Gold Collected: 0",
+                new Font("NoScary", Font.PLAIN, 76), Color.WHITE);
+        goldCollected.addToScreen(this, true);
+
+        TextBox itemsCollected = new TextBox(50, 200, 800, 800, "Items Collected: 0",
+                new Font("NoScary", Font.PLAIN, 76), Color.WHITE);
+        itemsCollected.addToScreen(this, true);
+        
         //Create buttons
         ButtonGridContainer buttonLayout = new ButtonGridContainer(4,1, 256, 96,
                 X_START, Y_START, Y_BUFFER);
-        Button newGameButton = (new Button(0, 0,
+        Button continueBtn = (new Button(0, 0,
                 "/assets/buttons/Button-Continue.png",
                 "/assets/buttons/Button-ContinuePressed.png",
                 DrawLayer.Entity,
@@ -41,7 +56,7 @@ public class EndLevelScreen extends GameScreen {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Continue");
                     setScreenState(ScreenState.TransitionOff);
                 }));
-        buttonLayout.addAt(newGameButton, 0, 0);
+        buttonLayout.addAt(continueBtn, 0, 0);
 
         buttonLayout.addToScreen(this, true);
     }

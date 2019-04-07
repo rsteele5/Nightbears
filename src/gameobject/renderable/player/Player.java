@@ -7,6 +7,7 @@ import gameengine.physics.PhysicsMeta;
 import gameengine.physics.PhysicsVector;
 import gameengine.rendering.animation.Animator;
 import gameobject.GameObject;
+import gameobject.renderable.ImageContainer;
 import gameobject.renderable.RenderableObject;
 import gameobject.renderable.item.*;
 import gameobject.renderable.DrawLayer;
@@ -44,6 +45,8 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
     public boolean grounded;
     private PlayerState playerState;
     private boolean requesting;     //Use for requesting interactions
+    private ImageContainer attackArea;
+    private boolean facing;//false is right, true is left
 
     public enum PlayerState {
         sideScroll,
@@ -60,6 +63,9 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
         this.playerData = playerData;
         items = new CopyOnWriteArrayList<>();
         items = playerData.getInventory();
+
+        attackArea = new ImageContainer(0,0,"/assets/player/sidescrolling/Whack.png",DrawLayer.Entity);
+
         //initializeItems()
 
         animator = new Animator(this);
@@ -71,7 +77,7 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
         animator.addAnimation("SS_Running_Right", new PlayerSSRunningAnimationRight(playerData.getImageDirectory()));
         animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation(playerData.getImageDirectory()));
 
-        requesting = true;
+        requesting = false;
     }
 
     //region <Getters and Setters>
@@ -167,13 +173,13 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
 
         if(playerState == PlayerState.sideScroll) {
             if(x1 == 1 && grounded && animator.getCurrentAnimation().getName() != "SS_Running_Right") {
-                animator.setAnimation("SS_Running_Right");
+                animator.setAnimation("SS_Running_Right"); facing = false; Debug.log(true,"face right");
             } else if (x1 == -1 && grounded && animator.getCurrentAnimation().getName() != "SS_Running_Left" ) {
-                animator.setAnimation("SS_Running_Left");
+                animator.setAnimation("SS_Running_Left"); facing = true; Debug.log(true,"face left");
             } else if(x1 == 0 && grounded && animator.getCurrentAnimation().getName() == "SS_Running_Left" && animator.getCurrentAnimation().getName() != "SS_Idle_Left") {
-                animator.setAnimation("SS_Idle_Left");
+                animator.setAnimation("SS_Idle_Left"); facing = true; Debug.log(true,"face left");
             } else if (x1 == 0 && grounded && animator.getCurrentAnimation().getName() == "SS_Running_Right" && animator.getCurrentAnimation().getName() != "SS_Idle_Right") {
-                animator.setAnimation("SS_Idle_Right");
+                animator.setAnimation("SS_Idle_Right"); facing = false; Debug.log(true,"face right");
             }
         }
 
@@ -242,6 +248,19 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
                 break;
         }
 
+    }
+
+    public void attack(KeyEvent e) {
+        switch (getState()) {
+            case sideScroll:
+                if (e.getKeyCode() == 70) { // Attack
+                    if(facing) attackArea.setPosition(x - 50, y);//50 is length of WHACK img
+                    else attackArea.setPosition(x + 100, y);//100 is length of Bear imgf
+                }
+                break;
+            case overWorld:
+                break;
+        }
     }
 
     public void addItem(Item i){
@@ -335,6 +354,7 @@ public class Player extends RenderableObject implements Kinematic, Interactable 
         super.addToScreen(screen, isActive);
         screen.kinematics.remove(this);
         if(isActive) screen.kinematics.add(this);
+        attackArea.addToScreen(screen,true);
     }
     //endregion
 }

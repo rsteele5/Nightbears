@@ -1,7 +1,6 @@
 package gameengine.physics;
 
 import gameengine.gamedata.GameData;
-import gameengine.gamedata.PlayerData;
 import gameobject.GameObject;
 import gameobject.renderable.player.Player;
 import gamescreen.ScreenManager;
@@ -11,8 +10,6 @@ import java.util.ArrayList;
 
 public class PhysicsEngine {
 
-    private GameData gameData;
-    private PlayerData playerData;
     private ScreenManager screenManager;
     public PhysicsEngine(GameData gameData, ScreenManager myScreenManager) {
         screenManager = myScreenManager;
@@ -38,6 +35,8 @@ public class PhysicsEngine {
             if(objects.get(i1).isStatic())
                 continue;
             GameObject obj1 = (GameObject) objects.get(i1);
+            Interactable iObj1 = null;
+            if(obj1 instanceof Interactable) iObj1 = (Interactable) obj1;
 
             Kinematic kObj1 = objects.get(i1);
             if(playerState == Player.PlayerState.sideScroll)
@@ -51,9 +50,8 @@ public class PhysicsEngine {
                 Kinematic kObj2 = objects.get(i2);
 
                 //Interactable
-                if(obj1 instanceof Interactable) {
+                if(iObj1 != null) {
                     if (obj2 instanceof Interactable) {
-                        Interactable iObj1 = (Interactable) obj1;
                         Interactable iObj2 = (Interactable) obj2;
                         if (iObj1.getRequestArea().intersects(iObj2.getRequestArea()) && iObj1.isRequesting()) {
                             iObj2.action(obj1);
@@ -61,6 +59,25 @@ public class PhysicsEngine {
                         }
                     }
                 }
+
+                //Trigger Interaction
+                if(kObj2 instanceof Trigger && (kObj1.getHitbox().intersects(((Trigger) kObj2).triggerArea()))) {
+                    if(((Trigger) kObj2).effect((GameObject) kObj1)) {
+                        objects.remove(kObj2);
+                        indices = objects.size();
+                        continue;
+                    }
+                }
+                if(kObj1 instanceof Trigger && (kObj2.getHitbox().intersects(((Trigger) obj1).triggerArea()))){
+                    if(((Trigger) kObj1).effect((GameObject) kObj2)) {
+                        objects.remove(kObj1);
+                        indices = objects.size();
+                        continue;
+                    }
+                }
+
+                if(!kObj2.isCollidable())
+                    continue;
 
                 if (kObj1.getHitbox().intersects(kObj2.getHitbox())) {
 
@@ -102,7 +119,7 @@ public class PhysicsEngine {
                 }
 
             }
+            if(iObj1 != null) iObj1.setRequesting(false);
         }
-
     }
 }
