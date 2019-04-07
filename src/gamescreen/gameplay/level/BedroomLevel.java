@@ -1,5 +1,6 @@
 package gamescreen.gameplay.level;
 
+import gameengine.physics.PhysicsEngine;
 import gameengine.physics.Platform;
 import gameengine.rendering.Camera;
 import gameobject.renderable.DrawLayer;
@@ -11,24 +12,25 @@ import gameobject.renderable.item.weapon.WeaponType;
 import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
+import gamescreen.gameplay.GamePlayScreen;
 import gamescreen.gameplay.overworld.OverworldScreen;
 import input.listeners.Key.SideScrollKeyHandler;
 
 
-public class BedroomLevel extends GameScreen {
+public class BedroomLevel extends GamePlayScreen {
 
     private BedroomBackgroundLayout background;
     private Player player;
     private OverworldScreen parentScreen;
 
     public BedroomLevel(ScreenManager screenManager, OverworldScreen parentScreen) {
-        super(screenManager, "BedroomLevel", true);
+        super(screenManager, "BedroomLevel", true, 1f);
         this.parentScreen= parentScreen;
     }
 
     @Override
     protected void initializeScreen() {
-        Platform p = new Platform(350,900,"/assets/testAssets/brick.jpg",DrawLayer.Props);
+        Platform p = new Platform(350,900,"/assets/testAssets/brick.jpg",DrawLayer.Prop);
         p.setWidth(100);
         p.setHeight(20);
         p.addToScreen(this,true);
@@ -41,7 +43,7 @@ public class BedroomLevel extends GameScreen {
                 });
 
         finishDoor.addToScreen(this, true);
-        player = new Player(30, 276, DrawLayer.Entity, gameData.getPlayerData());
+        player = new Player(50, 276, DrawLayer.Entity, gameData.getPlayerData());
         player.addToScreen(this, true);
         player.setState(Player.PlayerState.sideScroll);
         setKeyHandler(new SideScrollKeyHandler(player));
@@ -62,6 +64,7 @@ public class BedroomLevel extends GameScreen {
                 });
         secondFinishDoor.addToScreen(this, true);
 
+        setPhysicsEngine(new PhysicsEngine(player, PhysicsEngine.PhysicState.SideScroll));
 
     }
 

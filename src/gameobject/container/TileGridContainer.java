@@ -3,7 +3,9 @@ package gameobject.container;
 import gameobject.renderable.house.overworld.Tile;
 import gamescreen.GameScreen;
 
-public class TileGridContainer extends GridContainer<Tile> {
+import java.io.Serializable;
+
+public class TileGridContainer extends GridContainer<Tile> implements Serializable {
 
     public TileGridContainer(int rows, int cols, int itemWidth, int itemHeight, int xPos, int yPos) {
         super("Tile", rows, cols, itemWidth, itemHeight, xPos, yPos, 0);

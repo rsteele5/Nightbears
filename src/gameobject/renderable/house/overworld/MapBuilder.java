@@ -1,11 +1,10 @@
 package gameobject.renderable.house.overworld;
 
 import gameobject.container.GridIndex;
-import gameobject.renderable.house.overworld.room.Boundary;
 import gameobject.renderable.house.overworld.room.Door;
+import gameobject.Boundary;
 import gameobject.renderable.house.overworld.room.Room;
 import gameobject.container.TileGridContainer;
-import gamescreen.GameScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -14,19 +13,18 @@ import static gameobject.renderable.house.overworld.OverworldMeta.*;
 import static gameobject.renderable.house.overworld.OverworldMeta.Tiles.EMPTY;
 import static gameobject.renderable.house.overworld.OverworldMeta.Tiles.House.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class MapBuilder {
-    private GameScreen parentScreen;
+public class MapBuilder implements Serializable {
     private ChunkBuilder chunkBuilder;
     private ArrayList<ArrayList<TileGridContainer>> chunks;
     private ArrayList<Room> rooms;
 
 
 
-    public void createMap(GameScreen parentScreen){
+    public void createMap(){
         Debug.log(DebugEnabler.OVERWORLD, "MapBuilder - Start creating Map");
-        this.parentScreen = parentScreen;
         rooms = new ArrayList<>();
         chunks = new ArrayList<>();
         chunkBuilder = new ChunkBuilder();
@@ -306,10 +304,7 @@ public class MapBuilder {
                 for(Room otherRoom : rooms)
                     if (otherRoom != room)
                         if (otherRoom.containsTile(otherRoomTile))
-                            door.setOpenOperation(() -> {
-                                otherRoom.setActive(parentScreen);
-                                door.setInactive(parentScreen);
-                            });
+                            door.setRoomToOpen(otherRoom);
         });
     }
 

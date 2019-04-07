@@ -24,7 +24,6 @@ public class GameEngine implements Runnable {
     private GameData gameData;
 
     private ScreenManager screenManager;
-    private PhysicsEngine physicsEngine;
     private RenderEngine renderEngine;
     public Vendor vendor;
     public VendorData vendorData;
@@ -34,7 +33,6 @@ public class GameEngine implements Runnable {
         this.gameData = gameData;
         screenManager = new ScreenManager(gameData);
         renderEngine = new RenderEngine(gameData, screenManager);
-        physicsEngine = new PhysicsEngine(gameData, screenManager);
         renderEngine.addMouseListener(new MouseController(screenManager));
         renderEngine.addKeyListener(new KeyController(screenManager));
         renderEngine.setFocusTraversalKeysEnabled(false);                   //Lets us utilize TAB in te keyController.
@@ -51,7 +49,6 @@ public class GameEngine implements Runnable {
         while(true){
             frameCounter++;
             long startTime = System.currentTimeMillis();
-            physicsEngine.update();
             screenManager.update();
             //Render
             renderEngine.draw();

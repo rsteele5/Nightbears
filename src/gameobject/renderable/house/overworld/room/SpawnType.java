@@ -1,6 +1,8 @@
 package gameobject.renderable.house.overworld.room;
 
-public enum SpawnType {
+import java.io.Serializable;
+
+public enum SpawnType implements Serializable {
     Player,
     Vendor,
     ETC
