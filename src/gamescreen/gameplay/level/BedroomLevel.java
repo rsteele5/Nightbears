@@ -72,6 +72,11 @@ public class BedroomLevel extends GamePlayScreen {
         LockCameraTrigger cameraTrigger = new LockCameraTrigger(1600, 0, 1980, 1000, bedroomCamera, bounds);
         cameraTrigger.addToScreen(this,true);
         
+
+        //Overlays
+        SideScrollUI UI = new SideScrollUI(screenManager, this, player);
+        addOverlay(UI);
+
         setPhysicsEngine(new PhysicsEngine(player, PhysicsEngine.PhysicState.SideScroll));
     }
 
