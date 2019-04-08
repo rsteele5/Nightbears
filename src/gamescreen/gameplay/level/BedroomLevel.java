@@ -2,13 +2,16 @@ package gamescreen.gameplay.level;
 
 import gameengine.physics.PhysicsEngine;
 import gameengine.physics.Platform;
+import gameengine.physics.RenderablePhysicsObject;
 import gameengine.rendering.SSCamera;
 import gameobject.CameraTarget;
 import gameobject.LockCameraTrigger;
 import gameobject.TriggerableBoundary;
 import gameobject.renderable.DrawLayer;
+import gameobject.renderable.RenderableObject;
 import gameobject.renderable.house.sidescrolling.BedroomBackgroundLayout;
 import gameobject.renderable.house.sidescrolling.Door;
+import gameobject.renderable.physics.Square;
 import gameobject.renderable.player.Player;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.GamePlayScreen;
@@ -71,7 +74,14 @@ public class BedroomLevel extends GamePlayScreen {
         bounds.addToScreen(this,true);
         LockCameraTrigger cameraTrigger = new LockCameraTrigger(1600, 0, 1980, 1000, bedroomCamera, bounds);
         cameraTrigger.addToScreen(this,true);
-        
+        Square s;
+        for(int i1 = 0 ; i1 < 10; i1++){
+            for(int i2 = 0; i2 < 5; i2++){
+                s = new Square(i1 * 75,i2 * 75);
+                s.addToScreen(this,true);
+            }
+        }
+
 
         //Overlays
         SideScrollUI UI = new SideScrollUI(screenManager, this, player);

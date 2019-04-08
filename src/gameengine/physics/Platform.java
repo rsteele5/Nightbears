@@ -16,7 +16,7 @@ public class Platform extends CollidableRenderable{
         counter--;
         counter = counter < 0 ? 0 : counter;
         if(counter <= 0){
-            if (alpha < .9f) setAlpha(alpha + .03f);
+            if (alpha < .9f) setAlpha(alpha + .01f);
             else setAlpha(1);
         }
     }
