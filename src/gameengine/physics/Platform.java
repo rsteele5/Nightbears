@@ -31,7 +31,7 @@ public class Platform extends CollidableRenderable{
         if(c instanceof Player) {
             counter+=2;
             counter = counter > 10 ? 10 : counter;
-            if (alpha > .035f) setAlpha(alpha - .03f);
+            if (alpha > .01f) setAlpha(alpha - .01f);
             else setAlpha(0);
             return true;
         }
