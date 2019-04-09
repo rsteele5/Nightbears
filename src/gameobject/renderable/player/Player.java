@@ -65,7 +65,9 @@ public class Player extends RenderablePhysicsObject {
         animator.addAnimation("SS_Idle_Right", new PlayerSSIdleAnimationRight(playerData.getImageDirectory()));
         animator.addAnimation("SS_Running_Left", new PlayerSSRunningAnimationLeft(playerData.getImageDirectory()));
         animator.addAnimation("SS_Running_Right", new PlayerSSRunningAnimationRight(playerData.getImageDirectory()));
-        //animator.addAnimation("SS_Crouch",new PlayerSSCrawlingAnimationLeft(playerData.getImageDirectory()));
+        animator.addAnimation("SS_Crawl_Left", new PlayerSSCrawlingAnimationLeft(playerData.getImageDirectory()));
+        animator.addAnimation("SS_Crawl_Right", new PlayerSSCrawlingAnimationRight(playerData.getImageDirectory()));
+        //animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation(playerData.getImageDirectory()));
         //Interactable
         requesting = false;
         movement = new PhysicsVector(0,0);
@@ -182,6 +184,8 @@ public class Player extends RenderablePhysicsObject {
                                 animator.setAnimation("SS_Running_Right");
                         } else { /* Jumping or falling animation */}
                         break;
+                    case "SS_Crawl_Left":
+                    case "SS_Crawl_Right":
                 }
                 break;
             case overWorld:
