@@ -65,7 +65,7 @@ public class Player extends RenderablePhysicsObject {
         animator.addAnimation("SS_Idle_Right", new PlayerSSIdleAnimationRight(playerData.getImageDirectory()));
         animator.addAnimation("SS_Running_Left", new PlayerSSRunningAnimationLeft(playerData.getImageDirectory()));
         animator.addAnimation("SS_Running_Right", new PlayerSSRunningAnimationRight(playerData.getImageDirectory()));
-        //animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation(playerData.getImageDirectory()));
+        //animator.addAnimation("SS_Crouch",new PlayerSSCrawlingAnimationLeft(playerData.getImageDirectory()));
         //Interactable
         requesting = false;
         movement = new PhysicsVector(0,0);
