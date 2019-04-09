@@ -6,7 +6,6 @@ import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.overworld.Map;
 import gameobject.renderable.house.overworld.MapBuilder;
 import gameobject.renderable.house.overworld.room.*;
-import gameengine.rendering.Camera;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.vendor.Vendor;
 import gamescreen.ScreenManager;
@@ -97,7 +96,7 @@ public class OverworldScreen extends GamePlayScreen {
     @Override
     protected void activeUpdate() {
         super.activeUpdate();
-        this.overworldMap.getRooms().forEach(room -> room.contains(player.getX(), player.getY()));
+        //this.overworldMap.getRooms().forEach(room -> room.contains(player.getX(), player.getY()));
     }
 
     public void onLevelComplete(){

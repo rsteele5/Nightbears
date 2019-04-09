@@ -9,7 +9,6 @@ import java.awt.image.BufferedImage;
 
 public class HUD extends RenderableObject {
 
-    private Player player;
     private PlayerData playerData;
     //Image
     private BufferedImage portrait;
@@ -33,9 +32,8 @@ public class HUD extends RenderableObject {
 
 
 
-    public HUD(PlayerData pd, Player player){
+    public HUD(PlayerData pd){
         super();
-        this.player = player;
         playerData = pd;
         portraitPath = "/assets/player/color/" + pd.getImageDirectory() + "/hud/Portrait.png";
         heartFullPath = "/assets/player/color/" + pd.getImageDirectory() + "/hud/Heart-FULL.png";
@@ -60,19 +58,19 @@ public class HUD extends RenderableObject {
         AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
         graphics.setComposite(alphaComposite);
         graphics.drawImage(portrait, 30, 30, portrait.getWidth(), portrait.getHeight(), null);
-        for(int i = 1; i <= player.getMaxHealth(); i += 2){
-            if(i+1 < player.getCurrentHealth())
+        for(int i = 1; i <= playerData.getMaxHealth(); i += 2){
+            if(i+1 <= playerData.getCurrentHealth())
                 graphics.drawImage(heartFull, heartStartX + heartWidth * (i)/2 , heartStartY,
                         heartWidth, heartHeight, null);
-            else if(i <= player.getCurrentHealth())
+            else if(i <= playerData.getCurrentHealth())
                 graphics.drawImage(heartHalf, heartStartX + heartWidth * (i)/2 , heartStartY,
                         heartWidth, heartHeight, null);
             else
                 graphics.drawImage(heartEmpty, heartStartX + heartWidth * (i)/2 , heartStartY,
                         heartWidth, heartHeight, null);
         }
-        for(int i = 1; i <= player.getCurrentArmor(); i+=2){
-            if(i+1 < player.getCurrentArmor())
+        for(int i = 1; i <= playerData.getCurrentArmor(); i+=2){
+            if(i+1 <= playerData.getCurrentArmor())
                 graphics.drawImage(armorHeartFull, heartStartX + heartWidth * (i)/2 , heartStartY + heartHeight+10,
                         heartWidth, heartHeight, null);
             else
