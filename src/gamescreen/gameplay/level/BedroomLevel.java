@@ -3,6 +3,7 @@ package gamescreen.gameplay.level;
 import gameengine.physics.PhysicsEngine;
 import gameengine.physics.Platform;
 import gameengine.physics.RenderablePhysicsObject;
+import gameengine.physics.SpikeBall;
 import gameengine.rendering.SSCamera;
 import gameobject.CameraTarget;
 import gameobject.LockCameraTrigger;
@@ -32,10 +33,7 @@ public class BedroomLevel extends GamePlayScreen {
 
     @Override
     protected void initializeScreen() {
-        Platform p = new Platform(350,900,"/assets/testAssets/brick.jpg",DrawLayer.Prop);
-        p.setWidth(100);
-        p.setHeight(20);
-        p.addToScreen(this,true);
+       //
         Door finishDoor = new Door(800, 300,
                 "/assets/sidescroll/SideScrollDoor.png",
                 () -> {
@@ -74,13 +72,25 @@ public class BedroomLevel extends GamePlayScreen {
         bounds.addToScreen(this,true);
         LockCameraTrigger cameraTrigger = new LockCameraTrigger(1600, 0, 1980, 1000, bedroomCamera, bounds);
         cameraTrigger.addToScreen(this,true);
-        Square s;
-        for(int i1 = 0 ; i1 < 10; i1++){
-            for(int i2 = 0; i2 < 5; i2++){
-                s = new Square(i1 * 75,i2 * 75);
-                s.addToScreen(this,true);
+        SpikeBall s = new SpikeBall(250,150);
+        SpikeBall s2 = new SpikeBall(650,150);
+        s.addToScreen(this,true);
+        s2.addToScreen(this,true);
+        /*
+        Square s3;
+        for(int i1 = 0 ; i1 < 7; i1++){
+            for(int i2 = 0; i2 < 7; i2++){
+                s3 = new Square(75 + i1 * 150,75 + i2 * 150);
+                s3.addToScreen(this,true);
             }
         }
+
+        Platform p = new Platform(350,900,"/assets/testAssets/brick.jpg",DrawLayer.Prop);
+        p.setWidth(100);
+        p.setHeight(20);
+        p.addToScreen(this,true);
+        */
+
 
 
         //Overlays
