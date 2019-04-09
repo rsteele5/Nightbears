@@ -1,9 +1,11 @@
 package gamescreen.gameplay.overworld;
 
 import gameobject.container.ButtonGridContainer;
+import gameobject.renderable.HUD;
 import gameobject.renderable.button.Button;
 import gameobject.renderable.button.ButtonText;
 import gameobject.renderable.DrawLayer;
+import gameobject.renderable.player.Player;
 import gamescreen.Overlay;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.PauseMenu;
@@ -19,11 +21,12 @@ public class OverworldUI extends Overlay {
 
     private Button pauseButton;
     private static String emptyBtnPath = "/assets/buttons/Button-Empty.png";
+    Player player;
 
 
-    public OverworldUI(ScreenManager screenManager, OverworldScreen parentScreen) {
+    public OverworldUI(ScreenManager screenManager, OverworldScreen parentScreen, Player player) {
         super(screenManager, parentScreen,"OverworldUI", 0,0, 1f);
-
+        this.player = player;
     }
 
     /**
@@ -31,7 +34,11 @@ public class OverworldUI extends Overlay {
      */
     @Override
     protected void initializeScreen() {
-        ButtonGridContainer buttonLayout = new ButtonGridContainer(10,6, 256, 96,20,20, 20);
+
+        HUD hud = new HUD(gameData.getPlayerData());
+        hud.addToScreen(this, true);
+
+        ButtonGridContainer buttonLayout = new ButtonGridContainer(10,6, 256, 96,20,300, 20);
 
         pauseButton = new ButtonText(0,0, emptyBtnPath, emptyBtnPath, DrawLayer.Entity,
                 new Font("NoScary", Font.PLAIN, 72), Color.WHITE, "Pause",
@@ -49,7 +56,7 @@ public class OverworldUI extends Overlay {
                         screenManager.addScreen(new BedroomLevel(screenManager, (OverworldScreen)parentScreen));
                     }
                 });
-        buttonLayout.addAt(actionButton, 0, 1);
+        buttonLayout.addAt(actionButton, 1, 0);
 
         Button leaveButton = new ButtonText(20, 120, emptyBtnPath, emptyBtnPath, DrawLayer.Entity,
                 new Font("NoScary", Font.PLAIN, 72), Color.WHITE, "Leave",
@@ -57,7 +64,7 @@ public class OverworldUI extends Overlay {
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Leave");
                     screenManager.addScreen(new MainMenuScreen(screenManager));
                 });
-        buttonLayout.addAt(leaveButton, 1, 0);
+        buttonLayout.addAt(leaveButton, 2, 0);
 
         buttonLayout.addToScreen(this, true);
     }

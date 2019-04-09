@@ -168,7 +168,7 @@ public class BedroomBackgroundLayout extends BackgroundLayout {
                     case WALL_NE:
                         width += TileSize;
                         row[col] = WALL_E;
-                        //createEastWall(iRow, col);
+                        createEastWall(iRow, col);
                         done = true;
                         break;
                     case WALL_N:
@@ -277,6 +277,6 @@ public class BedroomBackgroundLayout extends BackgroundLayout {
             }
             if(done) break;
         }
-        addBoundary(new Boundary(startTile.getX(), y, WallThickness, height));
+        addBoundary(new Boundary(startTile.getX() - 100, y, 100 + WallThickness, height));
     }
 }
