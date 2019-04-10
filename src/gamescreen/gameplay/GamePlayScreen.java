@@ -1,16 +1,23 @@
 package gamescreen.gameplay;
 
+import gameengine.physics.Collidable;
 import gameengine.physics.Interactable;
 import gameengine.physics.Kinematic;
+import gameengine.physics.PhysicsEngine;
 import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
+import main.utilities.Debug;
 
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class GamePlayScreen extends GameScreen {
 
-    protected Player player;
+    /**
+     * Contains all of the active {@link Collidable} objects on the GameScreen
+     */
+    public ArrayList<Collidable> collidables;
     /**
      * Contains all of the active {@link Kinematic} objects on the GameScreen
      */
@@ -19,6 +26,8 @@ public abstract class GamePlayScreen extends GameScreen {
      * Contains all of the active {@link Interactable} objects on the GameScreen
      */
     public ArrayList<Interactable> interactables;
+
+    private PhysicsEngine physicsEngine = null;
 
 
     /**
@@ -29,10 +38,27 @@ public abstract class GamePlayScreen extends GameScreen {
      * @param name          Name of the GameScreen (Used for {@link Debug}ing).
      * @param screenAlpha   Starting alpha value of all of the GameScreen's renderables.
      */
-    public GamePlayScreen(ScreenManager screenManager, String name, float screenAlpha, Player player) {
+    public GamePlayScreen(ScreenManager screenManager, String name, float screenAlpha) {
         super(screenManager, name, screenAlpha);
-        this.player = player;
+        collidables = new ArrayList<>();
         kinematics = new ArrayList<>();
         interactables = new ArrayList<>();
+    }
+
+    public GamePlayScreen(ScreenManager screenManager, String name, boolean isExclusive, float screenAlpha){
+        super(screenManager,name,isExclusive,screenAlpha);
+        collidables = new ArrayList<>();
+        kinematics = new ArrayList<>();
+        interactables = new ArrayList<>();
+    }
+
+    protected void setPhysicsEngine(PhysicsEngine pe){
+        physicsEngine = pe;
+    }
+
+    @Override
+    protected void activeUpdate() {
+        if(physicsEngine != null) physicsEngine.update(collidables, kinematics, interactables);
+        super.activeUpdate();
     }
 }

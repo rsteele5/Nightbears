@@ -1,6 +1,8 @@
 package gameobject.renderable.house.overworld.room;
 
-public class SpawnPoint {
+import java.io.Serializable;
+
+public class SpawnPoint implements Serializable {
     private int tileX;
     private int tileY;
     private SpawnType spawnType;

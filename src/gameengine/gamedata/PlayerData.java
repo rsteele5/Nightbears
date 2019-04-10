@@ -3,6 +3,7 @@ package gameengine.gamedata;
 import gameobject.renderable.RenderableObject;
 import gameobject.renderable.item.Item;
 import gameobject.renderable.item.ItemComparator;
+import gameobject.renderable.item.armor.Armor;
 import gameobject.renderable.item.armor.ArmorBuilder;
 import gameobject.renderable.item.armor.ArmorType;
 import gameobject.renderable.item.consumable.ConsumableBuilder;
@@ -21,11 +22,17 @@ public class PlayerData implements Serializable {
     private CopyOnWriteArrayList<Item> playerEquipment = new CopyOnWriteArrayList<>();
     private String imageDirectory;
     private int gold;
+    private int maxHealth;  // Must be divisible by 2
+    private int currentHealth;
+    private int currentArmor;
 
     public PlayerData(){
         initializeInventory();
         initializeEquipment();
         gold = 100;
+        maxHealth = 6;
+        currentHealth = 6;
+        resetCurrentArmor();
     }
 
     public String getImageDirectory() {
@@ -59,10 +66,12 @@ public class PlayerData implements Serializable {
         }
         if(playerInventory.contains(equip)) playerInventory.remove(equip);
         playerEquipment.set(type,equip);
+        resetCurrentArmor();
     }
     public void unequipItem(Item remove, int type) {
         playerEquipment.set(type,null);
         playerInventory.add(remove);
+        resetCurrentArmor();
     }
 
     public void replaceList(CopyOnWriteArrayList<Item> updatedItems) {
@@ -157,7 +166,33 @@ public class PlayerData implements Serializable {
         return gold;
     }
 
-    public void changeGold(int amt) {
+    public void modifyGold(int amt) {
         gold += amt;
+    }
+
+    public int getMaxHealth(){
+        return maxHealth;
+    }
+    public void modifyMaxHealth(int amount){
+        maxHealth += amount;
+    }
+    public int getCurrentHealth() {
+        return currentHealth;
+    }
+    public void modifyCurrentHealth(int amount){
+        currentHealth += amount;
+    }
+
+    public int getCurrentArmor() {
+        return currentArmor;
+    }
+
+    public void resetCurrentArmor() {
+        currentArmor = 0;
+        playerEquipment.forEach(item -> {
+            if(item instanceof Armor){
+                currentArmor += ((Armor)item).getArmorValue();
+            }
+        });
     }
 }

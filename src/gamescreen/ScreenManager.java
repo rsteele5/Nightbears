@@ -58,14 +58,6 @@ public class ScreenManager extends JPanel {
     }
 
     /**
-     * Returns a list of the root screens Kinematic objects
-     * @return The root screens Kinematic objects
-     */
-    public ArrayList<Kinematic> getPhysicsObjects() {
-        return rootScreen.getPhysicsObjects();
-    }
-
-    /**
      * Updates the screens the ScreenManager is managing
      */
     public void update() {

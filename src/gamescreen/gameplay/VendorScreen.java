@@ -144,7 +144,7 @@ public class VendorScreen extends Overlay {
                                             playerData.addItem(currentItem);
                                             playerInventory.sort(new ItemComparator());
                                             // Decrease player's gold and display on splashscreen
-                                            playerData.changeGold(-currentItem.getValue());
+                                            playerData.modifyGold(-currentItem.getValue());
                                             goldTextBox.setText("");
                                             goldTextBox.setText(getGoldText());
                                             currentItem.setValue(currentItem.depreciate(currentItem.getValue()));
@@ -190,7 +190,7 @@ public class VendorScreen extends Overlay {
                                         vendorData.addItem(currentItem);
                                         vendorInventory.sort(new ItemComparator());
                                         // Increase player's gold and display on splashscreen
-                                        playerData.changeGold(currentItem.getValue());
+                                        playerData.modifyGold(currentItem.getValue());
                                         goldTextBox.setText("");
                                         goldTextBox.setText(getGoldText());
                                         // Reset button item to the updated inventory arrays

@@ -1,6 +1,5 @@
 package gameobject.renderable.text;
 
-import gameengine.gamedata.GraphicsSetting;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.RenderableObject;
 import main.utilities.AssetLoader;
@@ -24,7 +23,7 @@ public class TextBox extends RenderableObject {
         this.width = width;
         this.height = height;
         this.text = text;
-        this.drawLayer = DrawLayer.Effects;
+        this.drawLayer = DrawLayer.Effect;
         font = new Font("arial", Font.PLAIN, 12);
         color = Color.WHITE;
         displayText = "";
@@ -48,7 +47,7 @@ public class TextBox extends RenderableObject {
 
     @Override
     public void draw(Graphics2D graphics) {
-        Debug.drawRect(true, graphics, new Rectangle2D.Float(x,y,width,height));
+        Debug.drawRect(true, graphics, new Rectangle2D.Float(x, y, width, height));
         if(displayText.equals("")) parseString(graphics);
         graphics.setFont(font);
         graphics.setColor(color);

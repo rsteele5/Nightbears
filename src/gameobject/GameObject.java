@@ -1,11 +1,13 @@
 package gameobject;
 
+import gameengine.physics.PhysicsVector;
 import gamescreen.GameScreen;
 
-public abstract class GameObject {
+import java.io.Serializable;
 
-    protected int x;
-    protected int y;
+public abstract class GameObject implements Serializable {
+
+    protected int x, y;
 
     boolean isActive = true;
 
@@ -38,6 +40,11 @@ public abstract class GameObject {
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    public void translate(PhysicsVector vector){
+        x += vector.x;
+        y += vector.y;
     }
 
     public void translate(int x, int y){

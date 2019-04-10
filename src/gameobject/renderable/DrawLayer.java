@@ -4,6 +4,6 @@ public enum DrawLayer {
     Background,
     Scenery,
     Entity,
-    Props,
-    Effects
+    Prop,
+    Effect
 }

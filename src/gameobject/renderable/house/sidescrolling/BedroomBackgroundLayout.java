@@ -1,9 +1,9 @@
 package gameobject.renderable.house.sidescrolling;
 
+import gameobject.Boundary;
 import gameobject.container.TileGridContainer;
 import gameobject.renderable.house.overworld.Tile;
-import gameobject.renderable.house.overworld.room.Boundary;
-import main.utilities.Debug;
+import gameobject.CollidableObject;
 
 import java.util.ArrayList;
 
@@ -72,7 +72,7 @@ public class BedroomBackgroundLayout extends BackgroundLayout {
     private final String IMAGEPATH_WINDOW = "/assets/sidescroll/bedroom/SideScroll-Bedroom-Window.png";
     private final String IMAGEPATH_END = "";
 
-    private ArrayList<Boundary> boundaries;
+    private ArrayList<CollidableObject> boundaries;
 
     @Override
     protected void constructLayout() {
@@ -142,11 +142,11 @@ public class BedroomBackgroundLayout extends BackgroundLayout {
         createSouthWall(layout.length - 1, 0);
     }
 
-    public void addBoundary(Boundary boundary){
+    public void addBoundary(CollidableObject boundary){
         boundaries.add(boundary);
     }
 
-    public ArrayList<Boundary> getBoundaries(){
+    public ArrayList<CollidableObject> getBoundaries(){
         return boundaries;
     }
 
@@ -168,7 +168,7 @@ public class BedroomBackgroundLayout extends BackgroundLayout {
                     case WALL_NE:
                         width += TileSize;
                         row[col] = WALL_E;
-                        //createEastWall(iRow, col);
+                        createEastWall(iRow, col);
                         done = true;
                         break;
                     case WALL_N:
@@ -277,6 +277,6 @@ public class BedroomBackgroundLayout extends BackgroundLayout {
             }
             if(done) break;
         }
-        addBoundary(new Boundary(startTile.getX(), y, WallThickness, height));
+        addBoundary(new Boundary(startTile.getX() - 100, y, 100 + WallThickness, height));
     }
 }

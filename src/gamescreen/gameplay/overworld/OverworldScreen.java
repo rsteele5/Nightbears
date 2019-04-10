@@ -1,25 +1,20 @@
 package gamescreen.gameplay.overworld;
 
-import gameengine.gamedata.VendorData;
-import gameengine.physics.PhysicsObjectStatic;
+import gameengine.physics.PhysicsEngine;
+import gameengine.rendering.OWCamera;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.overworld.Map;
 import gameobject.renderable.house.overworld.MapBuilder;
-import gameobject.renderable.house.overworld.room.Bathroom;
-import gameobject.renderable.house.overworld.room.Bedroom;
-import gameobject.renderable.house.overworld.room.LivingRoom;
-import gameobject.renderable.house.overworld.room.SpawnPoint;
-import gameobject.renderable.text.DialogBox;
-import gameengine.rendering.Camera;
+import gameobject.renderable.house.overworld.room.*;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.vendor.Vendor;
-import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
+import gamescreen.gameplay.GamePlayScreen;
 import gamescreen.gameplay.VendorDialogBox;
 import gamescreen.gameplay.VendorScreen;
 import input.listeners.Key.OverworldKeyHandler;
 
-public class OverworldScreen extends GameScreen {
+public class OverworldScreen extends GamePlayScreen {
 
     //region <Variable Declaration>
     private OverworldUI UI;
@@ -27,30 +22,35 @@ public class OverworldScreen extends GameScreen {
     private Player player;
     private Vendor vendor;
     private int vendorVisits = -1;
+    private Room currentRoom;
     //endregion
 
     public OverworldScreen(ScreenManager screenManager) {
-        super(screenManager, "Overworld", 0f);
+        super(screenManager, "Overworld", 1f);
     }
 
 
     @Override
     protected void initializeScreen() {
         //House generation
-        MapBuilder mapBuilder = new MapBuilder();
-        mapBuilder.createMap(this);
-        mapBuilder.addRoomAtCell(0, 0, new Bedroom());
-        mapBuilder.addRoomAtCell(8,0, new LivingRoom());
-        mapBuilder.addRoomAtCell(0,8, new Bathroom());
-        overworldMap = mapBuilder.buildMap();
+        if(gameData.getLevelData().getCurrentMap() == null) {
+            MapBuilder mapBuilder = new MapBuilder();
+            mapBuilder.createMap();
+            mapBuilder.addRoomAtCell(0, 0, new Bedroom());
+            mapBuilder.addRoomAtCell(8,0, new LivingRoom());
+            mapBuilder.addRoomAtCell(0,8, new Bathroom());
+            overworldMap = mapBuilder.buildMap();
+            overworldMap.getRooms().get(0).discovered();
+            gameData.getLevelData().setCurrentMap(overworldMap);
+        } else {
+            overworldMap = gameData.getLevelData().getCurrentMap();
+        }
         overworldMap.addToScreen(this, true);
-        overworldMap.getRooms().forEach(room -> room.setInactive(this));
-        overworldMap.getRooms().get(0).setActive(this);
-
+        gameData.save();
         //Bed
         SpawnPoint bedSpawn = overworldMap.getRooms().get(0).getSpawnETCOptions().get(0);
-        PhysicsObjectStatic bed = new PhysicsObjectStatic(bedSpawn.getTileX(),bedSpawn.getTileY(),
-                "/assets/overworld/bedroom/Overworld-Bed2.png", DrawLayer.Props);
+        Prop bed = new Prop(bedSpawn.getTileX(),bedSpawn.getTileY(),
+                "/assets/overworld/bedroom/Overworld-Bed2.png");
         bed.addToScreen(this, true);
 
         //Player
@@ -58,7 +58,9 @@ public class OverworldScreen extends GameScreen {
         player = new Player(playerSpawn.getTileX(), playerSpawn.getTileY(), DrawLayer.Entity, gameData.getPlayerData());
         player.setState(Player.PlayerState.overWorld);
         player.addToScreen(this,true);
-        setCamera(new Camera(screenManager, this, player));
+        setCamera(new OWCamera(screenManager, this, player));
+
+        currentRoom = getCurrentRoom();
 
         //Vendor
         SpawnPoint vSpawn = overworldMap.getVendorSpawn();
@@ -66,19 +68,40 @@ public class OverworldScreen extends GameScreen {
         vendor.addToScreen(this, false);
 
         //Overlays
-        UI = new OverworldUI(screenManager, this);
+        UI = new OverworldUI(screenManager, this, player);
         addOverlay(UI);
-
         //KeyListener
         setKeyHandler(new OverworldKeyHandler(player, UI.clickables, UI.getPauseBtn()));
+        //Physics Engine
+        setPhysicsEngine(new PhysicsEngine(player, PhysicsEngine.PhysicState.TopDown));
+    }
+
+    @Override
+    protected void transitionOn() {
+        super.transitionOn();
+        if(currentState == ScreenState.Active){
+            overworldMap.getRooms().forEach(room -> {
+                if(room.isDiscovered())
+                    room.discovered();
+                else room.undiscovered();
+            });
+        }
+    }
+
+    @Override
+    protected void transitionOff() {
+        exiting = true;
     }
 
     @Override
     protected void activeUpdate() {
         super.activeUpdate();
+        //this.overworldMap.getRooms().forEach(room -> room.contains(player.getX(), player.getY()));
     }
 
     public void onLevelComplete(){
+        getCurrentRoom().setComplete(true);
+
         //Vendor
         //TODO: Edit this later
         if(vendorVisits == 0) vendorVisits++;
@@ -93,5 +116,14 @@ public class OverworldScreen extends GameScreen {
         );
         //Doors
         overworldMap.getRooms().get(0).getDoors().forEach(door -> door.setOpenable(true));
+    }
+
+    public Room getCurrentRoom(){
+        overworldMap.getRooms().forEach(room -> {
+            if(room.contains(player.getX(), player.getY())){
+                currentRoom = room;
+            }
+        });
+        return currentRoom;
     }
 }

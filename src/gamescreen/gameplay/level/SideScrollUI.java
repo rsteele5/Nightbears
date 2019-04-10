@@ -2,6 +2,7 @@ package gamescreen.gameplay.level;
 
 import gameobject.container.ButtonGridContainer;
 import gameobject.renderable.DrawLayer;
+import gameobject.renderable.HUD;
 import gameobject.renderable.button.Button;
 import gameobject.renderable.button.ButtonText;
 import gameobject.renderable.player.Player;
@@ -34,7 +35,11 @@ public class SideScrollUI extends Overlay {
      */
     @Override
     protected void initializeScreen() {
-        ButtonGridContainer buttonLayout = new ButtonGridContainer(10,6, 256, 96,20,20, 20);
+
+        HUD hud = new HUD(gameData.getPlayerData());
+        hud.addToScreen(this, true);
+
+        ButtonGridContainer buttonLayout = new ButtonGridContainer(10,6, 256, 96,20,300, 20);
 
         pauseButton = new ButtonText(0,0, emptyBtnPath, emptyBtnPath, DrawLayer.Entity,
                 new Font("NoScary", Font.PLAIN, 72), Color.WHITE, "Pause",

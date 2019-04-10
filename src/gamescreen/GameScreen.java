@@ -1,7 +1,6 @@
 package gamescreen;
 
 import gameengine.gamedata.GameData;
-import gameengine.physics.Kinematic;
 import gameengine.rendering.Camera;
 import input.listeners.Key.KeyHandler;
 import input.listeners.MouseController;
@@ -29,15 +28,14 @@ public abstract class GameScreen {
     protected ScreenState currentState;
     protected ScreenManager screenManager;
     private GameScreen childScreen;
-    private CopyOnWriteArrayList<GameScreen> overlayScreens;
+    private CopyOnWriteArrayList<Overlay> overlayScreens;
     private Camera camera;
     private boolean loadingScreenRequired = false;
     protected boolean isExclusive;
-    private boolean isOverlay;
     private boolean isLoading;
     protected boolean exiting = false;
     boolean isRoot;
-    private KeyHandler keyHandler;
+    protected KeyHandler keyHandler;
     /**
      * Contains all of the {@link GameObject}s that are not updated and/or drawn on the GameScreen
      */
@@ -54,10 +52,6 @@ public abstract class GameScreen {
      * Contains all of the active {@link Clickable}s on the GameScreen
      */
     public ArrayList<Clickable> clickables;
-    /**
-     * Contains all of the active {@link Kinematic} objects on the GameScreen
-     */
-    public ArrayList<Kinematic> kinematics;
     /**
      * Contains all objects that need to be loaded. The objects are removed from this list once they are loaded.
      */
@@ -92,14 +86,12 @@ public abstract class GameScreen {
         childScreen = null;
         overlayScreens = new CopyOnWriteArrayList<>();
         this.isExclusive = isExclusive;
-        this.isOverlay = !isExclusive;
         isLoading = true;
         this.isRoot = isRoot;
         //GameObjects
         activeObjects = new ArrayList<>();
         inactiveObjects = new ArrayList<>();
         clickables = new ArrayList<>();
-        kinematics = new ArrayList<>();
         loadables = new ArrayList<>();
         renderables = new ArrayList<>();
         this.gameData = screenManager.getGameData();
@@ -301,18 +293,6 @@ public abstract class GameScreen {
         return renderables;
     }
 
-    ArrayList<Kinematic> getPhysicsObjects() {
-        if (!isLoading) {
-            if (childScreen != null) {
-                return childScreen.getPhysicsObjects();
-            } else {
-                return kinematics;
-            }
-        } else {
-            return null;
-        }
-    }
-
     public boolean isLoadingScreenRequired() {
         return loadingScreenRequired;
     }
@@ -388,7 +368,10 @@ public abstract class GameScreen {
         }
     }
 
-    //Override if you know what ur doing
+    /**
+     * Controls how the GameScreen acts while in the hidden state.<br>
+     * Default behavior is to do nothing.
+     */
     protected void hiddenUpdate() {}
 
     /**
@@ -597,7 +580,7 @@ public abstract class GameScreen {
         exiting = false;
     }
 
-    public void addOverlay(GameScreen newOverlay){
+    public void addOverlay(Overlay newOverlay){
         if(newOverlay.isExclusive()){
             this.setScreenState(ScreenState.Hidden);
             overlayScreens.forEach(overlay -> overlay.setScreenState(ScreenState.Hidden));
@@ -614,8 +597,6 @@ public abstract class GameScreen {
             } else {
                 childScreen.coverWith(gameScreen);
             }
-        } else {
-            addOverlay(gameScreen);
         }
     }
 
