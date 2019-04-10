@@ -1,11 +1,11 @@
 package gamescreen.gameplay.overworld;
 
 import gameengine.physics.PhysicsEngine;
+import gameengine.rendering.OWCamera;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.overworld.Map;
 import gameobject.renderable.house.overworld.MapBuilder;
 import gameobject.renderable.house.overworld.room.*;
-import gameengine.rendering.Camera;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.vendor.Vendor;
 import gamescreen.ScreenManager;
@@ -58,7 +58,7 @@ public class OverworldScreen extends GamePlayScreen {
         player = new Player(playerSpawn.getTileX(), playerSpawn.getTileY(), DrawLayer.Entity, gameData.getPlayerData());
         player.setState(Player.PlayerState.overWorld);
         player.addToScreen(this,true);
-        setCamera(new Camera(screenManager, this, player));
+        setCamera(new OWCamera(screenManager, this, player));
 
         currentRoom = getCurrentRoom();
 
@@ -68,7 +68,7 @@ public class OverworldScreen extends GamePlayScreen {
         vendor.addToScreen(this, false);
 
         //Overlays
-        UI = new OverworldUI(screenManager, this);
+        UI = new OverworldUI(screenManager, this, player);
         addOverlay(UI);
         //KeyListener
         setKeyHandler(new OverworldKeyHandler(player, UI.clickables, UI.getPauseBtn()));
@@ -96,7 +96,7 @@ public class OverworldScreen extends GamePlayScreen {
     @Override
     protected void activeUpdate() {
         super.activeUpdate();
-        this.overworldMap.getRooms().forEach(room -> room.contains(player.getX(), player.getY()));
+        //this.overworldMap.getRooms().forEach(room -> room.contains(player.getX(), player.getY()));
     }
 
     public void onLevelComplete(){

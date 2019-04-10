@@ -3,7 +3,6 @@ package gameobject.renderable.player;
 import gameengine.gamedata.PlayerData;
 import gameengine.physics.*;
 import gameengine.rendering.animation.Animator;
-import gameobject.GameObject;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.item.Item;
 import gameobject.renderable.player.overworld.PlayerIdleAnimation;
@@ -44,6 +43,7 @@ public class Player extends RenderablePhysicsObject {
     private boolean requesting;     //Use for requesting interactions
     private boolean facing;//false is right, true is left
 
+
     public enum PlayerState {
         sideScroll,
         asleep,
@@ -67,6 +67,8 @@ public class Player extends RenderablePhysicsObject {
         animator.addAnimation("SS_Running_Right", new PlayerSSRunningAnimationRight(playerData.getImageDirectory()));
         animator.addAnimation("SS_Crawl_Left", new PlayerSSCrawlingAnimationLeft(playerData.getImageDirectory()));
         animator.addAnimation("SS_Crawl_Right", new PlayerSSCrawlingAnimationRight(playerData.getImageDirectory()));
+        animator.addAnimation("SS_Sword_Attack_Right", new PlayerSSSwordAttackAnimationRight(playerData.getImageDirectory()));
+        animator.addAnimation("SS_Sword_Attack_Left", new PlayerSSSwordAttackAnimationLeft(playerData.getImageDirectory()));
         //animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation(playerData.getImageDirectory()));
         //Interactable
         requesting = false;
@@ -105,6 +107,7 @@ public class Player extends RenderablePhysicsObject {
                 break;
         }
     }
+
     //endregion
 
     //region <Update and Draw>
@@ -128,10 +131,13 @@ public class Player extends RenderablePhysicsObject {
                 else motion.y = 0;
 
             case sideScroll: // x movement
-                if(keyFlag[0] && !keyFlag[1])
+                if(!isAttacking() && keyFlag[0] && !keyFlag[1]) {
                     motion.x = -speed;
-                else if(!keyFlag[0] && keyFlag[1])
+                    facing = true;
+                } else if(!isAttacking() && !keyFlag[0] && keyFlag[1]) {
                     motion.x = speed;
+                    facing = false;
+                }
                 else motion.x = 0;
                 break;
         }
@@ -155,6 +161,11 @@ public class Player extends RenderablePhysicsObject {
 
     //region <Support functions>
 
+    public boolean isAttacking() {
+        return animator.getCurrentAnimationName() == "SS_Sword_Attack_Right" ||
+                animator.getCurrentAnimationName() == "SS_Sword_Attack_Left";
+    }
+
     private void setMovementAnimation() {
         switch(playerState){
             case sideScroll:
@@ -166,13 +177,14 @@ public class Player extends RenderablePhysicsObject {
                                 else animator.setAnimation("SS_Running_Left");
                             }
                         }
-                        /*else if(crouch){
+                        else { /* Jumping or falling animation */}
+                        /*if(crouch){
                             if (motion.x < 0.05) {
                                 if (motion.x > -0.05) animator.setAnimation("SS_Crawl_Right");
                                 else animator.setAnimation("SS_Crawl_Left");
                             }
                         }*/
-                        else { /* Jumping or falling animation */}
+
                         break;
                     case "SS_Running_Left":
                         if(grounded) {
@@ -181,13 +193,14 @@ public class Player extends RenderablePhysicsObject {
                                 else animator.setAnimation("SS_Running_Right");
                             }
                         }
-                        /*else if (crouch) {
+                        else { /* Jumping or falling animation */}
+                        /*if (crouch) {
                             if (motion.x > -0.05) {
                                 if (motion.x < 0.05) animator.setAnimation("SS_Crawl_Left");
                                 else animator.setAnimation("SS_Crawl_Right");
                             }
                         }*/
-                        else { /* Jumping or falling animation */}
+
                         break;
                     case "SS_Idle_Right":
                     case "SS_Idle_Left":
@@ -197,6 +210,17 @@ public class Player extends RenderablePhysicsObject {
                             else if (motion.x > 0.05)
                                 animator.setAnimation("SS_Running_Right");
                         } else { /* Jumping or falling animation */}
+                        break;
+                    case "SS_Sword_Attack_Right":
+                        if(animator.getCurrentAnimation().getFrameToDisplay() == 6){
+                            animator.setAnimation("SS_Idle_Right");
+                        }
+                        break;
+                    case "SS_Sword_Attack_Left":
+                        if(animator.getCurrentAnimation().getFrameToDisplay() == 6){
+                            animator.setAnimation("SS_Idle_Left");
+                            translate(176,0);
+                        }
                         break;
                     case "SS_Crawl_Left":
                     case "SS_Crawl_Right":
@@ -226,6 +250,21 @@ public class Player extends RenderablePhysicsObject {
                 } else if(e.getKeyCode() == DOWN && !crouch){ // CROUCH
                     crouch = true;
                     crouchSet = false;
+                } /*else if (crouch && (e.getKeyCode() == RIGHT || e.getKeyCode() == LEFT)){
+                    if (facing){
+                        animator.setAnimation("SS_Crawl_Left");
+                    } else {
+                        animator.setAnimation("SS_Crawl_Right");
+                    }
+                }*/
+                else if(!isAttacking() && e.getKeyCode() == ATTACK && grounded){
+                    if(facing) {// facing left
+                        animator.setAnimation("SS_Sword_Attack_Left");
+                        translate(-176,0);
+                    } else {// facing right
+                        animator.setAnimation("SS_Sword_Attack_Right");
+                    }
+
                 }
             case overWorld:
                 if(e.getKeyCode() == SPRINT) { // SPRINT

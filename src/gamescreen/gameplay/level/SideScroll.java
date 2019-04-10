@@ -84,7 +84,7 @@ public class SideScroll extends GameScreen {
 
         UI = new SideScrollUI(screenManager, this, player);
         addOverlay(UI);
-        setCamera(new Camera(screenManager,this, player));
+        //setCamera(new Camera(screenManager,this, player));
         setKeyHandler(new SideScrollKeyHandler(player));
     }
 
