@@ -268,7 +268,7 @@ public class Player extends RenderablePhysicsObject {
 
     public void addItem(Item i){
         playerData.addItem(i);
-    }a
+    }
     //endregion
 
     //region <Interactable>
