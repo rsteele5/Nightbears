@@ -165,7 +165,14 @@ public class Player extends RenderablePhysicsObject {
                                 if (motion.x > -0.05) animator.setAnimation("SS_Idle_Right");
                                 else animator.setAnimation("SS_Running_Left");
                             }
-                        } else { /* Jumping or falling animation */}
+                        }
+                        /*else if(crouch){
+                            if (motion.x < 0.05) {
+                                if (motion.x > -0.05) animator.setAnimation("SS_Crawl_Right");
+                                else animator.setAnimation("SS_Crawl_Left");
+                            }
+                        }*/
+                        else { /* Jumping or falling animation */}
                         break;
                     case "SS_Running_Left":
                         if(grounded) {
@@ -173,7 +180,14 @@ public class Player extends RenderablePhysicsObject {
                                 if (motion.x < 0.05) animator.setAnimation("SS_Idle_Left");
                                 else animator.setAnimation("SS_Running_Right");
                             }
-                        } else { /* Jumping or falling animation */}
+                        }
+                        /*else if (crouch) {
+                            if (motion.x > -0.05) {
+                                if (motion.x < 0.05) animator.setAnimation("SS_Crawl_Left");
+                                else animator.setAnimation("SS_Crawl_Right");
+                            }
+                        }*/
+                        else { /* Jumping or falling animation */}
                         break;
                     case "SS_Idle_Right":
                     case "SS_Idle_Left":
@@ -254,7 +268,7 @@ public class Player extends RenderablePhysicsObject {
 
     public void addItem(Item i){
         playerData.addItem(i);
-    }
+    }a
     //endregion
 
     //region <Interactable>
