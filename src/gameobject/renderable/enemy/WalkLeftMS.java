@@ -20,6 +20,6 @@ public class WalkLeftMS extends MinionState {
 
     @Override
     public void doAction(Minion minion) {
-        minion.setVelocity(new PhysicsVector(-1,0));
+        minion.setVelocity(new PhysicsVector(-3,minion.getVelocity().y));
     }
 }

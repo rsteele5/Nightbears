@@ -74,6 +74,11 @@ public class PlayerData implements Serializable {
         resetCurrentArmor();
     }
 
+    public int getWeaponDamage(){
+        //Do logic for weapon damage
+        return 0;
+    }
+
     public void replaceList(CopyOnWriteArrayList<Item> updatedItems) {
         this.playerInventory = updatedItems;
     }

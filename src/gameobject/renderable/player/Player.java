@@ -4,6 +4,7 @@ import gameengine.gamedata.PlayerData;
 import gameengine.physics.*;
 import gameengine.rendering.animation.Animator;
 import gameobject.renderable.DrawLayer;
+import gameobject.renderable.enemy.Walker;
 import gameobject.renderable.item.Item;
 import gameobject.renderable.player.overworld.PlayerIdleAnimation;
 import gameobject.renderable.player.overworld.PlayerWalkingAnimation;
@@ -320,5 +321,18 @@ public class Player extends RenderablePhysicsObject {
         super.addToScreen(screen, isActive);
         // add stuff to Screen here
     }
+
+    @Override
+    public boolean collide(Collidable c2) {
+        if(c2 instanceof Walker){
+            if(!isAttacking()){
+
+            }
+
+                Debug.error(true, "We took some damage!");
+        }
+        return true;
+    }
+
     //endregion
 }

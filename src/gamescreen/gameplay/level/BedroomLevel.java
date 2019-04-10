@@ -7,6 +7,8 @@ import gameobject.CameraTarget;
 import gameobject.LockCameraTrigger;
 import gameobject.TriggerableBoundary;
 import gameobject.renderable.DrawLayer;
+import gameobject.renderable.enemy.Minion;
+import gameobject.renderable.enemy.Walker;
 import gameobject.renderable.house.sidescrolling.BedroomBackgroundLayout;
 import gameobject.renderable.house.sidescrolling.Door;
 import gameobject.renderable.player.Player;
@@ -33,6 +35,16 @@ public class BedroomLevel extends GamePlayScreen {
         p.setWidth(100);
         p.setHeight(20);
         p.addToScreen(this,true);
+
+        Minion minion = new Walker(500,700, DrawLayer.Entity, 20f);
+        minion.addToScreen(this, true);
+
+        Platform p2 = new Platform(750,900,"/assets/testAssets/brick.jpg",DrawLayer.Prop);
+        p2.setWidth(100);
+        p2.setHeight(20);
+        p2.addToScreen(this,true);
+
+
         Door finishDoor = new Door(800, 300,
                 "/assets/sidescroll/SideScrollDoor.png",
                 () -> {
@@ -78,6 +90,8 @@ public class BedroomLevel extends GamePlayScreen {
         addOverlay(UI);
 
         setPhysicsEngine(new PhysicsEngine(player, PhysicsEngine.PhysicState.SideScroll));
+
+
     }
 
     @Override
