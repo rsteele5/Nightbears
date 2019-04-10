@@ -15,6 +15,7 @@ import main.utilities.Debug;
 
 import java.io.Serializable;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class PlayerData implements Serializable {
 
@@ -75,8 +76,16 @@ public class PlayerData implements Serializable {
     }
 
     public int getWeaponDamage(){
-        //Do logic for weapon damage
-        return 0;
+        int minDamage;
+        int maxDamage;
+        if(playerEquipment.get(3) != null){ // If the player has a weapon equipped get the min/max damage;
+            minDamage = ((Weapon)playerEquipment.get(3)).getMinDamage();
+            maxDamage = ((Weapon)playerEquipment.get(3)).getMaxDamage();
+        } else { // If the player has no weapon equipped set the min/max damage to 1/4;
+            minDamage = 1;
+            maxDamage = 4;
+        }
+        return ThreadLocalRandom.current().nextInt(minDamage, maxDamage + 1);
     }
 
     public void replaceList(CopyOnWriteArrayList<Item> updatedItems) {

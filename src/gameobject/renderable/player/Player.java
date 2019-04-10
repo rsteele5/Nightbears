@@ -165,6 +165,10 @@ public class Player extends RenderablePhysicsObject {
                 animator.getCurrentAnimationName() == "SS_Sword_Attack_Left";
     }
 
+    public int getWeaponDamage(){
+        return playerData.getWeaponDamage();
+    }
+
     private void setMovementAnimation() {
         switch(playerState){
             case sideScroll:
@@ -218,7 +222,6 @@ public class Player extends RenderablePhysicsObject {
                 }
                 break;
         }
-
     }
 
     public void handleKeyPress(KeyEvent e) {
@@ -234,9 +237,11 @@ public class Player extends RenderablePhysicsObject {
                 } else if(!isAttacking() && e.getKeyCode() == ATTACK && grounded){
                     if(facing) {// facing left
                         animator.setAnimation("SS_Sword_Attack_Left");
+                        Debug.log(true, "Damage: " + playerData.getWeaponDamage());
                         translate(-176,0);
                     } else {// facing right
                         animator.setAnimation("SS_Sword_Attack_Right");
+                        Debug.log(true, "Damage: " + playerData.getWeaponDamage());
                     }
 
                 }
@@ -326,10 +331,8 @@ public class Player extends RenderablePhysicsObject {
     public boolean collide(Collidable c2) {
         if(c2 instanceof Walker){
             if(!isAttacking()){
-
-            }
-
                 Debug.error(true, "We took some damage!");
+            }
         }
         return true;
     }

@@ -95,5 +95,5 @@ public class DebugEnabler {
      * Controls debugging Key Events
      * @see KeyHandler
      */
-    public static boolean KEY_EVENTS =            true;
+    public static boolean KEY_EVENTS =            false;
 }
