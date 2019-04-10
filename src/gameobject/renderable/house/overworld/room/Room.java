@@ -1,19 +1,26 @@
 package gameobject.renderable.house.overworld.room;
 
 import gameobject.GameObject;
+import gameobject.renderable.house.overworld.Compass;
 import gameobject.renderable.house.overworld.Tile;
 import gamescreen.GameScreen;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.List;
+
+import static gameobject.renderable.house.overworld.OverworldMeta.TileSize;
+import static gameobject.renderable.house.overworld.OverworldMeta.WallThickness;
 
 public abstract class Room extends GameObject {
 
     //region <Variables>
     protected String name;
-    protected int cellX;
-    protected int cellY;
+    protected int cellCol;
+    protected int cellRow;
     protected Integer[][] layout;
     protected int width;
     protected int height;
@@ -21,18 +28,21 @@ public abstract class Room extends GameObject {
 
     protected ArrayList<SpawnPoint> spawnPoints;
     protected ArrayList<Boundary> boundaries;
+    protected ArrayList<Door> doors;
     //endregion
 
     //region <Construction and Initialization>
     public Room(String name){
+        super();
         this.name = "Room: "+name;
-        cellX = -1;
-        cellY = -1;
+        cellCol = -1;
+        cellRow = -1;
         layout = constructLayout();
         roomTiles = new Tile[layout.length][layout[0].length];
         width = layout[0].length;
         height = layout.length;
         boundaries = new ArrayList<>();
+        doors = new ArrayList<>();
         spawnPoints = new ArrayList<>();
     }
 
@@ -40,11 +50,11 @@ public abstract class Room extends GameObject {
 
     /**
      * Creates all of the spawn points in this room. This is called when you add this room to a Map using the
-     * MapBuilder.
+     * BackgroundBuilder.
      * @see gameobject.renderable.house.overworld.Map
      * @see gameobject.renderable.house.overworld.MapBuilder
      */
-    public abstract void initializeSpawnPoints();
+    public abstract void initializeRoom();
     //endregion
 
     //region <Getters and Setters>
@@ -52,12 +62,12 @@ public abstract class Room extends GameObject {
         return name;
     }
 
-    public int getCellX() {
-        return cellX;
+    public int getCellRow() {
+        return cellRow;
     }
 
-    public int getCellY() {
-        return cellY;
+    public int getCellCol() {
+        return cellCol;
     }
 
     public ArrayList<SpawnPoint> getPlayerSpawnOptions(){
@@ -82,6 +92,17 @@ public abstract class Room extends GameObject {
         return vendorSpawnOptions;
     }
 
+    public ArrayList<SpawnPoint> getSpawnETCOptions() {
+        ArrayList<SpawnPoint> etcSpawnOptions = new ArrayList<>();
+        for(SpawnPoint spawn : spawnPoints){
+            if(spawn.getSpawnType() == SpawnType.ETC)
+                etcSpawnOptions.add(spawn);
+        }
+        if(etcSpawnOptions.isEmpty())
+            return null;
+        return etcSpawnOptions;
+    }
+
     public Integer[][] getLayout() {
         return layout;
     }
@@ -98,9 +119,24 @@ public abstract class Room extends GameObject {
         return height;
     }
 
+    public ArrayList<Door> getDoors() {
+        return doors;
+    }
+
+    public boolean containsTile(Tile tile){
+        for(int r = 0; r < height; r++) {
+            for (int c = 0; c < width; c++)
+                if(tile == roomTiles[r][c]) return true;
+        } return false;
+    }
+
+    public Rectangle2D getBoundingBox() {
+        return new Rectangle2D.Double(cellCol *TileSize, cellRow *TileSize, width, height);
+    }
+
     public void setCell(int x, int y) {
-        cellX = x;
-        cellY = y;
+        cellCol = x;
+        cellRow = y;
     }
 
     public void setTile(int row, int col, Tile content) {
@@ -110,10 +146,9 @@ public abstract class Room extends GameObject {
 
     //region <Support Functions>
     public boolean isConflicting(Room newRoom) {
-        if(cellX >= 0 && cellY >= 0){
-            if(newRoom.cellX >= 0 && newRoom.cellY >= 0){
-                if((newRoom.cellX >= cellX && newRoom.cellY >= cellY)
-                        && (newRoom.cellY < cellY + layout.length && newRoom.cellX < cellX + layout[0].length)) {
+        if(cellCol >= 0 && cellRow >= 0){
+            if(newRoom.cellCol >= 0 && newRoom.cellRow >= 0){
+                if(this.getBoundingBox().intersects(newRoom.getBoundingBox())){
                     //TODO: Check if the conflicting sections have irrelevant differences
                     return true;
                 }
@@ -131,6 +166,16 @@ public abstract class Room extends GameObject {
     public void addBoundary(Boundary boundary){
         boundaries.add(boundary);
     }
+
+    protected void createSpawnPoint(int row, int col, SpawnType type){
+        Tile spawnTile = roomTiles[row][col];
+        spawnPoints.add(new SpawnPoint(spawnTile.getX(), spawnTile.getY(), type));
+    }
+
+    protected void createDoor(int row, int col, Compass attachedDirection) {
+        Tile referenceTile = roomTiles[row][col];
+        doors.add(new Door(referenceTile, attachedDirection));
+    }
     //endregion
 
 
@@ -139,8 +184,11 @@ public abstract class Room extends GameObject {
     @Override
     public boolean setActive(GameScreen screen){
         if(super.setActive(screen)){
-            for (Boundary boundary : boundaries) {
-                boundary.setActive(screen);
+            boundaries.forEach(boundary -> boundary.setActive(screen));
+            doors.forEach(door -> door.setActive(screen));
+            for(Tile[] row : roomTiles){
+                for(Tile tile : row)
+                    if(tile != null) tile.setActive(screen);
             }return true;
         }return false;
     }
@@ -148,8 +196,11 @@ public abstract class Room extends GameObject {
     @Override
     public boolean setInactive(GameScreen screen){
         if(super.setInactive(screen)){
-            for (Boundary boundary : boundaries) {
-                boundary.setInactive(screen);
+            boundaries.forEach(boundary -> boundary.setInactive(screen));
+            doors.forEach(door -> door.setInactive(screen));
+            for(Tile[] row : roomTiles){
+                for(Tile tile : row)
+                    if(tile != null) tile.setInactive(screen);
             }return true;
         }return false;
     }
@@ -157,9 +208,8 @@ public abstract class Room extends GameObject {
     @Override
     public void addToScreen(GameScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
-        for (Boundary boundary : boundaries) {
-            boundary.addToScreen(screen, isActive);
-        }
+        boundaries.forEach(boundary -> boundary.addToScreen(screen, isActive));
+        doors.forEach(door -> door.addToScreen(screen, isActive));
     }
     //endregion
 }

@@ -5,11 +5,9 @@ import gameengine.physics.PhysicsVector;
 import gameobject.GameObject;
 import gamescreen.GameScreen;
 
-import java.awt.*;
+import java.awt.Rectangle;
 
 public class Boundary extends GameObject implements Kinematic {
-
-    private PhysicsVector zeroVector;
     protected int width;
     protected int height;
 
@@ -17,18 +15,17 @@ public class Boundary extends GameObject implements Kinematic {
         super(x,y);
         this.width = width;
         this.height = height;
-        zeroVector = new PhysicsVector(0,0);
     }
 
     //Kinematic
     @Override
     public boolean isStatic() { return true; }
     @Override
-    public PhysicsVector getVelocity() { return zeroVector; }
+    public PhysicsVector getVelocity() { return PhysicsVector.ZERO; }
     @Override
     public void setVelocity(PhysicsVector pv) {}
     @Override
-    public PhysicsVector getAcceleration() { return zeroVector; }
+    public PhysicsVector getAcceleration() { return PhysicsVector.ZERO; }
     @Override
     public void setAcceleration(PhysicsVector pv) {}
     @Override
@@ -39,8 +36,7 @@ public class Boundary extends GameObject implements Kinematic {
         if(super.setActive(screen)){
             screen.kinematics.add(this);
             return true;
-        }
-        return false;
+        }return false;
     }
 
     @Override
@@ -48,17 +44,14 @@ public class Boundary extends GameObject implements Kinematic {
         if(super.setInactive(screen)){
             screen.kinematics.remove(this);
             return true;
-        }
-        return false;
+        }return false;
     }
 
     @Override
     public void addToScreen(GameScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
         screen.kinematics.remove(this);
-        if(isActive) {
-            screen.kinematics.add(this);
-        }
+        if(isActive) screen.kinematics.add(this);
     }
     @Override
     public void update() {}

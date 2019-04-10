@@ -34,4 +34,6 @@ public abstract class Animation implements Loadable {
     }
 
     public abstract String getName();
+
+    public int getFrameToDisplay(){return frameToDisplay;}
 }

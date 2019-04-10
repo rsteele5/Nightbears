@@ -4,13 +4,11 @@ public class SpawnPoint {
     private int tileX;
     private int tileY;
     private SpawnType spawnType;
-    private Room room;
 
-    public SpawnPoint(int tileX, int tileY, SpawnType type, Room room){
+    public SpawnPoint(int tileX, int tileY, SpawnType type){
         this.tileX = tileX;
         this.tileY = tileY;
         this.spawnType = type;
-        this.room = room;
     }
 
     public SpawnType getSpawnType() {

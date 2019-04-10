@@ -85,7 +85,7 @@ public class FallenHeroHallScreen extends GameScreen {
         //Create Background
         ImageContainer imageContainer;
 
-        imageContainer = new ImageContainer(0,0, "/assets/backgrounds/BG-HeroHall.png", DrawLayer.Background);
+        imageContainer = new ImageContainer(0,0, "/assets/backgrounds/BG-FallenHeroHall.png", DrawLayer.Background);
         imageContainer.addToScreen(this, true);
 
         //Create button
@@ -158,36 +158,36 @@ public class FallenHeroHallScreen extends GameScreen {
                 victims.get(i).changeGold(i * 5);
                 switch(i) {
                     case 0:
-                        victims.get(i).setImagePath("/assets/player/images/TeddyGreen.png");
-                        victims.get(i).setPressedImagePath("/assets/player/images/TeddyGreen.png");
+                        victims.get(i).setImagePath("/assets/player/color/red/Teddy.png");
+                        victims.get(i).setPressedImagePath("/assets/player/color/red/Teddy.png");
                         victims.get(i).setName("Loyal Doyal");
                         victims.get(i).setCreationDate(LocalDate.of(2019, Month.MARCH, 25));
                         victims.get(i).setDeathDate(LocalDate.of(2019, Month.APRIL, 1));
                         break;
                     case 1:
-                        victims.get(i).setImagePath("/assets/player/images/TeddyPurple.png");
-                        victims.get(i).setPressedImagePath("/assets/player/images/TeddyPurple.png");
+                        victims.get(i).setImagePath("/assets/player/color/purple/Teddy.png");
+                        victims.get(i).setPressedImagePath("/assets/player/color/purple/Teddy.png");
                         victims.get(i).setName("Royal Coil");
                         victims.get(i).setCreationDate(LocalDate.of(2019, Month.MARCH, 26));
                         victims.get(i).setDeathDate(LocalDate.of(2019, Month.APRIL, 2));
                         break;
                     case 2:
-                        victims.get(i).setImagePath("/assets/player/images/TeddyBlue.png");
-                        victims.get(i).setPressedImagePath("/assets/player/images/TeddyBlue.png");
+                        victims.get(i).setImagePath("/assets/player/color/blue/Teddy.png");
+                        victims.get(i).setPressedImagePath("/assets/player/color/blue/Teddy.png");
                         victims.get(i).setName("Ants Pants");
                         victims.get(i).setCreationDate(LocalDate.of(2019, Month.MARCH, 27));
                         victims.get(i).setDeathDate(LocalDate.of(2019, Month.APRIL, 3));
                         break;
                     case 3:
-                        victims.get(i).setImagePath("/assets/player/images/TeddyRed.png");
-                        victims.get(i).setPressedImagePath("/assets/player/images/TeddyRed.png");
+                        victims.get(i).setImagePath("/assets/player/color/green/Teddy.png");
+                        victims.get(i).setPressedImagePath("/assets/player/color/green/Teddy.png");
                         victims.get(i).setName("Ben Ten");
                         victims.get(i).setCreationDate(LocalDate.of(2019, Month.MARCH, 28));
                         victims.get(i).setDeathDate(LocalDate.of(2019, Month.APRIL, 4));
                         break;
                     case 4:
-                        victims.get(i).setImagePath("/assets/player/images/Teddy.png");
-                        victims.get(i).setPressedImagePath("/assets/player/images/Teddy.png");
+                        victims.get(i).setImagePath("/assets/player/color/none/Teddy.png");
+                        victims.get(i).setPressedImagePath("/assets/player/color/none/Teddy.png");
                         victims.get(i).setName("Jeremy");
                         victims.get(i).setCreationDate(LocalDate.of(2019, Month.MARCH, 29));
                         victims.get(i).setDeathDate(LocalDate.of(2019, Month.APRIL, 5));

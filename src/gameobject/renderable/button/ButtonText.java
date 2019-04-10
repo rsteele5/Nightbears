@@ -34,6 +34,10 @@ public class ButtonText extends Button{
         this(x, y, imagepath, drawLayer,font,color, text);
         onClick = handleOnClick;
     }
+    public ButtonText(int x, int y, String imagePath, String pressedImagePath, DrawLayer drawLayer, Font font, Color color) {
+        this(x, y, imagePath, drawLayer, font,color);
+        this.pressedImagePath = pressedImagePath;
+    }
 
     public ButtonText(int x, int y, String imagePath, String pressedImagePath, DrawLayer drawLayer, Font font, Color color, String text, Action handleOnClick) {
         this(x, y, imagePath, drawLayer, font,color, text);

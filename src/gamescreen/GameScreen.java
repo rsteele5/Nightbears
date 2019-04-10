@@ -32,7 +32,7 @@ public abstract class GameScreen {
     private CopyOnWriteArrayList<GameScreen> overlayScreens;
     private Camera camera;
     private boolean loadingScreenRequired = false;
-    private boolean isExclusive;
+    protected boolean isExclusive;
     private boolean isOverlay;
     private boolean isLoading;
     protected boolean exiting = false;
@@ -249,6 +249,10 @@ public abstract class GameScreen {
         currentState = state;
     }
 
+    public ScreenManager getScreenManager() {
+        return screenManager;
+    }
+
     /**
      * Sets a GameScreen in front of this GameScreen.
      * @param screen    GameScreen that will be this GameScreen's child.
@@ -422,15 +426,26 @@ public abstract class GameScreen {
                     case TransitionOff: transitionOff(); break;
                     case Active: activeUpdate(); break;
                     case Hidden: hiddenUpdate(); break;
-                    default: Debug.error(DebugEnabler.GAME_SCREEN_LOG, "Unknown splashscreen state");
+                    default: Debug.error(DebugEnabler.GAME_SCREEN_LOG, "Unknown screen state");
                 }
             }
             if(!overlayScreens.isEmpty()) {
+                boolean enableScreens = false;
                 for (GameScreen overlay : overlayScreens) {
                     if(overlay.isExiting()){
-                        if(!overlay.isLoading)
+                        if(!overlay.isLoading) {
                             overlayScreens.remove(overlay);
-                    }else overlay.update();
+                            enableScreens = overlay.isExclusive();
+                        }
+                    }else {
+                        if(overlay.isExclusive) enableScreens = false;
+                        overlay.update();
+                    }
+                } if(enableScreens) {
+                    overlayScreens.forEach(overlay -> {
+                        if(overlay.isHidden())overlay.setScreenState(ScreenState.Active);
+                    });
+                    if(this.isHidden())this.setScreenState(ScreenState.Active);
                 }
             }
 
@@ -448,23 +463,23 @@ public abstract class GameScreen {
      */
     final void drawScreen(Graphics2D graphics) {
         if(!isLoading) {
-            if(camera != null){
-                camera.track(graphics);
-            } else {
-                for(RenderableObject renderable : renderables)
-                    renderable.draw(graphics);
-            }
-
-            if(!overlayScreens.isEmpty()) {
-                for (GameScreen overlay : overlayScreens) {
-                    if(!overlay.isLoading)
-                        overlay.drawScreen(graphics);
-                }
-            }
             if(childScreen != null) {
                 childScreen.drawScreen(graphics);
-            }
+            }else {
+                if (camera != null) {
+                    camera.track(graphics);
+                } else {
+                    for (RenderableObject renderable : renderables)
+                        renderable.draw(graphics);
+                }
 
+                if (!overlayScreens.isEmpty()) {
+                    for (GameScreen overlay : overlayScreens) {
+                        if (!overlay.isLoading)
+                            overlay.drawScreen(graphics);
+                    }
+                }
+            }
         } else {
             if(childScreen != null) {
                 childScreen.drawScreen(graphics);
@@ -486,17 +501,19 @@ public abstract class GameScreen {
                 if (overlay.handleMousePress(mouseController, x, y))
                     return true;
             }
-            // If no overlays handled press
-            Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "- handle mouse press " + x + " " + y);
-            boolean success = false;
-            for(Clickable thing: clickables) {
-                if(thing.contains(x,y)) {
-                    mouseController.setPressTarget(thing);
-                    thing.setPressed(true);
-                    success = true;
-                } else thing.setPressed(false);
+            if(isActive()) {
+                // If no overlays handled press
+                Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "- handle mouse press " + x + " " + y);
+                boolean success = false;
+                for (Clickable thing : clickables) {
+                    if (thing.contains(x, y)) {
+                        mouseController.setPressTarget(thing);
+                        thing.setPressed(true);
+                        success = true;
+                    } else thing.setPressed(false);
+                }
+                return success;
             }
-            return success;
         }
         return false;
     }
@@ -513,19 +530,21 @@ public abstract class GameScreen {
                 if (overlay.handleMouseRelease(mouseController, x, y))
                     return true;
             }
-            // If no overlays handled press
-            Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "- handle mouse release " + x + " " + y);
-            for(Clickable thing: clickables) {
-                if(thing.equals(mouseController.getPressTarget())) {
-                    if(thing.contains(x,y)){
-                        thing.onClick();
-                        mouseController.clearPressTarget();
-                        thing.setPressed(false);
-                        return true;
-                    } else {
-                        mouseController.clearPressTarget();
-                        thing.setPressed(false);
-                        return false;
+            if(isActive()) {
+                // If no overlays handled press
+                Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "- handle mouse release " + x + " " + y);
+                for (Clickable thing : clickables) {
+                    if (thing.equals(mouseController.getPressTarget())) {
+                        if (thing.contains(x, y)) {
+                            thing.onClick();
+                            mouseController.clearPressTarget();
+                            thing.setPressed(false);
+                            return true;
+                        } else {
+                            mouseController.clearPressTarget();
+                            thing.setPressed(false);
+                            return false;
+                        }
                     }
                 }
             }
@@ -538,8 +557,14 @@ public abstract class GameScreen {
             Debug.log(DebugEnabler.KEY_EVENTS, name + " - handle key pressed on child");
             childScreen.handleKeyPressed(e);
         }else if(keyHandler != null){
-            Debug.log(DebugEnabler.KEY_EVENTS, name + " - handles key pressed: " + e.getKeyCode());
-            this.keyHandler.keyPressed(e);
+            if(!isHidden()) {
+                Debug.log(DebugEnabler.KEY_EVENTS, name + " - handles key pressed: " + e.getKeyCode());
+                this.keyHandler.keyPressed(e);
+            } else {
+                overlayScreens.forEach(overlay -> {
+                    if(overlay.isExclusive) overlay.keyHandler.keyPressed(e);
+                });
+            }
         } else {
             Debug.warning(DebugEnabler.KEY_EVENTS,
                     name + " - No key handler attached, cannot handle key pressed: " + e.getKeyCode());
@@ -552,8 +577,14 @@ public abstract class GameScreen {
             Debug.log(DebugEnabler.KEY_EVENTS, name + " - handle key release on child");
             childScreen.handleKeyReleased(e);
         }else if(keyHandler != null){
-            Debug.log(DebugEnabler.KEY_EVENTS, name + " - handles key release: " + e.getKeyCode());
-            this.keyHandler.keyReleased(e);
+            if(!isHidden()) {
+                Debug.log(DebugEnabler.KEY_EVENTS, name + " - handles key release: " + e.getKeyCode());
+                this.keyHandler.keyReleased(e);
+            } else {
+                overlayScreens.forEach(overlay -> {
+                    if(overlay.isExclusive) overlay.keyHandler.keyReleased(e);
+                });
+            }
         } else {
             Debug.warning(DebugEnabler.KEY_EVENTS,
                     name + " - No key handler attached, cannot handle key release: " + e.getKeyCode());
@@ -566,15 +597,14 @@ public abstract class GameScreen {
         exiting = false;
     }
 
-    protected void addOverlay(GameScreen overlay){
-        if(!overlay.isOverlay){
-            Debug.error(DebugEnabler.GAME_SCREEN_LOG,
-                    overlay.name +"- is not an overlay. Will not add to overlays.");
-        } else {
-            overlay.initializeScreen();
-            overlay.loadContent();
-            overlayScreens.add(overlay);
+    public void addOverlay(GameScreen newOverlay){
+        if(newOverlay.isExclusive()){
+            this.setScreenState(ScreenState.Hidden);
+            overlayScreens.forEach(overlay -> overlay.setScreenState(ScreenState.Hidden));
         }
+        newOverlay.initializeScreen();
+        newOverlay.loadContent();
+        overlayScreens.add(newOverlay);
     }
 
     protected void coverWith(GameScreen gameScreen) {
