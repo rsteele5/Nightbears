@@ -282,7 +282,7 @@ public class Player extends RenderablePhysicsObject {
     public void handleKeyPress(KeyEvent e) {
         switch (playerState) {
             case sideScroll:
-                if (e.getKeyCode() == JUMP && grounded) { // JUMP
+                if (e.getKeyCode() == JUMP && grounded && !hitStun) { // JUMP
                     motion = motion.add(0, -20);
                     grounded = false;
                     considerArc = true;
@@ -311,7 +311,7 @@ public class Player extends RenderablePhysicsObject {
 
                         }
                     }
-                } else if(e.getKeyCode() == KeyEvent.VK_H) {
+                } else if(e.getKeyCode() == KeyEvent.VK_H && !hitStun) {
                     Debug.log(true, "HitStun: " + hitStun);
                     hitStun = true;
                     hitStunFrameCounter = hitStunFrames;
@@ -402,7 +402,7 @@ public class Player extends RenderablePhysicsObject {
     @Override
     public boolean collide(Collidable c2) {
         if(c2 instanceof Walker){
-            if(!isAttacking()){
+            if(!isAttacking() && !hitStun){
                 Debug.error(true, "We took some damage!");
                 hitStun = true;
                 hitStunFrameCounter = hitStunFrames;
@@ -412,6 +412,5 @@ public class Player extends RenderablePhysicsObject {
         }
         return true;
     }
-
     //endregion
 }
