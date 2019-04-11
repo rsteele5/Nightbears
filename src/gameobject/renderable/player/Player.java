@@ -77,6 +77,8 @@ public class Player extends RenderablePhysicsObject {
         animator.addAnimation("SS_Spear_Attack_Left", new PlayerSSSpearAttackAnimationLeft(playerData.getImageDirectory()));
         animator.addAnimation("SS_Unarmed_Attack_Right", new PlayerSSUnarmedAttackAnimationRight(playerData.getImageDirectory()));
         animator.addAnimation("SS_Unarmed_Attack_Left", new PlayerSSUnarmedAttackAnimationLeft(playerData.getImageDirectory()));
+        animator.addAnimation("SS_Club_Attack_Right", new PlayerSSClubAttackAnimationRight(playerData.getImageDirectory()));
+        animator.addAnimation("SS_Club_Attack_Left", new PlayerSSClubAttackAnimationLeft(playerData.getImageDirectory()));
         animator.addAnimation("SS_HitStun_Right", new PlayerSSHitStunAnimationRight(playerData.getImageDirectory()));
         animator.addAnimation("SS_HitStun_Left", new PlayerSSHitStunAnimationLeft(playerData.getImageDirectory()));
         //animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation(playerData.getImageDirectory()));
@@ -202,7 +204,9 @@ public class Player extends RenderablePhysicsObject {
                 animator.getCurrentAnimationName() == "SS_Spear_Attack_Right" ||
                 animator.getCurrentAnimationName() == "SS_Spear_Attack_Left" ||
                 animator.getCurrentAnimationName() == "SS_Unarmed_Attack_Right" ||
-                animator.getCurrentAnimationName() == "SS_Unarmed_Attack_Left";
+                animator.getCurrentAnimationName() == "SS_Unarmed_Attack_Left" ||
+                animator.getCurrentAnimationName() == "SS_Club_Attack_Right" ||
+                animator.getCurrentAnimationName() == "SS_Club_Attack_Left";
     }
 
     public int getWeaponDamage(){
@@ -238,6 +242,12 @@ public class Player extends RenderablePhysicsObject {
                                 animator.setAnimation("SS_Running_Right");
                         } else { /* Jumping or falling animation */}
                         break;
+                    case "SS_Club_Attack_Right":
+                        if(animator.getCurrentAnimation().getFrameToDisplay() == 6){
+                            animator.setAnimation("SS_Idle_Right");
+                            translate(73,0);
+                        }
+                        break;
                     case "SS_Sword_Attack_Right":
                     case "SS_Spear_Attack_Right":
                     case "SS_Unarmed_Attack_Right":
@@ -257,7 +267,12 @@ public class Player extends RenderablePhysicsObject {
                             translate(176,0);
                         }
                         break;
-
+                    case "SS_Club_Attack_Left":
+                        if(animator.getCurrentAnimation().getFrameToDisplay() == 6){
+                            animator.setAnimation("SS_Idle_Left");
+                            translate(73,0);
+                        }
+                        break;
                     case "SS_Unarmed_Attack_Left":
                         if(animator.getCurrentAnimation().getFrameToDisplay() == 6){
                             animator.setAnimation("SS_Idle_Left");
@@ -300,6 +315,9 @@ public class Player extends RenderablePhysicsObject {
                         } else if (playerData.getPlayerEquipment().get(3).getType() == WeaponType.Spear.ordinal()){
                             animator.setAnimation("SS_Spear_Attack_Left");
                             translate(-176,0);
+                        } else if (playerData.getPlayerEquipment().get(3).getType() == WeaponType.Club.ordinal()){
+                            animator.setAnimation("SS_Club_Attack_Left");
+                            translate(-73,-30);
                         }
                     } else {// facing right
                         if(playerData.getPlayerEquipment().get(3) == null){
@@ -308,7 +326,9 @@ public class Player extends RenderablePhysicsObject {
                             animator.setAnimation("SS_Sword_Attack_Right");
                         } else if (playerData.getPlayerEquipment().get(3).getType() == WeaponType.Spear.ordinal()){
                             animator.setAnimation("SS_Spear_Attack_Right");
-
+                        } else if (playerData.getPlayerEquipment().get(3).getType() == WeaponType.Club.ordinal()){
+                            animator.setAnimation("SS_Club_Attack_Right");
+                            translate(-73,-30);
                         }
                     }
                 } else if(e.getKeyCode() == KeyEvent.VK_H && !hitStun) {

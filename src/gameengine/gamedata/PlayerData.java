@@ -102,6 +102,24 @@ public class PlayerData implements Serializable {
                 .critChance(3)
                 .buildWeapon());
 
+        addItem(new WeaponBuilder()
+                .imagePath("/assets/Items/spear1.png")
+                .name("My Fwirst Spear")
+                .type(WeaponType.Spear)
+                .value(10)
+                .minmaxDamage(5, 7)
+                .critChance(3)
+                .buildWeapon());
+
+        addItem(new WeaponBuilder()
+                .imagePath("/assets/Items/club1.png")
+                .name("My Fwirst Club")
+                .type(WeaponType.Club)
+                .value(10)
+                .minmaxDamage(5, 7)
+                .critChance(3)
+                .buildWeapon());
+
         addItem(new ArmorBuilder()
                 .imagePath("/assets/Items/helmet1.png")
                 .name("My Fwirst Helmet")
