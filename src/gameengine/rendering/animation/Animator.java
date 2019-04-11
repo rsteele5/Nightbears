@@ -57,4 +57,7 @@ public class Animator implements Loadable {
     public String getCurrentAnimationName(){
         return activeAnimation.getName();
     }
+    public boolean isCurrentAnimationName(String name){
+        return activeAnimation.getName().equals(name);
+    }
 }

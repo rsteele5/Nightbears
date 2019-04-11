@@ -6,7 +6,7 @@ import gameengine.rendering.animation.AnimationImage;
 public class PlayerSSCrawlingAnimationRight extends Animation {
 
     public PlayerSSCrawlingAnimationRight(String imageDirectory) {
-        String path = "/assets/player/color/" + imageDirectory + "/sidescroll/crawling/right";
+        String path = "/assets/player/color/" + imageDirectory + "/sidescroll/crawling/right/";
         AnimationImage crawl1 = new AnimationImage(path + "TeddyCrawling1.png", 10);
         AnimationImage crawl2 = new AnimationImage(path + "TeddyCrawling2.png", 10);
 
