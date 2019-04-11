@@ -3,10 +3,10 @@ package gameobject.renderable.player.sidescrolling;
 import gameengine.rendering.animation.Animation;
 import gameengine.rendering.animation.AnimationImage;
 
-public class PlayerSSSwordAttackAnimationLeft extends Animation {
+public class PlayerSSSpearAttackAnimationRight extends Animation {
 
-    public PlayerSSSwordAttackAnimationLeft(String imageDirectory) {
-        String path = "/assets/player/color/" + imageDirectory + "/sidescroll/attack/sword/left/";
+    public PlayerSSSpearAttackAnimationRight(String imageDirectory) {
+        String path = "/assets/player/color/" + imageDirectory + "/sidescroll/attack/spear/right/";
         AnimationImage attack1 = new AnimationImage(path + "Teddy-Attack1.png", 2);
         AnimationImage attack2 = new AnimationImage(path + "Teddy-Attack2.png", 2);
         AnimationImage attack3 = new AnimationImage(path + "Teddy-Attack3.png", 2);
@@ -24,9 +24,10 @@ public class PlayerSSSwordAttackAnimationLeft extends Animation {
         addAnimationImage(attack7);
     }
 
+
     @Override
     public String getName() {
-        return "SS_Sword_Attack_Left";
+        return "SS_Spear_Attack_Right";
     }
 
 }

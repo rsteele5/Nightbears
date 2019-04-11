@@ -6,6 +6,7 @@ import gameengine.rendering.animation.Animator;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.enemy.Walker;
 import gameobject.renderable.item.Item;
+import gameobject.renderable.item.weapon.WeaponType;
 import gameobject.renderable.player.overworld.PlayerIdleAnimation;
 import gameobject.renderable.player.overworld.PlayerWalkingAnimation;
 import gameobject.renderable.player.sidescrolling.*;
@@ -72,6 +73,10 @@ public class Player extends RenderablePhysicsObject {
         animator.addAnimation("SS_Running_Right", new PlayerSSRunningAnimationRight(playerData.getImageDirectory()));
         animator.addAnimation("SS_Sword_Attack_Right", new PlayerSSSwordAttackAnimationRight(playerData.getImageDirectory()));
         animator.addAnimation("SS_Sword_Attack_Left", new PlayerSSSwordAttackAnimationLeft(playerData.getImageDirectory()));
+        animator.addAnimation("SS_Spear_Attack_Right", new PlayerSSSpearAttackAnimationRight(playerData.getImageDirectory()));
+        animator.addAnimation("SS_Spear_Attack_Left", new PlayerSSSpearAttackAnimationLeft(playerData.getImageDirectory()));
+        animator.addAnimation("SS_Unarmed_Attack_Right", new PlayerSSUnarmedAttackAnimationRight(playerData.getImageDirectory()));
+        animator.addAnimation("SS_Unarmed_Attack_Left", new PlayerSSUnarmedAttackAnimationLeft(playerData.getImageDirectory()));
         animator.addAnimation("SS_HitStun_Right", new PlayerSSHitStunAnimationRight(playerData.getImageDirectory()));
         animator.addAnimation("SS_HitStun_Left", new PlayerSSHitStunAnimationLeft(playerData.getImageDirectory()));
         //animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation(playerData.getImageDirectory()));
@@ -193,7 +198,11 @@ public class Player extends RenderablePhysicsObject {
 
     public boolean isAttacking() {
         return animator.getCurrentAnimationName() == "SS_Sword_Attack_Right" ||
-                animator.getCurrentAnimationName() == "SS_Sword_Attack_Left";
+                animator.getCurrentAnimationName() == "SS_Sword_Attack_Left" ||
+                animator.getCurrentAnimationName() == "SS_Spear_Attack_Right" ||
+                animator.getCurrentAnimationName() == "SS_Spear_Attack_Left" ||
+                animator.getCurrentAnimationName() == "SS_Unarmed_Attack_Right" ||
+                animator.getCurrentAnimationName() == "SS_Unarmed_Attack_Left";
     }
 
     public int getWeaponDamage(){
@@ -230,6 +239,8 @@ public class Player extends RenderablePhysicsObject {
                         } else { /* Jumping or falling animation */}
                         break;
                     case "SS_Sword_Attack_Right":
+                    case "SS_Spear_Attack_Right":
+                    case "SS_Unarmed_Attack_Right":
                         if(animator.getCurrentAnimation().getFrameToDisplay() == 6){
                             animator.setAnimation("SS_Idle_Right");
                         }
@@ -238,6 +249,19 @@ public class Player extends RenderablePhysicsObject {
                         if(animator.getCurrentAnimation().getFrameToDisplay() == 6){
                             animator.setAnimation("SS_Idle_Left");
                             translate(176,0);
+                        }
+                        break;
+                    case "SS_Spear_Attack_Left":
+                        if(animator.getCurrentAnimation().getFrameToDisplay() == 6){
+                            animator.setAnimation("SS_Idle_Left");
+                            translate(176,0);
+                        }
+                        break;
+
+                    case "SS_Unarmed_Attack_Left":
+                        if(animator.getCurrentAnimation().getFrameToDisplay() == 6){
+                            animator.setAnimation("SS_Idle_Left");
+                            translate(45,0);
                         }
                         break;
                 }
@@ -267,12 +291,25 @@ public class Player extends RenderablePhysicsObject {
                     crouchSet = false;
                 } else if(!isAttacking() && e.getKeyCode() == ATTACK && grounded){
                     if(facing) {// facing left
-                        animator.setAnimation("SS_Sword_Attack_Left");
-                        Debug.log(true, "Damage: " + playerData.getWeaponDamage());
-                        translate(-176,0);
+                        if(playerData.getPlayerEquipment().get(3) == null){
+                            animator.setAnimation("SS_Unarmed_Attack_Left");
+                            translate(-45,0);
+                        } else if(playerData.getPlayerEquipment().get(3).getType() == WeaponType.Sword.ordinal()) {
+                            animator.setAnimation("SS_Sword_Attack_Left");
+                            translate(-176,0);
+                        } else if (playerData.getPlayerEquipment().get(3).getType() == WeaponType.Spear.ordinal()){
+                            animator.setAnimation("SS_Spear_Attack_Left");
+                            translate(-176,0);
+                        }
                     } else {// facing right
-                        animator.setAnimation("SS_Sword_Attack_Right");
-                        Debug.log(true, "Damage: " + playerData.getWeaponDamage());
+                        if(playerData.getPlayerEquipment().get(3) == null){
+                            animator.setAnimation("SS_Unarmed_Attack_Right");
+                        } else if(playerData.getPlayerEquipment().get(3).getType() == WeaponType.Sword.ordinal()) {
+                            animator.setAnimation("SS_Sword_Attack_Right");
+                        } else if (playerData.getPlayerEquipment().get(3).getType() == WeaponType.Spear.ordinal()){
+                            animator.setAnimation("SS_Spear_Attack_Right");
+
+                        }
                     }
                 } else if(e.getKeyCode() == KeyEvent.VK_H) {
                     Debug.log(true, "HitStun: " + hitStun);
