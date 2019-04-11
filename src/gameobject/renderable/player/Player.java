@@ -40,6 +40,10 @@ public class Player extends RenderablePhysicsObject {
     private boolean crouch = false;
     private boolean crouchSet = true;
     private boolean grounded = false;
+    private boolean hitStun = false;
+    private int hitStunFrames = 45;
+    private int hitStunFrameCounter = 0;
+    private int hitStunJump = 13;
     private boolean considerArc = false;
     private boolean requesting;     //Use for requesting interactions
     private boolean facing;//false is right, true is left
@@ -68,6 +72,8 @@ public class Player extends RenderablePhysicsObject {
         animator.addAnimation("SS_Running_Right", new PlayerSSRunningAnimationRight(playerData.getImageDirectory()));
         animator.addAnimation("SS_Sword_Attack_Right", new PlayerSSSwordAttackAnimationRight(playerData.getImageDirectory()));
         animator.addAnimation("SS_Sword_Attack_Left", new PlayerSSSwordAttackAnimationLeft(playerData.getImageDirectory()));
+        animator.addAnimation("SS_HitStun_Right", new PlayerSSHitStunAnimationRight(playerData.getImageDirectory()));
+        animator.addAnimation("SS_HitStun_Left", new PlayerSSHitStunAnimationLeft(playerData.getImageDirectory()));
         //animator.addAnimation("SS_Crouch",new PlayerSSCrouchingAnimation(playerData.getImageDirectory()));
         //Interactable
         requesting = false;
@@ -130,7 +136,32 @@ public class Player extends RenderablePhysicsObject {
                 else motion.y = 0;
 
             case sideScroll: // x movement
-                if(!isAttacking() && keyFlag[0] && !keyFlag[1]) {
+                if(hitStun) {
+                    hitStunFrameCounter--;
+                    if(alpha == 1) alpha = 0;
+                    else if(alpha == 0) alpha = 1;
+                    if(hitStunFrameCounter > 0) {
+                        if(facing) {
+                            if(animator.getCurrentAnimationName() != "SS_HitStun_Left")
+                                animator.setAnimation("SS_HitStun_Left");
+                            motion.x = 5;
+                        } else {
+                            if(animator.getCurrentAnimationName() != "SS_HitStun_Right")
+                                animator.setAnimation("SS_HitStun_Right");
+                            motion.x = -5;
+                        }
+                    } else {
+                        hitStun = false;
+                        motion.x = 0;
+                        alpha = 1;
+                        if(facing) {
+                            animator.setAnimation("SS_Idle_Left");
+                        } else {
+                            animator.setAnimation("SS_Idle_Right");
+                        }
+                    }
+                }
+                else if(!isAttacking() && keyFlag[0] && !keyFlag[1]) {
                     motion.x = -speed;
                     facing = true;
                 } else if(!isAttacking() && !keyFlag[0] && keyFlag[1]) {
@@ -174,7 +205,7 @@ public class Player extends RenderablePhysicsObject {
             case sideScroll:
                 switch(animator.getCurrentAnimation().getName()){
                     case "SS_Running_Right":
-                        if(grounded) {
+                        if(grounded && !hitStun) {
                             if (motion.x < 0.05) {
                                 if (motion.x > -0.05) animator.setAnimation("SS_Idle_Right");
                                 else animator.setAnimation("SS_Running_Left");
@@ -182,7 +213,7 @@ public class Player extends RenderablePhysicsObject {
                         } else { /* Jumping or falling animation */}
                         break;
                     case "SS_Running_Left":
-                        if(grounded) {
+                        if(grounded && !hitStun) {
                             if (motion.x > -0.05) {
                                 if (motion.x < 0.05) animator.setAnimation("SS_Idle_Left");
                                 else animator.setAnimation("SS_Running_Right");
@@ -191,7 +222,7 @@ public class Player extends RenderablePhysicsObject {
                         break;
                     case "SS_Idle_Right":
                     case "SS_Idle_Left":
-                        if(grounded) {
+                        if(grounded && !hitStun) {
                             if (motion.x < -0.05)
                                 animator.setAnimation("SS_Running_Left");
                             else if (motion.x > 0.05)
@@ -243,7 +274,11 @@ public class Player extends RenderablePhysicsObject {
                         animator.setAnimation("SS_Sword_Attack_Right");
                         Debug.log(true, "Damage: " + playerData.getWeaponDamage());
                     }
-
+                } else if(e.getKeyCode() == KeyEvent.VK_H) {
+                    Debug.log(true, "HitStun: " + hitStun);
+                    hitStun = true;
+                    hitStunFrameCounter = hitStunFrames;
+                    motion.y = -hitStunJump;
                 }
             case overWorld:
                 if(e.getKeyCode() == SPRINT) { // SPRINT
@@ -332,6 +367,10 @@ public class Player extends RenderablePhysicsObject {
         if(c2 instanceof Walker){
             if(!isAttacking()){
                 Debug.error(true, "We took some damage!");
+                hitStun = true;
+                hitStunFrameCounter = hitStunFrames;
+                motion.y = -hitStunJump;
+                //TODO: Take damage like this -> playerData.modifyCurrentHealth(-c2.getDamage());
             }
         }
         return true;
