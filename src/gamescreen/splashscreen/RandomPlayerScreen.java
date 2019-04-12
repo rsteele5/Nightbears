@@ -51,6 +51,8 @@ public class RandomPlayerScreen extends GameScreen {
                 400, 100, name, new Font("NoScary", Font.PLAIN, 60),
                 Color.WHITE, true);
         nameTextBox.addToScreen(this, true);
+
+        gameData.getPlayerData().setCreationDate(LocalDate.now());
     }
 
     private ImageContainer getRandomImage(){
@@ -68,9 +70,7 @@ public class RandomPlayerScreen extends GameScreen {
 
         int totalImages = images.size();
         int randomIndex = ThreadLocalRandom.current().nextInt(0, totalImages);
-        //int randomIndex = (int)(Math.random() * (totalImages));
         gameData.getPlayerData().setImageDirectory(directories[randomIndex]);
-        gameData.getPlayerData().setCreationDate(LocalDate.now());
         return images.get(randomIndex);
     }
 
