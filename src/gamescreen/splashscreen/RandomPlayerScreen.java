@@ -9,6 +9,7 @@ import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -56,6 +57,7 @@ public class RandomPlayerScreen extends GameScreen {
         int randomIndex = ThreadLocalRandom.current().nextInt(0, totalImages);
         //int randomIndex = (int)(Math.random() * (totalImages));
         gameData.getPlayerData().setImageDirectory(directories[randomIndex]);
+        gameData.getPlayerData().setCreationDate(LocalDate.now());
         return images.get(randomIndex);
     }
 

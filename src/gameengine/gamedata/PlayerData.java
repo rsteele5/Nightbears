@@ -14,6 +14,7 @@ import gameobject.renderable.item.weapon.WeaponType;
 import main.utilities.Debug;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -26,6 +27,10 @@ public class PlayerData implements Serializable {
     private int maxHealth;  // Must be divisible by 2
     private int currentHealth;
     private int currentArmor;
+
+    private LocalDate creationDate;
+    private LocalDate deathDate;
+    private LocalDate victoryDate;
 
     public PlayerData(){
         initializeInventory();
@@ -239,5 +244,29 @@ public class PlayerData implements Serializable {
                 currentArmor += ((Armor)item).getArmorValue();
             }
         });
+    }
+
+    public LocalDate getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDate creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public LocalDate getDeathDate() {
+        return deathDate;
+    }
+
+    public void setDeathDate(LocalDate deathDate) {
+        this.deathDate = deathDate;
+    }
+
+    public LocalDate getVictoryDate() {
+        return victoryDate;
+    }
+
+    public void setVictoryDate(LocalDate victoryDate) {
+        this.victoryDate = victoryDate;
     }
 }
