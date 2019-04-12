@@ -215,6 +215,11 @@ public class Player extends RenderablePhysicsObject {
         return playerData.getWeaponDamage();
     }
 
+    public int getHealth() {
+        return playerData.getCurrentHealth();
+    }
+    
+
     private void setMovementAnimation() {
         switch(playerState){
             case sideScroll:

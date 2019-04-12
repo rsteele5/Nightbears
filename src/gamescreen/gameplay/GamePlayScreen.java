@@ -27,7 +27,7 @@ public abstract class GamePlayScreen extends GameScreen {
      */
     public ArrayList<Interactable> interactables;
 
-    private PhysicsEngine physicsEngine = null;
+    protected PhysicsEngine physicsEngine = null;
 
 
     /**

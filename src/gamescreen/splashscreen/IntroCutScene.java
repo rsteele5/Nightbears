@@ -63,6 +63,6 @@ public class IntroCutScene extends GameScreen {
     @Override
     protected void transitionOff() {
         exiting = true;
-        screenManager.addScreen(new OverworldScreen(screenManager));
+        screenManager.addScreen(new OverworldScreen(screenManager, true));
     }
 }

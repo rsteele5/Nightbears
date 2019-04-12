@@ -16,6 +16,7 @@ import gameobject.renderable.player.Player;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.GamePlayScreen;
 import gamescreen.gameplay.overworld.OverworldScreen;
+import gamescreen.splashscreen.GameOverScreen;
 import input.listeners.Key.SideScrollKeyHandler;
 
 
@@ -101,6 +102,16 @@ public class BedroomLevel extends GamePlayScreen {
     @Override
     public void transitionOff(){
         exiting = true;
+    }
+
+    @Override
+    protected void activeUpdate() {
+        if(physicsEngine != null) physicsEngine.update(collidables, kinematics, interactables);
+        super.activeUpdate();
+        if(player.getHealth() <= 0){
+            screenManager.addScreen(new GameOverScreen(screenManager, 0f));
+            setScreenState(ScreenState.TransitionOff);
+        }
     }
 }
 
