@@ -23,6 +23,7 @@ public class PlayerData implements Serializable {
     private CopyOnWriteArrayList<Item> playerInventory = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<Item> playerEquipment = new CopyOnWriteArrayList<>();
     private String imageDirectory;
+    private String name;
     private int gold;
     private int maxHealth;  // Must be divisible by 2
     private int currentHealth;
@@ -268,5 +269,13 @@ public class PlayerData implements Serializable {
 
     public void setVictoryDate(LocalDate victoryDate) {
         this.victoryDate = victoryDate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
