@@ -4,6 +4,8 @@ import gameengine.gamedata.PlayerData;
 import gameengine.physics.*;
 import gameengine.rendering.animation.Animator;
 import gameobject.renderable.DrawLayer;
+import gameobject.renderable.enemy.Enemy;
+import gameobject.renderable.enemy.Minion;
 import gameobject.renderable.enemy.Walker;
 import gameobject.renderable.item.Item;
 import gameobject.renderable.item.weapon.WeaponType;
@@ -421,12 +423,21 @@ public class Player extends RenderablePhysicsObject {
 
     @Override
     public boolean collide(Collidable c2) {
-        if(c2 instanceof Walker){
+        if(c2 instanceof Minion){
             if(!isAttacking() && !hitStun){
                 Debug.error(true, "We took some damage!");
                 hitStun = true;
                 hitStunFrameCounter = hitStunFrames;
                 motion.y = -hitStunJump;
+                if(playerData.getCurrentArmor() > 0) {
+                    playerData.modifyCurrentArmor(-((Enemy) c2).getDamage());
+                } else {
+                    playerData.modifyCurrentHealth(-((Enemy) c2).getDamage());
+                    if(playerData.getCurrentHealth() < 1) {
+                        //kill;
+                    }
+                }
+
                 //TODO: Take damage like this -> playerData.modifyCurrentHealth(-c2.getDamage());
             }
         }

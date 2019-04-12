@@ -13,8 +13,9 @@ public abstract class Enemy extends RenderablePhysicsObject {
 
     protected int hp;
 
-    public Enemy(int x, int y, String imagePath, DrawLayer layer, float alpha) {
-        super(x, y, imagePath, layer, alpha);
+    public Enemy(int x, int y, String imagePath, DrawLayer layer, float speed, int hp) {
+        super(x, y, imagePath, layer, speed);
+        this.hp = hp;
     }
 
     public abstract void changeState();
@@ -29,5 +30,10 @@ public abstract class Enemy extends RenderablePhysicsObject {
     public void addToScreen(GameScreen screen, boolean isActive){
         super.addToScreen(screen, isActive);
         // add stuff to Screen here
+    }
+
+    public int getDamage()
+    {
+        return 2;
     }
 }

@@ -7,6 +7,7 @@ import gameobject.CameraTarget;
 import gameobject.LockCameraTrigger;
 import gameobject.TriggerableBoundary;
 import gameobject.renderable.DrawLayer;
+import gameobject.renderable.enemy.Flyer;
 import gameobject.renderable.enemy.Minion;
 import gameobject.renderable.enemy.Walker;
 import gameobject.renderable.house.sidescrolling.BedroomBackgroundLayout;
@@ -31,13 +32,16 @@ public class BedroomLevel extends GamePlayScreen {
 
     @Override
     protected void initializeScreen() {
-        Platform p = new Platform(350,900,"/assets/testAssets/brick.jpg",DrawLayer.Prop);
-        p.setWidth(100);
-        p.setHeight(20);
-        p.addToScreen(this,true);
+        //Platform p = new Platform(350,900,"/assets/testAssets/brick.jpg",DrawLayer.Prop);
+       //p.setWidth(100);
+        //p.setHeight(20);
+        //p.addToScreen(this,true);
 
-        Minion minion = new Walker(500,700, DrawLayer.Entity, 20f);
+        Minion minion = new Walker(500,700, DrawLayer.Entity, 3, 500);
         minion.addToScreen(this, true);
+
+        Flyer flyboi = new Flyer(500,400, DrawLayer.Entity, 3, 500, player);
+        flyboi.addToScreen(this, true);
 
         Platform p2 = new Platform(750,900,"/assets/testAssets/brick.jpg",DrawLayer.Prop);
         p2.setWidth(100);
@@ -78,11 +82,11 @@ public class BedroomLevel extends GamePlayScreen {
         background.getBackground().addToScreen(this, true);
         background.getBoundaries().forEach(boundary -> boundary.addToScreen(this, true));
 
-        TriggerableBoundary bounds = new TriggerableBoundary(1480, 0, 120, 1000);
+        /*TriggerableBoundary bounds = new TriggerableBoundary(1480, 0, 120, 1000);
         bounds.setTrigger(true);
         bounds.addToScreen(this,true);
         LockCameraTrigger cameraTrigger = new LockCameraTrigger(1600, 0, 1980, 1000, bedroomCamera, bounds);
-        cameraTrigger.addToScreen(this,true);
+        cameraTrigger.addToScreen(this,true);*/
         
 
         //Overlays
