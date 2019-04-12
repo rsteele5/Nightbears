@@ -10,6 +10,7 @@ import main.utilities.DebugEnabler;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class RandomPlayerScreen extends GameScreen {
@@ -52,7 +53,8 @@ public class RandomPlayerScreen extends GameScreen {
         }
 
         int totalImages = images.size();
-        int randomIndex = (int)(Math.random() * (totalImages));
+        int randomIndex = ThreadLocalRandom.current().nextInt(0, totalImages);
+        //int randomIndex = (int)(Math.random() * (totalImages));
         gameData.getPlayerData().setImageDirectory(directories[randomIndex]);
         return images.get(randomIndex);
     }

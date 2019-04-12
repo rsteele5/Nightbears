@@ -1,13 +1,19 @@
 package gamescreen.mainmenu;
 
+import gameengine.gamedata.LevelData;
+import gameengine.gamedata.PlayerData;
 import gameobject.GameObject;
 import gameobject.container.ButtonGridContainer;
 import gameobject.renderable.DrawLayer;
+import gameobject.renderable.house.overworld.Map;
+import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
 import gameobject.renderable.ImageContainer;
 import gameobject.renderable.button.Button;
+import gamescreen.gameplay.overworld.OverworldScreen;
 import gamescreen.mainmenu.options.OptionScreen;
+import gamescreen.splashscreen.RandomPlayerScreen;
 import input.listeners.Key.ClickableKeyHandler;
 import main.utilities.Clickable;
 import main.utilities.Debug;
@@ -18,9 +24,12 @@ public class MainMenuScreen extends GameScreen {
 
     //region <Variables>
     private final int X_START = -150;
-    private final int Y_START = 150;
+    private final int Y_START = 75;
     private final int BUTTON_HEIGHT = 96;
     private final int Y_BUFFER = 48;
+    private String continueImage;
+    private String continuePressedImage;
+    private PlayerData player = gameData.getPlayerData();
     //endregion
 
     //region <Construction and Initialization>
@@ -36,17 +45,38 @@ public class MainMenuScreen extends GameScreen {
         background.addToScreen(this,true);
 
         //Create buttons
-        ButtonGridContainer buttonLayout = new ButtonGridContainer(6,1, 256, 96,
+        ButtonGridContainer buttonLayout = new ButtonGridContainer(7,1, 256, 96,
                                                                     X_START, Y_START, Y_BUFFER);
+
+        if (player.getImageDirectory() != null) {
+            continueImage = "/assets/buttons/Button-Continue.png";
+            continuePressedImage = "/assets/buttons/Button-ContinuePressed.png";
+        }
+        else {
+            continueImage = "/assets/buttons/Button-ContinueInactive.png";
+            continuePressedImage = "/assets/buttons/Button-ContinueInactive.png";
+        }
+        Button continueGameButton = (new Button(0, 0,
+                continueImage,
+                continuePressedImage,
+                DrawLayer.Entity,
+                () -> {
+                    Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Continue Game");
+                    if (player.getImageDirectory() != null){
+                        screenManager.addScreen(new OverworldScreen(screenManager, false));
+                    }
+                }));
+        buttonLayout.addAt(continueGameButton, 0, 0);
+
         Button newGameButton = (new Button(0, 0,
                 "/assets/buttons/Button-NewGame.png",
                 "/assets/buttons/Button-NewGamePressed.png",
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - New Game");
-                    screenManager.addScreen(new PlayerCountScreen(screenManager));
+                    screenManager.addScreen(new RandomPlayerScreen(screenManager));
                 }));
-        buttonLayout.addAt(newGameButton, 0, 0);
+        buttonLayout.addAt(newGameButton, 1, 0);
 
         Button optionsButton = (new Button(0, 0,
                 "/assets/buttons/Button-Options.png",
@@ -56,7 +86,7 @@ public class MainMenuScreen extends GameScreen {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Options");
                     screenManager.addScreen(new OptionScreen(screenManager));
                 }));
-        buttonLayout.addAt(optionsButton, 1, 0);
+        buttonLayout.addAt(optionsButton, 2, 0);
 
         Button devModeButton = (new Button(0, 0,
                 "/assets/buttons/Button-Dev.png",
@@ -66,7 +96,7 @@ public class MainMenuScreen extends GameScreen {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - DevMode");
                     screenManager.addScreen(new DevScreen(screenManager));
                 }));
-        buttonLayout.addAt(devModeButton, 2, 0);
+        buttonLayout.addAt(devModeButton, 3, 0);
 
         Button heroHallButton = (new Button(0, 0,
                 "/assets/buttons/Button-HeroHall.png",
@@ -76,7 +106,7 @@ public class MainMenuScreen extends GameScreen {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Hall of Heroes");
                     screenManager.addScreen(new HeroHallScreen(screenManager));
                 }));
-        buttonLayout.addAt(heroHallButton, 3, 0);
+        buttonLayout.addAt(heroHallButton, 4, 0);
 
         Button fallenHallButton = (new Button(0, 0,
                 "/assets/buttons/Button-FallenHeroHall.png",
@@ -86,7 +116,7 @@ public class MainMenuScreen extends GameScreen {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Hall of Fallen");
                     screenManager.addScreen(new FallenHeroHallScreen(screenManager));
                 }));
-        buttonLayout.addAt(fallenHallButton, 4, 0);
+        buttonLayout.addAt(fallenHallButton, 5, 0);
 
         Button exitButton = (new Button(0, 0,
                 "/assets/buttons/Button-Quit.png",
@@ -98,7 +128,7 @@ public class MainMenuScreen extends GameScreen {
                     System.exit(0);
                     screenManager.addScreen(new DevScreen(screenManager));
                 }));
-        buttonLayout.addAt(exitButton, 5, 0);
+        buttonLayout.addAt(exitButton, 6, 0);
 
         buttonLayout.addToScreen(this, true);
 
@@ -120,5 +150,17 @@ public class MainMenuScreen extends GameScreen {
     @Override
     protected void transitionOff() {
         exiting = true;
+    }
+
+    @Override
+    public void hiddenUpdate() {
+        if (player.getImageDirectory() != null) {
+            continueImage = "/assets/buttons/Button-Continue.png";
+            continuePressedImage = "/assets/buttons/Button-ContinuePressed.png";
+        }
+        else {
+            continueImage = "/assets/buttons/Button-ContinueInactive.png";
+            continuePressedImage = "/assets/buttons/Button-ContinueInactive.png";
+        }
     }
 }

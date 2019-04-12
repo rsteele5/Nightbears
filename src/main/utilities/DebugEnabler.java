@@ -30,22 +30,22 @@ public class DebugEnabler {
      * Controls debugging the RenderEngine.
      * @see gameengine.rendering.RenderEngine
      */
-    public static boolean RENDER_ENGINE =         true;
+    public static boolean RENDER_ENGINE =         false;
     /**
      * Controls debugging GameScreens.
      * @see gamescreen.GameScreen
      */
-    public static boolean GAME_SCREEN_LOG =       true;
+    public static boolean GAME_SCREEN_LOG =       false;
     /**
      * Controls debugging RenderableObjects.
      * @see gameobject.renderable.RenderableObject
      */
-    public static boolean RENDERABLE_LOG =        true;
+    public static boolean RENDERABLE_LOG =        false;
     /**
      * Controls debugging Buttons.
      * @see gameobject.renderable.button.Button
      */
-    public static boolean BUTTON_LOG =            true;
+    public static boolean BUTTON_LOG =            false;
     /**
      * Controls debugging The GameEngine.
      * @see gameengine.GameEngine
@@ -81,7 +81,7 @@ public class DebugEnabler {
      * Controls debugging the Overworld and its components.
      * @see gamescreen.gameplay.overworld.OverworldScreen
      */
-    public static boolean OVERWORLD =             true;
+    public static boolean OVERWORLD =             false;
     /**
      * Controls debugging Collisions?
      */

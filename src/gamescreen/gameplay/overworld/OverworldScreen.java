@@ -6,7 +6,6 @@ import gameobject.renderable.DrawLayer;
 import gameobject.renderable.house.overworld.Map;
 import gameobject.renderable.house.overworld.MapBuilder;
 import gameobject.renderable.house.overworld.room.*;
-import gameengine.rendering.Camera;
 import gameobject.renderable.player.Player;
 import gameobject.renderable.vendor.Vendor;
 import gamescreen.ScreenManager;
@@ -24,9 +23,10 @@ public class OverworldScreen extends GamePlayScreen {
     private Vendor vendor;
     private int vendorVisits = -1;
     private Room currentRoom;
+    private boolean generateHouse;
     //endregion
 
-    public OverworldScreen(ScreenManager screenManager) {
+    public OverworldScreen(ScreenManager screenManager, boolean generateHouse) {
         super(screenManager, "Overworld", 1f);
     }
 
@@ -34,7 +34,7 @@ public class OverworldScreen extends GamePlayScreen {
     @Override
     protected void initializeScreen() {
         //House generation
-        if(gameData.getLevelData().getCurrentMap() == null) {
+        if(generateHouse) {
             MapBuilder mapBuilder = new MapBuilder();
             mapBuilder.createMap();
             mapBuilder.addRoomAtCell(0, 0, new Bedroom());
@@ -97,7 +97,7 @@ public class OverworldScreen extends GamePlayScreen {
     @Override
     protected void activeUpdate() {
         super.activeUpdate();
-        this.overworldMap.getRooms().forEach(room -> room.contains(player.getX(), player.getY()));
+        //this.overworldMap.getRooms().forEach(room -> room.contains(player.getX(), player.getY()));
     }
 
     public void onLevelComplete(){

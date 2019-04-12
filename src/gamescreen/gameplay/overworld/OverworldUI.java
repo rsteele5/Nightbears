@@ -35,7 +35,7 @@ public class OverworldUI extends Overlay {
     @Override
     protected void initializeScreen() {
 
-        HUD hud = new HUD(gameData.getPlayerData(),player);
+        HUD hud = new HUD(gameData.getPlayerData());
         hud.addToScreen(this, true);
 
         ButtonGridContainer buttonLayout = new ButtonGridContainer(10,6, 256, 96,20,300, 20);
