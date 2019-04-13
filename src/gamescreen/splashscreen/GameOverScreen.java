@@ -4,8 +4,12 @@ import gameengine.gamedata.EndGamePlayerData;
 import gameengine.gamedata.PlayerData;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.ImageContainer;
+import gameobject.renderable.button.Button;
 import gamescreen.GameScreen;
 import gamescreen.ScreenManager;
+import gamescreen.mainmenu.MainMenuScreen;
+import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 
 import java.time.LocalDate;
 
@@ -30,5 +34,15 @@ public class GameOverScreen extends GameScreen {
                 "/assets/backgrounds/BG-GameOver.png",
                 DrawLayer.Background);
         background.addToScreen(this, true);
+
+        Button button = new Button(100, 100,
+                "/assets/buttons/Button-MainMenu.png",
+                "/assets/buttons/Button-MainMenuPressed.png",
+                DrawLayer.Entity,
+                () ->{
+                    Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Main Menu");
+                    screenManager.addScreen(new MainMenuScreen(screenManager));
+                });
+        button.addToScreen(this,true);
     }
 }
