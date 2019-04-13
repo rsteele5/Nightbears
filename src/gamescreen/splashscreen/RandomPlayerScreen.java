@@ -84,6 +84,11 @@ public class RandomPlayerScreen extends GameScreen {
             int rLine2 = (int) (Math.random() * rLastNameFile.length());
             rFirstNameFile.seek(rLine1);
             rLastNameFile.seek(rLine2);
+
+            //Prevent partial words from getting into the name by moving to the next available full line
+            rFirstNameFile.readLine();
+            rLastNameFile.readLine();
+
             String rFirstName = rFirstNameFile.readLine();
             String rLastName = rLastNameFile.readLine();
             gameData.getPlayerData().setName(rFirstName + " " + rLastName);
