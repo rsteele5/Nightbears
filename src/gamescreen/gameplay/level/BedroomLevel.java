@@ -32,11 +32,6 @@ public class BedroomLevel extends GamePlayScreen {
     @Override
     protected void initializeScreen() {
 
-        Minion minion = new Walker(500,700, DrawLayer.Entity, 3, 500);
-        minion.addToScreen(this, true);
-
-        Flyer flyboi = new Flyer(500,400, DrawLayer.Entity, 3, 500, player);
-        flyboi.addToScreen(this, true);
 
 
         Door finishDoor = new Door(800, 300,
@@ -106,6 +101,14 @@ public class BedroomLevel extends GamePlayScreen {
         addOverlay(UI);
 
         setPhysicsEngine(new PhysicsEngine(player, PhysicsEngine.PhysicState.SideScroll));
+
+        //enemies
+
+        Minion minion = new Walker(500,700, DrawLayer.Entity, 3, 500);
+        minion.addToScreen(this, true);
+
+        Flyer flyboi = new Flyer(500,400, DrawLayer.Entity, 3, 500, player);
+        flyboi.addToScreen(this, true);
 
 
     }
