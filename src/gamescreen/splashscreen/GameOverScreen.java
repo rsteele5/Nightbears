@@ -24,7 +24,7 @@ public class GameOverScreen extends GameScreen {
         PlayerData playerData = gameData.getPlayerData();
         String imagePath = "/assets/player/color/" + playerData.getImageDirectory() + "/Teddy.png";
         EndGamePlayerData deadPlayer = new EndGamePlayerData(playerData.getGold(),
-                imagePath,imagePath,playerData.getCreationDate(), LocalDate.now(),null);
+                imagePath,playerData.getName(),playerData.getCreationDate(), LocalDate.now(),null);
         gameData.clearPlayerData();
         gameData.getPreviousPlayerData().add(deadPlayer);
         gameData.save();
