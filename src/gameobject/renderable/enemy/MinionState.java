@@ -7,4 +7,5 @@ public abstract class MinionState {
     public abstract String toString();
     public abstract String getState();
     public abstract void doAction(Minion minion);
+    public abstract boolean complete();
 }

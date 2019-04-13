@@ -13,6 +13,7 @@ import gameobject.renderable.ImageContainer;
 import gameobject.renderable.button.Button;
 import gamescreen.gameplay.overworld.OverworldScreen;
 import gamescreen.mainmenu.options.OptionScreen;
+import gamescreen.splashscreen.RandomPlayerScreen;
 import input.listeners.Key.ClickableKeyHandler;
 import main.utilities.Clickable;
 import main.utilities.Debug;
@@ -61,8 +62,8 @@ public class MainMenuScreen extends GameScreen {
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Continue Game");
-                    if (player.getImageDirectory()  != null){
-                        screenManager.addScreen(new OverworldScreen(screenManager));
+                    if (player.getImageDirectory() != null){
+                        screenManager.addScreen(new OverworldScreen(screenManager, false));
                     }
                 }));
         buttonLayout.addAt(continueGameButton, 0, 0);
@@ -73,7 +74,7 @@ public class MainMenuScreen extends GameScreen {
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - New Game");
-                    screenManager.addScreen(new PlayerCountScreen(screenManager));
+                    screenManager.addScreen(new RandomPlayerScreen(screenManager));
                 }));
         buttonLayout.addAt(newGameButton, 1, 0);
 

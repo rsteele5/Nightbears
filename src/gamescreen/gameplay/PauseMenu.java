@@ -265,6 +265,11 @@ public class PauseMenu extends Overlay {
                 "/assets/player/color/"+playerData.getImageDirectory()+"/Teddy.png", DrawLayer.Entity);
         teddy.setSize(teddyImgSize.x,teddyImgSize.y);
         teddy.addToScreen(this,true);
+
+        //Name
+        TextBox teddyName = new TextBox(teddyImgSpot.x - 100, teddyImgSize.y + 550, 400, 100, gameData.getPlayerData().getName(),
+                noScaryHeader2, Color.BLACK);
+        teddyName.addToScreen(this, true);
     }
 
     private void initButtons() {

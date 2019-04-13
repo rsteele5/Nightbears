@@ -6,7 +6,7 @@ import gameengine.rendering.animation.AnimationImage;
 public class PlayerSSSwordAttackAnimationRight extends Animation {
 
     public PlayerSSSwordAttackAnimationRight(String imageDirectory) {
-        String path = "/assets/player/color/" + imageDirectory + "/sidescroll/attack/right/";
+        String path = "/assets/player/color/" + imageDirectory + "/sidescroll/attack/sword/right/";
         AnimationImage attack1 = new AnimationImage(path + "Teddy-Attack1.png", 2);
         AnimationImage attack2 = new AnimationImage(path + "Teddy-Attack2.png", 2);
         AnimationImage attack3 = new AnimationImage(path + "Teddy-Attack3.png", 2);

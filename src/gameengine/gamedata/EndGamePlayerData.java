@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class EndGamePlayerData implements Serializable {
-//    private CopyOnWriteArrayList<PlayerData> previousPlayers = new CopyOnWriteArrayList<>();
+
     private String imagePath;
     private String pressedImagePath;
     private String name;
@@ -15,34 +15,29 @@ public class EndGamePlayerData implements Serializable {
     private LocalDate victoryDate;
     private int gold;
 
-    public EndGamePlayerData(){
-        gold = 10;
-        imagePath = "";
-        pressedImagePath = "";
-        name = "";
-        creationDate = null;
-        deathDate = null;
-        victoryDate = null;
+    public EndGamePlayerData(
+            int gold,
+            String imagePath,
+            String name,
+            LocalDate creationDate,
+            LocalDate deathDate,
+            LocalDate victoryDate
+    ){
+        this.gold = gold;
+        this.imagePath = imagePath;
+        this.pressedImagePath = imagePath;
+        this.name = name;
+        this.creationDate = creationDate;
+        this.deathDate = deathDate;
+        this.victoryDate = victoryDate;
     }
 
     public int getGold() {
         return gold;
     }
 
-    public void changeGold(int amt) {
-        gold += amt;
-    }
-
-    public void setImagePath(String path) {
-        this.imagePath = path;
-    }
-
     public String getImagePath() {
         return imagePath;
-    }
-
-    public void setPressedImagePath(String path) {
-        this.pressedImagePath = path;
     }
 
     public String getPressedImagePath() {
@@ -53,28 +48,12 @@ public class EndGamePlayerData implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setCreationDate(LocalDate birthday) {
-        this.creationDate = birthday;
-    }
-
     public LocalDate getCreationDate() {
         return creationDate;
     }
 
-    public void setDeathDate(LocalDate deathDay) {
-        this.deathDate = deathDay;
-    }
-
     public LocalDate getDeathDate() {
         return deathDate;
-    }
-
-    public void setVictoryDate(LocalDate victoryDay) {
-        this.victoryDate = victoryDay;
     }
 
     public LocalDate getVictoryDate() {
