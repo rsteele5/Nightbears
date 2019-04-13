@@ -5,11 +5,11 @@ import gameobject.renderable.CollidableRenderable;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.player.Player;
 
-public class Platform extends CollidableRenderable{
+public class DisappearingPlatform extends CollidableRenderable{
 
     private int counter = 0;
     private boolean isTrigger = false;
-    public Platform(int x, int y, String path, DrawLayer drawLayer) {
+    public DisappearingPlatform(int x, int y, String path, DrawLayer drawLayer) {
         super(x, y, path, drawLayer, 1f, false);
     }
 

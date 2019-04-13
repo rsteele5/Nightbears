@@ -1,20 +1,15 @@
 package gamescreen.gameplay.level;
 
 import gameengine.physics.PhysicsEngine;
-import gameengine.physics.Platform;
-import gameengine.physics.RenderablePhysicsObject;
 import gameengine.physics.SpikeBall;
 import gameengine.rendering.SSCamera;
 import gameobject.CameraTarget;
-import gameobject.LockCameraTrigger;
-import gameobject.TriggerableBoundary;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.enemy.Flyer;
 import gameobject.renderable.enemy.Minion;
 import gameobject.renderable.enemy.Walker;
 import gameobject.renderable.house.sidescrolling.BedroomBackgroundLayout;
 import gameobject.renderable.house.sidescrolling.Door;
-import gameobject.renderable.physics.Square;
 import gameobject.renderable.player.Player;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.GamePlayScreen;
@@ -42,11 +37,6 @@ public class BedroomLevel extends GamePlayScreen {
 
         Flyer flyboi = new Flyer(500,400, DrawLayer.Entity, 3, 500, player);
         flyboi.addToScreen(this, true);
-
-        Platform p2 = new Platform(750,900,"/assets/testAssets/brick.jpg",DrawLayer.Prop);
-        p2.setWidth(100);
-        p2.setHeight(20);
-        p2.addToScreen(this,true);
 
 
         Door finishDoor = new Door(800, 300,
@@ -105,7 +95,7 @@ public class BedroomLevel extends GamePlayScreen {
             }
         }
 
-        Platform p = new Platform(350,900,"/assets/testAssets/brick.jpg",DrawLayer.Prop);
+        DisappearingPlatform p = new DisappearingPlatform(350,900,"/assets/testAssets/brick.jpg",DrawLayer.Prop);
         p.setWidth(100);
         p.setHeight(20);
         p.addToScreen(this,true);
