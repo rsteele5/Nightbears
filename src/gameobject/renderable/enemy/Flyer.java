@@ -1,11 +1,10 @@
 package gameobject.renderable.enemy;
 
 import gameengine.physics.Collidable;
-import gameengine.physics.Platform;
+import gameengine.physics.DisappearingPlatform;
 import gameobject.Boundary;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.player.Player;
-import gamescreen.GameScreen;
 import main.utilities.Debug;
 
 public class Flyer extends Minion {
@@ -98,7 +97,7 @@ public class Flyer extends Minion {
     @Override
     public boolean collide(Collidable c2) {
         Debug.log(true, "Colliding with: " + c2.getClass().toString());
-        if((c2 instanceof Boundary) || (c2 instanceof Platform)) changeState();
+        if((c2 instanceof Boundary) || (c2 instanceof DisappearingPlatform)) changeState();
         if(c2 instanceof Player) {
             if(((Player) c2).isAttacking()){
                 //Damage function here hp - c2.getWeaponDamage()
