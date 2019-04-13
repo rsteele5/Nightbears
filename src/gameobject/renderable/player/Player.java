@@ -416,6 +416,11 @@ public class Player extends RenderablePhysicsObject {
     public void addItem(Item i) {
         playerData.addItem(i);
     }
+
+    public void modifyCoins(int coins){
+        playerData.modifyGold(coins);
+    }
+
     //endregion
 
     //region <Interactable>

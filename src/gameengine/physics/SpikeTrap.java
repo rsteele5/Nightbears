@@ -3,6 +3,7 @@ package gameengine.physics;
 import gameobject.GameObject;
 import gameobject.renderable.CollidableRenderable;
 import gameobject.renderable.DrawLayer;
+import gameobject.renderable.enemy.Walker;
 import gameobject.renderable.player.Player;
 
 import java.awt.*;
@@ -19,6 +20,9 @@ public class SpikeTrap extends CollidableRenderable {
     public boolean triggered(GameObject gameObject) {
         if(gameObject instanceof Player){
             ((Player)gameObject).hit(3);
+        }
+        if(gameObject instanceof Walker) {
+            ((Walker) gameObject).changeState();
         }
         return true;
     }

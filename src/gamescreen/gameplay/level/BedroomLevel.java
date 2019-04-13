@@ -25,6 +25,7 @@ public class BedroomLevel extends GamePlayScreen {
     private BedroomBackgroundLayout background;
     private Player player;
     private OverworldScreen parentScreen;
+    private int coins;
 
     public BedroomLevel(ScreenManager screenManager, OverworldScreen parentScreen) {
         super(screenManager, "BedroomLevel", true, 1f);
@@ -33,7 +34,7 @@ public class BedroomLevel extends GamePlayScreen {
 
     @Override
     protected void initializeScreen() {
-
+        coins = gameData.getPlayerData().getGold();
         player = new Player(50, 276, DrawLayer.Entity, gameData.getPlayerData());
         player.addToScreen(this, true);
         player.setState(Player.PlayerState.sideScroll);
@@ -53,7 +54,7 @@ public class BedroomLevel extends GamePlayScreen {
                 "/assets/sidescroll/SideScrollDoor.png",
                 () -> {
                     setScreenState(ScreenState.TransitionOff);
-                    screenManager.addScreen(new EndLevelScreen(screenManager,  true));
+                    screenManager.addScreen(new EndLevelScreen(screenManager,  true, coins - gameData.getPlayerData().getGold()));
                     parentScreen.onLevelComplete();
                 });
         finishDoor.setDrawLayer(DrawLayer.Background);
@@ -115,10 +116,21 @@ public class BedroomLevel extends GamePlayScreen {
 
         setPhysicsEngine(new PhysicsEngine(player, PhysicsEngine.PhysicState.SideScroll));
 
+        p = new DisappearingPlatform(1200,900,"/assets/testAssets/brick.jpg",DrawLayer.Entity);
+        p.setWidth(150);
+        p.setHeight(50);
+        p.addToScreen(this,true);
+
+
         //enemies
 
-       // Minion minion = new Walker(500,700, DrawLayer.Entity, 3, 500);
-      //  minion.addToScreen(this, true);
+        Minion minion = new Walker(1300,700, DrawLayer.Entity, 3, 500);
+        minion.addToScreen(this, true);
+
+        p = new DisappearingPlatform(1900,900,"/assets/testAssets/brick.jpg",DrawLayer.Entity);
+        p.setWidth(150);
+        p.setHeight(50);
+        p.addToScreen(this,true);
 
        // Flyer flyboi = new Flyer(500,400, DrawLayer.Entity, 3, 500, player);
        // flyboi.addToScreen(this, true);

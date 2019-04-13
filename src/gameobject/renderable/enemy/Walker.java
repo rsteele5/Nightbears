@@ -2,6 +2,7 @@ package gameobject.renderable.enemy;
 
 import gameengine.physics.Collidable;
 import gameengine.physics.PhysicsVector;
+import gameengine.physics.SpikeTrap;
 import gameobject.Boundary;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.player.Player;
@@ -45,7 +46,8 @@ public class Walker extends Minion {
                 Debug.success(true, "Walker took some damage!!!!");
                 if(getHp() <= 0){
                     setAlpha(0);
-                    isTrigger = true; 
+                    isTrigger = true;
+                    ((Player) c2).modifyCoins(1);
                 }
             }
         }
