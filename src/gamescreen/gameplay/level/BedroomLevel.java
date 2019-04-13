@@ -72,10 +72,14 @@ public class BedroomLevel extends GamePlayScreen {
         bounds.addToScreen(this,true);
         LockCameraTrigger cameraTrigger = new LockCameraTrigger(1600, 0, 1980, 1000, bedroomCamera, bounds);
         cameraTrigger.addToScreen(this,true);
+
         SpikeBall s = new SpikeBall(250,150);
-        SpikeBall s2 = new SpikeBall(650,150);
+      //  SpikeBall s2 = new SpikeBall(750,150);
+      //  SpikeBall s3 = new SpikeBall(1050,150);
         s.addToScreen(this,true);
-        s2.addToScreen(this,true);
+     //   s2.addToScreen(this,true);
+       // s3.addToScreen(this,true);
+
         /*
         Square s3;
         for(int i1 = 0 ; i1 < 7; i1++){
@@ -90,8 +94,6 @@ public class BedroomLevel extends GamePlayScreen {
         p.setHeight(20);
         p.addToScreen(this,true);
         */
-
-
 
         //Overlays
         SideScrollUI UI = new SideScrollUI(screenManager, this, player);
