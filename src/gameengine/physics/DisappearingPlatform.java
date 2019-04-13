@@ -18,7 +18,7 @@ public class DisappearingPlatform extends CollidableRenderable{
         counter--;
         counter = counter < 0 ? 0 : counter;
         if(counter <= 0){
-            if (alpha < .9f) setAlpha(alpha + .03f);
+            if (alpha < .9f) setAlpha(alpha + .01f);
             else{
                 isTrigger = false;
                 setAlpha(1);
@@ -35,7 +35,7 @@ public class DisappearingPlatform extends CollidableRenderable{
     public boolean triggered(GameObject g) {
         counter+=2;
         counter = counter > 10 ? 10 : counter;
-        if (alpha > .035f) setAlpha(alpha - .03f);
+        if (alpha > .035f) setAlpha(alpha - .01f);
         else setAlpha(0);
        return true;
     }
@@ -45,7 +45,7 @@ public class DisappearingPlatform extends CollidableRenderable{
         if(c instanceof Player) {
             counter+=2;
             counter = counter > 10 ? 10 : counter;
-            if (alpha > .035f) setAlpha(alpha - .03f);
+            if (alpha > .035f) setAlpha(alpha - .01f);
             else{
                 isTrigger = true;
                 setAlpha(0);

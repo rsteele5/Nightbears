@@ -337,6 +337,7 @@ public class Player extends RenderablePhysicsObject {
                 if (grounded) {
                     if (e.getKeyCode() == JUMP && !hitStun) { // JUMP
                         motion = motion.add(0, -20);
+                        grounded = false;
                         considerArc = true;
                     } else if (e.getKeyCode() == DOWN && !crouch && !hitStun) { // CROUCH
                         crouch = true;
@@ -415,6 +416,11 @@ public class Player extends RenderablePhysicsObject {
     public void addItem(Item i) {
         playerData.addItem(i);
     }
+
+    public void modifyCoins(int coins){
+        playerData.modifyGold(coins);
+    }
+
     //endregion
 
     //region <Interactable>
@@ -479,5 +485,14 @@ public class Player extends RenderablePhysicsObject {
         }
         return true;
     }
-    //endregion
+
+    public void hit(int i){
+        if(!hitStun){
+            hitStun = true;
+            hitStunFrameCounter = hitStunFrames;
+            motion.y = -hitStunJump;
+            if (playerData.getCurrentArmor() > 0)  playerData.modifyCurrentArmor(-i);
+            else playerData.modifyCurrentHealth(-i);
+        }
+    }
 }

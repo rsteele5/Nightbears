@@ -22,7 +22,7 @@ public class GameOverScreen extends GameScreen {
     @Override
     protected void initializeScreen() {
         PlayerData playerData = gameData.getPlayerData();
-        String imagePath = "/assets/player/color/" + playerData.getImageDirectory() + "/Teddy.png";
+        String imagePath = "/assets/player/color/" + playerData.getImageDirectory() + "/hud/Portrait.png";
         EndGamePlayerData deadPlayer = new EndGamePlayerData(playerData.getGold(),
                 imagePath,playerData.getName(),playerData.getCreationDate(), LocalDate.now(),null);
         gameData.clearPlayerData();
