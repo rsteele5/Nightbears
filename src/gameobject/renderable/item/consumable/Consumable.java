@@ -107,11 +107,19 @@ public class Consumable extends Item implements Serializable {
 
     /**
      * Getter
-     * @return item type (edible, throwable, spell, or ammunition)
+     * @return item type (consumable, weapon, or armor)
      */
     @Override
     public int getType() {
         return type.ordinal();
+    }
+
+    /**
+     * Getter
+     * @returns subtype (edible, throwable, enchant)
+     */
+    public AffectType getAffectType(){
+        return affect;
     }
 
     /**

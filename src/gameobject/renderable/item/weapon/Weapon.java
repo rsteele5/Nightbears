@@ -209,6 +209,10 @@ public class Weapon extends Item implements Serializable {
         else return false;
     }
 
+    public void modifyWeapon(int amount) {
+        maxDamage += amount;
+        minDamage += amount;
+    }
 }
 
 

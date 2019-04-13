@@ -12,6 +12,7 @@ import gameobject.renderable.item.weapon.Weapon;
 import gameobject.renderable.item.weapon.WeaponBuilder;
 import gameobject.renderable.item.weapon.WeaponType;
 import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 
 import java.io.Serializable;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -174,13 +175,21 @@ public class PlayerData implements Serializable {
         return maxHealth;
     }
     public void modifyMaxHealth(int amount){
-        maxHealth += amount;
+        double increase = amount * 0.4;
+        if ((int)increase % 2 == 1) increase++;
+        Debug.log(DebugEnabler.TEST_LOG, "max health percentage" + increase);
+        maxHealth += increase;
+        modifyCurrentHealth(amount);
     }
     public int getCurrentHealth() {
         return currentHealth;
     }
+
     public void modifyCurrentHealth(int amount){
-        currentHealth += amount;
+        double increase = amount * 0.4;
+        if ((int)increase % 2 == 1) increase++;
+        Debug.log(DebugEnabler.TEST_LOG, "current health percentage" + increase);
+        currentHealth +=  increase;
     }
 
     public int getCurrentArmor() {
