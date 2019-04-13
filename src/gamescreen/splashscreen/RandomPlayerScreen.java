@@ -46,7 +46,7 @@ public class RandomPlayerScreen extends GameScreen {
 
         name = getRandomName();
         nameTextBox = new TextBox(776, 963,
-                400, 100, name, new Font("NoScary", Font.PLAIN, 60),
+                400, 100, "", new Font("NoScary", Font.PLAIN, 60),
                 Color.WHITE, true);
         nameTextBox.addToScreen(this, true);
     }
@@ -100,6 +100,7 @@ public class RandomPlayerScreen extends GameScreen {
         if(!clicked) {
             Debug.log(DebugEnabler.GAME_SCREEN_LOG, name + "- handle click " + x + " " + y);
             silhouette.setAlpha(0f);
+            nameTextBox.setText(name);
             clicked = true;
         } else {
             setScreenState(ScreenState.TransitionOff);
