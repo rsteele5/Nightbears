@@ -14,17 +14,24 @@ import gameobject.renderable.item.weapon.WeaponType;
 import main.utilities.Debug;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class PlayerData implements Serializable {
 
     private CopyOnWriteArrayList<Item> playerInventory = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<Item> playerEquipment = new CopyOnWriteArrayList<>();
     private String imageDirectory;
+    private String name;
     private int gold;
     private int maxHealth;  // Must be divisible by 2
     private int currentHealth;
     private int currentArmor;
+
+    private LocalDate creationDate;
+    private LocalDate deathDate;
+    private LocalDate victoryDate;
 
     public PlayerData(){
         initializeInventory();
@@ -74,6 +81,28 @@ public class PlayerData implements Serializable {
         resetCurrentArmor();
     }
 
+    public int getWeaponDamage(){
+        int minDamage;
+        int maxDamage;
+        int critchance;
+        if(playerEquipment.get(3) != null){ // If the player has a weapon equipped get the min/max damage;
+            minDamage = ((Weapon)playerEquipment.get(3)).getMinDamage();
+            maxDamage = ((Weapon)playerEquipment.get(3)).getMaxDamage();
+            critchance = ((Weapon)playerEquipment.get(3)).getCritChance();
+        } else { // If the player has no weapon equipped set the min/max damage to 1/4;
+            minDamage = 1;
+            maxDamage = 4;
+            critchance = 0;
+
+        }
+        int crit = ThreadLocalRandom.current().nextInt(0, 100 + 1);
+        if(crit < critchance) {
+            Debug.log(true, "BOOOOOOOOOOOOOOM : " + crit);
+            return ThreadLocalRandom.current().nextInt(minDamage*3, (maxDamage + 1)*3);
+        }
+        return ThreadLocalRandom.current().nextInt(minDamage, maxDamage + 1);
+    }
+
     public void replaceList(CopyOnWriteArrayList<Item> updatedItems) {
         this.playerInventory = updatedItems;
     }
@@ -88,12 +117,30 @@ public class PlayerData implements Serializable {
                 .critChance(3)
                 .buildWeapon());
 
+        addItem(new WeaponBuilder()
+                .imagePath("/assets/Items/spear1.png")
+                .name("My Fwirst Spear")
+                .type(WeaponType.Spear)
+                .value(10)
+                .minmaxDamage(5, 7)
+                .critChance(3)
+                .buildWeapon());
+
+        addItem(new WeaponBuilder()
+                .imagePath("/assets/Items/club1.png")
+                .name("My Fwirst Club")
+                .type(WeaponType.Club)
+                .value(10)
+                .minmaxDamage(5, 7)
+                .critChance(3)
+                .buildWeapon());
+
         addItem(new ArmorBuilder()
                 .imagePath("/assets/Items/helmet1.png")
                 .name("My Fwirst Helmet")
                 .type(ArmorType.Head)
-                .value(12)
-                .armorPoints(10)
+                .value(10)
+                .armorPoints(2)
                 .buildArmor());
 
         addItem(new ConsumableBuilder()
@@ -107,16 +154,16 @@ public class PlayerData implements Serializable {
                 .imagePath("/assets/Items/chest1.png")
                 .name("My foist chesty")
                 .type(ArmorType.Chest)
-                .value(24)
-                .armorPoints(16)
+                .value(16)
+                .armorPoints(4)
                 .buildArmor());
 
         addItem(new ArmorBuilder()
                 .imagePath("/assets/Items/pants1.png")
                 .name("My cool pants")
                 .type(ArmorType.Legs)
-                .value(7)
-                .armorPoints(5)
+                .value(5)
+                .armorPoints(3)
                 .buildArmor());
 
         if (playerInventory.size() > 0) {
@@ -132,8 +179,8 @@ public class PlayerData implements Serializable {
                 .imagePath("/assets/Items/helmet2.png")
                 .name("My Swecond Helmet")
                 .type(ArmorType.Head)
-                .value(26)
-                .armorPoints(18)
+                .value(18)
+                .armorPoints(4)
                 .buildArmor(), ArmorType.Head.ordinal());
 
         equipItem(new ArmorBuilder()
@@ -141,7 +188,7 @@ public class PlayerData implements Serializable {
                 .name("My Thord Helmet")
                 .type(ArmorType.Head)
                 .value(53)
-                .armorPoints(30)
+                .armorPoints(6)
                 .buildArmor(), ArmorType.Head.ordinal());
 
         equipItem(new ArmorBuilder()
@@ -149,7 +196,7 @@ public class PlayerData implements Serializable {
                 .name("My capeeee")
                 .type(ArmorType.OffHand)
                 .value(16)
-                .armorPoints(5)
+                .armorPoints(1)
                 .buildArmor(), ArmorType.OffHand.ordinal());
 
 
@@ -158,7 +205,7 @@ public class PlayerData implements Serializable {
                 .name("My bootsies")
                 .type(ArmorType.Feet)
                 .value(13)
-                .armorPoints(3)
+                .armorPoints(1)
                 .buildArmor(), ArmorType.Feet.ordinal()+1);
     }
 
@@ -187,6 +234,10 @@ public class PlayerData implements Serializable {
         return currentArmor;
     }
 
+    public void modifyCurrentArmor(int amount){
+        currentArmor += amount;
+    }
+
     public void resetCurrentArmor() {
         currentArmor = 0;
         playerEquipment.forEach(item -> {
@@ -194,5 +245,37 @@ public class PlayerData implements Serializable {
                 currentArmor += ((Armor)item).getArmorValue();
             }
         });
+    }
+
+    public LocalDate getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDate creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public LocalDate getDeathDate() {
+        return deathDate;
+    }
+
+    public void setDeathDate(LocalDate deathDate) {
+        this.deathDate = deathDate;
+    }
+
+    public LocalDate getVictoryDate() {
+        return victoryDate;
+    }
+
+    public void setVictoryDate(LocalDate victoryDate) {
+        this.victoryDate = victoryDate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
