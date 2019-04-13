@@ -127,9 +127,6 @@ public class DescriptionAssistant {
 
         String myName = adj[rand.nextInt(adj.length)];
         switch (cType){
-            case misc:
-                myName += "Mystery Consumable";
-                break;
             case spell:
                 myName += " Spell";
                 break;
@@ -138,9 +135,6 @@ public class DescriptionAssistant {
                 break;
             case throwable:
                 myName += " Throwable";
-                break;
-            case ammunition:
-                myName += " Ammunition";
                 break;
         }
         return myName;
@@ -206,12 +200,6 @@ public class DescriptionAssistant {
 
         //First sentence sets the action. Maker1 is set according to the item's effect
         switch (affect){
-            case random:
-                String[] list1 = {"random", "strange", "dubious", "shady"};
-                myAdj = list1[rand.nextInt(list1.length)];
-                action = "No one is really sure what this " + myAdj + " " + type + " does.";
-                maker1 = "gypsy";
-                break;
             case fire:
                 String[] list2 = {"blazing hot", "fiery hot", "hot lava", "ghost pepper", "3-alarm fire"};
                 myAdj = list2[rand.nextInt(list2.length)];
@@ -223,12 +211,6 @@ public class DescriptionAssistant {
                 myAdj = list3[rand.nextInt(list3.length)];
                 action = "Enchant an item with this " + myAdj + " " + type + " to make it more powerful.";
                 maker1 = "witch";
-                break;
-            case puncture:
-                String[] list4 = {"pierce", "stab", "lacerate", "impale", "jab"};
-                myAdj = list4[rand.nextInt(list4.length)];
-                action = "This " + type + " can actually " + myAdj + " your enemy and cause damage.";
-                maker1 = "warlock";
                 break;
             case healthBoost:
                 String[] list5 = {"energize", "refresh", "invigorate", "exhilarate",
@@ -246,9 +228,6 @@ public class DescriptionAssistant {
         //Maker2 is set according to the item's type
         String maker2 = "";
         switch (type){
-            case ammunition:
-                maker2 = "gunsmith";
-                break;
             case throwable:
                 maker2 = "physicist";
                 break;
@@ -257,9 +236,6 @@ public class DescriptionAssistant {
                 break;
             case spell:
                 maker2 = "sorcerer";
-                break;
-            case misc:
-                maker2 = "vagabond";
                 break;
         }
 
