@@ -2,6 +2,8 @@ package gamescreen.gameplay.level;
 
 import gameengine.physics.PhysicsEngine;
 import gameengine.physics.Platform;
+import gameengine.physics.RenderablePhysicsObject;
+import gameengine.physics.SpikeBall;
 import gameengine.rendering.SSCamera;
 import gameobject.CameraTarget;
 import gameobject.LockCameraTrigger;
@@ -12,6 +14,7 @@ import gameobject.renderable.enemy.Minion;
 import gameobject.renderable.enemy.Walker;
 import gameobject.renderable.house.sidescrolling.BedroomBackgroundLayout;
 import gameobject.renderable.house.sidescrolling.Door;
+import gameobject.renderable.physics.Square;
 import gameobject.renderable.player.Player;
 import gamescreen.ScreenManager;
 import gamescreen.gameplay.GamePlayScreen;
@@ -33,10 +36,6 @@ public class BedroomLevel extends GamePlayScreen {
 
     @Override
     protected void initializeScreen() {
-        //Platform p = new Platform(350,900,"/assets/testAssets/brick.jpg",DrawLayer.Prop);
-       //p.setWidth(100);
-        //p.setHeight(20);
-        //p.addToScreen(this,true);
 
         Minion minion = new Walker(500,700, DrawLayer.Entity, 3, 500);
         minion.addToScreen(this, true);
@@ -89,6 +88,28 @@ public class BedroomLevel extends GamePlayScreen {
         LockCameraTrigger cameraTrigger = new LockCameraTrigger(1600, 0, 1980, 1000, bedroomCamera, bounds);
         cameraTrigger.addToScreen(this,true);*/
         
+
+        SpikeBall s = new SpikeBall(250,150);
+      //  SpikeBall s2 = new SpikeBall(750,150);
+      //  SpikeBall s3 = new SpikeBall(1050,150);
+        s.addToScreen(this,true);
+     //   s2.addToScreen(this,true);
+       // s3.addToScreen(this,true);
+
+        /*
+        Square s3;
+        for(int i1 = 0 ; i1 < 7; i1++){
+            for(int i2 = 0; i2 < 7; i2++){
+                s3 = new Square(75 + i1 * 150,75 + i2 * 150);
+                s3.addToScreen(this,true);
+            }
+        }
+
+        Platform p = new Platform(350,900,"/assets/testAssets/brick.jpg",DrawLayer.Prop);
+        p.setWidth(100);
+        p.setHeight(20);
+        p.addToScreen(this,true);
+        */
 
         //Overlays
         SideScrollUI UI = new SideScrollUI(screenManager, this, player);
