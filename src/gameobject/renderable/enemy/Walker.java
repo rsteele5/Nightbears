@@ -43,6 +43,10 @@ public class Walker extends Minion {
                 addhp(-(((Player) c2).getWeaponDamage()));
                 Debug.log(true, "MY HEALTH: " + hp);
                 Debug.success(true, "Walker took some damage!!!!");
+                if(getHp() <= 0){
+                    setAlpha(0);
+                    isTrigger = true; 
+                }
             }
         }
         return true;

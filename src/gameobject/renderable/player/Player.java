@@ -337,6 +337,7 @@ public class Player extends RenderablePhysicsObject {
                 if (grounded) {
                     if (e.getKeyCode() == JUMP && !hitStun) { // JUMP
                         motion = motion.add(0, -20);
+                        grounded = false;
                         considerArc = true;
                     } else if (e.getKeyCode() == DOWN && !crouch && !hitStun) { // CROUCH
                         crouch = true;

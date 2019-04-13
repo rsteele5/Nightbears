@@ -32,26 +32,6 @@ public class BedroomLevel extends GamePlayScreen {
     @Override
     protected void initializeScreen() {
 
-
-
-        Door finishDoor = new Door(800, 300,
-                "/assets/sidescroll/SideScrollDoor.png",
-                () -> {
-                    setScreenState(ScreenState.TransitionOff);
-                    screenManager.addScreen(new EndLevelScreen(screenManager,  true));
-                    parentScreen.onLevelComplete();
-                });
-        finishDoor.addToScreen(this, true);
-
-        Door secondFinishDoor = new Door(1600, 300,
-                "/assets/sidescroll/SideScrollDoor.png",
-                () -> {
-                    setScreenState(ScreenState.TransitionOff);
-                    screenManager.addScreen(new EndLevelScreen(screenManager,  true));
-                    parentScreen.onLevelComplete();
-                });
-        secondFinishDoor.addToScreen(this, true);
-
         player = new Player(50, 276, DrawLayer.Entity, gameData.getPlayerData());
         player.addToScreen(this, true);
         player.setState(Player.PlayerState.sideScroll);
@@ -67,34 +47,18 @@ public class BedroomLevel extends GamePlayScreen {
         background.getBackground().addToScreen(this, true);
         background.getBoundaries().forEach(boundary -> boundary.addToScreen(this, true));
 
-        /*TriggerableBoundary bounds = new TriggerableBoundary(1480, 0, 120, 1000);
-        bounds.setTrigger(true);
-        bounds.addToScreen(this,true);
-        LockCameraTrigger cameraTrigger = new LockCameraTrigger(1600, 0, 1980, 1000, bedroomCamera, bounds);
-        cameraTrigger.addToScreen(this,true);*/
-        
+        Door finishDoor = new Door(6750, 300,
+                "/assets/sidescroll/SideScrollDoor.png",
+                () -> {
+                    setScreenState(ScreenState.TransitionOff);
+                    screenManager.addScreen(new EndLevelScreen(screenManager,  true));
+                    parentScreen.onLevelComplete();
+                });
+        finishDoor.setDrawLayer(DrawLayer.Background);
+        finishDoor.addToScreen(this, true);
 
         SpikeBall s = new SpikeBall(250,150);
-      //  SpikeBall s2 = new SpikeBall(750,150);
-      //  SpikeBall s3 = new SpikeBall(1050,150);
         s.addToScreen(this,true);
-     //   s2.addToScreen(this,true);
-       // s3.addToScreen(this,true);
-
-        /*
-        Square s3;
-        for(int i1 = 0 ; i1 < 7; i1++){
-            for(int i2 = 0; i2 < 7; i2++){
-                s3 = new Square(75 + i1 * 150,75 + i2 * 150);
-                s3.addToScreen(this,true);
-            }
-        }
-
-        DisappearingPlatform p = new DisappearingPlatform(350,900,"/assets/testAssets/brick.jpg",DrawLayer.Prop);
-        p.setWidth(100);
-        p.setHeight(20);
-        p.addToScreen(this,true);
-        */
 
         //Overlays
         SideScrollUI UI = new SideScrollUI(screenManager, this, player);
@@ -109,8 +73,6 @@ public class BedroomLevel extends GamePlayScreen {
 
         Flyer flyboi = new Flyer(500,400, DrawLayer.Entity, 3, 500, player);
         flyboi.addToScreen(this, true);
-
-
     }
 
     @Override
