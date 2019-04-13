@@ -12,6 +12,7 @@ import gameobject.renderable.item.weapon.Weapon;
 import gameobject.renderable.item.weapon.WeaponBuilder;
 import gameobject.renderable.item.weapon.WeaponType;
 import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -109,7 +110,6 @@ public class PlayerData implements Serializable {
 
     public void initializeInventory(){
         addItem(new WeaponBuilder()
-                .imagePath("/assets/Items/sword1.png")
                 .name("My Fwirst Sword")
                 .type(WeaponType.Sword)
                 .value(10)
@@ -118,7 +118,6 @@ public class PlayerData implements Serializable {
                 .buildWeapon());
 
         addItem(new WeaponBuilder()
-                .imagePath("/assets/Items/spear1.png")
                 .name("My Fwirst Spear")
                 .type(WeaponType.Spear)
                 .value(10)
@@ -127,7 +126,6 @@ public class PlayerData implements Serializable {
                 .buildWeapon());
 
         addItem(new WeaponBuilder()
-                .imagePath("/assets/Items/club1.png")
                 .name("My Fwirst Club")
                 .type(WeaponType.Club)
                 .value(10)
@@ -136,7 +134,6 @@ public class PlayerData implements Serializable {
                 .buildWeapon());
 
         addItem(new ArmorBuilder()
-                .imagePath("/assets/Items/helmet1.png")
                 .name("My Fwirst Helmet")
                 .type(ArmorType.Head)
                 .value(10)
@@ -144,14 +141,12 @@ public class PlayerData implements Serializable {
                 .buildArmor());
 
         addItem(new ConsumableBuilder()
-                .imagePath("/assets/Items/bluepotion.png")
                 .name("Blew Potion")
-                .value(12)
+                .value(2)
                 .type(ConsumableType.edible)
                 .buildConsumable());
 
         addItem(new ArmorBuilder()
-                .imagePath("/assets/Items/chest1.png")
                 .name("My foist chesty")
                 .type(ArmorType.Chest)
                 .value(16)
@@ -159,7 +154,6 @@ public class PlayerData implements Serializable {
                 .buildArmor());
 
         addItem(new ArmorBuilder()
-                .imagePath("/assets/Items/pants1.png")
                 .name("My cool pants")
                 .type(ArmorType.Legs)
                 .value(5)
@@ -221,13 +215,19 @@ public class PlayerData implements Serializable {
         return maxHealth;
     }
     public void modifyMaxHealth(int amount){
+        if (amount % 2 == 1) amount++;
+        Debug.log(DebugEnabler.TEST_LOG, "max health increased by " + amount);
         maxHealth += amount;
+        modifyCurrentHealth(amount);
     }
     public int getCurrentHealth() {
         return currentHealth;
     }
+
     public void modifyCurrentHealth(int amount){
-        currentHealth += amount;
+        Debug.log(DebugEnabler.TEST_LOG, "current health increased by " + amount);
+        currentHealth +=  amount;
+        if (currentHealth > maxHealth) currentHealth = maxHealth;
     }
 
     public int getCurrentArmor() {
