@@ -153,7 +153,9 @@ public class PauseMenu extends Overlay {
                         }
                         else if (currentItem.getType() == 2){
                             Weapon myWeapon = (Weapon) playerData.getPlayerEquipment().get(3);
-                            myWeapon.increaseAttributes(rand);
+                            if (myWeapon != null) {
+                                myWeapon.increaseAttributes(rand);
+                            }
                         }
                         playerInventory.remove(currentItem);
                         playerData.removeItem(currentItem);
