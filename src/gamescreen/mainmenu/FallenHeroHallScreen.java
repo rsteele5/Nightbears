@@ -35,7 +35,7 @@ public class FallenHeroHallScreen extends GameScreen {
     @Override
     protected void initializeScreen() {
         //Initial position of the first button
-        int X_INIT_BUTTON = 64;
+        int X_INIT_BUTTON = 28;
         int Y_INIT_BUTTON = 920;
         int WIDTH_BUTTON = 256;
         int X_BUFFER = 48;
