@@ -3,6 +3,7 @@ package gameengine.physics;
 import gameobject.GameObject;
 import gameobject.renderable.CollidableRenderable;
 import gameobject.renderable.DrawLayer;
+import gameobject.renderable.player.Player;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
 
@@ -27,6 +28,9 @@ public class SpikeBall extends CollidableRenderable {
     @Override
     public boolean triggered(GameObject gameObject) {
         //Debug.log(true,"HERE");
+        if(gameObject instanceof Player){
+            ((Player)gameObject).hit(3);
+        }
         return true;
     }
     Random generator = new Random();
