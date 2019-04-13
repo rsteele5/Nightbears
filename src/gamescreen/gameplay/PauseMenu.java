@@ -151,9 +151,9 @@ public class PauseMenu extends Overlay {
                                 Debug.log(DebugEnabler.TEST_LOG, "Current Max Health: " + playerData.getMaxHealth());
                             }
                         }
-                        else if (currentItem.getType() == 3){
+                        else if (currentItem.getType() == 2){
                             Weapon myWeapon = (Weapon) playerData.getPlayerEquipment().get(3);
-                            myWeapon.modifyWeapon(rand);
+                            myWeapon.increaseAttributes(rand);
                         }
                         playerInventory.remove(currentItem);
                         playerData.removeItem(currentItem);

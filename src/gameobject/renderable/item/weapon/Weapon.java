@@ -165,6 +165,15 @@ public class Weapon extends Item implements Serializable {
     }
     //endregion
 
+    /**
+     * Increases the value of the item
+     */
+    public void increaseAttributes(int amount) {
+        maxDamage += amount;
+        minDamage += amount;
+    }
+
+
     //TODO: Weapons may be damaged or upgraded. Add item update here.
     @Override
     public void update() {
@@ -209,10 +218,7 @@ public class Weapon extends Item implements Serializable {
         else return false;
     }
 
-    public void modifyWeapon(int amount) {
-        maxDamage += amount;
-        minDamage += amount;
-    }
+
 }
 
 
