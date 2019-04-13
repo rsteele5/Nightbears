@@ -10,7 +10,7 @@ import main.utilities.Debug;
 
 public class Walker extends Minion {
     public Walker(int x, int y, DrawLayer drawLayer, float speed, int hp) {
-        super(x, y, "/assets/enemies/minions/walker/walker.png", drawLayer, speed, hp);
+        super(x, y, "/assets/enemies/minions/walker/walker.png", drawLayer, speed, 20);
         setState(new WalkLeftMS());
     }
     @Override

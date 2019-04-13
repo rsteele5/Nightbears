@@ -54,7 +54,7 @@ public class BedroomLevel extends GamePlayScreen {
                 "/assets/sidescroll/SideScrollDoor.png",
                 () -> {
                     setScreenState(ScreenState.TransitionOff);
-                    screenManager.addScreen(new EndLevelScreen(screenManager,  true, coins - gameData.getPlayerData().getGold()));
+                    screenManager.addScreen(new EndLevelScreen(screenManager,  true, gameData.getPlayerData().getGold() - coins));
                     parentScreen.onLevelComplete();
                 });
         finishDoor.setDrawLayer(DrawLayer.Background);
