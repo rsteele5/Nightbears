@@ -480,5 +480,14 @@ public class Player extends RenderablePhysicsObject {
         }
         return true;
     }
-    //endregion
+
+    public void hit(int i){
+        if(!hitStun){
+            hitStun = true;
+            hitStunFrameCounter = hitStunFrames;
+            motion.y = -hitStunJump;
+            if (playerData.getCurrentArmor() > 0)  playerData.modifyCurrentArmor(-i);
+            else playerData.modifyCurrentHealth(-i);
+        }
+    }
 }

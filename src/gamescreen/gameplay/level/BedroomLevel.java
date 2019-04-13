@@ -1,7 +1,9 @@
 package gamescreen.gameplay.level;
 
+import gameengine.physics.DisappearingPlatform;
 import gameengine.physics.PhysicsEngine;
 import gameengine.physics.SpikeBall;
+import gameengine.physics.SpikeTrap;
 import gameengine.rendering.SSCamera;
 import gameobject.CameraTarget;
 import gameobject.renderable.DrawLayer;
@@ -57,10 +59,57 @@ public class BedroomLevel extends GamePlayScreen {
         finishDoor.setDrawLayer(DrawLayer.Background);
         finishDoor.addToScreen(this, true);
 
-        SpikeBall s = new SpikeBall(250,150);
+        SpikeBall s = new SpikeBall(300,-150);
+      //  SpikeBall s2 = new SpikeBall(750,150);
+      //  SpikeBall s3 = new SpikeBall(1050,150);
         s.addToScreen(this,true);
 
+        SpikeTrap s2 = new SpikeTrap(200,925);
+        s2.addToScreen(this,true);
+        s2 = new SpikeTrap(300,925);
+        s2.addToScreen(this,true);
+        s2 = new SpikeTrap(400,925);
+        s2.addToScreen(this,true);
+        s2 = new SpikeTrap(500,925);
+        s2.addToScreen(this,true);
+        s2 = new SpikeTrap(600,925);
+        s2.addToScreen(this,true);
+        s2 = new SpikeTrap(700,925);
+        s2.addToScreen(this,true);
+        s2 = new SpikeTrap(800,925);
+        s2.addToScreen(this,true);
+        s2 = new SpikeTrap(900,925);
+        s2.addToScreen(this,true);
+        s2 = new SpikeTrap(1000,925);
+        s2.addToScreen(this,true);
+     //   s2.addToScreen(this,true);
+       // s3.addToScreen(this,true);
+
         //Overlays
+        DisappearingPlatform p = new DisappearingPlatform(200,800,"/assets/testAssets/brick.jpg",DrawLayer.Entity);
+        p.setWidth(150);
+        p.setHeight(50);
+        p.addToScreen(this,true);
+        p = new DisappearingPlatform(350,700,"/assets/testAssets/brick.jpg",DrawLayer.Entity);
+        p.setWidth(150);
+        p.setHeight(50);
+        p.addToScreen(this,true);
+        p = new DisappearingPlatform(500,600,"/assets/testAssets/brick.jpg",DrawLayer.Entity);
+        p.setWidth(150);
+        p.setHeight(50);
+        p.addToScreen(this,true);
+        p = new DisappearingPlatform(700,600,"/assets/testAssets/brick.jpg",DrawLayer.Entity);
+        p.setWidth(150);
+        p.setHeight(50);
+        p.addToScreen(this,true);
+        p = new DisappearingPlatform(850,700,"/assets/testAssets/brick.jpg",DrawLayer.Entity);
+        p.setWidth(150);
+        p.setHeight(50);
+        p.addToScreen(this,true);
+        p = new DisappearingPlatform(1000,800,"/assets/testAssets/brick.jpg",DrawLayer.Entity);
+        p.setWidth(150);
+        p.setHeight(50);
+        p.addToScreen(this,true);
         SideScrollUI UI = new SideScrollUI(screenManager, this, player);
         addOverlay(UI);
 
@@ -68,11 +117,13 @@ public class BedroomLevel extends GamePlayScreen {
 
         //enemies
 
-        Minion minion = new Walker(500,700, DrawLayer.Entity, 3, 500);
-        minion.addToScreen(this, true);
+       // Minion minion = new Walker(500,700, DrawLayer.Entity, 3, 500);
+      //  minion.addToScreen(this, true);
 
-        Flyer flyboi = new Flyer(500,400, DrawLayer.Entity, 3, 500, player);
-        flyboi.addToScreen(this, true);
+       // Flyer flyboi = new Flyer(500,400, DrawLayer.Entity, 3, 500, player);
+       // flyboi.addToScreen(this, true);
+
+
     }
 
     @Override
