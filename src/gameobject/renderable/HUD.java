@@ -1,7 +1,6 @@
 package gameobject.renderable;
 
 import gameengine.gamedata.PlayerData;
-import gameobject.renderable.player.Player;
 import main.utilities.AssetLoader;
 
 import java.awt.*;

@@ -60,7 +60,7 @@ public class DebugEnabler {
      * Controls debugging The current FPS.
      * @see gameengine.GameEngine
      */
-    public static boolean FPS_CURRENT =           true;
+    public static boolean FPS_CURRENT =           false;
     /**
      * Controls debugging Loadables and Loading.
      * @see Loadable
