@@ -21,6 +21,11 @@ public class FlyRD extends MinionState {
 
     @Override
     public void doAction(Minion minion) {
-        minion.setVelocity(new PhysicsVector(minion.getSpeed(),-minion.getSpeed()));
+        minion.setVelocity(new PhysicsVector(minion.getSpeed(),minion.getSpeed()));
+    }
+
+    @Override
+    public boolean complete() {
+        return true;
     }
 }

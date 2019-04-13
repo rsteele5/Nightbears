@@ -28,6 +28,7 @@ public class OverworldScreen extends GamePlayScreen {
 
     public OverworldScreen(ScreenManager screenManager, boolean generateHouse) {
         super(screenManager, "Overworld", 1f);
+        this.generateHouse = generateHouse;
     }
 
 

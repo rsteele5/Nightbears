@@ -65,9 +65,6 @@ public class PlayerCountScreen extends GameScreen {
                 DrawLayer.Entity,
                 () ->{
                     Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Coop");
-                    screenManager.addScreen(new ConfirmationPopup(screenManager,
-                            "You selected... \nCO-OP\nIs this correct?",
-                            ()-> coverWith(new TempCoopScreen(screenManager, this))));
                 });
         button.addToScreen(this, true);
 

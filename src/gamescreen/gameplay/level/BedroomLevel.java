@@ -38,12 +38,6 @@ public class BedroomLevel extends GamePlayScreen {
         //p.setHeight(20);
         //p.addToScreen(this,true);
 
-        Minion minion = new Walker(500,700, DrawLayer.Entity, 3, 500);
-        minion.addToScreen(this, true);
-
-        Flyer flyboi = new Flyer(500,400, DrawLayer.Entity, 3, 500, player);
-        flyboi.addToScreen(this, true);
-
         Platform p2 = new Platform(750,900,"/assets/testAssets/brick.jpg",DrawLayer.Prop);
         p2.setWidth(100);
         p2.setHeight(20);
@@ -95,6 +89,14 @@ public class BedroomLevel extends GamePlayScreen {
         addOverlay(UI);
 
         setPhysicsEngine(new PhysicsEngine(player, PhysicsEngine.PhysicState.SideScroll));
+
+        //enemies
+
+        Minion minion = new Walker(500,700, DrawLayer.Entity, 3, 500);
+        minion.addToScreen(this, true);
+
+        Flyer flyboi = new Flyer(500,400, DrawLayer.Entity, 3, 500, player);
+        flyboi.addToScreen(this, true);
 
 
     }
