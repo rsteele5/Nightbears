@@ -189,7 +189,7 @@ public class ConsumableBuilder {
      */
     public ConsumableBuilder value(int _value) {
         if (_value == 0){
-            this._value = getRandomNumber(_minAffect, _maxAffect) * 2;
+            this._value = getRandomNumber(_minAffect, _maxAffect) * 4;
         } else {
             this._value = _value;
         }
