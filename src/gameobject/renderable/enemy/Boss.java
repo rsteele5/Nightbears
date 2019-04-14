@@ -48,7 +48,7 @@ public abstract class Boss extends Enemy /*implements Collidable, Kinematic, Int
         this.screen = screen;
     }
 
-    public void attack(){
+    protected void attack(){
 
     }
 

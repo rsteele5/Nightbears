@@ -36,4 +36,13 @@ public abstract class Enemy extends RenderablePhysicsObject {
     {
         return 2;
     }
+
+    protected void killSelf(){
+        setAlpha(0f);
+        isTrigger = true;
+    }
+
+    protected void attack(){
+        //donothing
+    }
 }

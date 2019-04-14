@@ -11,8 +11,21 @@ public class Debris extends RenderablePhysicsObject {
 
     boolean ishit =false;
 
-    public Debris(int x, int y, DrawLayer drawLayer, float speed) {
-        super(x, y, "/assets/enemies/minions/flyer/flyerball.png", drawLayer, speed);
+    public Debris(int x, int y, DrawLayer drawLayer, float speed, int type) {
+        super(x, y, "", drawLayer, speed);
+        switch (type)
+        {
+            case 0:
+                this.imagePath = "/assets/enemies/bosses/sloshyboi/debris1.png";
+                break;
+            case 1:
+                this.imagePath = "/assets/enemies/bosses/sloshyboi/debris2.png";
+                break;
+            case 2:
+                this.imagePath = "/assets/enemies/bosses/sloshyboi/debris3.png";
+                break;
+        }
+
     }
 
     @Override

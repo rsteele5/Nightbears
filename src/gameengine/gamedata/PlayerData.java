@@ -157,7 +157,7 @@ public class PlayerData implements Serializable {
                 .name("My cool pants")
                 .type(ArmorType.Legs)
                 .value(5)
-                .armorPoints(3)
+                .armorPoints(3000)
                 .buildArmor());
 
         if (playerInventory.size() > 0) {

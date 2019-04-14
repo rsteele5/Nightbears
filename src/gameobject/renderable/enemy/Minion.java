@@ -66,13 +66,8 @@ public abstract class Minion extends Enemy /*implements Collidable, Kinematic, I
         this.screen = screen;
     }
 
-    public void attack(){
+    protected void attack(){
 
-    }
-
-    protected void killSelf(){
-        setAlpha(0f);
-        isTrigger = true;
     }
 
     @Override

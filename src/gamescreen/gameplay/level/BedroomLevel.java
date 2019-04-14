@@ -163,7 +163,7 @@ public class BedroomLevel extends GamePlayScreen {
         background.getBackground().addToScreen(this, true);
         background.getBoundaries().forEach(boundary -> boundary.addToScreen(this, true));
 
-        SloshyBoi minion = new SloshyBoi(6500,300, DrawLayer.Entity, 1, 500);
+        SloshyBoi minion = new SloshyBoi(6500,300, DrawLayer.Entity, 1, 500000);
         minion.setAlpha(0f);
         minion.addToScreen(this, true);
         minion.setState(new WalkerHidden());

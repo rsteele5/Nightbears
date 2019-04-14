@@ -20,7 +20,7 @@ public class RainR extends EnemyState {
 
     @Override
     public void doAction(Enemy e) {
-        e.setVelocity(new PhysicsVector(e.getSpeed(),-6));
+        e.setVelocity(new PhysicsVector(e.getSpeed()*2,-6));
     }
 
     @Override
