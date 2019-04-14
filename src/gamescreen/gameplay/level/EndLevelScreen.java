@@ -34,17 +34,9 @@ public class EndLevelScreen extends GameScreen {
         imageContainer = new ImageContainer(0,0, "/assets/backgrounds/BG-LevelComplete.png", DrawLayer.Background);
         imageContainer.addToScreen(this, true);
 
-        TextBox enemiesSlain = new TextBox(50, 50, 800, 800, "Enemies Slain: 0",
-                new Font("NoScary", Font.PLAIN, 76), Color.WHITE);
-        enemiesSlain.addToScreen(this, true);
-
         TextBox goldCollected = new TextBox(50, 125, 800, 800, "Gold Collected: " + collectedCoins,
                 new Font("NoScary", Font.PLAIN, 76), Color.WHITE);
         goldCollected.addToScreen(this, true);
-
-        TextBox itemsCollected = new TextBox(50, 200, 800, 800, "Items Collected: 0",
-                new Font("NoScary", Font.PLAIN, 76), Color.WHITE);
-        itemsCollected.addToScreen(this, true);
         
         //Create buttons
         ButtonGridContainer buttonLayout = new ButtonGridContainer(4,1, 256, 96,
