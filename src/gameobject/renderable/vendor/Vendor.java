@@ -1,18 +1,13 @@
 package gameobject.renderable.vendor;
 
-import gameengine.MyTimerTask;
-import gameengine.gamedata.GameData;
 import gameengine.gamedata.VendorData;
-import gameengine.physics.*;
+import gameengine.physics.Interactable;
 import gameengine.rendering.animation.Animator;
 import gameobject.GameObject;
 import gameobject.renderable.CollidableRenderable;
 import gameobject.renderable.DrawLayer;
-import gameobject.renderable.RenderableObject;
 import gameobject.renderable.house.overworld.OverworldMeta;
 import gameobject.renderable.player.Player;
-import gameobject.renderable.text.DialogBox;
-import gamescreen.GameScreen;
 import gamescreen.gameplay.GamePlayScreen;
 import main.utilities.Action;
 import main.utilities.AssetLoader;
@@ -56,8 +51,6 @@ public class Vendor extends CollidableRenderable implements Interactable, Serial
         vendorState = VendorState.hiding;
         this.imagePath = vendorLevelPath;
         this.vendorData = vendorData;
-        restockTimer = new MyTimerTask(vendorData);
-        //startRestockTimer();
 
         animator = new Animator(this);
         animator.addAnimation("Wait", new VendorUnderAnimation());
@@ -88,22 +81,6 @@ public class Vendor extends CollidableRenderable implements Interactable, Serial
     public void setImage(String imagePath){ this.imagePath = imagePath; }
 
     public void setIntroduction(Action intro) { this.intro = intro; }
-
-    public VendorState getVendorState() { return vendorState; }
-
-    public Animator getAnimator() { return animator; }
-
-    public VendorData getVendorData(){
-        return vendorData;
-    }
-
-    public BufferedImage getOverworldImage(){
-        return vendorOverworldImage;
-    }
-
-    public BufferedImage getLevelImage(){
-        return vendorLevelImage;
-    }
 
     @Override
     public void load() {
@@ -152,25 +129,6 @@ public class Vendor extends CollidableRenderable implements Interactable, Serial
     }
 
     public VendorState getState() { return vendorState;}
-
-    //TODO: Don't think I need this anymore
-    public void startRestockTimer(){
-        Timer timer = new Timer(true);
-        timer.scheduleAtFixedRate(restockTimer, 0, 1000*1000);
-        //cancel after sometime to avoid overlap
-        /*try {
-            Thread.sleep(120000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        timer.cancel();
-        System.out.println("TimerTask cancelled");
-        try {
-            Thread.sleep(30000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
-    }
 
     public void setPlayerInteractionOW(Action playerInteractionOW) {
         this.playerInteractionOW = playerInteractionOW;
