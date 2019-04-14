@@ -1,11 +1,12 @@
 package gameobject.renderable.enemy;
 
 import gameengine.physics.PhysicsVector;
+import main.utilities.Debug;
 
-public class FlyRU extends EnemyState {
+public class WalkRight extends EnemyState {
 
-    public FlyRU() {
-        str_State = "FlyRU";
+    public WalkRight() {
+        str_State = "Walk Right";
     }
 
     @Override
@@ -20,7 +21,7 @@ public class FlyRU extends EnemyState {
 
     @Override
     public void doAction(Enemy e) {
-        e.setVelocity(new PhysicsVector(e.getSpeed(),-e.getSpeed()));
+        e.setVelocity(new PhysicsVector(e.getSpeed(),e.getVelocity().y));
     }
 
     @Override

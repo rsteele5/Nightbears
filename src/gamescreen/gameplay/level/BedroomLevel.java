@@ -1,15 +1,12 @@
 package gamescreen.gameplay.level;
 
-import gameengine.physics.DisappearingPlatform;
-import gameengine.physics.PhysicsEngine;
-import gameengine.physics.SpikeBall;
-import gameengine.physics.SpikeTrap;
+import gameengine.physics.*;
 import gameengine.rendering.SSCamera;
 import gameobject.CameraTarget;
+import gameobject.LockCameraTrigger;
+import gameobject.TriggerableBoundary;
 import gameobject.renderable.DrawLayer;
-import gameobject.renderable.enemy.Flyer;
-import gameobject.renderable.enemy.Minion;
-import gameobject.renderable.enemy.Walker;
+import gameobject.renderable.enemy.*;
 import gameobject.renderable.house.sidescrolling.BedroomBackgroundLayout;
 import gameobject.renderable.house.sidescrolling.Door;
 import gameobject.renderable.player.Player;
@@ -124,7 +121,7 @@ public class BedroomLevel extends GamePlayScreen {
 
         //enemies
 
-        Minion minion = new Walker(1300,700, DrawLayer.Entity, 3, 500);
+        Minion minion = new Walker(1300,700, DrawLayer.Entity, 3, 50);
         minion.addToScreen(this, true);
 
         p = new DisappearingPlatform(1900,900,"/assets/testAssets/brick.jpg",DrawLayer.Entity);
@@ -132,10 +129,34 @@ public class BedroomLevel extends GamePlayScreen {
         p.setHeight(50);
         p.addToScreen(this,true);
 
-       // Flyer flyboi = new Flyer(500,400, DrawLayer.Entity, 3, 500, player);
-       // flyboi.addToScreen(this, true);
+//        Flyer flyboi = new Flyer(3000,400, DrawLayer.Entity, 3, 1, player);
+//        flyboi.addToScreen(this, true);
+
+        DisappearingPlatform p2 = new DisappearingPlatform(750,900,"/assets/testAssets/brick.jpg",DrawLayer.Prop);
+        p2.setWidth(100);
+        p2.setHeight(20);
+        p2.addToScreen(this,true);
 
 
+        SloshyBoi boss = new SloshyBoi(6500,300, DrawLayer.Entity, 1, 2000);
+        boss.setAlpha(0f);
+        boss.addToScreen(this, true);
+        boss.setState(new WalkerHidden());
+
+        TriggerableBoundary bounds = new TriggerableBoundary(5300-120, 0, 120, 1000);
+        bounds.setTrigger(true);
+        bounds.addToScreen(this,true);
+        LockCameraTrigger cameraTrigger = new LockCameraTrigger(5300, 0, 1980, 1000, bedroomCamera, bounds, boss);
+        cameraTrigger.addToScreen(this,true);
+
+        setPhysicsEngine(new PhysicsEngine(player, PhysicsEngine.PhysicState.SideScroll));
+        //enemies
+
+//        Minion minion = new Walker(500,700, DrawLayer.Entity, 3, 500);
+//        minion.addToScreen(this, true);
+
+//        Flyer flyboi = new Flyer(500,400, DrawLayer.Entity, 3, 500, player);
+//        flyboi.addToScreen(this, true);
     }
 
     @Override

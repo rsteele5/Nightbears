@@ -2,10 +2,10 @@ package gameobject.renderable.enemy;
 
 import gameengine.physics.PhysicsVector;
 
-public class WalkRightMS extends MinionState {
+public class RainL extends EnemyState {
 
-    public WalkRightMS() {
-        str_State = "Walk Right";
+    public RainL() {
+        str_State = "Rain Left";
     }
 
     @Override
@@ -19,8 +19,9 @@ public class WalkRightMS extends MinionState {
     }
 
     @Override
-    public void doAction(Minion minion) {
-        minion.setVelocity(new PhysicsVector(minion.getSpeed(),minion.getVelocity().y));
+    public void doAction(Enemy e) {
+        e.setVelocity(new PhysicsVector(-e.getSpeed()*2,-6));
+        e.attack();
     }
 
     @Override
