@@ -2,10 +2,10 @@ package gameobject.renderable.enemy;
 
 import gameengine.physics.PhysicsVector;
 
-public class FlyRU extends EnemyState {
+public class WalkerHidden extends EnemyState {
 
-    public FlyRU() {
-        str_State = "FlyRU";
+    public WalkerHidden() {
+        str_State = "Walk Idle";
     }
 
     @Override
@@ -19,8 +19,8 @@ public class FlyRU extends EnemyState {
     }
 
     @Override
-    public void doAction(Enemy e) {
-        e.setVelocity(new PhysicsVector(e.getSpeed(),-e.getSpeed()));
+    public void doAction(Enemy minion) {
+       //minion.setVelocity(new PhysicsVector(-minion.getSpeed(),minion.getVelocity().y));
     }
 
     @Override

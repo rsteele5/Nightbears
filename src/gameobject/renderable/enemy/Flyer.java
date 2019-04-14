@@ -11,7 +11,7 @@ public class Flyer extends Minion {
 
     int distance = 0, myx, myy;
     Player boi;
-    MinionState prevState;
+    EnemyState prevState;
 
     public Flyer(int x, int y, DrawLayer drawLayer, float speed, int hp, Player boi) {
         super(x, y, "/assets/enemies/minions/flyer/flyer.png", drawLayer, speed, hp);
@@ -21,7 +21,7 @@ public class Flyer extends Minion {
         this.boi = boi;
     }
 
-    public Flyer(int x, int y, DrawLayer drawLayer, float speed, MinionState state, int hp, Player boi) {
+    public Flyer(int x, int y, DrawLayer drawLayer, float speed, EnemyState state, int hp, Player boi) {
         super(x, y, "/assets/enemies/minions/flyer/flyer.png", drawLayer, speed, hp);
         this.state = state;
         this.boi = boi;
@@ -87,7 +87,7 @@ public class Flyer extends Minion {
 
     @Override
     public void update() {
-        state.doAction(this);
+        super.update();
         //distance += Math.sqrt(Math.pow(x - myx, 2) + Math.pow(y -myy, 2));
         //myx = x; myy = y;
         //Debug.log(true,"Distance : " + distance);
@@ -96,14 +96,12 @@ public class Flyer extends Minion {
 
     @Override
     public boolean collide(Collidable c2) {
-        Debug.log(true, "Colliding with: " + c2.getClass().toString());
         if((c2 instanceof Boundary) || (c2 instanceof DisappearingPlatform)) changeState();
         if(c2 instanceof Player) {
             if(((Player) c2).isAttacking()){
                 //Damage function here hp - c2.getWeaponDamage()
                 setHp(-(((Player) c2).getWeaponDamage()));
-                Debug.log(true, "MY HEALTH: " + hp);
-                Debug.success(true, "Flyer took some damage!!!!");
+                if(hp < 1) killSelf();
             }
         }
         return true;

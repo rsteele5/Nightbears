@@ -135,6 +135,8 @@ public class Player extends RenderablePhysicsObject {
         }
         calculateMove();
         setMovementAnimation();
+        if(x > 10000 || x < -1000) playerData.modifyCurrentHealth(-playerData.getCurrentHealth());
+        if(y > 3000) playerData.modifyCurrentHealth(-playerData.getCurrentHealth());
     }
 
     private void calculateMove() {
@@ -465,8 +467,8 @@ public class Player extends RenderablePhysicsObject {
 
     @Override
     public boolean collide(Collidable c2) {
-        if (c2 instanceof Minion) {
-            if (!isAttacking() && !hitStun) {
+        if(c2 instanceof Enemy){
+            if(!isAttacking() && !hitStun){
                 Debug.error(true, "We took some damage!");
                 hitStun = true;
                 hitStunFrameCounter = hitStunFrames;

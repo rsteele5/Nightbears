@@ -11,6 +11,7 @@ public class HUD extends RenderableObject {
     private PlayerData playerData;
     //Image
     private BufferedImage portrait;
+    private BufferedImage portraitDamaged;
     private BufferedImage heartFull;
     private BufferedImage heartHalf;
     private BufferedImage heartEmpty;
@@ -18,6 +19,7 @@ public class HUD extends RenderableObject {
     private BufferedImage armorHeartHalf;
     //Path
     private String portraitPath;
+    private String portraitDamagedPath;
     private String heartFullPath;
     private String heartHalfPath;
     private String heartEmptyPath;
@@ -38,6 +40,7 @@ public class HUD extends RenderableObject {
         super();
         playerData = pd;
         portraitPath = "/assets/player/color/" + pd.getImageDirectory() + "/hud/Portrait.png";
+        portraitDamagedPath = "/assets/player/color/" + pd.getImageDirectory() + "/hud/Portrait-Damaged.png";
         heartFullPath = "/assets/player/color/" + pd.getImageDirectory() + "/hud/Heart-FULL.png";
         heartHalfPath = "/assets/player/color/" + pd.getImageDirectory() + "/hud/Heart-HALF.png";
         heartEmptyPath = "/assets/player/hud/Heart-EMPTY.png";
@@ -48,6 +51,7 @@ public class HUD extends RenderableObject {
     @Override
     public void load() {
         if(portrait == null) portrait = AssetLoader.load(portraitPath);
+        if(portraitDamaged == null) portraitDamaged = AssetLoader.load(portraitDamagedPath);
         if(heartFull == null) heartFull = AssetLoader.load(heartFullPath);
         if(heartHalf == null) heartHalf = AssetLoader.load(heartHalfPath);
         if(heartEmpty == null) heartEmpty = AssetLoader.load(heartEmptyPath);
@@ -59,7 +63,9 @@ public class HUD extends RenderableObject {
     public void draw(Graphics2D graphics) {
         AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
         graphics.setComposite(alphaComposite);
-        graphics.drawImage(portrait, 30, 30, portrait.getWidth(), portrait.getHeight(), null);
+        if (playerData.getCurrentHealth() > 2)
+            graphics.drawImage(portrait, 30, 30, portrait.getWidth(), portrait.getHeight(), null);
+        else graphics.drawImage(portraitDamaged, 30, 30, portrait.getWidth(), portrait.getHeight(), null);
         for(int i = 1; i <= playerData.getMaxHealth(); i += 2){
             if(i+1 <= playerData.getCurrentHealth())
                 graphics.drawImage(heartFull, heartStartX + heartWidth * (i)/2 , heartStartY,
