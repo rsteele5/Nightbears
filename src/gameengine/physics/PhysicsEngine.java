@@ -71,10 +71,6 @@ public class PhysicsEngine {
         if(c1 instanceof Kinematic) {
             if(c1 instanceof Enemy && c2 instanceof Enemy)
                 return PhysicsVector.ZERO;
-            if(c1 instanceof Enemy && c2 instanceof Door)
-                return PhysicsVector.ZERO;
-            if(c1 instanceof Door && c2 instanceof Enemy)
-                return PhysicsVector.ZERO;
             if(c1 instanceof Player && ((Player) c1).isAttacking() && c2 instanceof Enemy)
                 return PhysicsVector.ZERO;
             Rectangle intersection = c1.getCollisionBox().intersection(c2.getCollisionBox());
