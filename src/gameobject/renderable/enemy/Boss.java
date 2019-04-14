@@ -11,9 +11,9 @@ import java.awt.image.BufferedImage;
 
 public abstract class Boss extends Enemy /*implements Collidable, Kinematic, Interactable*/ {
 
-
-
     protected EnemyState state;
+    protected PhysicsVector accel = new PhysicsVector(0,1);
+    protected PhysicsVector movement = new PhysicsVector(0, 0);
     private GameScreen screen;
 
     public Boss(int x, int y, String path, DrawLayer drawLayer, float speed, int hp) {

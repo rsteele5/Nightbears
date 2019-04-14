@@ -1,7 +1,6 @@
 package gameobject.renderable;
 
 import gameengine.gamedata.PlayerData;
-import gameobject.renderable.player.Player;
 import main.utilities.AssetLoader;
 
 import java.awt.*;
@@ -29,6 +28,9 @@ public class HUD extends RenderableObject {
     private int heartStartY = 54;
     private int heartWidth = 64;
     private int heartHeight = 52;
+    //Name
+    protected Font font = new Font("NoScary", Font.PLAIN, 48);
+    protected Color color = Color.WHITE;
 
 
 
@@ -77,6 +79,9 @@ public class HUD extends RenderableObject {
                 graphics.drawImage(armorHeartHalf, heartStartX + heartWidth * (i)/2 , heartStartY + heartHeight+10,
                         heartWidth, heartHeight, null);
         }
+        graphics.setFont(font);
+        graphics.setColor(color);
+        graphics.drawString(playerData.getName(), 30, 230);
     }
 
     @Override

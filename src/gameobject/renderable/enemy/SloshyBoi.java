@@ -6,6 +6,7 @@ import gameobject.Boundary;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.player.Player;
 import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 
 public class SloshyBoi extends Boss {
 
@@ -68,7 +69,16 @@ public class SloshyBoi extends Boss {
 
     @Override
     public void update() {
-        super.update();
+        //super.update();
+    }
+
+
+    @Override
+    public void draw(Graphics2D graphics) {
+        if(!(state instanceof WalkerHidden)){
+            super.draw(graphics);
+        }
+        Debug.drawRect(DebugEnabler.DRAWING_ACTIVE, graphics, new Rectangle(x, y, width, height));
     }
 
     @Override

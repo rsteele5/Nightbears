@@ -25,7 +25,7 @@ public class ConsumableBuilder {
     private String _imagePath = "";
     private DrawLayer _layer = DrawLayer.Entity;
     //TODO: Create more consumable images and separate into type arrays
-    private String [] potionImg = {"/assets/Items/bluepotion.png", "/assets/Items/redPotion.png", "/assets/Items/yellowpotion.png"};
+    private String [] potionImg = {"/assets/Items/redPotion.png", "/assets/Items/bluePotion.png", "/assets/Items/cookie.png", "/assets/Items/broccoli.png"};
 
     // Consumable requirements
     /** Random allows the builder to assign random attributes to each item **/
@@ -93,7 +93,7 @@ public class ConsumableBuilder {
      */
     public ConsumableBuilder type(ConsumableType _type) {
         if (_type == null){
-            this._type = ConsumableType.values()[rand.nextInt(ConsumableType.values().length-1)];
+            this._type = ConsumableType.values()[rand.nextInt(ConsumableType.values().length)];
         } else {
             this._type = _type;
         }
@@ -109,13 +109,14 @@ public class ConsumableBuilder {
         if (_affect == null){
             // Set a temporary effect
             this._affect = AffectType.healthBoost;
-            if (_type == ConsumableType.throwable || _type == ConsumableType.ammunition){
-                // Throwables and ammunition should never boost the enemy's health
-                while (this._affect == AffectType.healthBoost || this._affect == AffectType.healthLevel){
-                    this._affect = AffectType.values()[rand.nextInt(AffectType.values().length-1)];
-                }
-            } else {
-                this._affect = AffectType.values()[rand.nextInt(AffectType.values().length-1)];
+            if (_type == ConsumableType.edible ){
+                int rand = getRandomNumber(1,2);
+                if (rand == 1) this._affect = AffectType.healthBoost;
+                else this._affect = AffectType.healthLevel;
+            }else if (_type == ConsumableType.throwable ){
+                this._affect = AffectType.fire;
+            } else if (_type == ConsumableType.spell) {
+                this._affect = AffectType.enchant;
             }
         } else {
             this._affect = _affect;
@@ -131,7 +132,10 @@ public class ConsumableBuilder {
     //TODO: Add function for multiple image arrays according to type and affect
     public ConsumableBuilder imagePath(String _imagePath) {
         if (_imagePath.equals("")){
-            this._imagePath = potionImg[rand.nextInt(potionImg.length)];
+            if (this._affect == AffectType.healthBoost) this._imagePath = potionImg[2];
+            else if (this._affect == AffectType.healthLevel) this._imagePath = potionImg[3];
+            else if (this._affect == AffectType.enchant) this._imagePath = potionImg[1];
+            else this._imagePath = potionImg[0];
         } else {
             this._imagePath = _imagePath;
         }
@@ -185,7 +189,7 @@ public class ConsumableBuilder {
      */
     public ConsumableBuilder value(int _value) {
         if (_value == 0){
-            this._value = getRandomNumber(_minAffect, _maxAffect) * 2;
+            this._value = getRandomNumber(_minAffect, _maxAffect) * 4;
         } else {
             this._value = _value;
         }

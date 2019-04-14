@@ -100,7 +100,10 @@ public class GameData implements Serializable {
 //        this.currentPlayerData
 //    }
 
-    public void clearPlayerData() { this.currentPlayerData = null; }
+    public void clearPlayerData() {
+        this.currentPlayerData = new PlayerData();
+        this.currentVendorData = new VendorData();
+    }
 
     public CopyOnWriteArrayList<EndGamePlayerData> getPreviousPlayerData() {
         return previousPlayerData;

@@ -2,6 +2,9 @@ package gamescreen.gameplay;
 
 import gameengine.gamedata.PlayerData;
 import gameobject.renderable.item.armor.Armor;
+import gameobject.renderable.item.consumable.Consumable;
+import gameobject.renderable.item.consumable.ConsumableBuilder;
+import gameobject.renderable.item.consumable.ConsumableType;
 import gameobject.renderable.item.weapon.Weapon;
 import gameobject.renderable.*;
 import gameobject.renderable.ImageContainer;
@@ -129,6 +132,31 @@ public class PauseMenu extends Overlay {
                 if(currentItem.getCategory().toString() == "Consumable"){
                     useButton.setText("Consume");
                     useButton.setOnClick(() -> {
+                        Consumable myConsumable = (Consumable)currentItem;
+                        //Type: edible
+                        int rand = getRandomNumber(myConsumable.getMinAffect(), myConsumable.getMaxAffect());
+                        Debug.log(DebugEnabler.TEST_LOG, "Consumable Type: " + currentItem.getType());
+                        if (currentItem.getType() == 0){
+                            Debug.log(DebugEnabler.TEST_LOG, "Affect Type: " + myConsumable.getAffectType());
+                            Debug.log(DebugEnabler.TEST_LOG, "Current Health: " + playerData.getCurrentHealth());
+                            if (myConsumable.getAffectType() == AffectType.healthBoost){
+                                Debug.log(DebugEnabler.TEST_LOG, "Rand: " + rand);
+                                playerData.modifyCurrentHealth(rand);
+                                Debug.log(DebugEnabler.TEST_LOG, "New Health: " + playerData.getCurrentHealth());
+
+                            } else {
+                                Debug.log(DebugEnabler.TEST_LOG, "Rand: " + rand);
+                                Debug.log(DebugEnabler.TEST_LOG, "Current Max Health: " + playerData.getMaxHealth());
+                                playerData.modifyMaxHealth(rand);
+                                Debug.log(DebugEnabler.TEST_LOG, "Current Max Health: " + playerData.getMaxHealth());
+                            }
+                        }
+                        else if (currentItem.getType() == 2){
+                            Weapon myWeapon = (Weapon) playerData.getPlayerEquipment().get(3);
+                            if (myWeapon != null) {
+                                myWeapon.increaseAttributes(rand);
+                            }
+                        }
                         playerInventory.remove(currentItem);
                         playerData.removeItem(currentItem);
                         clearFields();
@@ -239,6 +267,11 @@ public class PauseMenu extends Overlay {
                 "/assets/player/color/"+playerData.getImageDirectory()+"/Teddy.png", DrawLayer.Entity);
         teddy.setSize(teddyImgSize.x,teddyImgSize.y);
         teddy.addToScreen(this,true);
+
+        //Name
+        TextBox teddyName = new TextBox(teddyImgSpot.x - 100, teddyImgSize.y + 550, 400, 100, gameData.getPlayerData().getName(),
+                noScaryHeader2, Color.BLACK);
+        teddyName.addToScreen(this, true);
     }
 
     private void initButtons() {
@@ -406,5 +439,9 @@ public class PauseMenu extends Overlay {
         //If you click the big view do nothing, can change this later
         bigEquipment.setOnClick( () -> bigEquipment.deSelect());
         bigEquipment.addToScreen(this, true);
+    }
+
+    private int getRandomNumber(int min, int max) {
+        return (int) ((Math.random() * ((max - min) + 1)) + min);
     }
 }

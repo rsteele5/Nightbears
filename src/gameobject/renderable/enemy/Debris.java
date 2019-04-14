@@ -11,9 +11,8 @@ public class Debris extends RenderablePhysicsObject {
 
     boolean ishit =false;
 
-    public Debris(int x, int y, DrawLayer drawLayer, float speed, int type) {
-
-        super(x, y, "/assets/enemies/bosses/sloshyboi/flyerball.png", drawLayer, speed);
+    public Debris(int x, int y, DrawLayer drawLayer, float speed) {
+        super(x, y, "/assets/enemies/minions/flyer/flyerball.png", drawLayer, speed);
     }
 
     @Override
