@@ -21,8 +21,7 @@ public class Falling extends EnemyState {
 
     @Override
     public void doAction(Enemy e) {
-        Debug.error(true,"please help im at x :" + e.getX() + " and y :" + e.getY());
-        //e.setVelocity(new PhysicsVector(0,0));
+        e.setVelocity(new PhysicsVector(0,1));
 
     }
 
