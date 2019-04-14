@@ -9,23 +9,21 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
-public abstract class Minion extends Enemy /*implements Collidable, Kinematic, Interactable*/ {
+public abstract class Boss extends Enemy /*implements Collidable, Kinematic, Interactable*/ {
 
-
-
-    protected MinionState state;
+    protected EnemyState state;
     protected PhysicsVector accel = new PhysicsVector(0,1);
     protected PhysicsVector movement = new PhysicsVector(0, 0);
     private GameScreen screen;
 
-    public Minion(int x, int y, String path, DrawLayer drawLayer, float speed, int hp) {
+    public Boss(int x, int y, String path, DrawLayer drawLayer, float speed, int hp) {
         super(x, y, path, drawLayer, speed, hp);
     }
 
     /**
      * Returns true or false depending on the acceptance of the state transition.
      */
-    public boolean setState(MinionState state) {
+    public boolean setState(EnemyState state) {
 
         this.state = state;
         //TODO: Implement error checking

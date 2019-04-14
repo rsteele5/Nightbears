@@ -6,11 +6,16 @@ import gameobject.Boundary;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.player.Player;
 import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 
-public class Walker extends Minion {
-    public Walker(int x, int y, DrawLayer drawLayer, float speed, int hp) {
+import java.awt.*;
+
+public class SloshyBoi extends Minion {
+    public SloshyBoi(int x, int y, DrawLayer drawLayer, float speed, int hp) {
         super(x, y, "/assets/enemies/minions/walker/walker.png", drawLayer, speed, hp);
-        setState(new WalkLeftMS());
+        setState(new WalkLeft());
+        width = 500;
+        height = 500;
     }
     @Override
     public void changeState()
@@ -18,18 +23,27 @@ public class Walker extends Minion {
         switch (state.getState()){
             case "Walk Left" :
                 image = flipVertical(image);
-                state = new WalkRightMS();
+                state = new WalkRight();
                 break;
             case "Walk Right" :
                 image = flipVertical(image);
-                state = new WalkLeftMS();
+                state = new WalkLeft();
                 break;
         }
     }
 
     @Override
     public void update() {
-        super.update();
+        //super.update();
+    }
+
+
+    @Override
+    public void draw(Graphics2D graphics) {
+        if(!(state instanceof WalkerHidden)){
+            super.draw(graphics);
+        }
+        Debug.drawRect(DebugEnabler.DRAWING_ACTIVE, graphics, new Rectangle(x, y, width, height));
     }
 
     @Override

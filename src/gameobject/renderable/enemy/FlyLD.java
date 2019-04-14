@@ -3,7 +3,7 @@ package gameobject.renderable.enemy;
 import gameengine.physics.PhysicsVector;
 import main.utilities.Debug;
 
-public class FlyLD extends MinionState {
+public class FlyLD extends EnemyState {
 
     public FlyLD() {
         str_State = "FlyLD";
@@ -20,7 +20,7 @@ public class FlyLD extends MinionState {
     }
 
     @Override
-    public void doAction(Minion minion) {
+    public void doAction(Enemy minion) {
         minion.setVelocity(new PhysicsVector(-minion.getSpeed(), minion.getSpeed()));
 
     }

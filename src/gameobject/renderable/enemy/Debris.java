@@ -7,11 +7,11 @@ import gameobject.renderable.DrawLayer;
 import gameobject.renderable.player.Player;
 import main.utilities.Debug;
 
-public class FlyerBall extends RenderablePhysicsObject {
+public class Debris extends RenderablePhysicsObject {
 
     boolean ishit =false;
 
-    public FlyerBall(int x, int y, DrawLayer drawLayer, float speed) {
+    public Debris(int x, int y, DrawLayer drawLayer, float speed) {
         super(x, y, "/assets/enemies/minions/flyer/flyerball.png", drawLayer, speed);
     }
 

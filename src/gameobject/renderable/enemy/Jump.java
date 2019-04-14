@@ -2,9 +2,9 @@ package gameobject.renderable.enemy;
 
 import gameengine.physics.PhysicsVector;
 
-public class WalkLeft extends EnemyState {
+public class Jump extends EnemyState {
 
-    public WalkLeft() {
+    public Jump() {
         str_State = "Walk Left";
     }
 

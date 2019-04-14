@@ -25,6 +25,10 @@ public abstract class CollidableRenderable extends RenderableObject implements C
         return isTrigger;
     }
 
+    public void setTrigger(boolean isTrigger) {
+        this.isTrigger = isTrigger;
+    }
+
     //Game Object
     public boolean setActive(GamePlayScreen screen){
         if(super.setActive(screen)){

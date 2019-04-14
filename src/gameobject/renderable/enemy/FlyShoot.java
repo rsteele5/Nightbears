@@ -3,7 +3,7 @@ package gameobject.renderable.enemy;
 import gameengine.physics.PhysicsVector;
 import main.utilities.Debug;
 
-public class FlyShoot extends MinionState {
+public class FlyShoot extends EnemyState {
 
     FlyerBall ball;
     boolean completed = false;
@@ -23,7 +23,7 @@ public class FlyShoot extends MinionState {
     }
 
     @Override
-    public void doAction(Minion minion) {
+    public void doAction(Enemy minion) {
         Debug.log(true,"STOP");
         minion.setVelocity(new PhysicsVector(0, 0));
         Flyer flyboi = ((Flyer) minion);

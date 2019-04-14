@@ -11,7 +11,7 @@ public class Flyer extends Minion {
 
     int distance = 0, myx, myy;
     Player boi;
-    MinionState prevState;
+    EnemyState prevState;
 
     public Flyer(int x, int y, DrawLayer drawLayer, float speed, int hp, Player boi) {
         super(x, y, "/assets/enemies/minions/flyer/flyer.png", drawLayer, speed, hp);
@@ -21,7 +21,7 @@ public class Flyer extends Minion {
         this.boi = boi;
     }
 
-    public Flyer(int x, int y, DrawLayer drawLayer, float speed, MinionState state, int hp, Player boi) {
+    public Flyer(int x, int y, DrawLayer drawLayer, float speed, EnemyState state, int hp, Player boi) {
         super(x, y, "/assets/enemies/minions/flyer/flyer.png", drawLayer, speed, hp);
         this.state = state;
         this.boi = boi;

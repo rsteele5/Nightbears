@@ -2,9 +2,9 @@ package gameobject.renderable.enemy;
 
 import gameengine.physics.PhysicsVector;
 
-public class RainL extends EnemyState {
+public class RainR extends EnemyState {
 
-    public RainL() {
+    public RainR() {
         str_State = "Jump";
     }
 

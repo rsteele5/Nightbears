@@ -1,17 +1,18 @@
 package gameobject.renderable.enemy;
 
 import gameengine.physics.Collidable;
-import gameengine.physics.PhysicsVector;
-import gameengine.physics.SpikeTrap;
 import gameobject.Boundary;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.player.Player;
 import main.utilities.Debug;
+import main.utilities.DebugEnabler;
+
+import java.awt.*;
 
 public class Walker extends Minion {
     public Walker(int x, int y, DrawLayer drawLayer, float speed, int hp) {
         super(x, y, "/assets/enemies/minions/walker/walker.png", drawLayer, speed, 20);
-        setState(new WalkLeftMS());
+        setState(new WalkLeft());
     }
     @Override
     public void changeState()
@@ -19,11 +20,11 @@ public class Walker extends Minion {
         switch (state.getState()){
             case "Walk Left" :
                 image = flipVertical(image);
-                state = new WalkRightMS();
+                state = new WalkRight();
                 break;
             case "Walk Right" :
                 image = flipVertical(image);
-                state = new WalkLeftMS();
+                state = new WalkLeft();
                 break;
         }
     }
@@ -31,6 +32,7 @@ public class Walker extends Minion {
     @Override
     public void update() {
         state.doAction(this);
+        //Debug.log(true, "alpha: " + alpha);
     }
 
     @Override
@@ -45,12 +47,18 @@ public class Walker extends Minion {
                 Debug.log(true, "MY HEALTH: " + hp);
                 Debug.success(true, "Walker took some damage!!!!");
                 if(getHp() <= 0){
-                    setAlpha(0);
+                    setAlpha(0f);
                     isTrigger = true;
                     ((Player) c2).modifyCoins(1);
                 }
             }
         }
         return true;
+    }
+
+    @Override
+    public void setAlpha(float alpha) {
+        super.setAlpha(alpha);
+        Debug.log(true,  this.getClass().toString() + " Setting alpha: " + alpha);
     }
 }
