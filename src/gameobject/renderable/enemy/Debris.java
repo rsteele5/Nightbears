@@ -3,7 +3,9 @@ package gameobject.renderable.enemy;
 import gameengine.physics.Collidable;
 import gameengine.physics.PhysicsVector;
 import gameengine.physics.RenderablePhysicsObject;
+import gameobject.Boundary;
 import gameobject.GameObject;
+import gameobject.TriggerableBoundary;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.player.Player;
 import main.utilities.Debug;
@@ -14,6 +16,7 @@ public class Debris extends Enemy {
 
     public Debris(int x, int y, DrawLayer drawLayer, float speed, int type) {
         super(x, y, "", drawLayer, speed, 2);
+        state = new Following();
         switch (type)
         {
             case 0:
@@ -34,7 +37,8 @@ public class Debris extends Enemy {
 
     @Override
     public void update() {
-
+        super.update();
+        state.doAction(this);
     }
 
     @Override
@@ -49,19 +53,9 @@ public class Debris extends Enemy {
 
     @Override
     public boolean collide(Collidable c2) {
-        Debug.log(true, "Colliding with: " + c2.getClass().toString());
-        if(!ishit){
-            if(c2 instanceof Player) {
-                if (((Player) c2).isAttacking()) {
-                    setVelocity(new PhysicsVector(-getVelocity().x,-getVelocity().y));
-                    Debug.log(true, "REVERSE REVERSE");
-                }
-            }
-        }else{
-            if(c2 instanceof Minion) {
-                ((Minion) c2).addhp(-300);//todo update 300
-                Debug.log(true, "Fireball smacked a bitch: " + 300);
-            }
+        if(c2 instanceof Boundary){
+            state = new Following();
+            Debug.log(true,"Now following");
         }
         return true;
     }

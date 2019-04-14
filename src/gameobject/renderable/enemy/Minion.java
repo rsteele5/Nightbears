@@ -13,23 +13,12 @@ public abstract class Minion extends Enemy /*implements Collidable, Kinematic, I
 
 
 
-    protected EnemyState state;
     protected PhysicsVector accel = new PhysicsVector(0,1);
     protected PhysicsVector movement = new PhysicsVector(0, 0);
     private GameScreen screen;
 
     public Minion(int x, int y, String path, DrawLayer drawLayer, float speed, int hp) {
         super(x, y, path, drawLayer, speed, hp);
-    }
-
-    /**
-     * Returns true or false depending on the acceptance of the state transition.
-     */
-    public boolean setState(EnemyState state) {
-
-        this.state = state;
-        //TODO: Implement error checking
-        return true;
     }
 
     @Override
@@ -68,11 +57,5 @@ public abstract class Minion extends Enemy /*implements Collidable, Kinematic, I
 
     protected void attack(){
 
-    }
-
-    @Override
-    public void update() {
-        state.doAction(this);
-        if(hp < 1){} //todo Killself
     }
 }

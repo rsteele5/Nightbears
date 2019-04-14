@@ -15,17 +15,17 @@ import java.util.ArrayList;
 public class SloshyBoi extends Boss {
 
     EnemyState pstate;
-    int doIJump = 0, shouldITurn = 0,shouldIComeDown=0, doIShit=0;
+    int doIJump = 0, shouldITurn = 0,shouldIComeDown=0, doIShit=0, poopyAmount, poopyCount=0;
     private ArrayList<Debris> poopings;
 
     public SloshyBoi(int x, int y, DrawLayer drawLayer, float speed, int hp) {
         super(x, y, "/assets/enemies/bosses/sloshyboi/sloshyboi.png", drawLayer, speed, hp);
         setState(new WalkLeft());
         poopings = new ArrayList<>();
-        poopings.add(new Debris(x,y+500,DrawLayer.Entity,0,0));
-        poopings.add(new Debris(x,y+500,DrawLayer.Entity,0,1));
-        poopings.add(new Debris(x,y+500,DrawLayer.Entity,0,2));
-
+        //poopings.add(new Debris(x,y+500,DrawLayer.Entity,0,0));
+        //poopings.add(new Debris(x,y+500,DrawLayer.Entity,0,1));
+        poopings.add(new Debris(x,y+500,DrawLayer.Entity,1,2));
+        poopyAmount = poopings.size();
     }
     @Override
     public void changeState()
@@ -75,8 +75,12 @@ public class SloshyBoi extends Boss {
     public void update() {
         super.update();
         for(Debris debris:poopings){
-            debris.setX(x+20);
-            debris.setY(y+500);
+            if(debris.getState().toString() == "Following") {
+                debris.setX(x+20);
+                debris.setY(y+500);
+            }else {
+                //do nothing
+            }
         }
     }
 
@@ -106,7 +110,6 @@ public class SloshyBoi extends Boss {
         if(c2 instanceof Player) {
             if(((Player) c2).isAttacking()){
                 shouldITurn = 11;
-                //Damage function here hp - c2.getWeaponDamage()
                 addhp(-(((Player) c2).getWeaponDamage()));
                 if(hp<1) killSelf();
                 Debug.log(true, "MY HEALTH: " + hp);
@@ -119,7 +122,19 @@ public class SloshyBoi extends Boss {
 
     @Override
     protected void attack(){
-        //todo ATTACK
+        doIShit++;
+        if(doIShit > 180) {
+            if(poopyCount == poopyAmount)
+            {
+                //poopyCount = 0;//todo fix
+            }else {
+                //poopings.get(poopyCount).setY(y+height+10);
+                poopings.get(poopyCount).state = new Falling();
+
+                poopyCount++;
+            }
+            doIShit=0;
+        }
     }
 
     @Override
@@ -127,6 +142,7 @@ public class SloshyBoi extends Boss {
 
         for(Debris debris: poopings){
             debris.addToScreen(screen,true);
+            screen.kinematics.add(debris);
         }
         super.addToScreen(screen, isActive);
         screen.kinematics.remove(this);

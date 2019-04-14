@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 public abstract class Enemy extends RenderablePhysicsObject {
 
     protected int hp;
+    protected EnemyState state;
 
     public Enemy(int x, int y, String imagePath, DrawLayer layer, float speed, int hp) {
         super(x, y, imagePath, layer, speed);
@@ -44,5 +45,24 @@ public abstract class Enemy extends RenderablePhysicsObject {
 
     protected void attack(){
         //donothing
+    }
+
+    public EnemyState getState() {
+        return state;
+    }
+
+    /**
+     * Returns true or false depending on the acceptance of the state transition.
+     */
+    public boolean setState(EnemyState state) {
+
+        this.state = state;
+        //TODO: Implement error checking
+        return true;
+    }
+
+    @Override
+    public void update() {
+        state.doAction(this);
     }
 }

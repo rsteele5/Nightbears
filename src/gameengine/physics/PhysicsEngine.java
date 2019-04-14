@@ -1,5 +1,6 @@
 package gameengine.physics;
 
+import gameobject.renderable.enemy.Debris;
 import gameobject.renderable.enemy.Enemy;
 import gameobject.renderable.player.Player;
 
@@ -38,7 +39,7 @@ public class PhysicsEngine {
     private void applyPhysics(ArrayList<Kinematic> kinematics){
         if(!kinematics.isEmpty()) {
             kinematics.forEach(k -> {
-                if (physicState == PhysicState.SideScroll) {
+                if (physicState == PhysicState.SideScroll && !(k instanceof Debris)) {
                     if (k.getVelocity().y + PhysicsMeta.Gravity.y < PhysicsMeta.terminalVelocity)
                         k.setVelocity(k.getVelocity().add(PhysicsMeta.Gravity));
                 } k.move();

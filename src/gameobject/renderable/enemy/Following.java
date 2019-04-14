@@ -1,11 +1,12 @@
 package gameobject.renderable.enemy;
 
 import gameengine.physics.PhysicsVector;
+import main.utilities.Debug;
 
-public class RainR extends EnemyState {
+public class Following extends EnemyState {
 
-    public RainR() {
-        str_State = "Rain Right";
+    public Following() {
+        str_State = "Following";
     }
 
     @Override
@@ -20,8 +21,7 @@ public class RainR extends EnemyState {
 
     @Override
     public void doAction(Enemy e) {
-        e.setVelocity(new PhysicsVector(e.getSpeed()*2,-6));
-        e.attack();
+            //do nothing
     }
 
     @Override
