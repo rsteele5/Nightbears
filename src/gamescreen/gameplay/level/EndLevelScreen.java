@@ -55,6 +55,7 @@ public class EndLevelScreen extends GameScreen {
                 DrawLayer.Entity,
                 () -> {
                     Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Continue");
+                    gameData.getPlayerData().resetCurrentArmor();
                     setScreenState(ScreenState.TransitionOff);
                 }));
         buttonLayout.addAt(continueBtn, 0, 0);
