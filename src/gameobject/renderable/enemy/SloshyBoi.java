@@ -1,12 +1,13 @@
 package gameobject.renderable.enemy;
 
 import gameengine.physics.Collidable;
-import gameengine.physics.Platform;
 import gameobject.Boundary;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.player.Player;
 import main.utilities.Debug;
 import main.utilities.DebugEnabler;
+
+import java.awt.*;
 
 public class SloshyBoi extends Boss {
 
@@ -21,7 +22,7 @@ public class SloshyBoi extends Boss {
     public void changeState()
     {
 
-        if(wait> 20){
+        if(wait > 20){
             wait = 0;
             pstate = state;
             state = new Jump();
@@ -29,12 +30,12 @@ public class SloshyBoi extends Boss {
         switch (state.getState()){
             case "Walk Left" :
                 pstate = state;wait+=5;
-                if(turn>3){state = new WalkRight();turn=0;}
+                if(turn>20){state = new WalkRight();turn=0;}
                 turn++;
             break;
             case "Walk Right" :
                 pstate = state;wait+=5;
-                if(turn>3){state = new WalkLeft();turn=0;}
+                if(turn>20){state = new WalkLeft();turn=0;}
                 turn++;
             break;
             case "Jump" :
@@ -44,11 +45,9 @@ public class SloshyBoi extends Boss {
                     switch (pstate.getState()) {
                         case "Walk Left" :
                             state = new RainL();turn++;
-                            Debug.log(true,"turn" + turn);
                             break;
                         case "Walk Right" :
                             state = new RainR();turn++;
-                            Debug.log(true,"turn" + turn);
                             break;
                             default: Debug.error(true,"bad news bears");
                     }
@@ -69,7 +68,7 @@ public class SloshyBoi extends Boss {
 
     @Override
     public void update() {
-        //super.update();
+        super.update();
     }
 
 
@@ -100,6 +99,8 @@ public class SloshyBoi extends Boss {
                 //Damage function here hp - c2.getWeaponDamage()
                 addhp(-(((Player) c2).getWeaponDamage()));
                 Debug.log(true, "MY HEALTH: " + hp);
+                turn += 5;
+                changeState();
             }
         }
         return true;

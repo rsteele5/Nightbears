@@ -1,6 +1,7 @@
 package gameobject.renderable.enemy;
 
 import gameengine.physics.PhysicsVector;
+import main.utilities.Debug;
 
 public class WalkLeft extends EnemyState {
 
@@ -20,6 +21,8 @@ public class WalkLeft extends EnemyState {
 
     @Override
     public void doAction(Enemy e) {
+        Debug.log(true, "Speed: ");
+        Debug.log(true, "Boss walk left");
         e.setVelocity(new PhysicsVector(-e.getSpeed(),e.getVelocity().y));
     }
 

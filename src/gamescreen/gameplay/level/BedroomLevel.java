@@ -163,15 +163,15 @@ public class BedroomLevel extends GamePlayScreen {
         background.getBackground().addToScreen(this, true);
         background.getBoundaries().forEach(boundary -> boundary.addToScreen(this, true));
 
-        SloshyBoi minion = new SloshyBoi(2750,300, DrawLayer.Entity, 3, 500);
+        SloshyBoi minion = new SloshyBoi(6500,300, DrawLayer.Entity, 1, 500);
         minion.setAlpha(0f);
         minion.addToScreen(this, true);
         minion.setState(new WalkerHidden());
 
-        TriggerableBoundary bounds = new TriggerableBoundary(1480, 0, 120, 1000);
+        TriggerableBoundary bounds = new TriggerableBoundary(5300-120, 0, 120, 1000);
         bounds.setTrigger(true);
         bounds.addToScreen(this,true);
-        LockCameraTrigger cameraTrigger = new LockCameraTrigger(1600, 0, 1980, 1000, bedroomCamera, bounds, minion);
+        LockCameraTrigger cameraTrigger = new LockCameraTrigger(5300, 0, 1980, 1000, bedroomCamera, bounds, minion);
         cameraTrigger.addToScreen(this,true);
 
 

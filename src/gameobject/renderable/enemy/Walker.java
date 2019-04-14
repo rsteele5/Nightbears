@@ -46,8 +46,7 @@ public class Walker extends Minion {
                 Debug.log(true, "MY HEALTH: " + hp);
                 Debug.success(true, "Walker took some damage!!!!");
                 if(getHp() <= 0){
-                    setAlpha(0f);
-                    isTrigger = true;
+                    killSelf();
                     ((Player) c2).modifyCoins(1);
                 }
             }

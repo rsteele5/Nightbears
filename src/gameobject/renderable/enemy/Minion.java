@@ -70,6 +70,11 @@ public abstract class Minion extends Enemy /*implements Collidable, Kinematic, I
 
     }
 
+    protected void killSelf(){
+        setAlpha(0f);
+        isTrigger = true;
+    }
+
     @Override
     public void update() {
         state.doAction(this);

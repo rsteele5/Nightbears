@@ -43,7 +43,7 @@ public class LockCameraTrigger extends CollidableObject {
                 cameraXPos += translateSpeed;
                 if(cameraXPos >= x + width / 2){
                     isTriggered = true;
-                    boss.setState(new WalkRight());
+                    boss.setState(new WalkLeft());
                     Debug.log(true, "setting trigger and stuff");
                 } else {
                     camera.setTarget(cameraXPos);
