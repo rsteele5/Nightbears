@@ -112,7 +112,10 @@ public class SloshyBoi extends Boss {
             if(((Player) c2).isAttacking()){
                 shouldITurn = 11;
                 addhp(-(((Player) c2).getWeaponDamage()));
-                if(hp<1) killSelf();
+                if(getHp() <= 0){
+                    killSelf();
+                    ((Player) c2).modifyCoins(1);
+                }
                 Debug.log(true, "MY HEALTH: " + hp);
 
                 changeState();

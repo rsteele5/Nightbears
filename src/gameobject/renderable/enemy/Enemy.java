@@ -1,11 +1,15 @@
 package gameobject.renderable.enemy;
 
+import gameengine.physics.Collidable;
 import gameengine.physics.Kinematic;
 import gameengine.physics.RenderablePhysicsObject;
+import gameobject.Boundary;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.RenderableObject;
+import gameobject.renderable.player.Player;
 import gamescreen.GameScreen;
 import gamescreen.gameplay.GamePlayScreen;
+import main.utilities.Debug;
 
 import java.awt.image.BufferedImage;
 
@@ -65,4 +69,5 @@ public abstract class Enemy extends RenderablePhysicsObject {
     public void update() {
         state.doAction(this);
     }
+
 }
