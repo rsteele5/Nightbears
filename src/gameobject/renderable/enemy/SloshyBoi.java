@@ -22,9 +22,9 @@ public class SloshyBoi extends Boss {
         super(x, y, "/assets/enemies/bosses/sloshyboi/sloshyboi.png", drawLayer, speed, hp);
         setState(new WalkLeft());
         poopings = new ArrayList<>();
-        poopings.add(new Debris(10000,10000,DrawLayer.Entity,0,0));
-        poopings.add(new Debris(10000,10000,DrawLayer.Entity,0,1));
-        poopings.add(new Debris(10000,10000,DrawLayer.Entity,0,2));
+        poopings.add(new Debris(x,y+500,DrawLayer.Entity,0,0));
+        poopings.add(new Debris(x,y+500,DrawLayer.Entity,0,1));
+        poopings.add(new Debris(x,y+500,DrawLayer.Entity,0,2));
 
     }
     @Override
@@ -76,7 +76,7 @@ public class SloshyBoi extends Boss {
         super.update();
         for(Debris debris:poopings){
             debris.setX(x+20);
-            debris.setY(y+20);
+            debris.setY(y+500);
         }
     }
 

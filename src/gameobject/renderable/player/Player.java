@@ -135,6 +135,8 @@ public class Player extends RenderablePhysicsObject {
         }
         calculateMove();
         setMovementAnimation();
+        if(x > 10000 || x < -1000) playerData.modifyCurrentHealth(-playerData.getCurrentHealth());
+        if(y > 3000) playerData.modifyCurrentHealth(-playerData.getCurrentHealth());
     }
 
     private void calculateMove() {
