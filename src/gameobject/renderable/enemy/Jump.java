@@ -2,10 +2,10 @@ package gameobject.renderable.enemy;
 
 import gameengine.physics.PhysicsVector;
 
-public class WalkLeft extends EnemyState {
+public class Jump extends EnemyState {
 
-    public WalkLeft() {
-        str_State = "Walk Left";
+    public Jump() {
+        str_State = "Jump";
     }
 
     @Override
@@ -20,7 +20,7 @@ public class WalkLeft extends EnemyState {
 
     @Override
     public void doAction(Enemy e) {
-        e.setVelocity(new PhysicsVector(-e.getSpeed(),e.getVelocity().y));
+        e.setVelocity(new PhysicsVector(0,-6));
     }
 
     @Override

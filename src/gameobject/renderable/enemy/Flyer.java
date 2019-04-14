@@ -5,14 +5,13 @@ import gameengine.physics.Platform;
 import gameobject.Boundary;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.player.Player;
-import gamescreen.GameScreen;
 import main.utilities.Debug;
 
 public class Flyer extends Minion {
 
     int distance = 0, myx, myy;
     Player boi;
-    MinionState prevState;
+    EnemyState prevState;
 
     public Flyer(int x, int y, DrawLayer drawLayer, float speed, int hp, Player boi) {
         super(x, y, "/assets/enemies/minions/flyer/flyer.png", drawLayer, speed, hp);
@@ -22,7 +21,7 @@ public class Flyer extends Minion {
         this.boi = boi;
     }
 
-    public Flyer(int x, int y, DrawLayer drawLayer, float speed, MinionState state, int hp, Player boi) {
+    public Flyer(int x, int y, DrawLayer drawLayer, float speed, EnemyState state, int hp, Player boi) {
         super(x, y, "/assets/enemies/minions/flyer/flyer.png", drawLayer, speed, hp);
         this.state = state;
         this.boi = boi;
@@ -88,7 +87,7 @@ public class Flyer extends Minion {
 
     @Override
     public void update() {
-        state.doAction(this);
+        super.update();
         //distance += Math.sqrt(Math.pow(x - myx, 2) + Math.pow(y -myy, 2));
         //myx = x; myy = y;
         //Debug.log(true,"Distance : " + distance);

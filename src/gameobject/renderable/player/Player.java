@@ -428,7 +428,7 @@ public class Player extends RenderablePhysicsObject {
 
     @Override
     public boolean collide(Collidable c2) {
-        if(c2 instanceof Minion){
+        if(c2 instanceof Enemy){
             if(!isAttacking() && !hitStun){
                 Debug.error(true, "We took some damage!");
                 hitStun = true;

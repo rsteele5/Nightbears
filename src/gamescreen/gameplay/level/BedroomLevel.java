@@ -9,6 +9,7 @@ import gameobject.TriggerableBoundary;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.enemy.Flyer;
 import gameobject.renderable.enemy.Minion;
+import gameobject.renderable.enemy.SloshyBoi;
 import gameobject.renderable.enemy.Walker;
 import gameobject.renderable.house.sidescrolling.BedroomBackgroundLayout;
 import gameobject.renderable.house.sidescrolling.Door;
@@ -38,10 +39,10 @@ public class BedroomLevel extends GamePlayScreen {
         //p.setHeight(20);
         //p.addToScreen(this,true);
 
-        Platform p2 = new Platform(750,900,"/assets/testAssets/brick.jpg",DrawLayer.Prop);
-        p2.setWidth(100);
-        p2.setHeight(20);
-        p2.addToScreen(this,true);
+        //Platform p2 = new Platform(750,900,"/assets/testAssets/brick.jpg",DrawLayer.Prop);
+        //p2.setWidth(100);
+        //p2.setHeight(20);
+        //p2.addToScreen(this,true);
 
 
         Door finishDoor = new Door(800, 300,
@@ -89,15 +90,16 @@ public class BedroomLevel extends GamePlayScreen {
         addOverlay(UI);
 
         setPhysicsEngine(new PhysicsEngine(player, PhysicsEngine.PhysicState.SideScroll));
-
         //enemies
 
-        Minion minion = new Walker(500,700, DrawLayer.Entity, 3, 500);
-        minion.addToScreen(this, true);
+        //Minion minion = new Walker(500,700, DrawLayer.Entity, 3, 500);
+        //minion.addToScreen(this, true);
 
-        Flyer flyboi = new Flyer(500,400, DrawLayer.Entity, 3, 500, player);
-        flyboi.addToScreen(this, true);
+        //Flyer flyboi = new Flyer(500,400, DrawLayer.Entity, 3, 500, player);
+        //flyboi.addToScreen(this, true);
 
+        SloshyBoi sloshyBoi = new SloshyBoi(1000, 700, DrawLayer.Entity, 1,100);
+        sloshyBoi.addToScreen(this, true);
 
     }
 

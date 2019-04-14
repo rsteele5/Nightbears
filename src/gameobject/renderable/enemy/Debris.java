@@ -7,12 +7,13 @@ import gameobject.renderable.DrawLayer;
 import gameobject.renderable.player.Player;
 import main.utilities.Debug;
 
-public class FlyerBall extends RenderablePhysicsObject {
+public class Debris extends RenderablePhysicsObject {
 
     boolean ishit =false;
 
-    public FlyerBall(int x, int y, DrawLayer drawLayer, float speed) {
-        super(x, y, "/assets/enemies/minions/flyer/flyerball.png", drawLayer, speed);
+    public Debris(int x, int y, DrawLayer drawLayer, float speed, int type) {
+
+        super(x, y, "/assets/enemies/bosses/sloshyboi/flyerball.png", drawLayer, speed);
     }
 
     @Override
@@ -33,7 +34,6 @@ public class FlyerBall extends RenderablePhysicsObject {
     @Override
     public boolean collide(Collidable c2) {
         Debug.log(true, "Colliding with: " + c2.getClass().toString());
-        //if(!(c2 instanceof Boundary))
         if(!ishit){
             if(c2 instanceof Player) {
                 if (((Player) c2).isAttacking()) {

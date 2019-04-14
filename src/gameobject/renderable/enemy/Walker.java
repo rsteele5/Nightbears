@@ -1,7 +1,6 @@
 package gameobject.renderable.enemy;
 
 import gameengine.physics.Collidable;
-import gameengine.physics.PhysicsVector;
 import gameobject.Boundary;
 import gameobject.renderable.DrawLayer;
 import gameobject.renderable.player.Player;
@@ -10,7 +9,7 @@ import main.utilities.Debug;
 public class Walker extends Minion {
     public Walker(int x, int y, DrawLayer drawLayer, float speed, int hp) {
         super(x, y, "/assets/enemies/minions/walker/walker.png", drawLayer, speed, hp);
-        setState(new WalkLeftMS());
+        setState(new WalkLeft());
     }
     @Override
     public void changeState()
@@ -18,18 +17,18 @@ public class Walker extends Minion {
         switch (state.getState()){
             case "Walk Left" :
                 image = flipVertical(image);
-                state = new WalkRightMS();
+                state = new WalkRight();
                 break;
             case "Walk Right" :
                 image = flipVertical(image);
-                state = new WalkLeftMS();
+                state = new WalkLeft();
                 break;
         }
     }
 
     @Override
     public void update() {
-        state.doAction(this);
+        super.update();
     }
 
     @Override
