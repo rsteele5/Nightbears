@@ -241,6 +241,8 @@ public class PauseMenu extends Overlay {
         //Fonts
         Font noScaryHeader1 = new Font("NoScary", Font.PLAIN, 192);
         Font noScaryHeader2 = new Font("NoScary", Font.PLAIN, 100);
+        Font noScaryHeader3 = new Font("NoScary", Font.PLAIN, 70);
+
 
         //Add menu Title
         TextBox menuTitle = new TextBox(titleLblSpot.x, titleLblSpot.y, 800, 1, "Pause Menu",
@@ -269,8 +271,8 @@ public class PauseMenu extends Overlay {
         teddy.addToScreen(this,true);
 
         //Name
-        TextBox teddyName = new TextBox(teddyImgSpot.x - 100, teddyImgSize.y + 550, 400, 100, gameData.getPlayerData().getName(),
-                noScaryHeader2, Color.BLACK);
+        TextBox teddyName = new TextBox(teddyImgSpot.x - 100, teddyImgSize.y + 550, 700, 100, gameData.getPlayerData().getName(),
+                noScaryHeader3, Color.BLACK);
         teddyName.addToScreen(this, true);
     }
 

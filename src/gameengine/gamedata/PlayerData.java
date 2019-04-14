@@ -6,6 +6,7 @@ import gameobject.renderable.item.ItemComparator;
 import gameobject.renderable.item.armor.Armor;
 import gameobject.renderable.item.armor.ArmorBuilder;
 import gameobject.renderable.item.armor.ArmorType;
+import gameobject.renderable.item.consumable.Consumable;
 import gameobject.renderable.item.consumable.ConsumableBuilder;
 import gameobject.renderable.item.consumable.ConsumableType;
 import gameobject.renderable.item.weapon.Weapon;
@@ -141,7 +142,7 @@ public class PlayerData implements Serializable {
                 .buildArmor());
 
         addItem(new ConsumableBuilder()
-                .name("Blew Potion")
+                .name("Yummy snack")
                 .value(2)
                 .type(ConsumableType.edible)
                 .buildConsumable());
@@ -159,6 +160,26 @@ public class PlayerData implements Serializable {
                 .value(5)
                 .armorPoints(4)
                 .buildArmor());
+
+        addItem(new ConsumableBuilder()
+                .type(ConsumableType.edible)
+                .buildConsumable());
+
+        addItem(new ConsumableBuilder()
+                .type(ConsumableType.edible)
+                .buildConsumable());
+
+        addItem(new ConsumableBuilder()
+                .type(ConsumableType.edible)
+                .buildConsumable());
+
+        addItem(new ConsumableBuilder()
+                .type(ConsumableType.spell)
+                .buildConsumable());
+
+        addItem(new ConsumableBuilder()
+                .type(ConsumableType.spell)
+                .buildConsumable());
 
         if (playerInventory.size() > 0) {
             playerInventory.sort(new ItemComparator());
