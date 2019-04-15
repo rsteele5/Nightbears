@@ -4,6 +4,8 @@ import gameengine.physics.Collidable;
 import gameobject.Boundary;
 import gameobject.TriggerableBoundary;
 import gameobject.renderable.DrawLayer;
+import gameobject.renderable.item.weapon.WeaponBuilder;
+import gameobject.renderable.item.weapon.WeaponType;
 import gameobject.renderable.player.Player;
 import gamescreen.gameplay.GamePlayScreen;
 import main.utilities.Debug;
@@ -114,7 +116,15 @@ public class SloshyBoi extends Boss {
                 addhp(-(((Player) c2).getWeaponDamage()));
                 if(getHp() <= 0){
                     killSelf();
-                    ((Player) c2).modifyCoins(1);
+                    ((Player) c2).modifyCoins(50);
+                    ((Player) c2).addItem(new WeaponBuilder()
+                            .name("Fleshy Spear")
+                            .type(WeaponType.Spear)
+                            .imagePath("/assets/Items/spear4.png")
+                            .value(100)
+                            .minmaxDamage(15, 19)
+                            .critChance(15)
+                            .buildWeapon());
                 }
                 Debug.log(true, "MY HEALTH: " + hp);
 

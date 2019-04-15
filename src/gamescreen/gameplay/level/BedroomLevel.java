@@ -138,7 +138,7 @@ public class BedroomLevel extends GamePlayScreen {
         p2.addToScreen(this,true);
 
 
-        SloshyBoi boss = new SloshyBoi(6500,300, DrawLayer.Entity, 1, 2000);
+        SloshyBoi boss = new SloshyBoi(6500,300, DrawLayer.Entity, 1, 1000);
         boss.setAlpha(0f);
         boss.addToScreen(this, true);
         boss.setState(new WalkerHidden());
