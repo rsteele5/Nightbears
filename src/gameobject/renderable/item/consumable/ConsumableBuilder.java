@@ -105,7 +105,7 @@ public class ConsumableBuilder {
      * affect type will be assigned.
      * @param _affect affect type (fire, puncture, healthBoost, healthLevel, enchant)
      */
-    private void affect(AffectType _affect) {
+    public ConsumableBuilder affect(AffectType _affect) {
         if (_affect == null){
             // Set a temporary effect
             this._affect = AffectType.healthBoost;
@@ -121,6 +121,7 @@ public class ConsumableBuilder {
         } else {
             this._affect = _affect;
         }
+        return this;
     }
 
     /**

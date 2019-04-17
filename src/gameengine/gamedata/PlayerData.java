@@ -1,6 +1,7 @@
 package gameengine.gamedata;
 
 import gameobject.renderable.RenderableObject;
+import gameobject.renderable.item.AffectType;
 import gameobject.renderable.item.Item;
 import gameobject.renderable.item.ItemComparator;
 import gameobject.renderable.item.armor.Armor;
@@ -38,7 +39,7 @@ public class PlayerData implements Serializable {
     public PlayerData(){
         initializeInventory();
         initializeEquipment();
-        gold = 100;
+        gold = 25;
         maxHealth = 6;
         currentHealth = 6;
         resetCurrentArmor();
@@ -118,110 +119,21 @@ public class PlayerData implements Serializable {
                 .critChance(3)
                 .buildWeapon());
 
-        addItem(new WeaponBuilder()
-                .name("My Fwirst Spear")
-                .type(WeaponType.Spear)
-                .value(10)
-                .minmaxDamage(5, 7)
-                .critChance(3)
-                .buildWeapon());
-
-        addItem(new WeaponBuilder()
-                .name("My Fwirst Club")
-                .type(WeaponType.Club)
-                .value(10)
-                .minmaxDamage(5, 7)
-                .critChance(3)
-                .buildWeapon());
-
         addItem(new ArmorBuilder()
-                .name("My Fwirst Helmet")
-                .type(ArmorType.Head)
-                .value(10)
-                .armorPoints(2)
-                .buildArmor());
-
-        addItem(new ConsumableBuilder()
-                .name("Yummy snack")
-                .value(2)
-                .type(ConsumableType.edible)
-                .buildConsumable());
-
-        addItem(new ArmorBuilder()
-                .name("My foist chesty")
-                .type(ArmorType.Chest)
-                .value(16)
-                .armorPoints(4)
-                .buildArmor());
-
-        addItem(new ArmorBuilder()
-                .name("My cool pants")
+                .name("My Comfy Pants")
                 .type(ArmorType.Legs)
-                .value(5)
-                .armorPoints(4)
                 .buildArmor());
 
         addItem(new ConsumableBuilder()
                 .type(ConsumableType.edible)
+                .affect(AffectType.healthBoost)
                 .buildConsumable());
 
-        addItem(new ConsumableBuilder()
-                .type(ConsumableType.edible)
-                .buildConsumable());
-
-        addItem(new ConsumableBuilder()
-                .type(ConsumableType.edible)
-                .buildConsumable());
-
-        addItem(new ConsumableBuilder()
-                .type(ConsumableType.spell)
-                .buildConsumable());
-
-        addItem(new ConsumableBuilder()
-                .type(ConsumableType.spell)
-                .buildConsumable());
-
-        if (playerInventory.size() > 0) {
-            playerInventory.sort(new ItemComparator());
-        }
     }
     public void initializeEquipment() {
         for(int x=0; x < 6; x++) {
             playerEquipment.add(null);
         }
-
-        equipItem(new ArmorBuilder()
-                .imagePath("/assets/Items/helmet2.png")
-                .name("My Swecond Helmet")
-                .type(ArmorType.Head)
-                .value(18)
-                .armorPoints(4)
-                .buildArmor(), ArmorType.Head.ordinal());
-
-        equipItem(new ArmorBuilder()
-                .imagePath("/assets/Items/helmet3.png")
-                .name("My Thord Helmet")
-                .type(ArmorType.Head)
-                .value(53)
-                .armorPoints(6)
-                .buildArmor(), ArmorType.Head.ordinal());
-
-        equipItem(new ArmorBuilder()
-                .imagePath("/assets/Items/cape1.png")
-                .name("My capeeee")
-                .type(ArmorType.OffHand)
-                .value(16)
-                .armorPoints(1)
-                .buildArmor(), ArmorType.OffHand.ordinal());
-
-
-        equipItem(new ArmorBuilder()
-                .imagePath("/assets/Items/feet1.png")
-                .name("My bootsies")
-                .type(ArmorType.Feet)
-                .value(13)
-                .armorPoints(1)
-                .buildArmor(), ArmorType.Feet.ordinal()+1);
     }
 
     public int getGold() {
