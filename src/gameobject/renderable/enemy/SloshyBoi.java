@@ -116,6 +116,9 @@ public class SloshyBoi extends Boss {
                 addhp(-(((Player) c2).getWeaponDamage()));
                 if(getHp() <= 0){
                     killSelf();
+                    for (Debris poop : poopings) {
+                        poop.killSelf();
+                    }
                     ((Player) c2).modifyCoins(50);
                     ((Player) c2).addItem(new WeaponBuilder()
                             .name("Fleshy Spear")
