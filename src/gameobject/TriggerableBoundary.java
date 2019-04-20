@@ -1,6 +1,7 @@
 package gameobject;
 
 import gameengine.physics.Collidable;
+import main.utilities.Debug;
 
 public class TriggerableBoundary extends CollidableObject {
 
@@ -28,4 +29,6 @@ public class TriggerableBoundary extends CollidableObject {
     public void setTrigger(boolean triggered) {
         this.isTriggered = triggered;
     }
+
+
 }

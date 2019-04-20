@@ -34,9 +34,8 @@ public class FallenHeroHallScreen extends GameScreen {
 
     @Override
     protected void initializeScreen() {
-
         //Initial position of the first button
-        int X_INIT_BUTTON = 64;
+        int X_INIT_BUTTON = 28;
         int Y_INIT_BUTTON = 920;
         int WIDTH_BUTTON = 256;
         int X_BUFFER = 48;
@@ -48,20 +47,18 @@ public class FallenHeroHallScreen extends GameScreen {
                 new Font("NoScary", Font.PLAIN, 76), Color.WHITE);
         displayFallenHeroAttributes.addToScreen(this, true);
 
-        //TEST: Add four heroes (will later be loaded from GameData)
-        for (int i = 0; i < 5; i++) {
-            final EndGamePlayerData selectedHero = victims.get(i);
+        for (EndGamePlayerData deadPlayer: victims){
             fallenHeroButtons.add(new Button(0, 0,
-                    victims.get(i).getImagePath(),
-                    victims.get(i).getPressedImagePath(),
+                    deadPlayer.getImagePath(),
+                    deadPlayer.getPressedImagePath(),
                     DrawLayer.Entity,
                     () -> {
                         Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Hero");
                         displayFallenHeroAttributes.setText(
-                                "Name: " + selectedHero.getName() +
-                                        "\nGold: " + selectedHero.getGold() +
-                                        "\nCreation Date: " + selectedHero.getCreationDate().format(DateTimeFormatter.ofPattern("MMMM dd, yyyy")) +
-                                        "\nDeath Date: " + selectedHero.getDeathDate().format(DateTimeFormatter.ofPattern("MMMM dd, yyyy")));
+                                "Name: " + deadPlayer.getName() +
+                                        "\nGold: " + deadPlayer.getGold() +
+                                        "\nCreation Date: " + deadPlayer.getCreationDate().format(DateTimeFormatter.ofPattern("MMMM dd, yyyy")) +
+                                        "\nDeath Date: " + deadPlayer.getDeathDate().format(DateTimeFormatter.ofPattern("MMMM dd, yyyy")));
                     }));
         }
 
@@ -97,19 +94,21 @@ public class FallenHeroHallScreen extends GameScreen {
                 "/assets/buttons/Button-LeftArrowPressed.png",
                 DrawLayer.Entity,
                 () -> {
-                    Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Left Arrow");
-                    for (int i = 0; i < fallenHeroButtons.size(); i++) {
-                        if (i < MAX_NUMBER_OF_FALLEN_HEROES) {
-                            int newIndex = ((fallenHeroesOnScreenIndex[i]) - 1 < 0) ? fallenHeroButtons.size() - 1 : fallenHeroesOnScreenIndex[i] - 1;
-                            fallenHeroesOnScreenIndex[i] = newIndex;
+                    if(victims.size() > 0) {
+                        Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Left Arrow");
+                        for (int i = 0; i < fallenHeroButtons.size(); i++) {
+                            if (i < MAX_NUMBER_OF_FALLEN_HEROES) {
+                                int newIndex = ((fallenHeroesOnScreenIndex[i]) - 1 < 0) ? fallenHeroButtons.size() - 1 : fallenHeroesOnScreenIndex[i] - 1;
+                                fallenHeroesOnScreenIndex[i] = newIndex;
+                            }
+                            fallenHeroButtons.get(i).setX(9999);
+                            fallenHeroButtons.get(i).setY(9999);
                         }
-                        fallenHeroButtons.get(i).setX(9999);
-                        fallenHeroButtons.get(i).setY(9999);
-                    }
 
-                    for (int i = 0; i < fallenHeroesOnScreenIndex.length; i++) {
-                        fallenHeroButtons.get(fallenHeroesOnScreenIndex[i]).setX(X_INIT_BUTTON + (i * 2 + 1) * (X_BUFFER + WIDTH_BUTTON - 30));
-                        fallenHeroButtons.get(fallenHeroesOnScreenIndex[i]).setY(Y_INIT_BUTTON - 230);
+                        for (int i = 0; i < fallenHeroesOnScreenIndex.length; i++) {
+                            fallenHeroButtons.get(fallenHeroesOnScreenIndex[i]).setX(X_INIT_BUTTON + (i * 2 + 1) * (X_BUFFER + WIDTH_BUTTON - 30));
+                            fallenHeroButtons.get(fallenHeroesOnScreenIndex[i]).setY(Y_INIT_BUTTON - 230);
+                        }
                     }
                 });
         butt.addToScreen(this, true);
@@ -120,19 +119,21 @@ public class FallenHeroHallScreen extends GameScreen {
                 "/assets/buttons/Button-RightArrowPressed.png",
                 DrawLayer.Entity,
                 () -> {
-                    Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Right Arrow");
-                    for (int i = 0; i < fallenHeroButtons.size(); i++) {
-                        if (i < MAX_NUMBER_OF_FALLEN_HEROES) {
-                            int newIndex = (fallenHeroesOnScreenIndex[i] + 1 > fallenHeroButtons.size() - 1) ? 0 : fallenHeroesOnScreenIndex[i] + 1;
-                            fallenHeroesOnScreenIndex[i] = newIndex;
+                    if(victims.size() > 0) {
+                        Debug.success(DebugEnabler.BUTTON_LOG, "Clicked Button - Right Arrow");
+                        for (int i = 0; i < fallenHeroButtons.size(); i++) {
+                            if (i < MAX_NUMBER_OF_FALLEN_HEROES) {
+                                int newIndex = (fallenHeroesOnScreenIndex[i] + 1 > fallenHeroButtons.size() - 1) ? 0 : fallenHeroesOnScreenIndex[i] + 1;
+                                fallenHeroesOnScreenIndex[i] = newIndex;
+                            }
+                            fallenHeroButtons.get(i).setX(9999);
+                            fallenHeroButtons.get(i).setY(9999);
                         }
-                        fallenHeroButtons.get(i).setX(9999);
-                        fallenHeroButtons.get(i).setY(9999);
-                    }
 
-                    for (int i = 0; i < fallenHeroesOnScreenIndex.length; i++) {
-                        fallenHeroButtons.get(fallenHeroesOnScreenIndex[i]).setX(X_INIT_BUTTON + (i * 2 + 1) * (X_BUFFER + WIDTH_BUTTON - 30));
-                        fallenHeroButtons.get(fallenHeroesOnScreenIndex[i]).setY(Y_INIT_BUTTON - 230);
+                        for (int i = 0; i < fallenHeroesOnScreenIndex.length; i++) {
+                            fallenHeroButtons.get(fallenHeroesOnScreenIndex[i]).setX(X_INIT_BUTTON + (i * 2 + 1) * (X_BUFFER + WIDTH_BUTTON - 30));
+                            fallenHeroButtons.get(fallenHeroesOnScreenIndex[i]).setY(Y_INIT_BUTTON - 230);
+                        }
                     }
                 });
         butt.addToScreen(this, true);
@@ -151,55 +152,7 @@ public class FallenHeroHallScreen extends GameScreen {
     }
 
     private void loadPlayers() {
-        //NOTE: THIS IS ONLY A TEMPORARY FUNCTION TO REPLICATE LOADING PLAYERS FROM GAMEDATA
-        if (victims.isEmpty()) {
-            for (int i = 0; i < 5; i++) {
-                victims.add(new EndGamePlayerData());
-                victims.get(i).changeGold(i * 5);
-                switch(i) {
-                    case 0:
-                        victims.get(i).setImagePath("/assets/player/color/red/Teddy.png");
-                        victims.get(i).setPressedImagePath("/assets/player/color/red/Teddy.png");
-                        victims.get(i).setName("Loyal Doyal");
-                        victims.get(i).setCreationDate(LocalDate.of(2019, Month.MARCH, 25));
-                        victims.get(i).setDeathDate(LocalDate.of(2019, Month.APRIL, 1));
-                        break;
-                    case 1:
-                        victims.get(i).setImagePath("/assets/player/color/purple/Teddy.png");
-                        victims.get(i).setPressedImagePath("/assets/player/color/purple/Teddy.png");
-                        victims.get(i).setName("Royal Coil");
-                        victims.get(i).setCreationDate(LocalDate.of(2019, Month.MARCH, 26));
-                        victims.get(i).setDeathDate(LocalDate.of(2019, Month.APRIL, 2));
-                        break;
-                    case 2:
-                        victims.get(i).setImagePath("/assets/player/color/blue/Teddy.png");
-                        victims.get(i).setPressedImagePath("/assets/player/color/blue/Teddy.png");
-                        victims.get(i).setName("Ants Pants");
-                        victims.get(i).setCreationDate(LocalDate.of(2019, Month.MARCH, 27));
-                        victims.get(i).setDeathDate(LocalDate.of(2019, Month.APRIL, 3));
-                        break;
-                    case 3:
-                        victims.get(i).setImagePath("/assets/player/color/green/Teddy.png");
-                        victims.get(i).setPressedImagePath("/assets/player/color/green/Teddy.png");
-                        victims.get(i).setName("Ben Ten");
-                        victims.get(i).setCreationDate(LocalDate.of(2019, Month.MARCH, 28));
-                        victims.get(i).setDeathDate(LocalDate.of(2019, Month.APRIL, 4));
-                        break;
-                    case 4:
-                        victims.get(i).setImagePath("/assets/player/color/none/Teddy.png");
-                        victims.get(i).setPressedImagePath("/assets/player/color/none/Teddy.png");
-                        victims.get(i).setName("Jeremy");
-                        victims.get(i).setCreationDate(LocalDate.of(2019, Month.MARCH, 29));
-                        victims.get(i).setDeathDate(LocalDate.of(2019, Month.APRIL, 5));
-                        break;
-                }
-            }
-
-        } else {
-            victims = gameData.getPreviousPlayerData();
-            return;
-        }
-        gameData.save();
+        victims = gameData.getPreviousPlayerData();
     }
 
 

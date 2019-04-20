@@ -23,17 +23,19 @@ public class OverworldScreen extends GamePlayScreen {
     private Vendor vendor;
     private int vendorVisits = -1;
     private Room currentRoom;
+    private boolean generateHouse;
     //endregion
 
-    public OverworldScreen(ScreenManager screenManager) {
+    public OverworldScreen(ScreenManager screenManager, boolean generateHouse) {
         super(screenManager, "Overworld", 1f);
+        this.generateHouse = generateHouse;
     }
 
 
     @Override
     protected void initializeScreen() {
         //House generation
-        if(gameData.getLevelData().getCurrentMap() == null) {
+        if(generateHouse) {
             MapBuilder mapBuilder = new MapBuilder();
             mapBuilder.createMap();
             mapBuilder.addRoomAtCell(0, 0, new Bedroom());

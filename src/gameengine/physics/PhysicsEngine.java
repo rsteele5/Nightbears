@@ -1,5 +1,9 @@
 package gameengine.physics;
 
+import gameobject.renderable.enemy.Boss;
+import gameobject.renderable.enemy.Debris;
+import gameobject.renderable.enemy.Enemy;
+import gameobject.renderable.house.sidescrolling.Door;
 import gameobject.renderable.player.Player;
 
 import java.awt.Rectangle;
@@ -65,6 +69,10 @@ public class PhysicsEngine {
 
     private PhysicsVector collisionReslover(Collidable c1, Collidable c2){
         if(c1 instanceof Kinematic) {
+            if(c1 instanceof Enemy && c2 instanceof Enemy)
+                return PhysicsVector.ZERO;
+            if(c1 instanceof Player && ((Player) c1).isAttacking() && c2 instanceof Enemy)
+                return PhysicsVector.ZERO;
             Rectangle intersection = c1.getCollisionBox().intersection(c2.getCollisionBox());
             //Direction
             double angleDeg = Math.atan2(

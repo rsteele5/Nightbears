@@ -1,20 +1,25 @@
 package gameengine.gamedata;
 
 import gameobject.renderable.RenderableObject;
+import gameobject.renderable.item.AffectType;
 import gameobject.renderable.item.Item;
 import gameobject.renderable.item.ItemComparator;
 import gameobject.renderable.item.armor.Armor;
 import gameobject.renderable.item.armor.ArmorBuilder;
 import gameobject.renderable.item.armor.ArmorType;
+import gameobject.renderable.item.consumable.Consumable;
 import gameobject.renderable.item.consumable.ConsumableBuilder;
 import gameobject.renderable.item.consumable.ConsumableType;
 import gameobject.renderable.item.weapon.Weapon;
 import gameobject.renderable.item.weapon.WeaponBuilder;
 import gameobject.renderable.item.weapon.WeaponType;
 import main.utilities.Debug;
+import main.utilities.DebugEnabler;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class PlayerData implements Serializable {
 
@@ -27,10 +32,14 @@ public class PlayerData implements Serializable {
     private int currentHealth;
     private int currentArmor;
 
+    private LocalDate creationDate;
+    private LocalDate deathDate;
+    private LocalDate victoryDate;
+
     public PlayerData(){
         initializeInventory();
         initializeEquipment();
-        gold = 100;
+        gold = 25;
         maxHealth = 6;
         currentHealth = 6;
         resetCurrentArmor();
@@ -75,13 +84,34 @@ public class PlayerData implements Serializable {
         resetCurrentArmor();
     }
 
+    public int getWeaponDamage(){
+        int minDamage;
+        int maxDamage;
+        int critchance;
+        if(playerEquipment.get(3) != null){ // If the player has a weapon equipped get the min/max damage;
+            minDamage = ((Weapon)playerEquipment.get(3)).getMinDamage();
+            maxDamage = ((Weapon)playerEquipment.get(3)).getMaxDamage();
+            critchance = ((Weapon)playerEquipment.get(3)).getCritChance();
+        } else { // If the player has no weapon equipped set the min/max damage to 1/4;
+            minDamage = 1;
+            maxDamage = 4;
+            critchance = 0;
+
+        }
+        int crit = ThreadLocalRandom.current().nextInt(0, 100 + 1);
+        if(crit < critchance) {
+            Debug.log(true, "BOOOOOOOOOOOOOOM : " + crit);
+            return ThreadLocalRandom.current().nextInt(minDamage*3, (maxDamage + 1)*3);
+        }
+        return ThreadLocalRandom.current().nextInt(minDamage, maxDamage + 1);
+    }
+
     public void replaceList(CopyOnWriteArrayList<Item> updatedItems) {
         this.playerInventory = updatedItems;
     }
 
     public void initializeInventory(){
         addItem(new WeaponBuilder()
-                .imagePath("/assets/Items/sword1.png")
                 .name("My Fwirst Sword")
                 .type(WeaponType.Sword)
                 .value(10)
@@ -90,77 +120,20 @@ public class PlayerData implements Serializable {
                 .buildWeapon());
 
         addItem(new ArmorBuilder()
-                .imagePath("/assets/Items/helmet1.png")
-                .name("My Fwirst Helmet")
-                .type(ArmorType.Head)
-                .value(12)
-                .armorPoints(10)
+                .name("My Comfy Pants")
+                .type(ArmorType.Legs)
                 .buildArmor());
 
         addItem(new ConsumableBuilder()
-                .imagePath("/assets/Items/bluepotion.png")
-                .name("Blew Potion")
-                .value(12)
                 .type(ConsumableType.edible)
+                .affect(AffectType.healthBoost)
                 .buildConsumable());
 
-        addItem(new ArmorBuilder()
-                .imagePath("/assets/Items/chest1.png")
-                .name("My foist chesty")
-                .type(ArmorType.Chest)
-                .value(24)
-                .armorPoints(16)
-                .buildArmor());
-
-        addItem(new ArmorBuilder()
-                .imagePath("/assets/Items/pants1.png")
-                .name("My cool pants")
-                .type(ArmorType.Legs)
-                .value(7)
-                .armorPoints(5)
-                .buildArmor());
-
-        if (playerInventory.size() > 0) {
-            playerInventory.sort(new ItemComparator());
-        }
     }
     public void initializeEquipment() {
         for(int x=0; x < 6; x++) {
             playerEquipment.add(null);
         }
-
-        equipItem(new ArmorBuilder()
-                .imagePath("/assets/Items/helmet2.png")
-                .name("My Swecond Helmet")
-                .type(ArmorType.Head)
-                .value(26)
-                .armorPoints(18)
-                .buildArmor(), ArmorType.Head.ordinal());
-
-        equipItem(new ArmorBuilder()
-                .imagePath("/assets/Items/helmet3.png")
-                .name("My Thord Helmet")
-                .type(ArmorType.Head)
-                .value(53)
-                .armorPoints(30)
-                .buildArmor(), ArmorType.Head.ordinal());
-
-        equipItem(new ArmorBuilder()
-                .imagePath("/assets/Items/cape1.png")
-                .name("My capeeee")
-                .type(ArmorType.OffHand)
-                .value(16)
-                .armorPoints(5)
-                .buildArmor(), ArmorType.OffHand.ordinal());
-
-
-        equipItem(new ArmorBuilder()
-                .imagePath("/assets/Items/feet1.png")
-                .name("My bootsies")
-                .type(ArmorType.Feet)
-                .value(13)
-                .armorPoints(3)
-                .buildArmor(), ArmorType.Feet.ordinal()+1);
     }
 
     public int getGold() {
@@ -175,17 +148,27 @@ public class PlayerData implements Serializable {
         return maxHealth;
     }
     public void modifyMaxHealth(int amount){
+        if (amount % 2 == 1) amount++;
+        Debug.log(DebugEnabler.TEST_LOG, "max health increased by " + amount);
         maxHealth += amount;
+        modifyCurrentHealth(amount);
     }
     public int getCurrentHealth() {
         return currentHealth;
     }
+
     public void modifyCurrentHealth(int amount){
-        currentHealth += amount;
+        Debug.log(DebugEnabler.TEST_LOG, "current health increased by " + amount);
+        currentHealth +=  amount;
+        if (currentHealth > maxHealth) currentHealth = maxHealth;
     }
 
     public int getCurrentArmor() {
         return currentArmor;
+    }
+
+    public void modifyCurrentArmor(int amount){
+        currentArmor += amount;
     }
 
     public void resetCurrentArmor() {
@@ -195,6 +178,30 @@ public class PlayerData implements Serializable {
                 currentArmor += ((Armor)item).getArmorValue();
             }
         });
+    }
+
+    public LocalDate getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDate creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public LocalDate getDeathDate() {
+        return deathDate;
+    }
+
+    public void setDeathDate(LocalDate deathDate) {
+        this.deathDate = deathDate;
+    }
+
+    public LocalDate getVictoryDate() {
+        return victoryDate;
+    }
+
+    public void setVictoryDate(LocalDate victoryDate) {
+        this.victoryDate = victoryDate;
     }
 
     public String getName() {

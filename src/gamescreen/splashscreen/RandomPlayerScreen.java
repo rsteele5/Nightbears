@@ -14,7 +14,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class RandomPlayerScreen extends GameScreen {
@@ -31,6 +33,7 @@ public class RandomPlayerScreen extends GameScreen {
 
     @Override
     protected void initializeScreen() {
+        gameData.clearPlayerData();
         ImageContainer background = new ImageContainer(0,0,
                 "/assets/backgrounds/BG-RandomPlayer.png",
                 DrawLayer.Background);
@@ -49,6 +52,8 @@ public class RandomPlayerScreen extends GameScreen {
                 400, 100, "", new Font("NoScary", Font.PLAIN, 60),
                 Color.WHITE, true);
         nameTextBox.addToScreen(this, true);
+
+        gameData.getPlayerData().setCreationDate(LocalDate.now());
     }
 
     private ImageContainer getRandomImage(){
@@ -65,7 +70,7 @@ public class RandomPlayerScreen extends GameScreen {
         }
 
         int totalImages = images.size();
-        int randomIndex = (int)(Math.random() * (totalImages));
+        int randomIndex = ThreadLocalRandom.current().nextInt(0, totalImages);
         gameData.getPlayerData().setImageDirectory(directories[randomIndex]);
         return images.get(randomIndex);
     }
