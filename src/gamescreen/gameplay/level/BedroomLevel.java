@@ -15,6 +15,7 @@ import gamescreen.gameplay.GamePlayScreen;
 import gamescreen.gameplay.overworld.OverworldScreen;
 import gamescreen.splashscreen.GameOverScreen;
 import input.listeners.Key.SideScrollKeyHandler;
+import main.utilities.Debug;
 
 
 public class BedroomLevel extends GamePlayScreen {
@@ -139,6 +140,7 @@ public class BedroomLevel extends GamePlayScreen {
 
 
         SloshyBoi boss = new SloshyBoi(6500,300, DrawLayer.Entity, 1, 1000);
+        Debug.log(true,"Make a new sloshyboi");
         boss.setAlpha(0f);
         boss.addToScreen(this, true);
         boss.setState(new WalkerHidden());

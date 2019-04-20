@@ -70,7 +70,6 @@ public class GameData implements Serializable {
                 this.currentVendorData = gameDataInput.currentVendorData;
                 this.previousPlayerData = gameDataInput.previousPlayerData;
                 this.currentLevelData = gameDataInput.currentLevelData;
-                Debug.log(true, "Do I have shit?: " + currentPlayerData.getInventory().get(0).getImagePath());
 
                 in.close();
                 file.close();

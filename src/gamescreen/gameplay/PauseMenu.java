@@ -3,8 +3,6 @@ package gamescreen.gameplay;
 import gameengine.gamedata.PlayerData;
 import gameobject.renderable.item.armor.Armor;
 import gameobject.renderable.item.consumable.Consumable;
-import gameobject.renderable.item.consumable.ConsumableBuilder;
-import gameobject.renderable.item.consumable.ConsumableType;
 import gameobject.renderable.item.weapon.Weapon;
 import gameobject.renderable.*;
 import gameobject.renderable.ImageContainer;
@@ -18,13 +16,11 @@ import gamescreen.GameScreen;
 import gamescreen.Overlay;
 import gamescreen.ScreenManager;
 import gameobject.container.RenderableGridContainer;
+import gamescreen.gameplay.level.BedroomLevel;
 import gamescreen.mainmenu.MainMenuScreen;
 import gamescreen.mainmenu.options.OptionScreen;
 import input.listeners.Key.ClickableKeyHandler;
 import main.utilities.Clickable;
-import main.utilities.Debug;
-import main.utilities.DebugEnabler;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -135,20 +131,12 @@ public class PauseMenu extends Overlay {
                         Consumable myConsumable = (Consumable)currentItem;
                         //Type: edible
                         int rand = getRandomNumber(myConsumable.getMinAffect(), myConsumable.getMaxAffect());
-                        Debug.log(DebugEnabler.TEST_LOG, "Consumable Type: " + currentItem.getType());
                         if (currentItem.getType() == 0){
-                            Debug.log(DebugEnabler.TEST_LOG, "Affect Type: " + myConsumable.getAffectType());
-                            Debug.log(DebugEnabler.TEST_LOG, "Current Health: " + playerData.getCurrentHealth());
                             if (myConsumable.getAffectType() == AffectType.healthBoost){
-                                Debug.log(DebugEnabler.TEST_LOG, "Rand: " + rand);
                                 playerData.modifyCurrentHealth(rand);
-                                Debug.log(DebugEnabler.TEST_LOG, "New Health: " + playerData.getCurrentHealth());
 
                             } else {
-                                Debug.log(DebugEnabler.TEST_LOG, "Rand: " + rand);
-                                Debug.log(DebugEnabler.TEST_LOG, "Current Max Health: " + playerData.getMaxHealth());
                                 playerData.modifyMaxHealth(rand);
-                                Debug.log(DebugEnabler.TEST_LOG, "Current Max Health: " + playerData.getMaxHealth());
                             }
                         }
                         else if (currentItem.getType() == 2){
@@ -163,32 +151,39 @@ public class PauseMenu extends Overlay {
                         //todo offer healing or bonuses
                     });
                 } else if((currentItem.getCategory().toString() == "Armor" || currentItem.getCategory().toString() == "Weapon") && !equipButtons.contains(itemContainerButton)){
-                    useButton.setText("Equip");
-                    useButton.setOnClick(() -> {
+                    useButton.setText("Locked");
+                    if(!(parentScreen instanceof BedroomLevel)) {
+                        useButton.setText("Equip");
+                        useButton.setOnClick(() -> {
 
-                        if(currentItem instanceof Weapon)
-                            playerData.equipItem(currentItem, 3);//3 is weapon slot
-                        if(currentItem instanceof Armor) {
-                            if (currentItem.getType() >= 3)
-                                playerData.equipItem(currentItem, currentItem.getType() + 1);
-                            else playerData.equipItem(currentItem, currentItem.getType());
-                        }
-                        clearFields();
-
-                    });
-                } else if((currentItem.getCategory().toString() == "Armor" || currentItem.getCategory().toString() == "Weapon") && equipButtons.contains(itemContainerButton)){
-                    useButton.setText("Unequip");
-                    useButton.setOnClick(() -> {
-                        if(currentItem != null) {
                             if (currentItem instanceof Weapon)
-                                playerData.unequipItem(currentItem, 3);
-                            else if (currentItem.getType() > 2)
-                                playerData.unequipItem(currentItem, currentItem.getType() + 1);
-                            else
-                                playerData.unequipItem(currentItem, currentItem.getType());
+                                playerData.equipItem(currentItem, 3);//3 is weapon slot
+                            if (currentItem instanceof Armor) {
+                                if (currentItem.getType() >= 3)
+                                    playerData.equipItem(currentItem, currentItem.getType() + 1);
+                                else playerData.equipItem(currentItem, currentItem.getType());
+                            }
                             clearFields();
-                        }
-                    });
+
+                        });
+                    }
+
+                } else if((currentItem.getCategory().toString() == "Armor" || currentItem.getCategory().toString() == "Weapon") && equipButtons.contains(itemContainerButton)){
+                    useButton.setText("Locked");
+                    if(!(parentScreen instanceof BedroomLevel)) {
+                        useButton.setText("Unequip");
+                        useButton.setOnClick(() -> {
+                            if (currentItem != null) {
+                                if (currentItem instanceof Weapon)
+                                    playerData.unequipItem(currentItem, 3);
+                                else if (currentItem.getType() > 2)
+                                    playerData.unequipItem(currentItem, currentItem.getType() + 1);
+                                else
+                                    playerData.unequipItem(currentItem, currentItem.getType());
+                                clearFields();
+                            }
+                        });
+                    }
                 }
             } else {
                 currentItem = null;
@@ -284,7 +279,6 @@ public class PauseMenu extends Overlay {
                 "/assets/buttons/Button-MainMenuPressed.png",
                 DrawLayer.Entity,
                 () ->{
-                    Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Main Menu");
                     screenManager.addScreen(new MainMenuScreen(screenManager));
                 });
         button.setSize(btnSize.x, btnSize.y);
@@ -298,7 +292,6 @@ public class PauseMenu extends Overlay {
                 DrawLayer.Entity,
                 () ->{
                     //TODO Save stuff
-                    Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Save");
                 });
         button.setSize(btnSize.x, btnSize.y);
         button.addToScreen(this,true);
@@ -310,7 +303,6 @@ public class PauseMenu extends Overlay {
                 "/assets/buttons/Button-OptionsPressed.png",
                 DrawLayer.Entity,
                 () ->{
-                    Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Options");
                     screenManager.addScreen(new OptionScreen(screenManager));
                 });
         button.setSize(btnSize.x, btnSize.y);
@@ -323,7 +315,6 @@ public class PauseMenu extends Overlay {
                 "/assets/buttons/Button-BackPressed.png",
                 DrawLayer.Entity,
                 () -> {
-                    Debug.success(DebugEnabler.BUTTON_LOG,"Clicked Button - Back");
                     currentState = ScreenState.TransitionOff;
                 });
         button.setSize(btnSize.x, btnSize.y);

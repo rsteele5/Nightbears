@@ -55,7 +55,6 @@ public class Debris extends Enemy {
     public boolean collide(Collidable c2) {
         if(c2 instanceof Boundary){
             state = new Following();
-            Debug.log(true,"Now following");
         }
         return true;
     }

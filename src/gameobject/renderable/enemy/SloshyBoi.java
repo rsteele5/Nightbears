@@ -32,8 +32,6 @@ public class SloshyBoi extends Boss {
     @Override
     public void changeState()
     {
-        Debug.log(true,"I am in state: " + state.toString());
-        Debug.log(true,"Do I jump: " + doIJump);
         if(doIJump > 5){
             doIJump = 0;
             pstate = state;
@@ -60,7 +58,6 @@ public class SloshyBoi extends Boss {
                 }
                 break;
             case "Rain Right" :
-                //state = pstate;
                 shouldITurn++;
                 if(shouldITurn>10){state = new RainL();shouldITurn=0;}
                 if(shouldIComeDown > 399){state=pstate; shouldIComeDown=0;}
@@ -126,8 +123,6 @@ public class SloshyBoi extends Boss {
                             .critChance(15)
                             .buildWeapon());
                 }
-                Debug.log(true, "MY HEALTH: " + hp);
-
                 changeState();
             }
         }
