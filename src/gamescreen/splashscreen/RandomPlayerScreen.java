@@ -33,6 +33,7 @@ public class RandomPlayerScreen extends GameScreen {
 
     @Override
     protected void initializeScreen() {
+        gameData.clearPlayerData();
         ImageContainer background = new ImageContainer(0,0,
                 "/assets/backgrounds/BG-RandomPlayer.png",
                 DrawLayer.Background);
