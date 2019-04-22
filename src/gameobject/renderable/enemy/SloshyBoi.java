@@ -113,8 +113,7 @@ public class SloshyBoi extends Boss {
                 addhp(-(((Player) c2).getWeaponDamage()));
                 if(getHp() <= 0){
                     killSelf();
-                    for(Debris poop : droppings)
-                    {
+                    for (Debris poop : poopings) {
                         poop.killSelf();
                     }
                     ((Player) c2).modifyCoins(50);
