@@ -17,6 +17,7 @@ public abstract class Enemy extends RenderablePhysicsObject {
 
     protected int hp;
     protected EnemyState state;
+    protected GameScreen screen;
 
     public Enemy(int x, int y, String imagePath, DrawLayer layer, float speed, int hp) {
         super(x, y, imagePath, layer, speed);
@@ -68,6 +69,14 @@ public abstract class Enemy extends RenderablePhysicsObject {
     @Override
     public void update() {
         state.doAction(this);
+    }
+
+    public GameScreen getScreen() {
+        return screen;
+    }
+
+    public void setScreen(GameScreen screen) {
+        this.screen = screen;
     }
 
 }

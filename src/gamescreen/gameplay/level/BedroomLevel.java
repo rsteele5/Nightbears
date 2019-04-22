@@ -143,7 +143,7 @@ public class BedroomLevel extends GamePlayScreen {
         Debug.log(true,"Make a new sloshyboi");
         boss.setAlpha(0f);
         boss.addToScreen(this, true);
-        boss.setState(new WalkerHidden());
+        boss.setState(new Hidden());
 
         TriggerableBoundary bounds = new TriggerableBoundary(5300-120, 0, 120, 1000);
         bounds.setTrigger(true);

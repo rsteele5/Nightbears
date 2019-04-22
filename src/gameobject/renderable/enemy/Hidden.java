@@ -3,10 +3,10 @@ package gameobject.renderable.enemy;
 import gameengine.physics.PhysicsVector;
 import main.utilities.Debug;
 
-public class Following extends EnemyState {
+public class Hidden extends EnemyState {
 
-    public Following() {
-        str_State = "Following";
+    public Hidden() {
+        str_State = "Walk Idle";
     }
 
     @Override
@@ -21,7 +21,11 @@ public class Following extends EnemyState {
 
     @Override
     public void doAction(Enemy e) {
-            Debug.log(true, "Help me, Im at x : " + e.getX() + " and y : " + e.getY());
+       //minion.setVelocity(new PhysicsVector(-minion.getSpeed(),minion.getVelocity().y));i
+        if(e.getX() != 6500) {e.setX(6500);
+            Debug.error(true,"I got lost but im going back");}
+        if(e.getY() != 300) {e.setY(300);
+            Debug.error(true,"I got lost but im going back");}
     }
 
     @Override

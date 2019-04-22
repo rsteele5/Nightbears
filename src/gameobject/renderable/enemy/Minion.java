@@ -1,7 +1,6 @@
 package gameobject.renderable.enemy;
 
 
-import gameengine.physics.PhysicsVector;
 import gameobject.renderable.DrawLayer;
 import gamescreen.GameScreen;
 
@@ -9,13 +8,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
-public abstract class Minion extends Enemy /*implements Collidable, Kinematic, Interactable*/ {
+public abstract class Minion extends Enemy {
 
-
-
-    protected PhysicsVector accel = new PhysicsVector(0,1);
-    protected PhysicsVector movement = new PhysicsVector(0, 0);
-    private GameScreen screen;
 
     public Minion(int x, int y, String path, DrawLayer drawLayer, float speed, int hp) {
         super(x, y, path, drawLayer, speed, hp);
@@ -45,17 +39,5 @@ public abstract class Minion extends Enemy /*implements Collidable, Kinematic, I
         AffineTransformOp tr=new AffineTransformOp(tx,null);  //transforming
 
         return tr.filter(src, null);  //filtering
-    }
-
-    public GameScreen getScreen() {
-        return screen;
-    }
-
-    public void setScreen(GameScreen screen) {
-        this.screen = screen;
-    }
-
-    protected void attack(){
-
     }
 }

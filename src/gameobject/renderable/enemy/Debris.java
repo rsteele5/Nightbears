@@ -12,8 +12,6 @@ import main.utilities.Debug;
 
 public class Debris extends Enemy {
 
-    boolean ishit =false;
-
     public Debris(int x, int y, DrawLayer drawLayer, float speed, int type) {
         super(x, y, "", drawLayer, speed, 2);
         state = new Following();

@@ -16,18 +16,18 @@ import java.util.ArrayList;
 
 public class SloshyBoi extends Boss {
 
-    EnemyState pstate;
-    int doIJump = 0, shouldITurn = 0,shouldIComeDown=0, doIShit=0, poopyAmount, poopyCount=0;
-    private ArrayList<Debris> poopings;
+    private EnemyState pstate;
+    private int doIJump = 0, shouldITurn = 0,shouldIComeDown=0, doIDrop=0, droppingAmount, droppingCount =0;
+    private ArrayList<Debris> droppings;
 
     public SloshyBoi(int x, int y, DrawLayer drawLayer, float speed, int hp) {
         super(x, y, "/assets/enemies/bosses/sloshyboi/sloshyboi.png", drawLayer, speed, hp);
         setState(new WalkLeft());
-        poopings = new ArrayList<>();
-        poopings.add(new Debris(x+100,y+100,DrawLayer.Entity,0,0));
-        poopings.add(new Debris(x+100,y+100,DrawLayer.Entity,0,1));
-        poopings.add(new Debris(x+100,y+100,DrawLayer.Entity,1,2));
-        poopyAmount = poopings.size();
+        droppings = new ArrayList<>();
+        droppings.add(new Debris(x+100,y+100,DrawLayer.Entity,0,0));
+        droppings.add(new Debris(x+100,y+100,DrawLayer.Entity,0,1));
+        droppings.add(new Debris(x+100,y+100,DrawLayer.Entity,1,2));
+        droppingAmount = droppings.size();
     }
     @Override
     public void changeState()
@@ -74,7 +74,7 @@ public class SloshyBoi extends Boss {
     @Override
     public void update() {
         super.update();
-        for(Debris debris:poopings){
+        for(Debris debris: droppings){
             if(debris.getState().toString() == "Following") {
                 debris.setX(x + 100);
                 debris.setY(y + 100);
@@ -87,7 +87,7 @@ public class SloshyBoi extends Boss {
 
     @Override
     public void draw(Graphics2D graphics) {
-        if(!(state instanceof WalkerHidden)){
+        if(!(state instanceof Hidden)){
             super.draw(graphics);
         }
         Debug.drawRect(DebugEnabler.DRAWING_ACTIVE, graphics, new Rectangle(x, y, width, height));
@@ -113,6 +113,10 @@ public class SloshyBoi extends Boss {
                 addhp(-(((Player) c2).getWeaponDamage()));
                 if(getHp() <= 0){
                     killSelf();
+                    for(Debris poop : droppings)
+                    {
+                        poop.killSelf();
+                    }
                     ((Player) c2).modifyCoins(50);
                     ((Player) c2).addItem(new WeaponBuilder()
                             .name("Fleshy Spear")
@@ -131,22 +135,22 @@ public class SloshyBoi extends Boss {
 
     @Override
     protected void attack(){
-        doIShit++;
-        if(doIShit > 120) {
-            if(poopyCount == poopyAmount)
+        doIDrop++;
+        if(doIDrop > 120) {
+            if(droppingCount == droppingAmount)
             {
-                poopyCount = 0;//todo fix
+                droppingCount = 0;//todo fix
             }else {
-                poopings.get(poopyCount).state = new Falling();
-                poopyCount++;
+                droppings.get(droppingCount).state = new Falling();
+                droppingCount++;
             }
-            doIShit=0;
+            doIDrop =0;
         }
     }
 
     @Override
     public void addToScreen(GamePlayScreen screen, boolean isActive){
-        for(Debris debris: poopings){
+        for(Debris debris: droppings){
             debris.addToScreen(screen,true);
             screen.kinematics.add(debris);
         }
