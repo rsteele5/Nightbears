@@ -23,9 +23,9 @@ public class Hidden extends EnemyState {
     public void doAction(Enemy e) {
        //minion.setVelocity(new PhysicsVector(-minion.getSpeed(),minion.getVelocity().y));i
         if(e.getX() != 6500) {e.setX(6500);
-            Debug.error(true,"I got lost but im going back");}
+            e.setVelocity(new PhysicsVector(0,0));}
         if(e.getY() != 300) {e.setY(300);
-            Debug.error(true,"I got lost but im going back");}
+            e.setVelocity(new PhysicsVector(0,0));}
     }
 
     @Override
